@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BC07B68B-3462-4D2C-86F3-632FF5E1A7FB}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Aqua</RootNamespace>
+    <AssemblyName>Aqua</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <TargetFrameworkProfile />
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Release\Aqua.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="system" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Aqua\Dynamic\DynamicObject.cs">
+      <Link>Dynamic\DynamicObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\Dynamic\DynamicObject.MetaObject.cs">
+      <Link>Dynamic\DynamicObject.MetaObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\Dynamic\DynamicObjectMapper.cs">
+      <Link>Dynamic\DynamicObjectMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua.Win\Dynamic\DynamicObjectMapper.NETCORE.cs">
+      <Link>Dynamic\DynamicObjectMapper.NETCORE.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\Dynamic\IDynamicObjectMapper.cs">
+      <Link>Dynamic\IDynamicObjectMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\FieldInfo.cs">
+      <Link>TypeSystem\FieldInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\ConstructorInfo.cs">
+      <Link>TypeSystem\ConstructorInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\MethodInfo.cs">
+      <Link>TypeSystem\MethodInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\MethodBaseInfo.cs">
+      <Link>TypeSystem\MethodBaseInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\PropertyInfo.cs">
+      <Link>TypeSystem\PropertyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\MemberTypes.cs">
+      <Link>TypeSystem\MemberTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\MemberInfo.cs">
+      <Link>TypeSystem\MemberInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\TypeInfoExtensions.cs">
+      <Link>TypeSystem\TypeInfoExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\TypeInfo.cs">
+      <Link>TypeSystem\TypeInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\ITypeResolver.cs">
+      <Link>TypeSystem\ITypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\TypeResolver.cs">
+      <Link>TypeSystem\TypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\TypeResolver.NET.cs">
+      <Link>TypeSystem\TypeResolver.NET.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\TypeHelper.cs">
+      <Link>TypeSystem\TypeHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\MemberInfoExtensions.cs">
+      <Link>TypeSystem\MemberInfoExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\MethodInfos.cs">
+      <Link>MethodInfos.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\ObjectReferenceEqualityComparer`.cs">
+      <Link>ObjectReferenceEqualityComparer`.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TransparentCache.cs">
+      <Link>TransparentCache.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeExtensions.cs">
+      <Link>TypeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua.NET35\TypeExtensions.NET35.cs">
+      <Link>TypeExtensions.NET35.cs</Link>
+    </Compile>
+    <Compile Include="NonSerializedAttribute.cs" />
+    <Compile Include="SerializableAttribute.cs" />
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

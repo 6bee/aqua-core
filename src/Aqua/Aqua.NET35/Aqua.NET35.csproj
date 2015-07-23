@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{70B7C494-F1DD-4EF7-897E-CC556793407E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Aqua</RootNamespace>
+    <AssemblyName>Aqua</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>NET35</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Aqua.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Aqua\Dynamic\DynamicObject.cs">
+      <Link>Dynamic\DynamicObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\Dynamic\DynamicObjectMapper.cs">
+      <Link>Dynamic\DynamicObjectMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\Dynamic\DynamicObjectMapper.NET.cs">
+      <Link>Dynamic\DynamicObjectMapper.NET.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\Dynamic\IDynamicObjectMapper.cs">
+      <Link>Dynamic\IDynamicObjectMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\FieldInfo.cs">
+      <Link>TypeSystem\FieldInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\ConstructorInfo.cs">
+      <Link>TypeSystem\ConstructorInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\MethodInfo.cs">
+      <Link>TypeSystem\MethodInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\MethodBaseInfo.cs">
+      <Link>TypeSystem\MethodBaseInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\PropertyInfo.cs">
+      <Link>TypeSystem\PropertyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\MemberTypes.cs">
+      <Link>TypeSystem\MemberTypes.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\MemberInfo.cs">
+      <Link>TypeSystem\MemberInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\TypeInfoExtensions.cs">
+      <Link>TypeSystem\TypeInfoExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\TypeInfo.cs">
+      <Link>TypeSystem\TypeInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\TypeResolver.cs">
+      <Link>TypeSystem\TypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\ITypeResolver.cs">
+      <Link>TypeSystem\ITypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\TypeResolver.NET.cs">
+      <Link>TypeSystem\TypeResolver.NET.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\TypeHelper.cs">
+      <Link>TypeSystem\TypeHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeSystem\MemberInfoExtensions.cs">
+      <Link>TypeSystem\MemberInfoExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\MethodInfos.cs">
+      <Link>MethodInfos.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\ObjectReferenceEqualityComparer`.cs">
+      <Link>ObjectReferenceEqualityComparer`.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TransparentCache.cs">
+      <Link>TransparentCache.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\TypeExtensions.cs">
+      <Link>TypeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.NET35.cs" />
+    <Compile Include="Lazy.cs" />
+    <Compile Include="TypeExtensions.NET35.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

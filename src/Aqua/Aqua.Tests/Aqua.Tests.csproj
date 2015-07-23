@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\xunit.runner.visualstudio.2.0.1\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.0.1\build\net20\xunit.runner.visualstudio.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{85AE4778-A174-4C29-90D2-D245A21B299C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Aqua.Tests</RootNamespace>
+    <AssemblyName>Aqua.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>50b13044</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="xunit">
+      <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.should">
+      <HintPath>..\packages\xunit.should.1.1\lib\net35\xunit.should.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Dynamic\DynamicObjectMapper\CustomMapper\When_mapping_reducing_property_set_for_seriable_type.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\CustomMapper\When_mapping_reducing_property_set.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\CustomMapper\When_mapping_int_as_string_and_long_as_long.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_dynamic_objects_to_list_of_known_types.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_known_types.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_null.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_custom_value_type.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_custom_reference_type.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_nullable_guids.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_strings.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_guids.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_dictionary.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_type_requiring_ctor_and_property_setter.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_different_target_type.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_anonymous_type.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_based_on_typeinfo.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_dynamic_object_to_type_with_different_property_types.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_different_property_types_unassignable.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_different_property_types_assignable.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_missing_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_additional_properies.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_private_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_private_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_properties_ordered_differently.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object_with_private_property_setters.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_private_property_setter.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_missing_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_additional_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_abstract_properties_with_type_information.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_abstract_properties_in_absence_of_type_information.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_abstract_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_indexer.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_enum.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_dictionary_property.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_guid_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_converting_to_datetime_object.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_nullable_guid.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_guid.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_guid_properties.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_enum_property.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_indexer.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_tree_with_circular_references.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_dictionary_property.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_custom_value_type.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_custom_type.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_a_keyvaluepair.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_based_on_datetime_object.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_using_collection_initializer.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_creating_dynamic_object_with_typeinfo.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_creating_dynamic_object_with_type.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_created_using_parameterless_constructor.cs" />
+    <Compile Include="Dynamic\DynamicObject\When_creating_dynamic_object_with_invalid_constructor_parameters.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunnableInDebugOnlyAttribute.cs" />
+    <Compile Include="Serialization\Dynamic\DynamicObject\When_using_dynamic_object_for_complex_object_tree.cs" />
+    <Compile Include="Serialization\SerializationHelper.cs" />
+    <Compile Include="TypeSystem\Emit\TypeEmitter\When_emitting_type.cs" />
+    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_of_anonymous_type.cs" />
+    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_for_simple_type.cs" />
+    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_of_circular_type_graph.cs" />
+    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_of_generic_type.cs" />
+    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_for_array_type_of_generic_type.cs" />
+    <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_for_array_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_unknown_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_unknown_anonymous_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_generic_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_anonymous_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_array_type_of_generic_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_array_type.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Aqua\Aqua.csproj">
+      <Project>{2e2b1850-c328-47c3-bed5-313f6e9dbb01}</Project>
+      <Name>Aqua</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.0.1\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.0.1\build\net20\xunit.runner.visualstudio.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
