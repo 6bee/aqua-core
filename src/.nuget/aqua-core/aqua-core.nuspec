@@ -5,8 +5,8 @@
     <version>1.0.0-alpha001</version>
     <authors>Christof Senn</authors>
     <owners>Christof Senn</owners>
-    <licenseUrl>https://raw.githubusercontent.com/6bee/aqua-core/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/6bee/aqua-core</projectUrl>
+    <licenseUrl>https://raw.githubusercontent.com/6bee/aqua-core/master/license.txt</licenseUrl>
+    <projectUrl>https://github.com/6bee/aqua-core/wiki</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/6bee/aqua-core/master/aqua-small.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Serializable type-info and dynamic-object types</description>
