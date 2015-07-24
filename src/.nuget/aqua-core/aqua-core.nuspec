@@ -7,7 +7,7 @@
     <owners>Christof Senn</owners>
     <licenseUrl>https://raw.githubusercontent.com/6bee/aqua-core/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/6bee/aqua-core</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/6bee/aqua-core/master/aQua.ico</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/6bee/aqua-core/master/aqua-small.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Serializable type-info and dynamic-object types</description>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
