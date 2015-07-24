@@ -7,7 +7,7 @@ namespace Aqua
 
     public sealed class ObjectReferenceEqualityComparer<T> : IEqualityComparer<T>
     {
-        internal static readonly ObjectReferenceEqualityComparer<T> Instance = new ObjectReferenceEqualityComparer<T>();
+        public static readonly ObjectReferenceEqualityComparer<T> Instance = new ObjectReferenceEqualityComparer<T>();
 
         private ObjectReferenceEqualityComparer()
         {
