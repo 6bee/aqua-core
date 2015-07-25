@@ -9,23 +9,31 @@ namespace Aqua.TypeSystem
     [DataContract(Name = "Field", IsReference = true)]
     public sealed class FieldInfo : MemberInfo
     {
+        [NonSerialized]
+        private System.Reflection.FieldInfo _field;
+
         public FieldInfo()
         {
         }
 
         public FieldInfo(System.Reflection.FieldInfo fieldInfo)
-            : base(fieldInfo, TypeInfo.CreateReferenceTracker())
+            : base(fieldInfo, TypeInfo.CreateReferenceTracker<Type>())
         {
             _field = fieldInfo;
         }
 
         public FieldInfo(string fieldName, Type declaringType)
-            : this(fieldName, TypeInfo.Create(TypeInfo.CreateReferenceTracker(), declaringType, includePropertyInfos: false))
+            : this(fieldName, TypeInfo.Create(TypeInfo.CreateReferenceTracker<Type>(), declaringType, includePropertyInfos: false))
         {
         }
 
         public FieldInfo(string fieldName, TypeInfo declaringType)
             : base(fieldName, declaringType)
+        {
+        }
+
+        protected FieldInfo(FieldInfo fieldInfo)
+            : base(fieldInfo, TypeInfo.CreateReferenceTracker<TypeInfo>())
         {
         }
 
@@ -43,8 +51,6 @@ namespace Aqua.TypeSystem
                 return _field;
             }
         }
-        [NonSerialized]
-        private System.Reflection.FieldInfo _field;
 
         public System.Reflection.FieldInfo ResolveField(ITypeResolver typeResolver)
         {

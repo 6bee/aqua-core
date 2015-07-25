@@ -10,12 +10,15 @@ namespace Aqua.TypeSystem
     [DataContract(Name = "Property", IsReference = true)]
     public sealed class PropertyInfo : MemberInfo
     {
+        [NonSerialized]
+        private System.Reflection.PropertyInfo _property;
+
         public PropertyInfo()
         {
         }
 
         public PropertyInfo(System.Reflection.PropertyInfo propertyInfo)
-            : this(propertyInfo, TypeInfo.CreateReferenceTracker())
+            : this(propertyInfo, TypeInfo.CreateReferenceTracker<Type>())
         {
         }
         
@@ -27,7 +30,7 @@ namespace Aqua.TypeSystem
         }
 
         public PropertyInfo(string propertyName, Type propertyType, Type declaringType)
-            : this(propertyName, propertyType, declaringType, TypeInfo.CreateReferenceTracker())
+            : this(propertyName, propertyType, declaringType, TypeInfo.CreateReferenceTracker<Type>())
         {
         }
 
@@ -40,6 +43,23 @@ namespace Aqua.TypeSystem
             : base(propertyName, declaringType)
         {
             PropertyType = propertyType;
+        }
+
+        protected PropertyInfo(PropertyInfo propertyInfo)
+            : base(propertyInfo, TypeInfo.CreateReferenceTracker<TypeInfo>())
+        {
+        }
+
+        internal PropertyInfo(PropertyInfo propertyInfo, Dictionary<TypeInfo, TypeInfo> referenceTracker)
+            : base(propertyInfo, referenceTracker)
+        {
+            if (ReferenceEquals(null, propertyInfo))
+            {
+                throw new ArgumentNullException("propertyInfo");
+            }
+            
+            PropertyType = TypeInfo.Create(referenceTracker, propertyInfo.PropertyType);
+            _property = propertyInfo._property;
         }
 
         public override MemberTypes MemberType { get { return Aqua.TypeSystem.MemberTypes.Property; } }
@@ -58,8 +78,6 @@ namespace Aqua.TypeSystem
                 return _property;
             }
         }
-        [NonSerialized]
-        private System.Reflection.PropertyInfo _property;
 
         public System.Reflection.PropertyInfo ResolveProperty(ITypeResolver typeResolver)
         {

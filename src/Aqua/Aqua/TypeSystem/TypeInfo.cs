@@ -11,12 +11,15 @@ namespace Aqua.TypeSystem
     [DataContract(Name = "Type", IsReference = true)]
     public class TypeInfo
     {
+        [NonSerialized]
+        private Type _type;
+
         public TypeInfo()
         {
         }
 
         public TypeInfo(Type type, bool includePropertyInfos = true)
-            : this(type, includePropertyInfos, TypeInfo.CreateReferenceTracker())
+            : this(type, includePropertyInfos, TypeInfo.CreateReferenceTracker<Type>())
         {
         }
 
@@ -69,9 +72,32 @@ namespace Aqua.TypeSystem
             }
         }
 
-        internal static Dictionary<Type, TypeInfo> CreateReferenceTracker()
+        internal protected TypeInfo(TypeInfo typeInfo)
+            : this(typeInfo, new Dictionary<TypeInfo, TypeInfo>(ObjectReferenceEqualityComparer<TypeInfo>.Instance))
         {
-            return new Dictionary<Type, TypeInfo>(ObjectReferenceEqualityComparer<Type>.Instance);
+        }
+
+        private TypeInfo(TypeInfo typeInfo, Dictionary<TypeInfo, TypeInfo> referenceTracker)
+        {
+            if (ReferenceEquals(null, typeInfo))
+            {
+                throw new ArgumentNullException("typeInfo");
+            }
+
+            referenceTracker.Add(typeInfo, this);
+
+            Name = typeInfo.Name;
+            Namespace = typeInfo.Namespace;
+            DeclaringType = ReferenceEquals(null, typeInfo.DeclaringType) ? null : Create(referenceTracker, typeInfo.DeclaringType);
+            GenericArguments = ReferenceEquals(null, typeInfo.GenericArguments) ? null : typeInfo.GenericArguments.Select(x => Create(referenceTracker, x)).ToList();
+            IsAnonymousType = typeInfo.IsAnonymousType;
+            Properties = ReferenceEquals(null, typeInfo.Properties) ? null : typeInfo.Properties.Select(x => new PropertyInfo(x, referenceTracker)).ToList();
+            _type = typeInfo._type;
+        }
+
+        internal static Dictionary<T, TypeInfo> CreateReferenceTracker<T>()
+        {
+            return new Dictionary<T, TypeInfo>(ObjectReferenceEqualityComparer<T>.Instance);
         }
 
         internal static TypeInfo Create(Dictionary<Type, TypeInfo> referenceTracker, Type type, bool includePropertyInfos = true)
@@ -80,6 +106,22 @@ namespace Aqua.TypeSystem
             if (!referenceTracker.TryGetValue(type, out typeInfo))
             {
                 typeInfo = new TypeInfo(type, includePropertyInfos, referenceTracker);
+            }
+
+            return typeInfo;
+        }
+
+        internal static TypeInfo Create(Dictionary<TypeInfo, TypeInfo> referenceTracker, TypeInfo type)
+        {
+            if (ReferenceEquals(null, type))
+            {
+                return null;
+            }
+
+            TypeInfo typeInfo;
+            if (!referenceTracker.TryGetValue(type, out typeInfo))
+            {
+                typeInfo = new TypeInfo(type, referenceTracker);
             }
 
             return typeInfo;
@@ -152,8 +194,6 @@ namespace Aqua.TypeSystem
                 return _type;
             }
         }
-        [NonSerialized]
-        private Type _type;
 
         public override bool Equals(object obj)
         {

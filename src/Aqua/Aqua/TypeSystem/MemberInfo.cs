@@ -46,6 +46,17 @@ namespace Aqua.TypeSystem
             DeclaringType = declaringType;
         }
 
+        protected MemberInfo(MemberInfo memberInfo, Dictionary<TypeInfo, TypeInfo> referenceTracker)
+        {
+            if (ReferenceEquals(null, memberInfo))
+            {
+                throw new ArgumentException("memberInfo");
+            }
+
+            Name = memberInfo.Name;
+            DeclaringType = TypeInfo.Create(referenceTracker, memberInfo.DeclaringType);
+        }
+
         public abstract MemberTypes MemberType { get; }
 
         [DataMember(Order = 1, EmitDefaultValue = false)]

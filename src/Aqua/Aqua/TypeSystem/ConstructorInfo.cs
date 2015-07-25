@@ -11,19 +11,27 @@ namespace Aqua.TypeSystem
     [DataContract(Name = "Constructor", IsReference = true)]
     public class ConstructorInfo : MethodBaseInfo
     {
+        [NonSerialized]
+        private System.Reflection.ConstructorInfo _constructor;
+
         public ConstructorInfo()
         {
         }
 
         public ConstructorInfo(System.Reflection.ConstructorInfo constructorInfo)
-            : base(constructorInfo, TypeInfo.CreateReferenceTracker())
+            : base(constructorInfo, TypeInfo.CreateReferenceTracker<Type>())
         {
             _constructor = constructorInfo;
         }
 
         // TODO: replace binding flags by bool flags
         public ConstructorInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes)
-            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes, TypeInfo.CreateReferenceTracker())
+            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes, TypeInfo.CreateReferenceTracker<Type>())
+        {
+        }
+
+        protected ConstructorInfo(ConstructorInfo constructorInfo)
+            : base(constructorInfo, TypeInfo.CreateReferenceTracker<TypeInfo>())
         {
         }
 
@@ -40,8 +48,6 @@ namespace Aqua.TypeSystem
                 return _constructor;
             }
         }
-        [NonSerialized]
-        private System.Reflection.ConstructorInfo _constructor;
 
         public System.Reflection.ConstructorInfo ResolveConstructor(ITypeResolver typeResolver)
         {

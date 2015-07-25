@@ -31,6 +31,11 @@ namespace Aqua.Dynamic
                 Value = value;
             }
 
+            internal protected Property(Property property)
+                : this(property.Name, property.Value)
+            {
+            }
+
             internal Property(KeyValuePair<string, object> item)
                 : this(item.Key, item.Value)
             {
@@ -121,6 +126,30 @@ namespace Aqua.Dynamic
             var dynamicObject = (mapper ?? new DynamicObjectMapper()).MapObject(obj);
             Type = dynamicObject.Type;
             Members = dynamicObject.Members;
+        }
+
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="members">Initial collection of properties and values</param>
+        /// <exception cref="ArgumentNullException">The specified members collection is null</exception>
+        internal protected DynamicObject(DynamicObject dynamicObject, bool deepCopy = true)
+        {
+            if (ReferenceEquals(null, dynamicObject))
+            {
+                throw new ArgumentNullException("dynamicObject");
+            }
+
+            if (deepCopy)
+            {
+                Type = ReferenceEquals(null, dynamicObject.Type) ? null : new TypeInfo(dynamicObject.Type);
+                Members = ReferenceEquals(null, dynamicObject.Members) ? null : dynamicObject.Members.Select(x => new Property(x)).ToList();
+            }
+            else
+            {
+                Type = dynamicObject.Type;
+                Members = dynamicObject.Members;
+            }
         }
 
         /// <summary>

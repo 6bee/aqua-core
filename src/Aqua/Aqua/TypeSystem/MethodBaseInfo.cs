@@ -62,6 +62,14 @@ namespace Aqua.TypeSystem
                 : parameterTypes.ToList();
         }
 
+        protected MethodBaseInfo(MethodBaseInfo methodBaseInfo, Dictionary<TypeInfo, TypeInfo> referenceTracker)
+            : base(methodBaseInfo, referenceTracker)
+        {
+            BindingFlags = methodBaseInfo.BindingFlags;
+            GenericArgumentTypes = ReferenceEquals(null, methodBaseInfo.GenericArgumentTypes) ? null : methodBaseInfo.GenericArgumentTypes.Select(x => TypeInfo.Create(referenceTracker, x)).ToList();
+            ParameterTypes = ReferenceEquals(null, methodBaseInfo.ParameterTypes) ? null : methodBaseInfo.ParameterTypes.Select(x => TypeInfo.Create(referenceTracker, x)).ToList();
+        }
+
         // TODO: replace binding flags by bool flags
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
         public BindingFlags BindingFlags { get; set; }

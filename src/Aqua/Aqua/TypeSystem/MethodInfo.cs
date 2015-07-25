@@ -12,24 +12,32 @@ namespace Aqua.TypeSystem
     [DataContract(Name = "Method", IsReference = true)]
     public class MethodInfo : MethodBaseInfo
     {
+        [NonSerialized]
+        private System.Reflection.MethodInfo _method;
+
         public MethodInfo()
         {
         }
 
         public MethodInfo(System.Reflection.MethodInfo methodInfo)
-            : base(methodInfo, TypeInfo.CreateReferenceTracker())
+            : base(methodInfo, TypeInfo.CreateReferenceTracker<Type>())
         {
             _method = methodInfo;
         }
 
         // TODO: replace binding flags by bool flags
         public MethodInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes)
-            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes, TypeInfo.CreateReferenceTracker())
+            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes, TypeInfo.CreateReferenceTracker<Type>())
         {
         }
 
         public MethodInfo(string name, TypeInfo declaringType, BindingFlags bindingFlags, IEnumerable<TypeInfo> genericArguments, IEnumerable<TypeInfo> parameterTypes)
             : base(name, declaringType, bindingFlags, genericArguments, parameterTypes)
+        {
+        }
+
+        protected MethodInfo(MethodInfo methodInfo)
+            : base(methodInfo, TypeInfo.CreateReferenceTracker<TypeInfo>())
         {
         }
 
@@ -47,8 +55,6 @@ namespace Aqua.TypeSystem
                 return _method;
             }
         }
-        [NonSerialized]
-        private System.Reflection.MethodInfo _method;
 
         public System.Reflection.MethodInfo ResolveMethod(ITypeResolver typeResolver)
         {
