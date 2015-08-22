@@ -20,6 +20,6 @@
     <file src="..\..\Aqua\Aqua.SL5\bin\Release\Aqua.*" target="lib\sl5" />
     <file src="..\..\Aqua\Aqua.Win\bin\Release\Aqua.*" target="lib\win" />
     <file src="..\..\Aqua\Aqua.WP\bin\Release\Aqua.*" target="lib\wp8" />
-    <file src="..\..\Aqua\**\*.cs" target="src" exclude="..\..\**\bin\**;..\..\**\obj\**;..\..\**\*.Tests\**" />
+    <file src="..\..\Aqua\**\*.cs" target="src" exclude="..\..\**\packages\**;..\..\**\bin\**;..\..\**\obj\**;..\..\**\*.Tests\**" />
   </files>
 </package>
