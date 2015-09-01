@@ -43,16 +43,16 @@ namespace Aqua.Dynamic
         /// Mapps the specified instance into a <see cref="DynamicObject"/>
         /// </summary>
         /// <param name="obj">The instance to be mapped</param>
-        /// <param name="setTypeInformation">Set this parameter to true if type information should be included within the <see cref="DynamicObject"/>, set it to false otherwise.</param>
+        /// <param name="setTypeInformation">Type information is included within the <see cref="DynamicObject"/> if lambda is null or returns true, no type information is set otherwise.</param>
         /// <returns>An instance of <see cref="DynamicObject"/> representing the mapped instance</returns>
-        DynamicObject MapObject(object obj, bool setTypeInformation = true);
+        DynamicObject MapObject(object obj, Func<Type, bool> setTypeInformation = null);
 
         /// <summary>
         /// Maps a collection of objects into a collection of <see cref="DynamicObject"/>
         /// </summary>
         /// <param name="objects">The objects to be mapped</param>
-        /// <param name="setTypeInformation">Set this parameter to true if type information should be included within the <see cref="DynamicObject"/>s, set it to false otherwise.</param>
+        /// <param name="setTypeInformation">Type information is included within the <see cref="DynamicObject"/>s if lambda is null or returns true, no type information is set otherwise.</param>
         /// <returns>A collection of <see cref="DynamicObject"/> representing the objects specified</returns>
-        IEnumerable<DynamicObject> MapCollection(object objects, bool setTypeInformation = true);
+        IEnumerable<DynamicObject> MapCollection(object objects, Func<Type, bool> setTypeInformation = null);
     }
 }

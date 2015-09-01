@@ -30,7 +30,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
                 throw new NotSupportedException();
             }
 
-            protected override DynamicObject MapToDynamicObjectGraph(object obj, bool setTypeInformation)
+            protected override DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
             {
                 if (obj is int)
                 {

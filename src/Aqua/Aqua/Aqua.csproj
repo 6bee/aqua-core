@@ -51,6 +51,7 @@
     <Compile Include="Dynamic\DynamicObjectMapper.NET.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper.cs" />
     <Compile Include="Dynamic\DynamicObject.MetaObject.cs" />
+    <Compile Include="TypeSystem\Emit\EmittedTypeAttribute.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter.Cache.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter.cs" />
     <Compile Include="TypeSystem\FieldInfo.cs" />

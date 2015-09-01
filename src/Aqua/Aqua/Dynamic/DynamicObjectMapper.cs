@@ -49,12 +49,14 @@ namespace Aqua.Dynamic
             /// <summary>
             /// Returns an existing instance if found in the reference map, creates a new instance otherwise
             /// </summary>
-            internal TTo TryGetOrCreateNew(Type objectType, TFrom from, Func<Type, TFrom, bool, TTo> factory, Action<Type, TFrom, TTo, bool> initializer, bool setTypeInformation)
+            internal TTo TryGetOrCreateNew(Type objectType, TFrom from, Func<Type, TFrom, Func<Type, bool>, TTo> factory, Action<Type, TFrom, TTo, Func<Type, bool>> initializer, Func<Type, bool> setTypeInformation)
             {
                 TTo to;
                 if (!ReferenceMap.TryGetValue(from, out to))
                 {
-                    to = factory(setTypeInformation ? objectType : null, from, setTypeInformation);
+                    var setTypeInformationValue = ReferenceEquals(null, setTypeInformation) ? true : setTypeInformation(objectType);
+
+                    to = factory(setTypeInformationValue ? objectType : null, from, setTypeInformation);
 
                     try
                     {
@@ -269,7 +271,7 @@ namespace Aqua.Dynamic
         /// <param name="objects">The objects to be mapped</param>
         /// <param name="setTypeInformation">Set this parameter to true if type information should be included within the <see cref="DynamicObject"/>s, set it to false otherwise.</param>
         /// <returns>A collection of <see cref="DynamicObject"/> representing the objects specified</returns>
-        public IEnumerable<DynamicObject> MapCollection(object obj, bool setTypeInformation = true)
+        public IEnumerable<DynamicObject> MapCollection(object obj, Func<Type, bool> setTypeInformation = null)
         {
             IEnumerable<DynamicObject> enumerable;
             if (ReferenceEquals(null, obj))
@@ -304,7 +306,7 @@ namespace Aqua.Dynamic
         /// <param name="obj">The instance to be mapped</param>
         /// <param name="setTypeInformation">Set this parameter to true if type information should be included within the <see cref="DynamicObject"/>, set it to false otherwise.</param>
         /// <returns>An instance of <see cref="DynamicObject"/> representing the mapped instance</returns>
-        public DynamicObject MapObject(object obj, bool setTypeInformation = true)
+        public DynamicObject MapObject(object obj, Func<Type, bool> setTypeInformation = null)
         {
             return MapToDynamicObjectGraph(obj, setTypeInformation);
         }
@@ -314,7 +316,7 @@ namespace Aqua.Dynamic
             return MapFromDynamicObjectIfRequired(obj, targetType);
         }
 
-        protected virtual DynamicObject MapToDynamicObjectGraph(object obj, bool setTypeInformation)
+        protected virtual DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
         {
             return MapInternal(obj, setTypeInformation);
         }
@@ -426,7 +428,7 @@ namespace Aqua.Dynamic
         /// Maps an object to a dynamic object
         /// </summary>
         /// <remarks>Null references and dynamic objects are not mapped.</remarks>
-        private DynamicObject MapInternal(object obj, bool setTypeInformation)
+        private DynamicObject MapInternal(object obj, Func<Type, bool> setTypeInformation)
         {
             if (ReferenceEquals(null, obj))
             {
@@ -438,8 +440,8 @@ namespace Aqua.Dynamic
                 return (DynamicObject)obj;
             }
 
-            Func<Type, object, bool, DynamicObject> facotry;
-            Action<Type, object, DynamicObject, bool> initializer = null;
+            Func<Type, object, Func<Type, bool>, DynamicObject> facotry;
+            Action<Type, object, DynamicObject, Func<Type, bool>> initializer = null;
 
             var type = obj.GetType();
             if (IsNativeType(type) || IsKnownType(type))
@@ -474,7 +476,7 @@ namespace Aqua.Dynamic
         /// Maps from object to dynamic object if required.
         /// </summary>
         /// <remarks>Null references, strings, value types, and dynamic objects are no mapped.</remarks>
-        private object MapToDynamicObjectIfRequired(object obj, bool setTypeInformation)
+        private object MapToDynamicObjectIfRequired(object obj, Func<Type, bool> setTypeInformation)
         {
             if (ReferenceEquals(null, obj))
             {
@@ -518,7 +520,7 @@ namespace Aqua.Dynamic
         /// <summary>
         /// Extrancts member values from source object and populates to dynamic object 
         /// </summary>
-        private void PopulateObjectMembers(Type type, object from, DynamicObject to, bool setTypeInformation)
+        private void PopulateObjectMembers(Type type, object from, DynamicObject to, Func<Type, bool> setTypeInformation)
         {
             // TODO: add support for ISerializable
             // TODO: add support for OnSerializingAttribute, OnSerializedAttribute, OnDeserializingAttribute, OnDeserializedAttribute

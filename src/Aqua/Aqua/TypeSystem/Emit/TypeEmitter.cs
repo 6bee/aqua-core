@@ -7,6 +7,7 @@ namespace Aqua.TypeSystem.Emit
     using System.Linq;
     using System.Reflection;
     using System.Reflection.Emit;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
@@ -50,6 +51,9 @@ namespace Aqua.TypeSystem.Emit
 
             // define type
             var type = _module.DefineType(fullName, TypeAttributes.Public | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.Sealed, typeof(object));
+
+            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(EmittedTypeAttribute).GetConstructor(new Type[0]), new object[0]));
+            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(CompilerGeneratedAttribute).GetConstructor(new Type[0]), new object[0]));
 
             // define fields
             var fields = propertyInfos
@@ -107,6 +111,9 @@ namespace Aqua.TypeSystem.Emit
 
             // define type
             var type = _module.DefineType(fullName, TypeAttributes.Public | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.Sealed, typeof(object));
+
+            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(EmittedTypeAttribute).GetConstructor(new Type[0]), new object[0]));
+            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(CompilerGeneratedAttribute).GetConstructor(new Type[0]), new object[0]));
 
             // define generic parameters
             var genericTypeParameterNames = propertyNames.Select((x, i) => string.Format("T{0}", i)).ToArray();
@@ -173,7 +180,7 @@ namespace Aqua.TypeSystem.Emit
         private string CreateUniqueClassNameForAnonymousType(IEnumerable<string> properties)
         {
             var id = Interlocked.Increment(ref _classIndex);
-            var fullName = string.Format("{0}.__EmittedType__{1}`{2}", _module.Name, id, properties.Count());
+            var fullName = string.Format("{0}.<>__EmittedType__{1}`{2}", _module.Name, id, properties.Count());
             return fullName;
         }
     }

@@ -77,7 +77,7 @@ namespace Aqua.Dynamic
         /// <summary>
         /// Retrieves object members type by using <see cref="FormatterServices" /> and populates dynamic object
         /// </summary>
-        private void MapObjectMembers(object from, DynamicObject to, bool setTypeInformation)
+        private void MapObjectMembers(object from, DynamicObject to, Func<Type, bool> setTypeInformation)
         {
             var type = _typeResolver.ResolveType(to.Type);
 

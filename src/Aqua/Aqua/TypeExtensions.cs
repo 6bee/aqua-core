@@ -20,11 +20,25 @@ namespace Aqua
             return type.IsGenericType;
         }
 
+#if NET
+        public static bool IsAnonymousType(this Type type)
+        {
+            return type.Name.StartsWith("<>")
+                && type.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), false).Any()
+                || type.IsEmittedType();
+        }
+
+        public static bool IsEmittedType(this Type type)
+        {
+            return type.GetCustomAttributes(typeof(Aqua.TypeSystem.Emit.EmittedTypeAttribute), false).Any();
+        }
+#else
         public static bool IsAnonymousType(this Type type)
         {
             return type.Name.StartsWith("<>")
                 && type.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), false).Any();
         }
+#endif
 
         public static bool IsEnum(this Type type)
         {
