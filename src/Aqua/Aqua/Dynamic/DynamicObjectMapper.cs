@@ -15,7 +15,15 @@ namespace Aqua.Dynamic
     {
         private sealed class ObjectFormatterContext<TFrom, TTo>
         {
-            private readonly Dictionary<TFrom, TTo> ReferenceMap = new Dictionary<TFrom, TTo>(ObjectReferenceEqualityComparer<TFrom>.Instance);
+            private readonly Func<Type, Type> _dynamicObjectTypeInfoMapper;
+
+            private readonly Dictionary<TFrom, TTo> _referenceMap;
+
+            public ObjectFormatterContext(Func<Type, Type> dynamicObjectTypeMapper = null)
+            {
+                _dynamicObjectTypeInfoMapper = dynamicObjectTypeMapper ?? (t => t);
+                _referenceMap = new Dictionary<TFrom, TTo>(ObjectReferenceEqualityComparer<TFrom>.Instance);
+            }
 
             /// <summary>
             /// Returns an existing instance if found in the reference map, creates a new instance otherwise
@@ -23,19 +31,19 @@ namespace Aqua.Dynamic
             internal TTo TryGetOrCreateNew(Type objectType, TFrom from, Func<Type, TFrom, TTo> factory, Action<Type, TFrom, TTo> initializer)
             {
                 TTo to;
-                if (!ReferenceMap.TryGetValue(from, out to))
+                if (!_referenceMap.TryGetValue(from, out to))
                 {
                     to = factory(objectType, from);
 
                     try
                     {
-                        ReferenceMap.Add(from, to);
+                        _referenceMap.Add(from, to);
                     }
                     catch
                     {
                         // detected cyclic reference
                         // can happen for non-serializable types without parameterless constructor, which have cyclic references 
-                        return ReferenceMap[from];
+                        return _referenceMap[from];
                     }
 
                     if (!ReferenceEquals(null, initializer))
@@ -52,21 +60,21 @@ namespace Aqua.Dynamic
             internal TTo TryGetOrCreateNew(Type objectType, TFrom from, Func<Type, TFrom, Func<Type, bool>, TTo> factory, Action<Type, TFrom, TTo, Func<Type, bool>> initializer, Func<Type, bool> setTypeInformation)
             {
                 TTo to;
-                if (!ReferenceMap.TryGetValue(from, out to))
+                if (!_referenceMap.TryGetValue(from, out to))
                 {
                     var setTypeInformationValue = ReferenceEquals(null, setTypeInformation) ? true : setTypeInformation(objectType);
 
-                    to = factory(setTypeInformationValue ? objectType : null, from, setTypeInformation);
+                    to = factory(setTypeInformationValue ? _dynamicObjectTypeInfoMapper(objectType) : null, from, setTypeInformation);
 
                     try
                     {
-                        ReferenceMap.Add(from, to);
+                        _referenceMap.Add(from, to);
                     }
                     catch
                     {
                         // detected cyclic reference
                         // can happen for non-serializable types without parameterless constructor, which have cyclic references 
-                        return ReferenceMap[from];
+                        return _referenceMap[from];
                     }
 
                     if (!ReferenceEquals(null, initializer))
@@ -185,10 +193,12 @@ namespace Aqua.Dynamic
         /// <param name="knownTypes">Types not required to be mapped into <see cref="DynamicObject"/></param>
         /// <param name="silentlySkipUnassignableMembers">If set to true properties which cannot be assigned due to a type mismatch are silently skipped, 
         /// if set to false no validation will be performed resulting in an exception when trying to assign a property value with an unmatching type.</param>
-        public DynamicObjectMapper(ITypeResolver typeResolver = null, IEnumerable<Type> knownTypes = null, bool silentlySkipUnassignableMembers = true, bool formatPrimitiveTypesAsString = false)
+        /// <param name="formatPrimitiveTypesAsString">If set to true all primitive type values are stored as strings, ohterwise primitive values get stored with no transformation.</param>
+        /// <param name="dynamicObjectTypeInfoMapper">This optional function allows mapping type informaiton which gets set into the <see cref="DynamicObject"/> upon their creation.</param>
+        public DynamicObjectMapper(ITypeResolver typeResolver = null, IEnumerable<Type> knownTypes = null, bool silentlySkipUnassignableMembers = true, bool formatPrimitiveTypesAsString = false, Func<Type, Type> dynamicObjectTypeInfoMapper = null)
         {
             _fromContext = new ObjectFormatterContext<DynamicObject, object>();
-            _toContext = new ObjectFormatterContext<object, DynamicObject>();
+            _toContext = new ObjectFormatterContext<object, DynamicObject>(dynamicObjectTypeInfoMapper);
             _typeResolver = typeResolver ?? TypeResolver.Instance;
             _knownTypes = ReferenceEquals(null, knownTypes) ? new Dictionary<Type, object>(0) : knownTypes.ToDictionary(x => x, x => (object)null);
             _suppressMemberAssignabilityValidation = !silentlySkipUnassignableMembers;
