@@ -13,7 +13,7 @@ namespace Aqua.TypeSystem
         private readonly TransparentCache<TypeInfo, Type> _typeCache;
         private readonly TransparentCache<string, Type> _typeCacheByName;
 
-        protected TypeResolver()
+        public TypeResolver()
         {
             _typeCache = new TransparentCache<TypeInfo, Type>();
             _typeCacheByName = new TransparentCache<string, Type>();
