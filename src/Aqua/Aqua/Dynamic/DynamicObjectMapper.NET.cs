@@ -79,7 +79,7 @@ namespace Aqua.Dynamic
         /// </summary>
         private void MapObjectMembers(object from, DynamicObject to, Func<Type, bool> setTypeInformation)
         {
-            var type = _typeResolver.ResolveType(to.Type);
+            var type = _resolveType(to.Type);
 
             var customPropertySet = GetPropertiesForMapping(type);
             var customPropertyNames = ReferenceEquals(null, customPropertySet) ? null : customPropertySet.ToDictionary(x => x.Name);

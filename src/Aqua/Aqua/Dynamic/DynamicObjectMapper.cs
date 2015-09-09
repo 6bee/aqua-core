@@ -94,7 +94,7 @@ namespace Aqua.Dynamic
 
         private static readonly Type _genericKeyValuePairType = typeof(KeyValuePair<,>);
 
-        private static readonly Dictionary<Type, object> _nativeTypes = new[]
+        private static readonly Func<Type, bool> _isNativeType = new[]
             {
                 typeof(string),
 
@@ -152,7 +152,7 @@ namespace Aqua.Dynamic
                 typeof(System.Numerics.Complex),
                 typeof(System.Numerics.Complex?),
 #endif
-            }.ToDictionary(x => x, x => (object)null);
+            }.ToDictionary(x => x, x => (object)null).ContainsKey;
 
         private readonly static Dictionary<Type, Dictionary<Type, object>> _implicitNumericConversionsTable = new Dictionary<Type, Dictionary<Type, object>>() 
         {
@@ -181,26 +181,26 @@ namespace Aqua.Dynamic
 
         private readonly ObjectFormatterContext<DynamicObject, object> _fromContext;
         private readonly ObjectFormatterContext<object, DynamicObject> _toContext;
-        private readonly ITypeResolver _typeResolver;
-        private readonly Dictionary<Type, object> _knownTypes;
+        private readonly Func<TypeSystem.TypeInfo,Type> _resolveType;
+        private readonly Func<Type, bool> _isKnownType;
         private readonly bool _suppressMemberAssignabilityValidation;
         private readonly bool _formatPrimitiveTypesAsString;
-
+        
         /// <summary>
         /// Creates a new instance of <see cref="DynamicObjectMapper"/>
         /// </summary>
-        /// <param name="typeResolver">Instance of <see cref="ITypeResolver"/> to be used to resolve types</param>
-        /// <param name="knownTypes">Types not required to be mapped into <see cref="DynamicObject"/></param>
+        /// <param name="resolveType">Func to be used to resolve types</param>
+        /// <param name="isKnownType">Func to decide whether a type requires to be mapped into a <see cref="DynamicObject"/>, know types do not get mapped</param>
         /// <param name="silentlySkipUnassignableMembers">If set to true properties which cannot be assigned due to a type mismatch are silently skipped, 
         /// if set to false no validation will be performed resulting in an exception when trying to assign a property value with an unmatching type.</param>
         /// <param name="formatPrimitiveTypesAsString">If set to true all primitive type values are stored as strings, ohterwise primitive values get stored with no transformation.</param>
         /// <param name="dynamicObjectTypeInfoMapper">This optional function allows mapping type informaiton which gets set into the <see cref="DynamicObject"/> upon their creation.</param>
-        public DynamicObjectMapper(ITypeResolver typeResolver = null, IEnumerable<Type> knownTypes = null, bool silentlySkipUnassignableMembers = true, bool formatPrimitiveTypesAsString = false, Func<Type, Type> dynamicObjectTypeInfoMapper = null)
+        public DynamicObjectMapper(Func<TypeSystem.TypeInfo, Type> resolveType = null, Func<Type, bool> isKnownType = null, bool silentlySkipUnassignableMembers = true, bool formatPrimitiveTypesAsString = false, Func<Type, Type> dynamicObjectTypeInfoMapper = null)
         {
             _fromContext = new ObjectFormatterContext<DynamicObject, object>();
             _toContext = new ObjectFormatterContext<object, DynamicObject>(dynamicObjectTypeInfoMapper);
-            _typeResolver = typeResolver ?? TypeResolver.Instance;
-            _knownTypes = ReferenceEquals(null, knownTypes) ? new Dictionary<Type, object>(0) : knownTypes.ToDictionary(x => x, x => (object)null);
+            _resolveType = resolveType ?? (t => TypeResolver.Instance.ResolveType(t));
+            _isKnownType = isKnownType ?? (t => false);
             _suppressMemberAssignabilityValidation = !silentlySkipUnassignableMembers;
             _formatPrimitiveTypesAsString = formatPrimitiveTypesAsString;
         }
@@ -249,7 +249,7 @@ namespace Aqua.Dynamic
                 throw new InvalidOperationException("Type property must not be null");
             }
 
-            var type = _typeResolver.ResolveType(obj.Type);
+            var type = _resolveType(obj.Type);
             return Map(obj, type);
         }
 
@@ -344,7 +344,7 @@ namespace Aqua.Dynamic
                 // subsequent mapping of nested dynamic object
                 if (!ReferenceEquals(null, dynamicObj.Type))
                 {
-                    var type = _typeResolver.ResolveType(dynamicObj.Type);
+                    var type = _resolveType(dynamicObj.Type);
                     if (ReferenceEquals(null, targetType) || targetType.IsAssignableFrom(type))
                     {
                         targetType = type;
@@ -367,12 +367,12 @@ namespace Aqua.Dynamic
                 return obj;
             }
 
-            if (IsKnownType(objectType))
+            if (_isKnownType(objectType))
             {
                 return obj;
             }
 
-            if (IsNativeType(targetType))
+            if (_isNativeType(targetType))
             {
                 return obj is string ? ParseToNativeType(targetType, (string)obj) : obj;
             }
@@ -454,7 +454,7 @@ namespace Aqua.Dynamic
             Action<Type, object, DynamicObject, Func<Type, bool>> initializer = null;
 
             var type = obj.GetType();
-            if (IsNativeType(type) || IsKnownType(type))
+            if (_isNativeType(type) || _isKnownType(type))
             {
                 facotry = (t, o, f) =>
                 {
@@ -500,12 +500,12 @@ namespace Aqua.Dynamic
 
             var type = obj.GetType();
 
-            if (IsKnownType(type))
+            if (_isKnownType(type))
             {
                 return obj;
             }
 
-            if (IsNativeType(type))
+            if (_isNativeType(type))
             {
                 return _formatPrimitiveTypesAsString ? FormatNativeTypeAsString(obj, type) : obj;
             }
@@ -692,11 +692,6 @@ namespace Aqua.Dynamic
             var mapper = GetMapInternalMethod(type);
             var result = InvokeMethod(this, mapper, obj);
             return result;
-        }
-
-        private bool IsKnownType(Type type)
-        {
-            return _knownTypes.ContainsKey(type);
         }
 
         private static object ParseToNativeType(Type targetType, string value)
@@ -889,11 +884,6 @@ namespace Aqua.Dynamic
         {
             Dictionary<Type, object> toList;
             return _implicitNumericConversionsTable.TryGetValue(from, out toList) && toList.ContainsKey(to);
-        }
-
-        private static bool IsNativeType(Type type)
-        {
-            return _nativeTypes.ContainsKey(type);
         }
 
         private static object FormatNativeTypeAsString(object obj, Type type)

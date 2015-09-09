@@ -27,7 +27,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
                 new CustomReferenceType { Int32Property = 2, StringProperty="Two" },
             };
 
-            var mapper = new DynamicObjectMapper(knownTypes: new[] { typeof(CustomReferenceType) });
+            var mapper = new DynamicObjectMapper(isKnownType: t => t == typeof(CustomReferenceType));
             
             dynamicObjects = mapper.MapCollection(sourceObjects);
         }

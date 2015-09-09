@@ -33,7 +33,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
                 },
             };
 
-            var mapper = new DynamicObjectMapper(knownTypes: new[] { typeof(CustomReferenceType) });
+            var mapper = new DynamicObjectMapper(isKnownType: t => t == typeof(CustomReferenceType));
 
             recreatedObjectLists = mapper.Map<CustomReferenceType>(dynamicObjects);
         }
