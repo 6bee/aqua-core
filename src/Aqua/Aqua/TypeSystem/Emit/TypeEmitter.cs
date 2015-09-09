@@ -13,7 +13,7 @@ namespace Aqua.TypeSystem.Emit
 
     public sealed partial class TypeEmitter
     {
-        private static readonly TypeCache _typeCache = new TypeCache();
+        private readonly TypeCache _typeCache = new TypeCache();
 
         private readonly AssemblyBuilder _assemblyBuilder;
         private readonly ModuleBuilder _module;
@@ -45,7 +45,7 @@ namespace Aqua.TypeSystem.Emit
 
         private Type InternalEmitType(TypeInfo typeInfo)
         {
-            var fullName = CreateUniqueClassName(typeInfo);
+            var fullName = CreateUniqueClassName();
 
             var propertyInfos = typeInfo.Properties.ToArray();
 
@@ -161,20 +161,11 @@ namespace Aqua.TypeSystem.Emit
             return t1;
         }
 
-        private string CreateUniqueClassName(TypeInfo typeInfo)
+        private string CreateUniqueClassName()
         {
-            var typeFullName = typeInfo.FullName;
-            string suffix = null;
-
-            var type = _module.GetType(typeFullName);
-            if (!ReferenceEquals(null, type))
-            {
-                var id = Interlocked.Increment(ref _classIndex);
-                suffix = string.Format("_{0}", id);
-            }
-
-            var name = string.Format("{1}{2}", _module.Name, typeFullName, suffix);
-            return name;
+            var id = Interlocked.Increment(ref _classIndex);
+            var fullName = string.Format("{0}.<>__EmittedType__{1}", _module.Name, id);
+            return fullName;
         }
 
         private string CreateUniqueClassNameForAnonymousType(IEnumerable<string> properties)

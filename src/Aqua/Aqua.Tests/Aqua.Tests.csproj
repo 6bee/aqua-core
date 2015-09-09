@@ -111,6 +111,8 @@
     <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_of_generic_type.cs" />
     <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_for_array_type_of_generic_type.cs" />
     <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_for_array_type.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_a_types_with_two_resolvers.cs" />
+    <Compile Include="TypeSystem\TypeResolver\When_resolving_two_types_with_same_name.cs" />
     <Compile Include="TypeSystem\TypeResolver\When_resolving_unknown_type.cs" />
     <Compile Include="TypeSystem\TypeResolver\When_resolving_unknown_anonymous_type.cs" />
     <Compile Include="TypeSystem\TypeResolver\When_resolving_generic_type.cs" />

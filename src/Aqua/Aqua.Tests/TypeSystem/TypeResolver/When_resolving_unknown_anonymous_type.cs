@@ -14,7 +14,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
 
         public When_resolving_unknown_anonymous_type()
         {
-            var instance = new { Int32Value= 0, StringValue = "" };
+            var instance = new { Int32Value = 0, StringValue = "" };
 
             var actualType = instance.GetType();
 
@@ -23,7 +23,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
             typeInfo.Name = "UnknowTestClass";
             typeInfo.Namespace = "Unkown.Test.Namespace";
 
-            emitedType = TypeResolver.Instance.ResolveType(typeInfo);
+            emitedType = new TypeResolver().ResolveType(typeInfo);
         }
 
         [Fact]

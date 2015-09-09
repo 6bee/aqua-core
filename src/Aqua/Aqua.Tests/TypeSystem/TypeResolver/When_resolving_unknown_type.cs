@@ -26,17 +26,17 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
             typeInfo.Namespace = "Unkown.Test.Namespace";
             typeInfo.DeclaringType = null;
 
-            emitedType = TypeResolver.Instance.ResolveType(typeInfo);
+            emitedType = new TypeResolver().ResolveType(typeInfo);
         }
 
         [Fact]
-        public void Type_should_be_different_from_actual_type()
+        public void Emitted_type_should_be_different_from_actual_type()
         {
             emitedType.ShouldNotBe(typeof(A));
         }
 
         [Fact]
-        public void Type_should_be_dynamically_emited_type()
+        public void Emitted_type_should_be_dynamically_emited_type()
         {
             emitedType.ShouldNotBeNull();
 
@@ -46,13 +46,13 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         }
 
         [Fact]
-        public void Type_name_should_be_as_defined()
+        public void Emitted_type_shoult_have_name_special_name()
         {
-            emitedType.Namespace.ShouldBe("Unkown.Test.Namespace");
+            emitedType.Namespace.ShouldBe("<In Memory Module>");
 
-            emitedType.Name.ShouldBe("UnknowTestClass");
+            emitedType.Name.ShouldBe("<>__EmittedType__0");
 
-            emitedType.FullName.ShouldBe("Unkown.Test.Namespace.UnknowTestClass");
+            emitedType.FullName.ShouldBe("<In Memory Module>.<>__EmittedType__0");
         }
 
         [Fact]

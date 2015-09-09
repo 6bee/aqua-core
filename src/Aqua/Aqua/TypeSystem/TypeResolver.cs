@@ -8,16 +8,20 @@ namespace Aqua.TypeSystem
     public partial class TypeResolver : ITypeResolver
     {
         private static readonly ITypeResolver _defaultTypeResolver = new TypeResolver();
+
         private static ITypeResolver _instance;
 
-        private readonly TransparentCache<TypeInfo, Type> _typeCache;
-        private readonly TransparentCache<string, Type> _typeCacheByName;
+        private readonly TransparentCache<TypeInfo, Type> _typeCache = new TransparentCache<TypeInfo, Type>();
 
-        public TypeResolver()
+        private readonly TransparentCache<string, Type> _typeCacheByName = new TransparentCache<string, Type>();
+#if NET
+        private readonly Func<TypeInfo, Type> _typeEmitter;
+
+        public TypeResolver(Func<TypeInfo, Type> typeEmitter = null)
         {
-            _typeCache = new TransparentCache<TypeInfo, Type>();
-            _typeCacheByName = new TransparentCache<string, Type>();
+            _typeEmitter = typeEmitter ?? new Emit.TypeEmitter().EmitType;
         }
+#endif
 
         /// <summary>
         /// Sets or gets an instance of ITypeResolver.
@@ -89,7 +93,7 @@ namespace Aqua.TypeSystem
 #if NET
             if (ReferenceEquals(null, type))
             {
-                type = EmitType(typeInfo);
+                type = _typeEmitter(typeInfo);
             }
 #endif
 
@@ -117,14 +121,6 @@ namespace Aqua.TypeSystem
             return type;
         }
 
-#if NET
-        protected virtual Type EmitType(TypeInfo typeInfo)
-        {
-            var type = new Emit.TypeEmitter().EmitType(typeInfo);
-            return type;
-        }
-#endif
-
         private static bool IsValid(Type type, TypeInfo typeInfo)
         {
             if (!ReferenceEquals(null, type))
@@ -139,10 +135,10 @@ namespace Aqua.TypeSystem
                     var properties = type.GetProperties().Select(x => x.Name).ToList();
                     var propertyNames = typeInfo.Properties.Select(x => x.Name).ToList();
 
-                    var match = 
-                        type.IsAnonymousType() && 
-                        typeInfo.IsAnonymousType && 
-                        properties.Count == propertyNames.Count && 
+                    var match =
+                        type.IsAnonymousType() &&
+                        typeInfo.IsAnonymousType &&
+                        properties.Count == propertyNames.Count &&
                         propertyNames.All(x => properties.Contains(x));
 
                     if (!match)
