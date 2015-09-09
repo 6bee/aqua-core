@@ -1,4 +1,7 @@
 # aqua-core
+Capable to transform any object-graph into a dynamic structure of composed dictionaries, holding serializable values, type information, and dynamic-objects.
+
+#Contents
 Aqua-core provides a bunch of serializable classes:
 * DynamicObject
 * TypeInfo
