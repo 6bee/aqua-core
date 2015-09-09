@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/6bee/aqua-core/wiki</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/6bee/aqua-core/master/aqua-small.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Capable to transform any object-graph into a dynamic structure of composed dictionaries, holding serializable values, type information, and dynamic-objects.</description>
+    <description>Library to transform any object-graph into a dynamic structure of composed dictionaries, holding serializable values, type information, and dynamic-objects.</description>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
     <copyright>Copyright Christof Senn 2013-2015</copyright>
     <tags>type-info dynamic-object object-mapping object-mapper</tags>
