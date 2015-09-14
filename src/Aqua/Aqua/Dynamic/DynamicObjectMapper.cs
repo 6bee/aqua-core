@@ -181,11 +181,11 @@ namespace Aqua.Dynamic
 
         private readonly ObjectFormatterContext<DynamicObject, object> _fromContext;
         private readonly ObjectFormatterContext<object, DynamicObject> _toContext;
-        private readonly Func<TypeSystem.TypeInfo,Type> _resolveType;
+        private readonly Func<TypeSystem.TypeInfo, Type> _resolveType;
         private readonly Func<Type, bool> _isKnownType;
         private readonly bool _suppressMemberAssignabilityValidation;
         private readonly bool _formatPrimitiveTypesAsString;
-        
+
         /// <summary>
         /// Creates a new instance of <see cref="DynamicObjectMapper"/>
         /// </summary>
@@ -517,6 +517,20 @@ namespace Aqua.Dynamic
 
             if (obj is System.Collections.IEnumerable)
             {
+                var elementType = TypeHelper.GetElementType(type);
+                if (elementType != type)
+                {
+                    if (_isKnownType(elementType))
+                    {
+                        return obj;
+                    }
+
+                    if (_isNativeType(elementType) && !_formatPrimitiveTypesAsString)
+                    {
+                        return obj;
+                    }
+                }
+
                 var list = ((System.Collections.IEnumerable)obj)
                     .OfType<object>()
                     .Select(x => MapToDynamicObjectIfRequired(x, setTypeInformation))

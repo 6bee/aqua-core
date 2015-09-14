@@ -23,6 +23,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             public object Value1 { get; set; }
             public object Value2 { get; set; }
             public object Value3 { get; set; }
+            public object Value4 { get; set; }
         }
 
         ClassWithAbstractProperties obj;
@@ -37,6 +38,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 Value1 = "the value's pay load",
                 Value2 = 222,
                 Value3 = new object(),
+                Value4 = new byte[] { 1, 22, 0, 44 },
             };
 
             var mapper = new DynamicObjectMapper();
@@ -49,12 +51,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             dynamicObject.ShouldNotBeNull();
 
-            dynamicObject.MemberCount.ShouldBe(4);
+            dynamicObject.MemberCount.ShouldBe(5);
 
             dynamicObject.MemberNames.ElementAt(0).ShouldBe("Ref");
             dynamicObject.MemberNames.ElementAt(1).ShouldBe("Value1");
             dynamicObject.MemberNames.ElementAt(2).ShouldBe("Value2");
             dynamicObject.MemberNames.ElementAt(3).ShouldBe("Value3");
+            dynamicObject.MemberNames.ElementAt(4).ShouldBe("Value4");
 
             dynamicObject["Ref"].ShouldBeInstanceOf<DynamicObject>();
             ((DynamicObject)dynamicObject["Ref"]).MemberCount.ShouldBe(0);
@@ -66,6 +69,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             dynamicObject["Value3"].ShouldBeInstanceOf<DynamicObject>();
             ((DynamicObject)dynamicObject["Value3"]).MemberCount.ShouldBe(0);
             ((DynamicObject)dynamicObject["Value3"]).Type.Type.ShouldBe(typeof(object));
+
+            dynamicObject["Value4"].ShouldBeInstanceOf<byte[]>();
+            ((byte[])dynamicObject["Value4"]).Length.ShouldBe(4);
+            ((byte[])dynamicObject["Value4"])[0].ShouldBe((byte)1);
+            ((byte[])dynamicObject["Value4"])[1].ShouldBe((byte)22);
+            ((byte[])dynamicObject["Value4"])[2].ShouldBe((byte)0);
+            ((byte[])dynamicObject["Value4"])[3].ShouldBe((byte)44);
         }
     }
 }

@@ -50,6 +50,7 @@
     <Compile Include="Dynamic\DynamicObjectMapper\CustomMapper\When_mapping_reducing_property_set.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\CustomMapper\When_mapping_int_as_string_and_long_as_long.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_dynamic_objects_to_list_of_known_types.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_object_with_dynamic_object_member.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_with_type_info_mapper.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_list_of_known_types.cs" />
     <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_null.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_missing_properties.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_additional_properties.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_serializable_object.cs" />
+    <Compile Include="Dynamic\DynamicObjectMapper\When_mapping_from_dynamic_object.cs" />
     <Compile Include="Dynamic\DynamicObject\When_created_based_on_object_with_abstract_properties_with_type_information.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_abstract_properties_in_absence_of_type_information.cs" />
     <Compile Include="Dynamic\DynamicObject\When_converting_to_object_with_abstract_properties.cs" />
