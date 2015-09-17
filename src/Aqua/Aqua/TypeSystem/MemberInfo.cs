@@ -21,40 +21,26 @@ namespace Aqua.TypeSystem
 
         protected MemberInfo(System.Reflection.MemberInfo memberInfo, Dictionary<Type, TypeInfo> referenceTracker)
         {
-            if (ReferenceEquals(null, memberInfo))
+            if (!ReferenceEquals(null, memberInfo))
             {
-                throw new ArgumentNullException("memberInfo");
+                Name = memberInfo.Name;
+                DeclaringType = TypeInfo.Create(referenceTracker, memberInfo.DeclaringType, includePropertyInfos: false);
             }
-
-            Name = memberInfo.Name;
-            DeclaringType = TypeInfo.Create(referenceTracker, memberInfo.DeclaringType, includePropertyInfos: false);
         }
 
         protected MemberInfo(string name, TypeInfo declaringType)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentNullException("name", "Expected a valid member name");
-            }
-
-            if (ReferenceEquals(null, declaringType))
-            {
-                throw new ArgumentNullException("declaringType");
-            }
-
             Name = name;
             DeclaringType = declaringType;
         }
 
         protected MemberInfo(MemberInfo memberInfo, Dictionary<TypeInfo, TypeInfo> referenceTracker)
         {
-            if (ReferenceEquals(null, memberInfo))
+            if (!ReferenceEquals(null, memberInfo))
             {
-                throw new ArgumentException("memberInfo");
+                Name = memberInfo.Name;
+                DeclaringType = TypeInfo.Create(referenceTracker, memberInfo.DeclaringType);
             }
-
-            Name = memberInfo.Name;
-            DeclaringType = TypeInfo.Create(referenceTracker, memberInfo.DeclaringType);
         }
 
         public abstract MemberTypes MemberType { get; }

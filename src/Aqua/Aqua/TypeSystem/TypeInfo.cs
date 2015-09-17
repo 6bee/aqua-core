@@ -25,50 +25,48 @@ namespace Aqua.TypeSystem
 
         private TypeInfo(Type type, bool includePropertyInfos, Dictionary<Type, TypeInfo> referenceTracker)
         {
-            if (ReferenceEquals(null, type))
+            if (!ReferenceEquals(null, type))
             {
-                throw new ArgumentNullException("type");
-            }
+                referenceTracker.Add(type, this);
 
-            referenceTracker.Add(type, this);
+                _type = type;
 
-            _type = type;
+                Name = type.Name;
 
-            Name = type.Name;
+                Namespace = type.Namespace;
 
-            Namespace = type.Namespace;
-
-            if (type.IsArray)
-            {
-                if (!IsArray)
+                if (type.IsArray)
                 {
-                    throw new Exception("Name is not in expected format for array type");
+                    if (!IsArray)
+                    {
+                        throw new Exception("Name is not in expected format for array type");
+                    }
+
+                    type = type.GetElementType();
                 }
 
-                type = type.GetElementType();
-            }
+                if (type.IsNested && !type.IsGenericParameter)
+                {
+                    DeclaringType = TypeInfo.Create(referenceTracker, type.DeclaringType, includePropertyInfos: false);
+                }
 
-            if (type.IsNested && !type.IsGenericParameter)
-            {
-                DeclaringType = TypeInfo.Create(referenceTracker, type.DeclaringType, includePropertyInfos: false);
-            }
+                if (type.IsGenericType())
+                {
+                    GenericArguments = type
+                        .GetGenericArguments()
+                        .Select(x => TypeInfo.Create(referenceTracker, x, includePropertyInfos))
+                        .ToList();
+                }
 
-            if (type.IsGenericType())
-            {
-                GenericArguments = type
-                    .GetGenericArguments()
-                    .Select(x => TypeInfo.Create(referenceTracker, x, includePropertyInfos))
-                    .ToList();
-            }
+                IsAnonymousType = type.IsAnonymousType();
 
-            IsAnonymousType = type.IsAnonymousType();
-
-            if (IsAnonymousType || includePropertyInfos)
-            {
-                Properties = type
-                    .GetProperties()
-                    .Select(x => new PropertyInfo(x.Name, TypeInfo.Create(referenceTracker, x.PropertyType, includePropertyInfos), this))
-                    .ToList();
+                if (IsAnonymousType || includePropertyInfos)
+                {
+                    Properties = type
+                        .GetProperties()
+                        .Select(x => new PropertyInfo(x.Name, TypeInfo.Create(referenceTracker, x.PropertyType, includePropertyInfos), null/*this*/))
+                        .ToList();
+                }
             }
         }
 
