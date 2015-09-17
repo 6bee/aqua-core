@@ -5,14 +5,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{44ADE047-F2F6-4AB8-9249-6A24FBD3AD77}</ProjectGuid>
+    <ProjectGuid>{EBB2AA3A-7F50-44C2-AB39-A12B58A3BE22}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Aqua.NET35.Tests</RootNamespace>
-    <AssemblyName>Aqua.NET35.Tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <RootNamespace>Aqua.Tests.Serialization</RootNamespace>
+    <AssemblyName>Aqua.Tests.Serialization.XmlSerializer</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>08d6f0a3</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>22cff56c</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,6 +34,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.XML" />
     <Reference Include="xunit, Version=1.9.2.1705, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
@@ -44,17 +46,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Lazy\When_using_threadsave_lazy_object.cs" />
+    <Compile Include="..\Aqua.Tests\Serialization\Dynamic\DynamicObject\When_using_dynamic_object_for_complex_object_tree.cs">
+      <Link>Dynamic\DynamicObject\When_using_dynamic_object_for_complex_object_tree.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua.Tests\Serialization\TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference_no_propertyinfos.cs">
+      <Link>TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference_no_propertyinfos.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerializationHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Aqua.NET35\Aqua.NET35.csproj">
-      <Project>{70b7c494-f1dd-4ef7-897e-cc556793407e}</Project>
-      <Name>Aqua.NET35</Name>
+    <ProjectReference Include="..\Aqua\Aqua.csproj">
+      <Project>{2e2b1850-c328-47c3-bed5-313f6e9dbb01}</Project>
+      <Name>Aqua</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

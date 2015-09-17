@@ -12,7 +12,7 @@
     <AssemblyName>Aqua.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>50b13044</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>8c5f6cc5</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,10 +35,12 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="xunit">
+    <Reference Include="xunit, Version=1.9.2.1705, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
     </Reference>
-    <Reference Include="xunit.should">
+    <Reference Include="xunit.should, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\xunit.should.1.1\lib\net35\xunit.should.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -106,6 +108,8 @@
     <Compile Include="RunnableInDebugOnlyAttribute.cs" />
     <Compile Include="Serialization\Dynamic\DynamicObject\When_using_dynamic_object_for_complex_object_tree.cs" />
     <Compile Include="Serialization\SerializationHelper.cs" />
+    <Compile Include="Serialization\TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference.cs" />
+    <Compile Include="Serialization\TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference_no_propertyinfos.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter\When_emitting_type.cs" />
     <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_of_anonymous_type.cs" />
     <Compile Include="TypeSystem\TypeInfo\When_creating_type_info_for_simple_type.cs" />
