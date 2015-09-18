@@ -23,7 +23,7 @@ namespace Aqua.TypeSystem
         }
 
         public FieldInfo(string fieldName, Type declaringType)
-            : this(fieldName, TypeInfo.Create(TypeInfo.CreateReferenceTracker<Type>(), declaringType, includePropertyInfos: false))
+            : this(fieldName, TypeInfo.Create(TypeInfo.CreateReferenceTracker<Type>(), declaringType, false, false))
         {
         }
 

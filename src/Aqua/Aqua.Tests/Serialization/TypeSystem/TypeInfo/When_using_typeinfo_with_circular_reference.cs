@@ -27,7 +27,7 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 
         public When_using_typeinfo_with_circular_reference()
         {
-            var typeInfo = new TypeInfo(typeof(C<X>), true);
+            var typeInfo = new TypeInfo(typeof(C<X>), false);
 
             serializedTypeInfo = typeInfo.Serialize();
         }

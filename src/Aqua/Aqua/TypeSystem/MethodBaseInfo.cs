@@ -29,22 +29,22 @@ namespace Aqua.TypeSystem
             var genericArguments = methodInfo.IsGenericMethod ? methodInfo.GetGenericArguments() : null;
             GenericArgumentTypes = ReferenceEquals(null, genericArguments) || genericArguments.Length == 0
                 ? null
-                : genericArguments.Select(x => TypeInfo.Create(referenceTracker, x, includePropertyInfos: false)).ToList();
+                : genericArguments.Select(x => TypeInfo.Create(referenceTracker, x, false, false)).ToList();
 
             var parameters = methodInfo.GetParameters();
             ParameterTypes = parameters.Length == 0
                 ? null
-                : parameters.Select(x => TypeInfo.Create(referenceTracker, x.ParameterType, includePropertyInfos: false)).ToList();
+                : parameters.Select(x => TypeInfo.Create(referenceTracker, x.ParameterType, false, false)).ToList();
         }
 
         // TODO: replace binding flags by bool flags
         protected MethodBaseInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, Dictionary<Type, TypeInfo> referenceTracker)
             : this(
             name, 
-            TypeInfo.Create(referenceTracker, declaringType, includePropertyInfos: false), 
+            TypeInfo.Create(referenceTracker, declaringType, includePropertyInfos: false, setMemberDeclaringTypes: false), 
             bindingFlags,
-            ReferenceEquals(null, genericArguments) ? null : genericArguments.Select(x => TypeInfo.Create(referenceTracker, x, includePropertyInfos: false)),
-            ReferenceEquals(null, parameterTypes) ? null : parameterTypes.Select(x => TypeInfo.Create(referenceTracker, x, includePropertyInfos: false)))
+            ReferenceEquals(null, genericArguments) ? null : genericArguments.Select(x => TypeInfo.Create(referenceTracker, x, false, false)),
+            ReferenceEquals(null, parameterTypes) ? null : parameterTypes.Select(x => TypeInfo.Create(referenceTracker, x, false, false)))
         {
         }
 

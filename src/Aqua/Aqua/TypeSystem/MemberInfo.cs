@@ -24,7 +24,7 @@ namespace Aqua.TypeSystem
             if (!ReferenceEquals(null, memberInfo))
             {
                 Name = memberInfo.Name;
-                DeclaringType = TypeInfo.Create(referenceTracker, memberInfo.DeclaringType, includePropertyInfos: false);
+                DeclaringType = TypeInfo.Create(referenceTracker, memberInfo.DeclaringType, false, false);
             }
         }
 

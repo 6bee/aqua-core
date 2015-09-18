@@ -49,8 +49,14 @@
     <Compile Include="..\Aqua.Tests\Serialization\Dynamic\DynamicObject\When_using_dynamic_object_for_complex_object_tree.cs">
       <Link>Dynamic\DynamicObject\When_using_dynamic_object_for_complex_object_tree.cs</Link>
     </Compile>
+    <Compile Include="..\Aqua.Tests\Serialization\TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference.cs">
+      <Link>TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference.cs</Link>
+    </Compile>
     <Compile Include="..\Aqua.Tests\Serialization\TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference_no_propertyinfos.cs">
       <Link>TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference_no_propertyinfos.cs</Link>
+    </Compile>
+    <Compile Include="..\Aqua.Tests\Serialization\TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference_with_anonymous_type.cs">
+      <Link>TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference_with_anonymous_type.cs</Link>
     </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>

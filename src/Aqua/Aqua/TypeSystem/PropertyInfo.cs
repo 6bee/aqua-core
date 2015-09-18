@@ -26,7 +26,7 @@ namespace Aqua.TypeSystem
             : base(propertyInfo, referenceTracker)
         {
             _property = propertyInfo;
-            PropertyType = TypeInfo.Create(referenceTracker, propertyInfo.PropertyType);
+            PropertyType = TypeInfo.Create(referenceTracker, propertyInfo.PropertyType, false, false);
         }
 
         public PropertyInfo(string propertyName, Type propertyType, Type declaringType)
@@ -35,7 +35,7 @@ namespace Aqua.TypeSystem
         }
 
         private PropertyInfo(string propertyName, Type propertyType, Type declaringType, Dictionary<Type, TypeInfo> referenceTracker)
-            : this(propertyName, TypeInfo.Create(referenceTracker, propertyType, includePropertyInfos: false), TypeInfo.Create(referenceTracker, declaringType, includePropertyInfos: false))
+            : this(propertyName, TypeInfo.Create(referenceTracker, propertyType, false, false), TypeInfo.Create(referenceTracker, declaringType, false, false))
         {
         }
 

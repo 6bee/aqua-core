@@ -19,11 +19,16 @@ namespace Aqua.TypeSystem
         }
 
         public TypeInfo(Type type, bool includePropertyInfos = true)
-            : this(type, includePropertyInfos, TypeInfo.CreateReferenceTracker<Type>())
+            : this(type, includePropertyInfos, true, TypeInfo.CreateReferenceTracker<Type>())
         {
         }
 
-        private TypeInfo(Type type, bool includePropertyInfos, Dictionary<Type, TypeInfo> referenceTracker)
+        public TypeInfo(Type type, bool includePropertyInfos, bool setMemberDeclaringTypes)
+            : this(type, includePropertyInfos, setMemberDeclaringTypes, TypeInfo.CreateReferenceTracker<Type>())
+        {
+        }
+
+        private TypeInfo(Type type, bool includePropertyInfos, bool setMemberDeclaringTypes, Dictionary<Type, TypeInfo> referenceTracker)
         {
             if (!ReferenceEquals(null, type))
             {
@@ -47,14 +52,14 @@ namespace Aqua.TypeSystem
 
                 if (type.IsNested && !type.IsGenericParameter)
                 {
-                    DeclaringType = TypeInfo.Create(referenceTracker, type.DeclaringType, includePropertyInfos: false);
+                    DeclaringType = TypeInfo.Create(referenceTracker, type.DeclaringType, false, false);
                 }
 
                 if (type.IsGenericType())
                 {
                     GenericArguments = type
                         .GetGenericArguments()
-                        .Select(x => TypeInfo.Create(referenceTracker, x, includePropertyInfos))
+                        .Select(x => TypeInfo.Create(referenceTracker, x, includePropertyInfos, setMemberDeclaringTypes))
                         .ToList();
                 }
 
@@ -64,7 +69,7 @@ namespace Aqua.TypeSystem
                 {
                     Properties = type
                         .GetProperties()
-                        .Select(x => new PropertyInfo(x.Name, TypeInfo.Create(referenceTracker, x.PropertyType, includePropertyInfos), null/*this*/))
+                        .Select(x => new PropertyInfo(x.Name, TypeInfo.Create(referenceTracker, x.PropertyType, includePropertyInfos, setMemberDeclaringTypes), setMemberDeclaringTypes ? this : null))
                         .ToList();
                 }
             }
@@ -98,12 +103,12 @@ namespace Aqua.TypeSystem
             return new Dictionary<T, TypeInfo>(ObjectReferenceEqualityComparer<T>.Instance);
         }
 
-        internal static TypeInfo Create(Dictionary<Type, TypeInfo> referenceTracker, Type type, bool includePropertyInfos = true)
+        internal static TypeInfo Create(Dictionary<Type, TypeInfo> referenceTracker, Type type, bool includePropertyInfos, bool setMemberDeclaringTypes)
         {
             TypeInfo typeInfo;
             if (!referenceTracker.TryGetValue(type, out typeInfo))
             {
-                typeInfo = new TypeInfo(type, includePropertyInfos, referenceTracker);
+                typeInfo = new TypeInfo(type, includePropertyInfos, setMemberDeclaringTypes, referenceTracker);
             }
 
             return typeInfo;

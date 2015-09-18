@@ -108,6 +108,7 @@
     <Compile Include="RunnableInDebugOnlyAttribute.cs" />
     <Compile Include="Serialization\Dynamic\DynamicObject\When_using_dynamic_object_for_complex_object_tree.cs" />
     <Compile Include="Serialization\SerializationHelper.cs" />
+    <Compile Include="Serialization\TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference_with_anonymous_type.cs" />
     <Compile Include="Serialization\TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference.cs" />
     <Compile Include="Serialization\TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference_no_propertyinfos.cs" />
     <Compile Include="TypeSystem\Emit\TypeEmitter\When_emitting_type.cs" />
