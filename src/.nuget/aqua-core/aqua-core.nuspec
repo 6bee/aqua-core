@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>aqua-core</id>
-    <version>3.0.0-alpha003</version>
+    <version>3.0.0</version>
     <authors>Christof Senn</authors>
     <owners>Christof Senn</owners>
     <licenseUrl>https://raw.githubusercontent.com/6bee/aqua-core/master/license.txt</licenseUrl>
@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Library to transform any object-graph into a dynamic structure of composed dictionaries, holding serializable values, type information, and dynamic-objects.</description>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
-    <copyright>Copyright Christof Senn 2013-2015</copyright>
+    <copyright>Copyright Christof Senn 2013-2016</copyright>
     <tags>type-info dynamic-object object-mapping object-mapper</tags>
   </metadata>
   <files>  
