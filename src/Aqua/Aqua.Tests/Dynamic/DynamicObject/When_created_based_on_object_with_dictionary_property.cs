@@ -6,7 +6,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_created_based_on_object_with_dictionary_property
     {
@@ -54,7 +54,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Dictionary_property_should_be_object_array()
         {
-            dynamicObject["Dictionary"].ShouldBeInstanceOf<object[]>();
+            dynamicObject["Dictionary"].ShouldBeOfType<object[]>();
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             foreach (var element in (object[])dynamicObject["Dictionary"])
             {
-                element.ShouldBeInstanceOf<DynamicObject>();
+                element.ShouldBeOfType<DynamicObject>();
             }
         }
 

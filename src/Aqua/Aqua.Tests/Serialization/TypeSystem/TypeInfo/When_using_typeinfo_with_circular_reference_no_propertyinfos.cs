@@ -4,7 +4,7 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 {
     using Aqua.TypeSystem;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_using_typeinfo_with_circular_reference_no_propertyinfos
     {

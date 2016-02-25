@@ -7,7 +7,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
     using System.Linq;
     using System.Collections.Generic;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
     using System.Reflection;
 
     public class When_mapping_reducing_property_set

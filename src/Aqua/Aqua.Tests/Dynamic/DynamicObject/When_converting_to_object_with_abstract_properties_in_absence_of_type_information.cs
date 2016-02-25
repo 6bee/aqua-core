@@ -5,7 +5,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using Aqua.Dynamic;
     using System;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_converting_to_object_with_abstract_properties_in_absence_of_type_information
     {
@@ -62,14 +62,14 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         public void Should_recreate_object_with_original_values()
         {
             obj.ShouldNotBeNull();
-            obj.ShouldBeInstanceOf<ClassWithAbstractProperties>();
+            obj.ShouldBeOfType<ClassWithAbstractProperties>();
 
             var instance = (ClassWithAbstractProperties)obj;
-            instance.Ref.ShouldBeInstanceOf<A>();
+            instance.Ref.ShouldBeOfType<A>();
             instance.Value1.ShouldBe("the value's pay load");
             instance.Value2.ShouldBe(222);
             instance.Value3.ShouldBeNull();
-            instance.Value4.ShouldBeInstanceOf<object>();
+            instance.Value4.ShouldBeOfType<object>();
         }
     }
 }

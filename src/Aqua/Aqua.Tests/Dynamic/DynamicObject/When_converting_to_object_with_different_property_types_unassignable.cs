@@ -4,7 +4,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     /// <summary>
     /// Covers mapping type missmatches for types which allow exlicit conversion only

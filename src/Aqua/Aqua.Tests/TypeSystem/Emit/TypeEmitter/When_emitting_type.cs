@@ -7,7 +7,7 @@ namespace Aqua.Tests.TypeSystem.Emit.TypeEmitter
     using System;
     using System.Collections.Generic;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_emitting_type
     {

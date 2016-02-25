@@ -5,7 +5,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using Aqua.Dynamic;
     using System;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_created_using_collection_initializer
     {

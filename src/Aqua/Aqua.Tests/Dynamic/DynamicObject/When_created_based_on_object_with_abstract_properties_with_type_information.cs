@@ -5,7 +5,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using Aqua.Dynamic;
     using System.Linq;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_created_based_on_object_with_abstract_properties_with_type_information
     {
@@ -59,18 +59,18 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             dynamicObject.MemberNames.ElementAt(3).ShouldBe("Value3");
             dynamicObject.MemberNames.ElementAt(4).ShouldBe("Value4");
 
-            dynamicObject["Ref"].ShouldBeInstanceOf<DynamicObject>();
+            dynamicObject["Ref"].ShouldBeOfType<DynamicObject>();
             ((DynamicObject)dynamicObject["Ref"]).MemberCount.ShouldBe(0);
             ((DynamicObject)dynamicObject["Ref"]).Type.Type.ShouldBe(typeof(A));
 
             dynamicObject["Value1"].ShouldBe(obj.Value1);
             dynamicObject["Value2"].ShouldBe(obj.Value2);
 
-            dynamicObject["Value3"].ShouldBeInstanceOf<DynamicObject>();
+            dynamicObject["Value3"].ShouldBeOfType<DynamicObject>();
             ((DynamicObject)dynamicObject["Value3"]).MemberCount.ShouldBe(0);
             ((DynamicObject)dynamicObject["Value3"]).Type.Type.ShouldBe(typeof(object));
 
-            dynamicObject["Value4"].ShouldBeInstanceOf<byte[]>();
+            dynamicObject["Value4"].ShouldBeOfType<byte[]>();
             ((byte[])dynamicObject["Value4"]).Length.ShouldBe(4);
             ((byte[])dynamicObject["Value4"])[0].ShouldBe((byte)1);
             ((byte[])dynamicObject["Value4"])[1].ShouldBe((byte)22);

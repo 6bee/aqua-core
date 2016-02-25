@@ -6,7 +6,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using System.Linq;
     using Aqua.Dynamic;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_converting_to_datetime_object
     {

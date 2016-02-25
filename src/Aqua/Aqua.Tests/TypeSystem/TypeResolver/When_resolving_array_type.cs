@@ -5,7 +5,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
     using Aqua.TypeSystem;
     using System;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_resolving_array_type
     {

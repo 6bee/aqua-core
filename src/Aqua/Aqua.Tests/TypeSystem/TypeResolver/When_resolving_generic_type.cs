@@ -6,7 +6,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
     using System;
     using System.Collections.Generic;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_resolving_generic_type
     {

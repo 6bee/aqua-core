@@ -7,7 +7,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
     using System.Linq;
     using System.Collections.Generic;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_mapping_int_as_string_and_long_as_long
     {
@@ -59,13 +59,13 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
         [Fact]
         public void Dynamic_object_for_int_should_contain_string_value()
         {
-            dynamicObjectWithInt.Values.Single().ShouldBeInstanceOf<string>();
+            dynamicObjectWithInt.Values.Single().ShouldBeOfType<string>();
         }
 
         [Fact]
         public void Dynamic_object_for_lonb_should_contain_string_value()
         {
-            dynamicObjectWithLong.Values.Single().ShouldBeInstanceOf<long>();
+            dynamicObjectWithLong.Values.Single().ShouldBeOfType<long>();
         }
     }
 }

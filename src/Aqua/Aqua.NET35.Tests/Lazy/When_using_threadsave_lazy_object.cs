@@ -4,7 +4,6 @@ namespace Aqua.NET35.Tests.Lazy
 {
     using System.Threading;
     using Xunit;
-    using Xunit.Should;
 
     public class When_using_threadsave_lazy_object
     {
@@ -19,15 +18,15 @@ namespace Aqua.NET35.Tests.Lazy
         [Fact]
         public void Should_not_execute_factory_delegate_if_value_property_was_not_accessed()
         {
-            count.ShouldBe(0);
+            Assert.Equal(0, count);
         }
 
         [Fact]
         public void Value_property_should_return_expected_value()
         {
-            lazy.Value.ShouldBe(1);
-            lazy.Value.ShouldBe(1);
-            lazy.Value.ShouldBe(1);
+            Assert.Equal(1, lazy.Value);
+            Assert.Equal(1, lazy.Value);
+            Assert.Equal(1, lazy.Value);
         }
 
         [Fact]
@@ -37,7 +36,7 @@ namespace Aqua.NET35.Tests.Lazy
             var v2 = lazy.Value;
             var v3 = lazy.Value;
 
-            count.ShouldBe(1);            
+            Assert.Equal(1, count);            
         }
     }
 }

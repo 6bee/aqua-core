@@ -5,7 +5,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using Aqua.Dynamic;
     using System;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     /// <summary>
     /// Covers mapping type mismatches for unassignable types without validation, i.e. exeption upon assignment
@@ -34,7 +34,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             var ex = Assert.Throws<Exception>(() => mapper.Map<CustomType>(dynamicObject));
 
-            ex.InnerException.ShouldBeInstanceOf<ArgumentException>();
+            ex.InnerException.ShouldBeOfType<ArgumentException>();
             ex.InnerException.Message.ShouldBe("Object of type 'System.Double' cannot be converted to type 'System.Int32'.");
         }
 

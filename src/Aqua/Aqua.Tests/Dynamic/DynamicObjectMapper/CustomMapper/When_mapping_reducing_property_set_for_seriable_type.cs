@@ -4,11 +4,11 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
 {
     using Aqua.Dynamic;
     using System;
-    using System.Linq;
     using System.Collections.Generic;
-    using Xunit;
-    using Xunit.Should;
+    using System.Linq;
     using System.Reflection;
+    using Xunit;
+    using Xunit.Fluent;
 
     public class When_mapping_reducing_property_set_for_seriable_type
     {

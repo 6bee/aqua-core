@@ -6,7 +6,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using System;
     using System.Reflection;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_converting_to_object_with_private_properties
     {

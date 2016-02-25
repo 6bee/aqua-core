@@ -4,7 +4,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_mapping_from_dynamic_object
     {

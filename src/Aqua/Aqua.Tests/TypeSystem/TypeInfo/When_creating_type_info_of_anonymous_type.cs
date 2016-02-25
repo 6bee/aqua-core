@@ -5,7 +5,7 @@ namespace Aqua.Tests.TypeSystem.TypeInfo
     using Aqua.TypeSystem;
     using System.Linq;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_creating_type_info_of_anonymous_type
     {

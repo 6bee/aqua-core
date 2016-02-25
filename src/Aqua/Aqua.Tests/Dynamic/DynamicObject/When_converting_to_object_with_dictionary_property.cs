@@ -6,7 +6,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_converting_to_object_with_dictionary_property
     {
@@ -48,7 +48,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Object_should_be_of_expected_type()
         {
-            obj.ShouldBeInstanceOf<ClassWithDictionaryProperty>();
+            obj.ShouldBeOfType<ClassWithDictionaryProperty>();
             objectWithDictionaryProperty.ShouldNotBeNull();
         }
 

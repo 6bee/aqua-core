@@ -6,7 +6,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using System;
     using System.Linq;
     using Xunit;
-    using Xunit.Should;
+    using Xunit.Fluent;
 
     public class When_created_based_on_nullable_guid
     {
@@ -41,7 +41,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Dynamic_guid_properties_should_be_of_type_string()
         {
-            dynamicObject.Values.Single().ShouldBeInstanceOf<Guid>();
+            dynamicObject.Values.Single().ShouldBeOfType<Guid>();
         }
 
         [Fact]
