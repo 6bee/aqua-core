@@ -76,7 +76,7 @@ namespace Aqua.TypeSystem
         }
 
         internal protected TypeInfo(TypeInfo typeInfo)
-            : this(typeInfo, new Dictionary<TypeInfo, TypeInfo>(ObjectReferenceEqualityComparer<TypeInfo>.Instance))
+            : this(typeInfo, new Dictionary<TypeInfo, TypeInfo>(ReferenceEqualityComparer<TypeInfo>.Instance))
         {
         }
 
@@ -100,7 +100,7 @@ namespace Aqua.TypeSystem
 
         internal static Dictionary<T, TypeInfo> CreateReferenceTracker<T>()
         {
-            return new Dictionary<T, TypeInfo>(ObjectReferenceEqualityComparer<T>.Instance);
+            return new Dictionary<T, TypeInfo>(ReferenceEqualityComparer<T>.Instance);
         }
 
         internal static TypeInfo Create(Dictionary<Type, TypeInfo> referenceTracker, Type type, bool includePropertyInfos, bool setMemberDeclaringTypes)

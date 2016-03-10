@@ -22,7 +22,7 @@ namespace Aqua.Dynamic
             public ObjectFormatterContext(Func<Type, Type> dynamicObjectTypeMapper = null)
             {
                 _dynamicObjectTypeInfoMapper = dynamicObjectTypeMapper ?? (t => t);
-                _referenceMap = new Dictionary<TFrom, TTo>(ObjectReferenceEqualityComparer<TFrom>.Instance);
+                _referenceMap = new Dictionary<TFrom, TTo>(ReferenceEqualityComparer<TFrom>.Instance);
             }
 
             /// <summary>

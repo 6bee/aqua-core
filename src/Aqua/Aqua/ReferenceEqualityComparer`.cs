@@ -5,14 +5,10 @@ namespace Aqua
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
 
-    public sealed class ObjectReferenceEqualityComparer<T> : IEqualityComparer<T>
+    public sealed class ReferenceEqualityComparer<T> : IEqualityComparer<T>
     {
-        public static readonly ObjectReferenceEqualityComparer<T> Instance = new ObjectReferenceEqualityComparer<T>();
-
-        private ObjectReferenceEqualityComparer()
-        {
-        }
-
+        public static readonly ReferenceEqualityComparer<T> Instance = new ReferenceEqualityComparer<T>();
+        
         public bool Equals(T x, T y)
         {
             return ReferenceEquals(x, y);

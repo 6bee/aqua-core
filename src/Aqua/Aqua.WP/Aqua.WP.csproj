@@ -144,8 +144,8 @@
     <Compile Include="..\Aqua\MethodInfos.cs">
       <Link>MethodInfos.cs</Link>
     </Compile>
-    <Compile Include="..\Aqua\ObjectReferenceEqualityComparer`.cs">
-      <Link>ObjectReferenceEqualityComparer`.cs</Link>
+    <Compile Include="..\Aqua\ReferenceEqualityComparer`.cs">
+      <Link>ReferenceEqualityComparer`.cs</Link>
     </Compile>
     <Compile Include="..\Aqua\TransparentCache.cs">
       <Link>TransparentCache.cs</Link>
