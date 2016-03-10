@@ -7,7 +7,7 @@ namespace Aqua.TypeSystem
 
     [Serializable]
     [DataContract(Name = "Field", IsReference = true)]
-    public sealed class FieldInfo : MemberInfo
+    public class FieldInfo : MemberInfo
     {
         [NonSerialized]
         private System.Reflection.FieldInfo _field;

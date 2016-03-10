@@ -8,7 +8,7 @@ namespace Aqua.TypeSystem
 
     [Serializable]
     [DataContract(Name = "Property", IsReference = true)]
-    public sealed class PropertyInfo : MemberInfo
+    public class PropertyInfo : MemberInfo
     {
         [NonSerialized]
         private System.Reflection.PropertyInfo _property;
