@@ -3,29 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua", "Aqua\Aqua.csproj", "{2E2B1850-C328-47C3-BED5-313F6E9DBB01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua", "src\Aqua\Aqua.csproj", "{2E2B1850-C328-47C3-BED5-313F6E9DBB01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.NET35", "Aqua.NET35\Aqua.NET35.csproj", "{70B7C494-F1DD-4EF7-897E-CC556793407E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.NET35", "src\Aqua.NET35\Aqua.NET35.csproj", "{70B7C494-F1DD-4EF7-897E-CC556793407E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.SL5", "Aqua.SL5\Aqua.SL5.csproj", "{BC07B68B-3462-4D2C-86F3-632FF5E1A7FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.SL5", "src\Aqua.SL5\Aqua.SL5.csproj", "{BC07B68B-3462-4D2C-86F3-632FF5E1A7FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.Win", "Aqua.Win\Aqua.Win.csproj", "{A8539D88-FEAF-4283-9FA5-0FC81457C640}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.Win", "src\Aqua.Win\Aqua.Win.csproj", "{A8539D88-FEAF-4283-9FA5-0FC81457C640}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.WP", "Aqua.WP\Aqua.WP.csproj", "{62F6813E-8484-4E62-B2D4-40B35610B71D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.WP", "src\Aqua.WP\Aqua.WP.csproj", "{62F6813E-8484-4E62-B2D4-40B35610B71D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C0DCE22E-09EB-4152-93FD-A54582B2C4BC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "src\Tests", "{C0DCE22E-09EB-4152-93FD-A54582B2C4BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.Tests", "Aqua.Tests\Aqua.Tests.csproj", "{85AE4778-A174-4C29-90D2-D245A21B299C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.Tests", "src\Aqua.Tests\Aqua.Tests.csproj", "{85AE4778-A174-4C29-90D2-D245A21B299C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.NET35.Tests", "Aqua.NET35.Tests\Aqua.NET35.Tests.csproj", "{44ADE047-F2F6-4AB8-9249-6A24FBD3AD77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.NET35.Tests", "src\Aqua.NET35.Tests\Aqua.NET35.Tests.csproj", "{44ADE047-F2F6-4AB8-9249-6A24FBD3AD77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.Tests.Serialization.DataContractSerializer", "Aqua.Tests.Serialization.DataContractSerializer\Aqua.Tests.Serialization.DataContractSerializer.csproj", "{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.Tests.Serialization.DataContractSerializer", "src\Aqua.Tests.Serialization.DataContractSerializer\Aqua.Tests.Serialization.DataContractSerializer.csproj", "{CBC364AA-FD1A-42AF-B437-FA2A9C0F6C7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.Tests.Serialization.NetDataContractSerializer", "Aqua.Tests.Serialization.NetDataContractSerializer\Aqua.Tests.Serialization.NetDataContractSerializer.csproj", "{11173297-FF69-4B47-B48F-61988E0BAF67}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.Tests.Serialization.NetDataContractSerializer", "src\Aqua.Tests.Serialization.NetDataContractSerializer\Aqua.Tests.Serialization.NetDataContractSerializer.csproj", "{11173297-FF69-4B47-B48F-61988E0BAF67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.Tests.Serialization.XmlSerializer", "Aqua.Tests.Serialization.XmlSerializer\Aqua.Tests.Serialization.XmlSerializer.csproj", "{EBB2AA3A-7F50-44C2-AB39-A12B58A3BE22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.Tests.Serialization.XmlSerializer", "src\Aqua.Tests.Serialization.XmlSerializer\Aqua.Tests.Serialization.XmlSerializer.csproj", "{EBB2AA3A-7F50-44C2-AB39-A12B58A3BE22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.Tests.Serialization.JsonSerializer", "Aqua.Tests.Serialization.JsonSerializer\Aqua.Tests.Serialization.JsonSerializer.csproj", "{36BDA8B3-7499-4336-9C1A-51C48037DDCB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aqua.Tests.Serialization.JsonSerializer", "src\Aqua.Tests.Serialization.JsonSerializer\Aqua.Tests.Serialization.JsonSerializer.csproj", "{36BDA8B3-7499-4336-9C1A-51C48037DDCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
