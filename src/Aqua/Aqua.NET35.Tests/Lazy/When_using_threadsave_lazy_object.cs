@@ -22,6 +22,19 @@ namespace Aqua.NET35.Tests.Lazy
         }
 
         [Fact]
+        public void Should_return_false_on_is_value_create_before_accessing_value_property()
+        {
+            Assert.False(lazy.IsValueCreated);
+        }
+
+        [Fact]
+        public void Should_return_true_on_is_value_create_after_accessing_value_property()
+        {
+            var v = lazy.Value;
+            Assert.True(lazy.IsValueCreated);
+        }
+
+        [Fact]
         public void Value_property_should_return_expected_value()
         {
             Assert.Equal(1, lazy.Value);

@@ -8,7 +8,7 @@ namespace Aqua
     /// <summary>
     /// Custom implementation of the corresponding .NET framework class
     /// </summary>
-    public sealed class Lazy<T>
+    public class Lazy<T>
     {
         private static readonly object _lock = new object();
         private readonly bool _isThreadSafe;
@@ -53,5 +53,7 @@ namespace Aqua
                 return _value;
             }
         }
+
+        public bool IsValueCreated => _isValueCreated;
     }
 }
