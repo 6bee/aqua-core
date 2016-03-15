@@ -16,7 +16,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         {
             var instance = new { Int32Value = 0, StringValue = "" };
 
-            var actualType = instance.GetType();
+            actualType = instance.GetType();
 
             var typeInfo = new TypeInfo(actualType);
 

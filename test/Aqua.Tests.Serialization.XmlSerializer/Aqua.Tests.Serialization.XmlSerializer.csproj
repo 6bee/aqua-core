@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{11173297-FF69-4B47-B48F-61988E0BAF67}</ProjectGuid>
+    <ProjectGuid>{EBB2AA3A-7F50-44C2-AB39-A12B58A3BE22}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Aqua.Tests.Serialization</RootNamespace>
-    <AssemblyName>Aqua.Tests.Serialization.NetDataContractSerializer</AssemblyName>
+    <AssemblyName>Aqua.Tests.Serialization.XmlSerializer</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -36,7 +36,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.XML" />
     <Reference Include="xunit.abstractions">
       <HintPath>..\..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
@@ -65,10 +64,13 @@
     <Compile Include="..\Aqua.Tests\Serialization\TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference_no_propertyinfos.cs">
       <Link>TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference_no_propertyinfos.cs</Link>
     </Compile>
+    <Compile Include="..\Aqua.Tests\Serialization\TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference_with_anonymous_type.cs">
+      <Link>TypeSystem\TypeInfo\When_using_typeinfo_with_circular_reference_with_anonymous_type.cs</Link>
+    </Compile>
     <Compile Include="..\Aqua.Tests\Xunit\Fluent\FluentAssertions.cs">
       <Link>Xunit\Fluent\FluentAssertions.cs</Link>
     </Compile>
-    <Compile Include="..\SharedAssemblyInfo.cs">
+    <Compile Include="..\..\src\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,7 +81,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Aqua\Aqua.csproj">
+    <ProjectReference Include="..\..\src\Aqua\Aqua.csproj">
       <Project>{2e2b1850-c328-47c3-bed5-313f6e9dbb01}</Project>
       <Name>Aqua</Name>
     </ProjectReference>
@@ -87,7 +89,6 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
