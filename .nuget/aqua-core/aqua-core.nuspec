@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>aqua-core</id>
-    <version>3.0.0</version>
+    <version>3.1.0-alpha001</version>
     <authors>Christof Senn</authors>
     <owners>Christof Senn</owners>
     <licenseUrl>https://raw.githubusercontent.com/6bee/aqua-core/master/license.txt</licenseUrl>
@@ -15,11 +15,7 @@
     <tags>type-info dynamic-object object-mapping object-mapper</tags>
   </metadata>
   <files>  
-    <file src="..\..\Aqua\Aqua\bin\Release\Aqua.*" target="lib\net45" />
-    <file src="..\..\Aqua\Aqua.NET35\bin\Release\Aqua.*" target="lib\net35-client" />
-    <file src="..\..\Aqua\Aqua.SL5\bin\Release\Aqua.*" target="lib\sl5" />
-    <file src="..\..\Aqua\Aqua.Win\bin\Release\Aqua.*" target="lib\win" />
-    <file src="..\..\Aqua\Aqua.WP\bin\Release\Aqua.*" target="lib\wp8" />
-    <file src="..\..\Aqua\**\*.cs" target="src" exclude="..\..\**\packages\**;..\..\**\bin\**;..\..\**\obj\**;..\..\**\*.Tests\**" />
+    <file src="..\..\src\Aqua\bin\Release\**\Aqua.*" target="lib" />
+    <file src="..\..\src\Aqua\**\*.cs" target="src" exclude="..\..\**\packages\**;..\..\**\bin\**;..\..\**\obj\**;..\..\**\*.Tests\**" />
   </files>
 </package>
