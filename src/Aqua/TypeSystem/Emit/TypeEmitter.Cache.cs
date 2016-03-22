@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+#if NET || NET35 || CORECLR
+
 namespace Aqua.TypeSystem.Emit
 {
     using System;
@@ -22,10 +24,10 @@ namespace Aqua.TypeSystem.Emit
                 {
                     unchecked
                     {
-                        var hash = 27;
+                        var hash = 0;
                         foreach (var property in _properties)
                         {
-                            hash = (hash * 13) + property.GetHashCode();
+                            hash = (hash * 397) ^ property?.GetHashCode() ?? 0;
                         }
 
                         return hash;
@@ -103,10 +105,10 @@ namespace Aqua.TypeSystem.Emit
                 {
                     unchecked
                     {
-                        var hash = 27;
+                        var hash = 0;
                         foreach (var property in _properties)
                         {
-                            hash = (hash * 13) + property.GetHashCode();
+                            hash = (hash * 397) ^ property?.GetHashCode() ?? 0;
                         }
 
                         return hash;
@@ -211,3 +213,5 @@ namespace Aqua.TypeSystem.Emit
         }
     }
 }
+
+#endif

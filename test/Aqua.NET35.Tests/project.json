@@ -1,0 +1,25 @@
+{
+  "version": "1.0.0-*",
+  "description": "Tests for aqua-core",
+  "copyright": "Copyright Christof Senn 2013-2016",
+  "dependencies": {
+    "Aqua": "",
+    "xunit": "1.9.2",
+    "xunit.runner.visualstudio": "2.1.0"
+  },
+  "frameworks": {
+    "net35-client": {
+      "frameworkAssemblies": {
+      },
+      "dependencies": {
+      },
+      "compilationOptions": {
+        "define": [ "NET" ]
+      }
+    }
+  },
+  "commands": {
+    "_test": "xunit.runner.visualstudio"
+  },
+  "runtimes": { "win": { } }
+}

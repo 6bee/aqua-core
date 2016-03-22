@@ -42,7 +42,7 @@ namespace Aqua.Tests.TypeSystem.TypeInfo
         [Fact]
         public void Type_B_should_have_property_of_type_A()
         {
-            typeInfo.Properties.Single().PropertyType.Properties.Single().PropertyType.ShouldBeSameAs(typeInfo);
+            typeInfo.Properties.Single().PropertyType.Properties.Single().PropertyType.ShouldBeSameInstance(typeInfo);
         }
     }
 }

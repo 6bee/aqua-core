@@ -1,0 +1,105 @@
+{
+  "id": "aqua-core",
+  "authors": [ "Christof Senn" ],
+  "version": "3.1.0-alpha001",
+  "description": "Library to transform any object-graph into a dynamic structure of composed dictionaries, holding serializable values, type information, and dynamic-objects.",
+  "licenseUrl": "https://raw.githubusercontent.com/6bee/aqua-core/master/license.txt",
+  "projectUrl": "https://github.com/6bee/aqua-core/wiki",
+  "iconUrl": "https://raw.githubusercontent.com/6bee/aqua-core/master/aqua-small.png",
+  "copyright": "Copyright Christof Senn 2013-2016",
+  "tags": [ "type-info", "dynamic-object", "object-mapping", "object-mapper" ],
+  "dependencies": {
+  },
+  "frameworks": {
+    "dnxcore50": {
+      "dependencies": {
+        "System.Linq": "4.0.0.0",
+        "System.Linq.Expressions": "4.0.0.0",
+        "System.Linq.Queryable": "4.0.0.0",
+        "System.Reflection.Emit": "4.0.0.0",
+        "System.Reflection.Emit.ILGeneration": "4.0.0.0",
+        "System.Reflection.Primitives": "4.0.0.0",
+        "System.Reflection.Extensions": "4.0.0.0",
+        "System.Reflection.TypeExtensions": "4.0.0.0",
+        "System.Runtime.Numerics": "4.0.0.0",
+        "System.Runtime.Serialization.Primitives": "4.0.0.0",
+        "System.Text.RegularExpressions": "4.0.0.0",
+        "System.Threading": "4.0.0.0",
+        "System.Xml.XmlSerializer": "4.0.0.0",
+        "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
+      },
+      "compilationOptions": {
+        "define": [ "CORECLR" ]
+      }
+    },
+    "net451": {
+      "frameworkAssemblies": {
+        "System.Numerics": "4.0.0.0",
+        "System.Runtime.Serialization": "4.0.0.0",
+        "System.XML": "4.0.0.0"
+      },
+      "dependencies": {
+        "System.Reflection.Emit": "4.0.0.0",
+        "System.Reflection.Emit.ILGeneration": "4.0.0.0",
+        "System.Reflection.Primitives": "4.0.0.0",
+        "System.Reflection.Extensions": "4.0.0.0",
+        "System.Runtime.Numerics": "4.0.1-beta-23516",
+        "System.Runtime.Serialization.Primitives": "4.1.0-beta-23516",
+        "System.Xml.XmlSerializer": "4.0.11-beta-23516",
+        "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
+      },
+      "compilationOptions": {
+        "define": [ "NET" ]
+      }
+    },
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Numerics": "4.0.0.0",
+        "System.Runtime.Serialization": "4.0.0.0",
+        "System.XML": "4.0.0.0"
+      },
+      "dependencies": {
+        "System.Reflection.Emit": "4.0.0.0",
+        "System.Reflection.Emit.ILGeneration": "4.0.0.0",
+        "System.Reflection.Primitives": "4.0.0.0",
+        "System.Reflection.Extensions": "4.0.0.0",
+        "System.Runtime.Numerics": "4.0.1-beta-23516",
+        "System.Runtime.Serialization.Primitives": "4.1.0-beta-23516",
+        "System.Xml.XmlSerializer": "4.0.11-beta-23516",
+        "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
+      },
+      "compilationOptions": {
+        "define": [ "NET" ]
+      }
+    },
+    "net35-client": {
+      "frameworkAssemblies": {
+        "mscorlib": "2.0.0.0",
+        "System": "2.0.0.0",
+        "System.Core": "3.5.0.0",
+        "System.Runtime.Serialization": "3.0.0.0",
+        "System.XML": "2.0.0.0"
+      },
+      "dependencies": {
+      },
+      "compilationOptions": {
+        "define": [ "NET35" ]
+      }
+    },
+    "sl5": {
+      "frameworkAssemblies": {
+        "mscorlib": "5.0.5.0",
+        "System": "5.0.5.0",
+        "System.Core": "5.0.5.0",
+        "System.Runtime.Serialization": "5.0.5.0",
+        "System.Xml": "5.0.5.0"
+      },
+      "dependencies": {
+      },
+      "compilationOptions": {
+        "define": [ "SILVERLIGHT" ]
+      }
+    }
+  },
+  "runtimes": { "win": { } }
+}

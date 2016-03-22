@@ -88,7 +88,7 @@ namespace Aqua.Dynamic
 
         private const string NumericPattern = @"([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?";
 
-        private static readonly Regex _complexNumberParserRegex = new Regex(string.Format("^(?<Re>[+-]?({0}))(?<Sign>[+-])[iI](?<Im>{0})$", NumericPattern), LocalRegexOptions);
+        private static readonly string ComplexNumberParserRegexPattern = string.Format("^(?<Re>[+-]?({0}))(?<Sign>[+-])[iI](?<Im>{0})$", NumericPattern);
 
         private static readonly Type _genericDictionaryType = typeof(Dictionary<,>);
 
@@ -820,7 +820,7 @@ namespace Aqua.Dynamic
 
             if (targetType == typeof(System.Numerics.Complex) || targetType == typeof(System.Numerics.Complex?))
             {
-                var m = _complexNumberParserRegex.Match(value);
+                var m = Regex.Match(value, ComplexNumberParserRegexPattern);
                 if (m.Success)
                 {
                     var re = double.Parse(m.Groups["Re"].Value);

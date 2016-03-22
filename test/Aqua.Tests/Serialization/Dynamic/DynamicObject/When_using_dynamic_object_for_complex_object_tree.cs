@@ -7,19 +7,19 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     using Xunit;
     using Xunit.Fluent;
 
-    public class When_using_dynamic_object_for_complex_object_tree
+    public abstract partial class When_using_dynamic_object_for_complex_object_tree
     {
         const double DoubleValue = 1.234567e-987;
         const string StringValue = "eleven";
 
         DynamicObject serializedObject;
 
-        public When_using_dynamic_object_for_complex_object_tree()
+        protected When_using_dynamic_object_for_complex_object_tree(Func<DynamicObject, DynamicObject> serialize)
         {
             var originalObject = new DynamicObject()
             {
                 { "DoubleValue", DoubleValue },
-                { 
+                {
                     "Reference", new DynamicObject()
                     {
                         { "StringValue", StringValue },
@@ -27,7 +27,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
                 },
             };
 
-            serializedObject = originalObject.Serialize();
+            serializedObject = serialize(originalObject);
         }
 
         [Fact]

@@ -74,7 +74,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
                 var sourceObject = sourceObjects.ElementAt(i);
 
-                dynamicObject[""].ShouldBeSameAs(sourceObject);
+                dynamicObject[""].ShouldBeStrictlyEqual(sourceObject);
             }
         }
     }

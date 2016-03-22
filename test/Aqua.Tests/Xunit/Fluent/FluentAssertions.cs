@@ -256,12 +256,12 @@ namespace Xunit.Fluent
             Assert.NotNull(@object);
         }
 
-        public static void ShouldNotBeSame(this object actual, object expected)
+        public static void ShouldNotBeSameInstance(this object actual, object expected)
         {
             Assert.NotSame(expected, actual);
         }
 
-        public static void ShouldNotBeSameAs<T>(this T actual, T expected)
+        public static void ShouldNotBeStrictlyEqual<T>(this T actual, T expected)
         {
             Assert.NotStrictEqual<T>(expected, actual);
         }
@@ -286,7 +286,7 @@ namespace Xunit.Fluent
             Assert.PropertyChanged(@object, propertyName, testCode);
         }
 
-        public static void ShouldBeSame(this object actual, object expected)
+        public static void ShouldBeSameInstance(this object actual, object expected)
         {
             Assert.Same(expected, actual);
         }
@@ -321,7 +321,7 @@ namespace Xunit.Fluent
             Assert.StartsWith(expectedStartString, actualString, comparisonType);
         }
 
-        public static void ShouldBeSameAs<T>(this T actual, T expected)
+        public static void ShouldBeStrictlyEqual<T>(this T actual, T expected)
         {
             Assert.StrictEqual<T>(expected, actual);
         }

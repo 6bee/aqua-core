@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+#if NET || NET35 || CORECLR
+
 namespace Aqua.TypeSystem.Emit
 {
     using System;
@@ -21,13 +23,13 @@ namespace Aqua.TypeSystem.Emit
 
         public TypeEmitter()
         {
-            var appDomain = AppDomain.CurrentDomain;
             var assemblyName = new AssemblyName("Aqua.TypeSystem.Emit.Types");
-            var assemblyBuilder = appDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
-            var module = assemblyBuilder.DefineDynamicModule(assemblyName.Name);
-
-            _assemblyBuilder = assemblyBuilder;
-            _module = module;
+#if NET35
+            _assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+#else
+            _assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
+#endif
+            _module = _assemblyBuilder.DefineDynamicModule(assemblyName.Name);
         }
 
         public Type EmitType(TypeInfo typeInfo)
@@ -96,8 +98,8 @@ namespace Aqua.TypeSystem.Emit
                 .ToArray();
 
             // create type
-            var t1 = type.CreateType();
-            return t1;
+            var t1 = type.CreateTypeInfo();
+            return t1.AsType();
         }
 
         private Type InternalEmitAnonymousType(IEnumerable<string> propertyNames)
@@ -121,11 +123,11 @@ namespace Aqua.TypeSystem.Emit
 
             // define fields
             var fields = propertyNames
-                .Select((x, i) => type.DefineField(string.Format("_{0}", x), genericTypeParameters[i], FieldAttributes.Private | FieldAttributes.InitOnly))
+                .Select((x, i) => type.DefineField(string.Format("_{0}", x), genericTypeParameters[i].AsType(), FieldAttributes.Private | FieldAttributes.InitOnly))
                 .ToArray();
 
             // define constructor
-            var constructor = type.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, genericTypeParameters);
+            var constructor = type.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, genericTypeParameters.Select(_ => _.AsType()).ToArray());
             var objectCtor = typeof(object).GetConstructor(Type.EmptyTypes);
             var il = constructor.GetILGenerator();
             il.Emit(OpCodes.Ldarg_0);
@@ -142,9 +144,9 @@ namespace Aqua.TypeSystem.Emit
             var properties = propertyNames
                 .Select((x, i) =>
                 {
-                    var property = type.DefineProperty(x, PropertyAttributes.HasDefault, genericTypeParameters[i], null);
+                    var property = type.DefineProperty(x, PropertyAttributes.HasDefault, genericTypeParameters[i].AsType(), null);
 
-                    var propertyGetter = type.DefineMethod(string.Format("get_{0}", x), MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, genericTypeParameters[i], null);
+                    var propertyGetter = type.DefineMethod(string.Format("get_{0}", x), MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, genericTypeParameters[i].AsType(), null);
                     var pil = propertyGetter.GetILGenerator();
                     pil.Emit(OpCodes.Ldarg_0);
                     pil.Emit(OpCodes.Ldfld, fields[i]);
@@ -157,8 +159,8 @@ namespace Aqua.TypeSystem.Emit
                 .ToArray();
 
             // create type
-            var t1 = type.CreateType();
-            return t1;
+            var t1 = type.CreateTypeInfo();
+            return t1.AsType();
         }
 
         private string CreateUniqueClassName()
@@ -176,3 +178,5 @@ namespace Aqua.TypeSystem.Emit
         }
     }
 }
+
+#endif

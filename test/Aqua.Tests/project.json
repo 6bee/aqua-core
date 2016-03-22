@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0-*",
+  "description": "Tests for aqua-core",
+  "copyright": "Copyright Christof Senn 2013-2016",
+  "dependencies": {
+    "Aqua": "",
+    "xunit": "2.1.0-*",
+    "xunit.runner.dnx": "2.1.0-*",
+    "FluentAssertions": "4.2.2"
+  },
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.ObjectModel": "4.0.0.0",
+        "System.Text.RegularExpressions": "4.0.0.0"
+      },
+      "dependencies": {
+        "System.Runtime.Numerics": "4.0.1-beta-23516",
+        "System.Runtime.Serialization.Primitives": "4.1.0-beta-23516",
+        "System.Xml.XmlSerializer": "4.0.11-beta-23516",
+        "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
+      },
+      "compilationOptions": {
+        "define": [ "NET" ]
+      }
+    }
+  },
+  "commands": {
+    "test": "xunit.runner.dnx"
+  },
+  "runtimes": { "win": { } }
+}

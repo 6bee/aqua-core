@@ -53,7 +53,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
                 var recreatedObject = recreatedObjectLists.ElementAt(i);
 
-                recreatedObject.ShouldBeSameAs(sourceObject);
+                recreatedObject.ShouldBeSameInstance(sourceObject);
             }
         }
     }

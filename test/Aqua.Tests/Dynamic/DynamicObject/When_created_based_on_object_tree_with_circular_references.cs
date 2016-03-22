@@ -47,7 +47,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             referenceFromB2ToB1.ShouldBeOfType<DynamicObject>();
             referenceFromB2ToB1["Id"].ShouldBe(sourceB1.Id);
 
-            referenceFromB2ToB1["BaseClassReference"].ShouldBeSameAs(referenceFromB2ToB1);
+            referenceFromB2ToB1["BaseClassReference"].ShouldBeSameInstance(referenceFromB2ToB1);
         }
     }
 }

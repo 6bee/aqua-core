@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+#if NET || NET35
+
 namespace Aqua.Dynamic
 {
     using System;
@@ -10,12 +12,7 @@ namespace Aqua.Dynamic
 
     partial class DynamicObjectMapper
     {
-        /// <summary>
-        /// .NET platform specific regex options
-        /// </summary>
-        private const RegexOptions LocalRegexOptions = RegexOptions.Compiled | RegexOptions.ExplicitCapture | RegexOptions.Singleline;
-
-        private static readonly Regex _backingFieldRegex = new Regex(@"^(.+\+)?\<(?<name>.+)\>k__BackingField$", LocalRegexOptions);
+        private const string BackingFieldRegexPattern = @"^(.+\+)?\<(?<name>.+)\>k__BackingField$";
 
         /// <summary>
         /// Gets an uninitialized instance of the specified type by using <see cref="FormatterServices" />
@@ -100,12 +97,14 @@ namespace Aqua.Dynamic
 
         private static string CleanBackingFieldNameIfRequired(string memberName)
         {
-            var match = _backingFieldRegex.Match(memberName);
-            if (match.Success && match.Groups.Count == 2)
+            var match = Regex.Match(memberName, BackingFieldRegexPattern);
+            if (match.Success)
             {
-                memberName = match.Groups[1].Value;
+                memberName = match.Groups["name"].Value;
             }
             return memberName;
         }
     }
 }
+
+#endif

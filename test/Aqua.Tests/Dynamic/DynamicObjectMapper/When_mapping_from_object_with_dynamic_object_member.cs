@@ -26,7 +26,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_reference_should_be_same()
         {
-            dynamicObject["Reference"].ShouldBeSameAs(source.Reference);
+            dynamicObject["Reference"].ShouldBeStrictlyEqual(source.Reference);
         }
     }
 }

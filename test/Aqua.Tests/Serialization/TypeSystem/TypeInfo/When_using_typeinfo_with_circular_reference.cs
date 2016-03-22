@@ -3,10 +3,11 @@
 namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 {
     using Aqua.TypeSystem;
+    using System;
     using Xunit;
     using Xunit.Fluent;
 
-    public class When_using_typeinfo_with_circular_reference
+    public abstract partial class When_using_typeinfo_with_circular_reference
     {
         abstract class A
         {
@@ -25,11 +26,13 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 
         TypeInfo serializedTypeInfo;
 
-        public When_using_typeinfo_with_circular_reference()
+        protected When_using_typeinfo_with_circular_reference(Func<TypeInfo, TypeInfo> serialize)
         {
             var typeInfo = new TypeInfo(typeof(C<X>), false);
 
-            serializedTypeInfo = typeInfo.Serialize();
+            serializedTypeInfo = serialize(typeInfo);
+
+            serializedTypeInfo.ShouldNotBeSameInstance(typeInfo);
         }
 
         [Fact]

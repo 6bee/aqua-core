@@ -20,7 +20,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_should_be_different_instance()
         {
-            dynamicObject.ShouldBeSameAs(source);
+            dynamicObject.ShouldBeSameInstance(source);
         }
     }
 }

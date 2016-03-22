@@ -14,14 +14,6 @@ namespace Aqua.TypeSystem
         private readonly TransparentCache<TypeInfo, Type> _typeCache = new TransparentCache<TypeInfo, Type>();
 
         private readonly TransparentCache<string, Type> _typeCacheByName = new TransparentCache<string, Type>();
-#if NET
-        private readonly Func<TypeInfo, Type> _typeEmitter;
-
-        public TypeResolver(Func<TypeInfo, Type> typeEmitter = null)
-        {
-            _typeEmitter = typeEmitter ?? new Emit.TypeEmitter().EmitType;
-        }
-#endif
 
         /// <summary>
         /// Sets or gets an instance of ITypeResolver.
@@ -90,7 +82,7 @@ namespace Aqua.TypeSystem
                 }
             }
 
-#if NET
+#if NET || NET35 || CORECLR
             if (ReferenceEquals(null, type))
             {
                 type = _typeEmitter(typeInfo);
@@ -104,17 +96,15 @@ namespace Aqua.TypeSystem
 
             if (typeInfo.IsGenericType)
             {
-                var generigArguments =
-                    from x in typeInfo.GenericArguments
-                    select ResolveType(x);
+                var genericArguments = typeInfo.GenericArguments.Select(ResolveType).ToArray();
 
                 if (typeInfo.IsArray)
                 {
-                    type = type.GetElementType().MakeGenericType(generigArguments.ToArray()).MakeArrayType();
+                    type = type.GetElementType().MakeGenericType(genericArguments).MakeArrayType();
                 }
                 else
                 {
-                    type = type.MakeGenericType(generigArguments.ToArray());
+                    type = type.MakeGenericType(genericArguments);
                 }
             }
 

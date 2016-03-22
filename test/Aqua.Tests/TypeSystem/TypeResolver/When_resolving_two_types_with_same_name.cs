@@ -50,13 +50,13 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         [Fact]
         public void Resolved_type_A_should_be_same()
         {
-            resolvedTypeA1.ShouldBeSameAs(resolvedTypeA2);
+            resolvedTypeA1.ShouldBeSameInstance(resolvedTypeA2);
         }
 
         [Fact]
         public void Resolved_type_B_should_be_same()
         {
-            resolvedTypeB1.ShouldBeSameAs(resolvedTypeB2);
+            resolvedTypeB1.ShouldBeSameInstance(resolvedTypeB2);
         }
 
         [Fact]

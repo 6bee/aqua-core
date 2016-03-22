@@ -2,11 +2,12 @@
 <Project ToolsVersion="4.0" DefaultTargets="RebuildPackage" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
     <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+        <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
         <Platform Condition=" '$(Platform)' == '' ">Any CPU</Platform>
         <BuildProperties>Platform=$(Platform)</BuildProperties>
         <SourceDirectory Condition="$(SourceDirectory) == '' Or $(SourceDirectory) == '*Undefined*'">$(MSBuildThisFileDirectory)\</SourceDirectory>
-        <OutputDirectory Condition=" '$(OutputDirectory)' == '' ">$(MSBuildThisFileDirectory)..\bin\$(Configuration)\</OutputDirectory>
+        <OutputDirectory Condition=" '$(OutputDirectory)' == '' ">$(MSBuildThisFileDirectory)artifacts\$(Configuration)\</OutputDirectory>
         <NuGetExePath>$(MSBuildThisFileDirectory).nuget\nuget.exe</NuGetExePath>
     </PropertyGroup>
 
