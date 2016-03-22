@@ -3,6 +3,7 @@ branches:
   only:
     #- master
     - dnx
+os: Visual Studio 2015
 build:
   project: Aqua.sln
   verbosity: minimal
