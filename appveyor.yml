@@ -3,7 +3,6 @@ branches:
   only:
     #- master
     - dnx
-before_build:
-  - nuget restore
 build:
+  project: Aqua.sln
   verbosity: minimal
