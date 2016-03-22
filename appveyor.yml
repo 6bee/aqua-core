@@ -2,7 +2,7 @@ version: 1.0.{build}
 branches:
   only:
     - master
-    - dnx
+    #- dnx
 before_build:
 - cmd: nuget restore src/Aqua/Aqua.sln
 build:
