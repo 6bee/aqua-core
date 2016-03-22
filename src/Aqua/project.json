@@ -11,21 +11,24 @@
   "dependencies": {
   },
   "frameworks": {
-    "dnxcore50": {
+    "netcore50": {
       "dependencies": {
-        "System.Linq": "4.0.0.0",
-        "System.Linq.Expressions": "4.0.0.0",
-        "System.Linq.Queryable": "4.0.0.0",
-        "System.Reflection.Emit": "4.0.0.0",
-        "System.Reflection.Emit.ILGeneration": "4.0.0.0",
-        "System.Reflection.Primitives": "4.0.0.0",
-        "System.Reflection.Extensions": "4.0.0.0",
-        "System.Reflection.TypeExtensions": "4.0.0.0",
-        "System.Runtime.Numerics": "4.0.0.0",
-        "System.Runtime.Serialization.Primitives": "4.0.0.0",
-        "System.Text.RegularExpressions": "4.0.0.0",
-        "System.Threading": "4.0.0.0",
-        "System.Xml.XmlSerializer": "4.0.0.0",
+        "System.Linq": "4.0.1-beta-23516",
+        "System.Linq.Expressions": "4.0.10",
+        "System.Linq.Queryable": "4.0.1-beta-23225",
+        "System.ObjectModel": "4.0.11-beta-23516",
+        "System.Reflection.Emit": "4.0.1-beta-23516",
+        "System.Reflection.Emit.ILGeneration": "4.0.1-beta-23516",
+        "System.Reflection.Primitives": "4.0.1-beta-23516",
+        "System.Reflection.Extensions": "4.0.1-beta-23516",
+        "System.Reflection.TypeExtensions": "4.1.0-beta-23516",
+        "System.Runtime.Extensions": "4.0.10",
+        "System.Runtime.WindowsRuntime": "4.0.11-beta-23516",
+        "System.Runtime.Numerics": "4.0.1-beta-23516",
+        "System.Runtime.Serialization.Primitives": "4.1.0-beta-23516",
+        "System.Text.RegularExpressions": "4.0.11-beta-23516",
+        "System.Threading": "4.0.10",
+        "System.Xml.XmlSerializer": "4.0.10",
         "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
       },
       "compilationOptions": {
@@ -36,16 +39,16 @@
       "frameworkAssemblies": {
         "System.Numerics": "4.0.0.0",
         "System.Runtime.Serialization": "4.0.0.0",
-        "System.XML": "4.0.0.0"
+        "System.Xml": "4.0.0.0"
       },
       "dependencies": {
         "System.Reflection.Emit": "4.0.0.0",
         "System.Reflection.Emit.ILGeneration": "4.0.0.0",
         "System.Reflection.Primitives": "4.0.0.0",
         "System.Reflection.Extensions": "4.0.0.0",
-        "System.Runtime.Numerics": "4.0.1-beta-23516",
-        "System.Runtime.Serialization.Primitives": "4.1.0-beta-23516",
-        "System.Xml.XmlSerializer": "4.0.11-beta-23516",
+        "System.Runtime.Numerics": "4.0.0.0",
+        "System.Runtime.Serialization.Primitives": "4.0.0.0",
+        "System.Xml.XmlSerializer": "4.0.0.0",
         "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
       },
       "compilationOptions": {
@@ -56,16 +59,16 @@
       "frameworkAssemblies": {
         "System.Numerics": "4.0.0.0",
         "System.Runtime.Serialization": "4.0.0.0",
-        "System.XML": "4.0.0.0"
+        "System.Xml": "4.0.0.0"
       },
       "dependencies": {
         "System.Reflection.Emit": "4.0.0.0",
         "System.Reflection.Emit.ILGeneration": "4.0.0.0",
         "System.Reflection.Primitives": "4.0.0.0",
         "System.Reflection.Extensions": "4.0.0.0",
-        "System.Runtime.Numerics": "4.0.1-beta-23516",
-        "System.Runtime.Serialization.Primitives": "4.1.0-beta-23516",
-        "System.Xml.XmlSerializer": "4.0.11-beta-23516",
+        "System.Runtime.Numerics": "4.0.0.0",
+        "System.Runtime.Serialization.Primitives": "4.0.0.0",
+        "System.Xml.XmlSerializer": "4.0.0.0",
         "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
       },
       "compilationOptions": {
@@ -78,7 +81,7 @@
         "System": "2.0.0.0",
         "System.Core": "3.5.0.0",
         "System.Runtime.Serialization": "3.0.0.0",
-        "System.XML": "2.0.0.0"
+        "System.Xml": "2.0.0.0"
       },
       "dependencies": {
       },
@@ -100,6 +103,5 @@
         "define": [ "SILVERLIGHT" ]
       }
     }
-  },
-  "runtimes": { "win": { } }
+  }
 }

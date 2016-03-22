@@ -1,9 +1,8 @@
-version: 1.0.{build}
+init:
+  - git config --global core.autocrlf true
+build_script:
+  - build.cmd --quiet verify
 branches:
   only:
     #- master
     - dnx
-os: Visual Studio 2015
-build:
-  project: Aqua.sln
-  verbosity: minimal

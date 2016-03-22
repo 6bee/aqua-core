@@ -3,7 +3,7 @@
   "description": "Tests for aqua-core",
   "copyright": "Copyright Christof Senn 2013-2016",
   "dependencies": {
-    "Aqua": "",
+    "Aqua": "3.1.0-*",
     "xunit": "2.1.0-*",
     "xunit.runner.dnx": "2.1.0-*",
     "FluentAssertions": "4.2.2"
@@ -15,9 +15,9 @@
         "System.Text.RegularExpressions": "4.0.0.0"
       },
       "dependencies": {
-        "System.Runtime.Numerics": "4.0.1-beta-23516",
-        "System.Runtime.Serialization.Primitives": "4.1.0-beta-23516",
-        "System.Xml.XmlSerializer": "4.0.11-beta-23516",
+        "System.Runtime.Numerics": "4.0.0.0",
+        "System.Runtime.Serialization.Primitives": "4.0.0.0",
+        "System.Xml.XmlSerializer": "4.0.0.0",
         "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
       },
       "compilationOptions": {
@@ -27,6 +27,5 @@
   },
   "commands": {
     "test": "xunit.runner.dnx"
-  },
-  "runtimes": { "win": { } }
+  }
 }
