@@ -9,4 +9,4 @@ sudo: false
 install: curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh
   | sh && source ~/.dnx/dnvm/dnvm.sh && dnvm upgrade
 script:
-  dnu restore && dnu build src\Aqua test\Aqua.Tests test\Aqua.NET35.Tests && dnx -p test/Aqua.Tests test
+  dnu restore && dnu build src/Aqua test/Aqua.Tests test/Aqua.NET35.Tests && dnx -p test/Aqua.Tests test
