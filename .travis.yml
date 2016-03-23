@@ -3,7 +3,7 @@ branches:
   only:
     #- master
     - dnx
-solution: aqua-core.sln
+solution: Aqua.sln
 #install:
 #  - nuget restore aqua-core.sln
 #  - nuget install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
