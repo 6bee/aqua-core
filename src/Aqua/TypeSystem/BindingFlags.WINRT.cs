@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if NETFX_CORE //|| CORECLR
+#if WINRT
 
-namespace System.Reflection //Aqua.TypeSystem
+namespace Aqua.TypeSystem
 {
     using System;
 

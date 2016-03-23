@@ -772,7 +772,7 @@ namespace Aqua.Dynamic
 
             if (targetType == typeof(char) || targetType == typeof(char?))
             {
-#if NETFX_CORE || SILVERLIGHT
+#if WINRT || SILVERLIGHT
                 char character;
                 if (!char.TryParse(value, out character))
                 {
