@@ -6,4 +6,6 @@ branches:
   only:
     #- master
     - dnx
-test: off
+test:
+  assemblies:
+    - '**\*.Tests.dll'
