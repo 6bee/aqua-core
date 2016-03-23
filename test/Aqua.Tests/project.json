@@ -3,7 +3,7 @@
   "description": "Tests for aqua-core",
   "copyright": "Copyright Christof Senn 2013-2016",
   "dependencies": {
-    "Aqua": "3.1.0-*",
+    "Aqua": { "target": "project" },
     "xunit": "2.2.0-*",
     "xunit.extensibility.execution": "2.2.0-*",
     "xunit.runner.dnx": "2.1.0-*",
