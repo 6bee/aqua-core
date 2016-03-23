@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if !NET35 && !CORECLR
+#if !(CORECLR || WINRT || NET35)
 
 namespace Aqua.Dynamic
 {
