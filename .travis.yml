@@ -7,6 +7,6 @@ branches:
     - dnx
 sudo: false
 install: curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh
-  | sh && source ~/.dnx/dnvm/dnvm.sh && dnvm upgrade
+  | sh && source ~/.dnx/dnvm/dnvm.sh && dnvm upgrade && dnvm list
 script:
-  dnu restore && dnu build src/Aqua test/Aqua.Tests && dnx -p test/Aqua.Tests test
+  dnvm use default -r mono && dnvm list && dnu restore && dnu build src/Aqua test/Aqua.Tests && dnx -p test/Aqua.Tests test
