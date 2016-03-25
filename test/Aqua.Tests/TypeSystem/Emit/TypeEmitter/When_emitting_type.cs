@@ -6,6 +6,7 @@ namespace Aqua.Tests.TypeSystem.Emit.TypeEmitter
     using Aqua.TypeSystem.Emit;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Xunit;
     using Xunit.Fluent;
 
@@ -40,7 +41,7 @@ namespace Aqua.Tests.TypeSystem.Emit.TypeEmitter
         [Fact]
         public void Emitted_type_shoult_have_two_properties()
         {
-            emittedType.GetProperties().Length.ShouldBe(2);
+            emittedType.GetProperties().Count().ShouldBe(2);
         }
 
         [Fact]

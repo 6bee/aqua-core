@@ -3,7 +3,9 @@
 namespace Aqua.Tests.TypeSystem.TypeResolver
 {
     using Aqua.TypeSystem;
+    using Aqua.TypeSystem.Emit;
     using System;
+    using System.Linq;
     using Xunit;
     using Xunit.Fluent;
 
@@ -35,37 +37,39 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         [Fact]
         public void Type_should_be_dynamically_emited_type()
         {
-            emitedType.ShouldNotBeNull();
+            emitedType.GetCustomAttributes(typeof(EmittedTypeAttribute), false).Count().ShouldBe(1);
+        }
 
+        [Fact]
+        public void Type_should_have_special_namespace()
+        {
             emitedType.Namespace.ShouldBe("<In Memory Module>");
-
-            emitedType.Assembly.GetName().Name.ShouldBe("Aqua.TypeSystem.Emit.Types");
-
-            emitedType.Assembly.IsDynamic.ShouldBeTrue();
         }
 
         [Fact]
         public void Emited_type_should_be_generic_type()
         {
-            emitedType.IsGenericType.ShouldBeTrue();
+            emitedType.IsGenericType().ShouldBeTrue();
         }
 
+#if NET
         [Fact]
         public void Emited_type_should_closed_generic_type()
         {
             emitedType.IsGenericTypeDefinition.ShouldBeFalse();
         }
+#endif
 
         [Fact]
         public void Emited_type_should_have_two_generic_arguments()
         {
-            emitedType.GetGenericArguments().Length.ShouldBe(2);
+            emitedType.GetGenericArguments().Count().ShouldBe(2);
         }
 
         [Fact]
         public void Emited_type_should_have_two_properties()
         {
-            emitedType.GetProperties().Length.ShouldBe(2);
+            emitedType.GetProperties().Count().ShouldBe(2);
         }
 
         [Fact]

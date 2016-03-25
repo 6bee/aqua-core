@@ -9,13 +9,13 @@ namespace Aqua.Tests.Serialization
     {
         public static T Serialize<T>(this T graph)
         {
-            var serializer = new NetDataContractSerializer();
+            var serializer = new DataContractSerializer(typeof(T));
 
             using (var stream = new MemoryStream())
             {
-                serializer.Serialize(stream, graph);
+                serializer.WriteObject(stream, graph);
                 stream.Seek(0, SeekOrigin.Begin);
-                return (T)serializer.Deserialize(stream);
+                return (T)serializer.ReadObject(stream);
             }
         }
     }
