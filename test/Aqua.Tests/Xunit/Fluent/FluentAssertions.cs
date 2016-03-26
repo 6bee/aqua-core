@@ -6,6 +6,8 @@ namespace Xunit.Fluent
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
+    using System.Reflection;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
@@ -414,6 +416,41 @@ namespace Xunit.Fluent
         public static void ShouldBeTrue(this bool condition, string userMessage)
         {
             Assert.True(condition, userMessage);
+        }
+
+        public static void ShouldBeAnnotatedWith<T>(this Type type) where T : Attribute
+        {
+            if (type.GetCustomAttributes(typeof(T), false).Count() < 1)
+            {
+                throw new ExpectedAnnotation(type, typeof(T));
+            }
+        }
+
+        private class ExpectedAnnotation : Xunit.Sdk.XunitException
+        {
+            public ExpectedAnnotation(Type type, Type attributeType)
+            {
+                Type = type;
+                AttributeType = attributeType;
+            }
+
+            public Type Type{ get; }
+
+
+            public Type AttributeType{ get; }
+
+            public override string Message
+            {
+                get
+                {
+                    return $"Missing custom attribute annotation {Environment.NewLine}Type: {Type.Name} {Environment.NewLine}Expected: {AttributeType.Name} {Environment.NewLine}Found: {Environment.NewLine}{string.Join(Environment.NewLine, Type.GetCustomAttributes().Select(_=> "- "+_.GetType().Name))}";
+                }
+            }
+
+            public override string ToString()
+            {
+                return Message;
+            }
         }
     }
 }

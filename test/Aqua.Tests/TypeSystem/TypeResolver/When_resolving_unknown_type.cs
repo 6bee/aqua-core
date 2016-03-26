@@ -45,17 +45,9 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         }
 
         [Fact]
-        public void Emitted_type_shoult_have_special_namespace()
-        {
-            emitedType.Namespace.ShouldBe("<In Memory Module>");
-        }
-
-        [Fact]
         public void Emitted_type_shoult_have_name_special_name()
         {
             emitedType.Name.ShouldBe("<>__EmittedType__0");
-
-            emitedType.FullName.ShouldBe("<In Memory Module>.<>__EmittedType__0");
         }
 
         [Fact]

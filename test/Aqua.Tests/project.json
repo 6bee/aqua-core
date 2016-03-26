@@ -27,6 +27,7 @@
     },
     "dnxcore50": {
       "dependencies": {
+        "System.Reflection.TypeExtensions": "4.1.0-beta-23516",
         "System.Runtime.Serialization.Primitives": "4.0.11-beta-23225",
         "System.Runtime.Serialization.Xml": "4.1.0-beta-23516",
         "System.Xml.XmlSerializer": "4.0.11-beta-23409",

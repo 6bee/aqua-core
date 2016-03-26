@@ -34,8 +34,6 @@ namespace Aqua.Tests.TypeSystem.Emit.TypeEmitter
         public void Emitted_type_shoult_have_name_special_name()
         {
             emittedType.Name.ShouldBe("<>__EmittedType__0");
-            emittedType.Namespace.ShouldBe("<In Memory Module>");
-            emittedType.FullName.ShouldBe("<In Memory Module>.<>__EmittedType__0");
         }
 
         [Fact]

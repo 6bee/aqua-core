@@ -37,13 +37,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         [Fact]
         public void Type_should_be_dynamically_emited_type()
         {
-            emitedType.GetCustomAttributes(typeof(EmittedTypeAttribute), false).Count().ShouldBe(1);
-        }
-
-        [Fact]
-        public void Type_should_have_special_namespace()
-        {
-            emitedType.Namespace.ShouldBe("<In Memory Module>");
+            emitedType.ShouldBeAnnotatedWith<EmittedTypeAttribute>();
         }
 
         [Fact]
