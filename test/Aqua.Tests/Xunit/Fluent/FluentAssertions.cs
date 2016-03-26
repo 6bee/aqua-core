@@ -420,7 +420,7 @@ namespace Xunit.Fluent
 
         public static void ShouldBeAnnotatedWith<T>(this Type type) where T : Attribute
         {
-            if (type.GetCustomAttributes(typeof(T), false).Count() < 1)
+            if (type.GetTypeInfo().GetCustomAttributes<T>().Count() < 1)
             {
                 throw new ExpectedAnnotation(type, typeof(T));
             }
@@ -443,7 +443,7 @@ namespace Xunit.Fluent
             {
                 get
                 {
-                    return $"Missing custom attribute annotation {Environment.NewLine}Type: {Type.Name} {Environment.NewLine}Expected: {AttributeType.Name} {Environment.NewLine}Found: {Environment.NewLine}{string.Join(Environment.NewLine, Type.GetCustomAttributes().Select(_=> "- "+_.GetType().Name))}";
+                    return $"Missing custom attribute annotation {Environment.NewLine}Type: {Type.Name} {Environment.NewLine}Expected: {AttributeType.Name} {Environment.NewLine}Found: {Environment.NewLine}{string.Join(Environment.NewLine, Type.GetTypeInfo().GetCustomAttributes().Select(_=> "- "+_.GetType().Name))}";
                 }
             }
 
