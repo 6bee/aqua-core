@@ -15,6 +15,9 @@ AppVeyor (`master`): [![Build status](https://ci.appveyor.com/api/projects/statu
 AppVeyor (`dnx`): [![Build status](https://ci.appveyor.com/api/projects/status/98rc3yav530hlw1c/branch/dnx?svg=true)](https://ci.appveyor.com/project/6bee/aqua-core)
 
 
+Travis (`dnx`): [![Travis build Status](https://travis-ci.org/6bee/aqua-core.svg?branch=dnx)](https://travis-ci.org/6bee/aqua-core?branch=dnx)
+
+
 Capable to transform any object-graph into a dynamic structure of composed dictionaries, holding serializable values, type information, and dynamic-objects.
 
 #Contents
