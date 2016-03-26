@@ -46,12 +46,12 @@ namespace Xunit.Fluent
             Assert.Contains<T>(expected, collection, comparer);
         }
 
-        public static void ShouldNotContain(this string expectedSubstring, string actualString)
+        public static void ShouldNotContain(this string actualString, string expectedSubstring)
         {
             Assert.DoesNotContain(expectedSubstring, actualString);
         }
 
-        public static void ShouldNotContainthis(string expectedSubstring, string actualString, StringComparison comparisonType)
+        public static void ShouldNotContainthis(string actualString, string expectedSubstring, StringComparison comparisonType)
         {
             Assert.DoesNotContain(expectedSubstring, actualString, comparisonType);
         }
@@ -96,22 +96,22 @@ namespace Xunit.Fluent
             Assert.EndsWith(expectedEndString, actualString, comparisonType);
         }
 
-        public static void ShouldBe(this string expected, string actual)
+        public static void ShouldBe(this string actual, string expected)
         {
             Assert.Equal(expected, actual);
         }
 
-        public static void ShouldBe(this decimal expected, decimal actual, int precision)
+        public static void ShouldBe(this decimal actual, decimal expected, int precision)
         {
             Assert.Equal(expected, actual, precision);
         }
 
-        public static void ShouldBe(this double expected, double actual, int precision)
+        public static void ShouldBe(this double actual, double expected, int precision)
         {
             Assert.Equal(expected, actual, precision);
         }
 
-        public static void ShouldBe(this string expected, string actual, bool ignoreCase = false, bool ignoreLineEndingDifferences = false, bool ignoreWhiteSpaceDifferences = false)
+        public static void ShouldBe(this string actual, string expected, bool ignoreCase = false, bool ignoreLineEndingDifferences = false, bool ignoreWhiteSpaceDifferences = false)
         {
             Assert.Equal(expected, actual, ignoreCase, ignoreLineEndingDifferences, ignoreWhiteSpaceDifferences);
         }
@@ -296,7 +296,7 @@ namespace Xunit.Fluent
             return Assert.Single(collection);
         }
 
-        public static void ShouldBeSingle(this object expected, IEnumerable collection)
+        public static void ShouldBeSingle(this IEnumerable collection, object expected)
         {
             Assert.Single(collection, expected);
         }
@@ -336,12 +336,12 @@ namespace Xunit.Fluent
             Assert.Superset<T>(expectedSubset, actual);
         }
 
-        public static Exception ShouldThrow(this Type exceptionType, Action testCode)
+        public static Exception ShouldThrow(this Action testCode, Type exceptionType)
         {
             return Assert.Throws(exceptionType, testCode);
         }
 
-        public static Exception ShouldThrow(this Type exceptionType, Func<object> testCode)
+        public static Exception ShouldThrow(this Func<object> testCode, Type exceptionType)
         {
             return Assert.Throws(exceptionType, testCode);
         }
@@ -356,12 +356,12 @@ namespace Xunit.Fluent
             return Assert.Throws<T>(testCode);
         }
 
-        public static T ShouldThrow<T>(this string paramName, Action testCode) where T : ArgumentException
+        public static T ShouldThrow<T>(this Action testCode, string paramName) where T : ArgumentException
         {
             return Assert.Throws<T>(paramName, testCode);
         }
 
-        public static T ShouldThrow<T>(this string paramName, Func<object> testCode) where T : ArgumentException
+        public static T ShouldThrow<T>(this Func<object> testCode, string paramName) where T : ArgumentException
         {
             return Assert.Throws<T>(paramName, testCode);
         }
@@ -381,7 +381,7 @@ namespace Xunit.Fluent
             return Assert.ThrowsAnyAsync<T>(testCode);
         }
 
-        public static Task<Exception> ShouldThrowAsync(this Type exceptionType, Func<Task> testCode)
+        public static Task<Exception> ShouldThrowAsync(this Func<Task> testCode, Type exceptionType)
         {
             return Assert.ThrowsAsync(exceptionType, testCode);
         }
@@ -391,7 +391,7 @@ namespace Xunit.Fluent
             return Assert.ThrowsAsync<T>(testCode);
         }
 
-        public static Task<T> ShouldThrowAsync<T>(this string paramName, Func<Task> testCode) where T : ArgumentException
+        public static Task<T> ShouldThrowAsync<T>(this Func<Task> testCode, string paramName) where T : ArgumentException
         {
             return Assert.ThrowsAsync<T>(paramName, testCode);
         }
