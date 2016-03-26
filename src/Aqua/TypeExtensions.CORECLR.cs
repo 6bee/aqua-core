@@ -6,14 +6,12 @@ namespace Aqua
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
     using BindingFlags = System.Reflection.BindingFlags;
     using MemberTypes = Aqua.TypeSystem.MemberTypes;
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static partial class TypeExtensions
+    partial class TypeExtensions
     {
         public static Type GetUnderlyingSystemType(this Type type)
         {
@@ -90,19 +88,12 @@ namespace Aqua
 
         public static IEnumerable<Attribute> GetCustomAttributes(this Type type, Type attributeType, bool inherit)
         {
-#if CORECLR
-            // TODO: how to in dnx core?
-            return new Attribute[0];
-#else
             return type.GetTypeInfo().GetCustomAttributes(attributeType, inherit);
-#endif
         }
 
-        public static bool IsAnonymousType(this Type type)
+        public static IEnumerable<T> GetCustomAttributes<T>(this Type type, bool inherit) where T : Attribute
         {
-            // TODO: how to in dnx core?
-            return type.Name.StartsWith("<>")
-                && type.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), false).Any();
+            return type.GetTypeInfo().GetCustomAttributes<T>(inherit);
         }
 
         public static IEnumerable<System.Reflection.MemberInfo> GetMember(this Type type, string name, MemberTypes memberType, BindingFlags bindingAttr)

@@ -9,6 +9,11 @@ namespace Aqua
 
     partial class TypeExtensions
     {
+        internal static Type GetTypeInfo(this Type type)
+        {
+            return type;
+        }
+
         internal static Type AsType(this Type type)
         {
             return type;
