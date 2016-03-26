@@ -33,15 +33,15 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Member_names_should_be_key_and_value()
         {
-            dynamicObject.MemberNames.ShouldContain("key");
-            dynamicObject.MemberNames.ShouldContain("value");
+            dynamicObject.MemberNames.ShouldContain("Key");
+            dynamicObject.MemberNames.ShouldContain("Value");
         }
 
         [Fact]
         public void Member_values_should_be_key_and_value_of_source()
         {
-            dynamicObject["key"].ShouldBe(source.Key);
-            dynamicObject["value"].ShouldBe(source.Value);
+            dynamicObject["Key"].ShouldBe(source.Key);
+            dynamicObject["Value"].ShouldBe(source.Value);
         }
     }
 }

@@ -95,8 +95,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             foreach (DynamicObject element in (object[])dynamicObject["Dictionary"])
             {
-                element.MemberNames.ShouldContain("key");
-                element.MemberNames.ShouldContain("value");
+                element.MemberNames.ShouldContain("Key");
+                element.MemberNames.ShouldContain("Value");
             }
         }
 
@@ -110,8 +110,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 var key = source.Dictionary.Keys.ElementAt(i);
                 var value = source.Dictionary.Values.ElementAt(i);
 
-                element["key"].ShouldBe(key);
-                element["value"].ShouldBe(value);
+                element["Key"].ShouldBe(key);
+                element["Value"].ShouldBe(value);
             }
         }
     }

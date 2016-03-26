@@ -31,7 +31,7 @@ namespace Aqua.Dynamic
             var customPropertyNames = ReferenceEquals(null, customPropertySet) ? null : customPropertySet.ToDictionary(x => x.Name);
 
             var members = FormatterServices.GetSerializableMembers(type);
-            var membersByCleanName = members.ToDictionary(x => CleanBackingFieldNameIfRequired(x.Name));
+            var membersByCleanName = members.ToDictionary(GetCleanMemberName);
             var memberValueMap = new Dictionary<System.Reflection.MemberInfo, object>();
 
             foreach (var dynamicProperty in from)
@@ -84,7 +84,7 @@ namespace Aqua.Dynamic
             var values = FormatterServices.GetObjectData(from, members);
             for (int i = 0; i < members.Length; i++)
             {
-                var memberName = CleanBackingFieldNameIfRequired(members[i].Name);
+                var memberName = GetCleanMemberName(members[i]);
                 if (!ReferenceEquals(null, customPropertyNames) && !customPropertyNames.ContainsKey(memberName))
                 {
                     continue;
@@ -95,13 +95,25 @@ namespace Aqua.Dynamic
             }
         }
 
-        private static string CleanBackingFieldNameIfRequired(string memberName)
+        private static string GetCleanMemberName(System.Reflection.MemberInfo member)
         {
+            var memberName = member.Name;
+
             var match = Regex.Match(memberName, BackingFieldRegexPattern);
             if (match.Success)
             {
                 memberName = match.Groups["name"].Value;
             }
+
+            if (member.MemberType != System.Reflection.MemberTypes.Property)
+            {
+                var property = member.DeclaringType.GetProperty(memberName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.IgnoreCase);
+                if (!ReferenceEquals(null, property))
+                {
+                    memberName = property.Name;
+                }
+            }
+
             return memberName;
         }
     }
