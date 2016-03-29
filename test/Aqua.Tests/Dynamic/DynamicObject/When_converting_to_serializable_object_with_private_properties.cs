@@ -48,17 +48,38 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             obj.Int32Value.ShouldBe(Int32Value);
         }
 
+#if NET
+
         [Fact]
-        public void Should_have_the_double_property_set()
+        public void Should_have_the_private_double_property_set()
         {
             GetPropertyValue("DoubleValue").ShouldBe(DoubleValue);
         }
 
         [Fact]
-        public void Should_have_the_string_property_set()
+        public void Should_have_the_private_string_property_set()
         {
             GetPropertyValue("StringValue").ShouldBe(StringValue);
         }
+
+#endif
+
+
+#if CORECLR
+
+        [Fact]
+        public void Should_not_have_the_private_double_property_set()
+        {
+            GetPropertyValue("DoubleValue").ShouldBe(default(double));
+        }
+
+        [Fact]
+        public void Should_not_have_the_private_string_property_set()
+        {
+            GetPropertyValue("StringValue").ShouldBeNull();
+        }
+
+#endif
 
         private object GetPropertyValue(string propertyName)
         {
