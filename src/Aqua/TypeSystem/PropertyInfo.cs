@@ -2,8 +2,10 @@
 
 namespace Aqua.TypeSystem
 {
+    using Extensions;
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Runtime.Serialization;
 
     [Serializable]

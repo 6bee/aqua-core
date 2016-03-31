@@ -4,11 +4,15 @@ namespace Aqua.Tests.TypeSystem.Emit.TypeEmitter
 {
     using Aqua.TypeSystem;
     using Aqua.TypeSystem.Emit;
+    using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using Xunit;
     using Xunit.Fluent;
+    using TypeInfo = Aqua.TypeSystem.TypeInfo;
+    using PropertyInfo = Aqua.TypeSystem.PropertyInfo;
 
     public class When_emitting_type
     {

@@ -4,10 +4,13 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
 {
     using Aqua.TypeSystem;
     using Aqua.TypeSystem.Emit;
+    using Aqua.TypeSystem.Extensions;
     using System;
     using System.Linq;
+    using System.Reflection;
     using Xunit;
     using Xunit.Fluent;
+    using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
     public class When_resolving_unknown_anonymous_type
     {

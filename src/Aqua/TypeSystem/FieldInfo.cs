@@ -3,6 +3,7 @@
 namespace Aqua.TypeSystem
 {
     using System;
+    using System.Reflection;
     using System.Runtime.Serialization;
 
     [Serializable]

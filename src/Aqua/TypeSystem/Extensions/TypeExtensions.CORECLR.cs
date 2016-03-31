@@ -2,13 +2,12 @@
 
 #if CORECLR || WINRT
 
-namespace Aqua
+namespace Aqua.TypeSystem.Extensions
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using BindingFlags = System.Reflection.BindingFlags;
     using MemberTypes = Aqua.TypeSystem.MemberTypes;
 
     partial class TypeExtensions
@@ -39,33 +38,17 @@ namespace Aqua
             return type.GetTypeInfo().IsSerializable;
         }
 
-        public static IEnumerable<Type> GetInterfaces(this Type type)
-        {
-            return type.GetTypeInfo().ImplementedInterfaces;
-        }
-
         public static Type GetBaseType(this Type type)
         {
             return type.GetTypeInfo().BaseType;
         }
 
-        public static IEnumerable<Type> GetGenericArguments(this Type type)
-        {
-            var genericTypeArguments = type.GetTypeInfo().GenericTypeArguments;
-            return genericTypeArguments;
-        }
-
-        public static IEnumerable<System.Reflection.ConstructorInfo> GetConstructors(this Type type)
-        {
-            return type.GetTypeInfo().DeclaredConstructors;
-        }
-
-        public static IEnumerable<System.Reflection.ConstructorInfo> GetConstructors(this Type type, BindingFlags bindingAttr)
+        public static IEnumerable<ConstructorInfo> GetConstructors(this Type type, BindingFlags bindingAttr)
         {
             return type.GetTypeInfo().DeclaredConstructors.Filter(bindingAttr);
         }
 
-        public static System.Reflection.ConstructorInfo GetConstructor(this Type type, BindingFlags bindingAttr, /*Binder*/object binder, Type[] types, /*ParameterModifier[]*/object modifiers)
+        public static ConstructorInfo GetConstructor(this Type type, BindingFlags bindingAttr, /*Binder*/object binder, Type[] types, /*ParameterModifier[]*/object modifiers)
         {
             if (!ReferenceEquals(null, binder)) throw new NotSupportedException("Binder not supported by WinRT");
             if (!ReferenceEquals(null, modifiers)) throw new NotSupportedException("ParameterModifier not supported by WinRT");
@@ -96,10 +79,10 @@ namespace Aqua
             return type.GetTypeInfo().GetCustomAttributes<T>(inherit);
         }
 
-        public static IEnumerable<System.Reflection.MemberInfo> GetMember(this Type type, string name, MemberTypes memberType, BindingFlags bindingAttr)
+        public static IEnumerable<MemberInfo> GetMember(this Type type, string name, MemberTypes memberType, BindingFlags bindingAttr)
         {
             // Note: binding flags are simply ignored
-            var members = new List<System.Reflection.MemberInfo>();
+            var members = new List<MemberInfo>();
 
             if ((memberType & MemberTypes.Constructor) == MemberTypes.Constructor)
             {
@@ -124,35 +107,7 @@ namespace Aqua
             return members.ToArray();
         }
 
-        public static System.Reflection.ConstructorInfo GetConstructor(this Type type, Type[] types)
-        {
-            var constructors = type.GetTypeInfo().DeclaredConstructors
-                .Where(m => ParametersMatch(m, types))
-                .ToList();
-
-            switch (constructors.Count)
-            {
-                case 0:
-                    return null;
-                case 1:
-                    return constructors[0];
-                default:
-                    throw new AmbiguousMatchException("More than one constructor is found with the specified name and parameters.");
-            }
-        }
-
-        public static System.Reflection.FieldInfo GetField(this Type type, string name)
-        {
-            return type.GetTypeInfo().GetDeclaredField(name);
-        }
-
-        public static IEnumerable<System.Reflection.MethodInfo> GetMethods(this Type type, BindingFlags bindingAttr)
-        {
-            var methods = type.GetTypeInfo().DeclaredMethods.Filter(bindingAttr);
-            return methods.ToArray();
-        }
-
-        public static System.Reflection.MethodInfo GetMethod(this Type type, string name)
+        public static MethodInfo GetMethod(this Type type, string name)
         {
             var methods = type.GetTypeInfo().DeclaredMethods
                 .Where(m => string.Equals(m.Name, name, StringComparison.Ordinal))
@@ -169,42 +124,7 @@ namespace Aqua
             }
         }
 
-        public static System.Reflection.MethodInfo GetMethod(this Type type, string name, Type[] types)
-        {
-            var methods = type.GetTypeInfo().DeclaredMethods
-                .Where(m => string.Equals(m.Name, name, StringComparison.Ordinal))
-                .Where(m => ParametersMatch(m, types))
-                .ToList();
-
-            switch (methods.Count)
-            {
-                case 0:
-                    return null;
-                case 1:
-                    return methods[0];
-                default:
-                    throw new AmbiguousMatchException("More than one method is found with the specified name and parameters.");
-            }
-        }
-
-        public static System.Reflection.MethodInfo GetMethod(this Type type, string name, BindingFlags bindingAttr)
-        {
-            var methods = type.GetTypeInfo().GetDeclaredMethods(name)
-                .Filter(bindingAttr)
-                .ToList();
-
-            switch (methods.Count)
-            {
-                case 0:
-                    return null;
-                case 1:
-                    return methods[0];
-                default:
-                    throw new AmbiguousMatchException("More than one method is found with the specified name and matching the specified binding constraints.");
-            }
-        }
-
-        public static System.Reflection.MethodInfo GetMethod(this Type type, BindingFlags bindingAttr)
+        public static MethodInfo GetMethod(this Type type, BindingFlags bindingAttr)
         {
             var methods = type.GetTypeInfo().DeclaredMethods
                 .Filter(bindingAttr)
@@ -221,7 +141,7 @@ namespace Aqua
             }
         }
 
-        public static System.Reflection.MethodInfo GetMethod(this Type type, string name, BindingFlags bindingAttr, /*Binder*/object binder, Type[] types, /*ParameterModifier[]*/object modifiers)
+        public static MethodInfo GetMethod(this Type type, string name, BindingFlags bindingAttr, /*Binder*/object binder, Type[] types, /*ParameterModifier[]*/object modifiers)
         {
             if (!ReferenceEquals(null, binder)) throw new NotSupportedException("Binder not supported by WinRT");
             if (!ReferenceEquals(null, modifiers)) throw new NotSupportedException("ParameterModifier not supported by WinRT");
@@ -242,12 +162,7 @@ namespace Aqua
             }
         }
 
-        public static System.Reflection.PropertyInfo GetProperty(this Type type, string name)
-        {
-            return type.GetTypeInfo().GetDeclaredProperty(name);
-        }
-
-        public static System.Reflection.PropertyInfo GetProperty(this Type type, string name, Type returnType)
+        public static PropertyInfo GetProperty(this Type type, string name, Type returnType)
         {
             var properties = type.GetProperties()
                 .Where(p => string.Equals(p.Name, name, StringComparison.Ordinal) && p.PropertyType == returnType)
@@ -264,7 +179,7 @@ namespace Aqua
             }
         }
 
-        public static System.Reflection.PropertyInfo GetProperty(this Type type, string name, BindingFlags bindingAttr)
+        public static PropertyInfo GetProperty(this Type type, string name, BindingFlags bindingAttr)
         {
             var properties = type.GetProperties()
                 .Where(p => string.Equals(p.Name, name, StringComparison.Ordinal))
@@ -282,24 +197,7 @@ namespace Aqua
             }
         }
 
-        public static IEnumerable<System.Reflection.PropertyInfo> GetProperties(this Type type)
-        {
-            return type.GetTypeInfo().DeclaredProperties;
-        }
-
-        public static IEnumerable<System.Reflection.PropertyInfo> GetProperties(this Type type, BindingFlags bindingAttr)
-        {
-            return type.GetProperties()
-                .Filter(bindingAttr)
-                .ToList();
-        }
-
-        public static bool IsAssignableFrom(this Type type, Type c)
-        {
-            return type.GetTypeInfo().IsAssignableFrom(c.GetTypeInfo());
-        }
-
-        private static bool ParametersMatch(System.Reflection.MethodBase m, Type[] types)
+        private static bool ParametersMatch(MethodBase m, Type[] types)
         {
             var parameters = m.GetParameters();
             if (parameters.Length == types.Length)
@@ -318,7 +216,7 @@ namespace Aqua
             return false;
         }
 
-        private static IEnumerable<T> Filter<T>(this IEnumerable<T> memberInfos, BindingFlags bindingAttr) where T : System.Reflection.MemberInfo
+        private static IEnumerable<T> Filter<T>(this IEnumerable<T> memberInfos, BindingFlags bindingAttr) where T : MemberInfo
         {
             // Note: binding flags are simply ignored
             return memberInfos;

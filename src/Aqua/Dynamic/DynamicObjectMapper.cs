@@ -3,11 +3,11 @@
 namespace Aqua.Dynamic
 {
     using Aqua.TypeSystem;
+    using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Text.RegularExpressions;
     using MethodInfo = System.Reflection.MethodInfo;
     using PropertyInfo = System.Reflection.PropertyInfo;
 
@@ -820,7 +820,7 @@ namespace Aqua.Dynamic
 
             if (targetType == typeof(System.Numerics.Complex) || targetType == typeof(System.Numerics.Complex?))
             {
-                var m = Regex.Match(value, ComplexNumberParserRegexPattern);
+                var m = System.Text.RegularExpressions.Regex.Match(value, ComplexNumberParserRegexPattern);
                 if (m.Success)
                 {
                     var re = double.Parse(m.Groups["Re"].Value);

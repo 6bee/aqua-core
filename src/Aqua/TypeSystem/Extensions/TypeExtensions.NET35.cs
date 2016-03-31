@@ -2,21 +2,26 @@
 
 #if NET35 || SILVERLIGHT
 
-namespace Aqua
+namespace Aqua.TypeSystem.Extensions
 {
     using System;
     using System.Reflection;
 
     partial class TypeExtensions
     {
-        internal static Type GetTypeInfo(this Type type)
+        public static Type GetTypeInfo(this Type type)
         {
             return type;
         }
 
-        internal static Type AsType(this Type type)
+        public static Type AsType(this Type type)
         {
             return type;
+        }
+
+        public static T GetCustomAttribute<T>(this MemberInfo type) where T : Attribute
+        {
+            return type.GetCustomAttributes(typeof(T), true) as T;
         }
 
         public static void SetValue(this PropertyInfo property, object obj, object value)

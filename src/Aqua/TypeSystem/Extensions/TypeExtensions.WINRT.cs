@@ -2,7 +2,7 @@
 
 #if WINRT
 
-namespace Aqua
+namespace Aqua.TypeSystem.Extensions
 {
     using System;
 

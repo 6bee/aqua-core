@@ -2,13 +2,11 @@
 
 #if NET || NET35 || SILVERLIGHT
 
-namespace Aqua
+namespace Aqua.TypeSystem.Extensions
 {
     using System;
     using System.Reflection;
     using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Linq;
 
     partial class TypeExtensions
     {
@@ -46,9 +44,9 @@ namespace Aqua
             return type.BaseType;
         }
 
-        public static IEnumerable<System.Reflection.MemberInfo> GetMember(this Type type, string name, Aqua.TypeSystem.MemberTypes memberType, System.Reflection.BindingFlags bindingFlags)
+        public static IEnumerable<MemberInfo> GetMember(this Type type, string name, Aqua.TypeSystem.MemberTypes memberType, BindingFlags bindingFlags)
         {
-            var t = (System.Reflection.MemberTypes)memberType;
+            var t = (MemberTypes)memberType;
             return type.GetMember(name, t, bindingFlags);
         }
     }

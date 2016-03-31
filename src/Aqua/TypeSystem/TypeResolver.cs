@@ -2,8 +2,10 @@
 
 namespace Aqua.TypeSystem
 {
+    using Extensions;
     using System;
     using System.Linq;
+    using System.Reflection;
 
     public partial class TypeResolver : ITypeResolver
     {

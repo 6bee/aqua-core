@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua
+namespace Aqua.TypeSystem.Extensions
 {
     using System;
     using System.Reflection;
@@ -11,7 +11,6 @@ namespace Aqua
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static partial class TypeExtensions
     {
-
 #if NET || NET35 || CORECLR
 
         public static bool IsAnonymousType(this Type type)
