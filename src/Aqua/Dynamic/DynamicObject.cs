@@ -89,7 +89,7 @@ namespace Aqua.Dynamic
         {
             if (ReferenceEquals(null, members))
             {
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(members));
             }
 
             Members = members.Select(x => new Property(x)).ToList();
@@ -104,7 +104,7 @@ namespace Aqua.Dynamic
         {
             if (ReferenceEquals(null, members))
             {
-                throw new ArgumentNullException("data");
+                throw new ArgumentNullException(nameof(members));
             }
 
             Members = members.ToList();
@@ -120,7 +120,7 @@ namespace Aqua.Dynamic
         {
             if (ReferenceEquals(null, obj))
             {
-                throw new ArgumentNullException("obj");
+                throw new ArgumentNullException(nameof(obj));
             }
 
             var dynamicObject = (mapper ?? new DynamicObjectMapper()).MapObject(obj);
@@ -137,7 +137,7 @@ namespace Aqua.Dynamic
         {
             if (ReferenceEquals(null, dynamicObject))
             {
-                throw new ArgumentNullException("dynamicObject");
+                throw new ArgumentNullException(nameof(dynamicObject));
             }
 
             if (deepCopy)
@@ -200,7 +200,7 @@ namespace Aqua.Dynamic
                     return value;
                 }
 
-                throw new Exception(string.Format("Member not found for name '{0}'", name));
+                throw new Exception($"Member not found for name '{name}'");
             }
             set
             {

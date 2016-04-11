@@ -25,7 +25,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             source = new ClassWithGuidProperties
             {
                 Guid1 = Guid.NewGuid(),
-                Guid2 = Guid.NewGuid(),
+                Guid2 = Guid.Empty,
                 Guid3 = null,
             };
 
@@ -39,7 +39,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         }
 
         [Fact]
-        public void Should_have_a_single_member()
+        public void Should_have_three_members_stored()
         {
             dynamicObject.MemberCount.ShouldBe(3);
         }
@@ -47,21 +47,20 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Member_name_should_be_name_of_property()
         {
-            dynamicObject.MemberNames.ElementAt(0).ShouldBe("Guid1");
-            dynamicObject.MemberNames.ElementAt(1).ShouldBe("Guid2");
-            dynamicObject.MemberNames.ElementAt(2).ShouldBe("Guid3");
+            dynamicObject.MemberNames.Any(name => name == "Guid1").ShouldBeTrue();
+            dynamicObject.MemberNames.Any(name => name == "Guid2").ShouldBeTrue();
+            dynamicObject.MemberNames.Any(name => name == "Guid3").ShouldBeTrue();
         }
 
         [Fact]
-        public void Dynamic_guid_properties_should_be_of_type_string()
+        public void Dynamic_guid_properties_should_be_of_type_guid()
         {
-            dynamicObject.Values.ElementAt(0).ShouldBeOfType<Guid>();
-            dynamicObject.Values.ElementAt(1).ShouldBeOfType<Guid>();
-            dynamicObject.Values.ElementAt(2).ShouldBeNull();
+            dynamicObject["Guid1"].ShouldBeOfType<Guid>();
+            dynamicObject["Guid2"].ShouldBeOfType<Guid>();
         }
 
         [Fact]
-        public void Dynamic_guid_properties_should_be_string_represenation_of_guid_values()
+        public void Dynamic_guid_properties_should_contain_expected_guid_values()
         {
             dynamicObject["Guid1"].ShouldBe(source.Guid1);
             dynamicObject["Guid2"].ShouldBe(source.Guid2);

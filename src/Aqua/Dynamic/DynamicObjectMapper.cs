@@ -22,7 +22,7 @@ namespace Aqua.Dynamic
             public ObjectFormatterContext(Func<Type, Type> dynamicObjectTypeMapper = null)
             {
                 _dynamicObjectTypeInfoMapper = dynamicObjectTypeMapper ?? (t => t);
-                _referenceMap = new Dictionary<TFrom, TTo>(ReferenceEqualityComparer<TFrom>.Instance);
+                _referenceMap = new Dictionary<TFrom, TTo>(ReferenceEqualityComparer<TFrom>.Default);
             }
 
             /// <summary>
@@ -183,6 +183,7 @@ namespace Aqua.Dynamic
         private readonly ObjectFormatterContext<object, DynamicObject> _toContext;
         private readonly Func<TypeSystem.TypeInfo, Type> _resolveType;
         private readonly Func<Type, bool> _isKnownType;
+        private readonly Func<Type, object, DynamicObject> _dynamicObjectFactory;
         private readonly bool _suppressMemberAssignabilityValidation;
         private readonly bool _formatPrimitiveTypesAsString;
 
@@ -195,12 +196,14 @@ namespace Aqua.Dynamic
         /// if set to false no validation will be performed resulting in an exception when trying to assign a property value with an unmatching type.</param>
         /// <param name="formatPrimitiveTypesAsString">If set to true all primitive type values are stored as strings, ohterwise primitive values get stored with no transformation.</param>
         /// <param name="dynamicObjectTypeInfoMapper">This optional function allows mapping type informaiton which gets set into the <see cref="DynamicObject"/> upon their creation.</param>
-        public DynamicObjectMapper(Func<TypeSystem.TypeInfo, Type> resolveType = null, Func<Type, bool> isKnownType = null, bool silentlySkipUnassignableMembers = true, bool formatPrimitiveTypesAsString = false, Func<Type, Type> dynamicObjectTypeInfoMapper = null)
+        /// <param name="dynamicObjectFactory">This optional funtion allows injection of custom creator of <see cref="DynamicObject"/>.</param>
+        public DynamicObjectMapper(Func<TypeSystem.TypeInfo, Type> resolveType = null, Func<Type, bool> isKnownType = null, bool silentlySkipUnassignableMembers = true, bool formatPrimitiveTypesAsString = false, Func<Type, Type> dynamicObjectTypeInfoMapper = null, Func<Type, object, DynamicObject> dynamicObjectFactory = null)
         {
             _fromContext = new ObjectFormatterContext<DynamicObject, object>();
             _toContext = new ObjectFormatterContext<object, DynamicObject>(dynamicObjectTypeInfoMapper);
             _resolveType = resolveType ?? (t => TypeResolver.Instance.ResolveType(t));
             _isKnownType = isKnownType ?? (t => false);
+            _dynamicObjectFactory = dynamicObjectFactory ?? ((t, o) => new DynamicObject(t));
             _suppressMemberAssignabilityValidation = !silentlySkipUnassignableMembers;
             _formatPrimitiveTypesAsString = formatPrimitiveTypesAsString;
         }
@@ -459,7 +462,9 @@ namespace Aqua.Dynamic
                 facotry = (t, o, f) =>
                 {
                     var value = MapToDynamicObjectIfRequired(o, f);
-                    return new DynamicObject(t) { { string.Empty, value } };
+                    var dynamicObject = _dynamicObjectFactory(t, o);
+                    dynamicObject.Add(string.Empty, value);
+                    return dynamicObject;
                 };
             }
             else if (type.IsArray)
@@ -470,12 +475,14 @@ namespace Aqua.Dynamic
                         .OfType<object>()
                         .Select(x => MapToDynamicObjectIfRequired(x, f))
                         .ToArray();
-                    return new DynamicObject(t) { { string.Empty, list.Any() ? list : null } };
+                    var dynamicObject = _dynamicObjectFactory(t, o);
+                    dynamicObject.Add(string.Empty, list.Any() ? list : null);
+                    return dynamicObject;
                 };
             }
             else
             {
-                facotry = (t, o, f) => new DynamicObject(t);
+                facotry = (t, o, f) => _dynamicObjectFactory(t, o);
                 initializer = PopulateObjectMembers;
             }
 
@@ -548,12 +555,14 @@ namespace Aqua.Dynamic
         {
             // TODO: add support for ISerializable
             // TODO: add support for OnSerializingAttribute, OnSerializedAttribute, OnDeserializingAttribute, OnDeserializedAttribute
+#if NET || NET35
             if (type.IsSerializable())
             {
                 MapObjectMembers(from, to, setTypeInformation);
             }
             else
             {
+#endif
                 var properties = GetPropertiesForMapping(type) ??
                     type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                         .Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
@@ -563,7 +572,9 @@ namespace Aqua.Dynamic
                     value = MapToDynamicObjectIfRequired(value, setTypeInformation);
                     to[property.Name] = value;
                 }
+#if NET || NET35
             }
+#endif
         }
 
         /// <summary>
@@ -623,6 +634,7 @@ namespace Aqua.Dynamic
                 // project data record
                 Func<Type, DynamicObject, object> factory;
                 Action<Type, DynamicObject, object> initializer = null;
+#if NET || NET35
                 if (elementType.IsSerializable())
                 {
                     factory = (type, item) => GetUninitializedObject(type);
@@ -630,6 +642,7 @@ namespace Aqua.Dynamic
                 }
                 else
                 {
+#endif
                     var dynamicProperties = objects.SelectMany(x => x.Members).Distinct().ToList();
                     var constructor = elementType.GetConstructors()
                         .Select(i =>
@@ -686,7 +699,9 @@ namespace Aqua.Dynamic
                     {
                         throw new Exception(string.Format("Failed to pick matching contructor for type {0}", elementType.FullName));
                     }
+#if NET || NET35
                 }
+#endif
 
                 var list = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
                 foreach (var item in objects)

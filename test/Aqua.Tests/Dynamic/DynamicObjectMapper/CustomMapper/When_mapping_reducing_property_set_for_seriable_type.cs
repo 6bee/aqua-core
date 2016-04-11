@@ -39,13 +39,19 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
         {
             var dynamicObjectMapper = new CustomMapper();
 
-            dynamicObject = dynamicObjectMapper.MapObject(new DataObject());
+            dynamicObject = dynamicObjectMapper.MapObject(new DataObject
+            {
+                PropertyOne = "one",
+                PropertyTwo = "two"
+            });
         }
 
         [Fact]
         public void Dynamic_object_should_contain_property_two_only()
         {
             dynamicObject.MemberNames.Single().ShouldBe("PropertyTwo");
+
+            dynamicObject["PropertyTwo"].ShouldBe("two");
         }
     }
 }

@@ -7,8 +7,13 @@ namespace Aqua
 
     public sealed class ReferenceEqualityComparer<T> : IEqualityComparer<T>
     {
-        public static readonly ReferenceEqualityComparer<T> Instance = new ReferenceEqualityComparer<T>();
-        
+        private static ReferenceEqualityComparer<T> _default;
+
+        public static ReferenceEqualityComparer<T> Default
+        {
+            get { return _default ?? (_default = new ReferenceEqualityComparer<T>()); }
+        }
+
         public bool Equals(T x, T y)
         {
             return ReferenceEquals(x, y);
