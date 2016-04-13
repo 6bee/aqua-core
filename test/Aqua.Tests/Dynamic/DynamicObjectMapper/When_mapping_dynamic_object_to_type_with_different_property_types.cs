@@ -30,7 +30,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Should_throw_when_preventing_type_validation()
         {
-            var mapper = new DynamicObjectMapper(silentlySkipUnassignableMembers: false);
+            var mapper = new DynamicObjectMapper(new DynamicObjectMapperSettings { SilentlySkipUnassignableMembers = false });
 
             var ex = Assert.Throws<Exception>(() => mapper.Map<CustomType>(dynamicObject));
 
@@ -41,7 +41,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Should_silently_skip_unmatching_value_when_allowing_type_validation()
         {
-            var mapper = new DynamicObjectMapper(silentlySkipUnassignableMembers: true);
+            var mapper = new DynamicObjectMapper(new DynamicObjectMapperSettings { SilentlySkipUnassignableMembers = true });
 
             var obj = mapper.Map<CustomType>(dynamicObject);
 

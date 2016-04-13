@@ -3,13 +3,20 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
+    using Aqua.TypeSystem;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
     using Xunit.Fluent;
+    using System;
 
     public class When_mapping_dynamic_objects_to_list_of_known_types
     {
+        class IsKnownTypeProvider : IIsKnownTypeProvider
+        {
+            public bool IsKnownType(Type type) => type == typeof(CustomReferenceType);
+        }
+
         class CustomReferenceType
         {
             public int Int32Property { get; set; }
@@ -33,7 +40,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
                 },
             };
 
-            var mapper = new DynamicObjectMapper(isKnownType: t => t == typeof(CustomReferenceType));
+            var mapper = new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider());
 
             recreatedObjectLists = mapper.Map<CustomReferenceType>(dynamicObjects);
         }

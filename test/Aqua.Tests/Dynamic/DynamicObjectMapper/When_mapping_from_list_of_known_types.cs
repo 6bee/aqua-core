@@ -7,9 +7,15 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using System.Linq;
     using Xunit;
     using Xunit.Fluent;
+    using System;
 
     public class When_mapping_from_list_of_known_types
     {
+        class IsKnownTypeProvider : IIsKnownTypeProvider
+        {
+            public bool IsKnownType(Type type) => type == typeof(CustomReferenceType);
+        }
+
         class CustomReferenceType
         {
             public int Int32Property { get; set; }
@@ -27,7 +33,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
                 new CustomReferenceType { Int32Property = 2, StringProperty="Two" },
             };
 
-            var mapper = new DynamicObjectMapper(isKnownType: t => t == typeof(CustomReferenceType));
+            var mapper = new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider());
             
             dynamicObjects = mapper.MapCollection(sourceObjects);
         }

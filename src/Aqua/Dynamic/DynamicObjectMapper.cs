@@ -88,7 +88,7 @@ namespace Aqua.Dynamic
 
         private const string NumericPattern = @"([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?";
 
-        private static readonly string ComplexNumberParserRegexPattern = string.Format("^(?<Re>[+-]?({0}))(?<Sign>[+-])[iI](?<Im>{0})$", NumericPattern);
+        private static readonly string ComplexNumberParserRegexPattern = $"^(?<Re>[+-]?({NumericPattern}))(?<Sign>[+-])[iI](?<Im>{NumericPattern})$";
 
         private static readonly Type _genericDictionaryType = typeof(Dictionary<,>);
 
@@ -183,36 +183,49 @@ namespace Aqua.Dynamic
         private readonly ObjectFormatterContext<object, DynamicObject> _toContext;
         private readonly Func<TypeSystem.TypeInfo, Type> _resolveType;
         private readonly Func<Type, bool> _isKnownType;
-        private readonly Func<Type, object, DynamicObject> _dynamicObjectFactory;
+        private readonly Func<Type, object, DynamicObject> _createDynamicObject;
         private readonly bool _suppressMemberAssignabilityValidation;
         private readonly bool _formatPrimitiveTypesAsString;
 
         /// <summary>
         /// Creates a new instance of <see cref="DynamicObjectMapper"/>
         /// </summary>
-        /// <param name="resolveType">Func to be used to resolve types</param>
-        /// <param name="isKnownType">Func to decide whether a type requires to be mapped into a <see cref="DynamicObject"/>, know types do not get mapped</param>
-        /// <param name="silentlySkipUnassignableMembers">If set to true properties which cannot be assigned due to a type mismatch are silently skipped, 
-        /// if set to false no validation will be performed resulting in an exception when trying to assign a property value with an unmatching type.</param>
-        /// <param name="formatPrimitiveTypesAsString">If set to true all primitive type values are stored as strings, ohterwise primitive values get stored with no transformation.</param>
-        /// <param name="dynamicObjectTypeInfoMapper">This optional function allows mapping type informaiton which gets set into the <see cref="DynamicObject"/> upon their creation.</param>
-        /// <param name="dynamicObjectFactory">This optional funtion allows injection of custom creator of <see cref="DynamicObject"/>.</param>
-        public DynamicObjectMapper(Func<TypeSystem.TypeInfo, Type> resolveType = null, Func<Type, bool> isKnownType = null, bool silentlySkipUnassignableMembers = true, bool formatPrimitiveTypesAsString = false, Func<Type, Type> dynamicObjectTypeInfoMapper = null, Func<Type, object, DynamicObject> dynamicObjectFactory = null)
+        /// <param name="settings">Optional settings for dynamic object mapping</param>
+        /// <param name="typeResolver">Optional instance to be used to resolve types</param>
+        /// <param name="typeMapper">This optional parameter allows mapping type information which get set into the <see cref="DynamicObject"/>s upon their creation.</param>
+        /// <param name="dynamicObjectFactory">This optional parameter allows injection of a custom factory for <see cref="DynamicObject"/>.</param>
+        /// <param name="isKnownTypeProvider">Optional instance to decide whether a type requires to be mapped into a <see cref="DynamicObject"/>, know types do not get mapped</param>
+        public DynamicObjectMapper(DynamicObjectMapperSettings settings = null, ITypeResolver typeResolver = null, ITypeMapper typeMapper = null, IDynamicObjectFactory dynamicObjectFactory = null, IIsKnownTypeProvider isKnownTypeProvider = null)
         {
+            if (ReferenceEquals(null, settings))
+            {
+                settings = new DynamicObjectMapperSettings();
+            }
+
+            _suppressMemberAssignabilityValidation = !settings.SilentlySkipUnassignableMembers;
+
+            _formatPrimitiveTypesAsString = settings.FormatPrimitiveTypesAsString;
+
             _fromContext = new ObjectFormatterContext<DynamicObject, object>();
-            _toContext = new ObjectFormatterContext<object, DynamicObject>(dynamicObjectTypeInfoMapper);
-            _resolveType = resolveType ?? (t => TypeResolver.Instance.ResolveType(t));
-            _isKnownType = isKnownType ?? (t => false);
-            _dynamicObjectFactory = dynamicObjectFactory ?? ((t, o) => new DynamicObject(t));
-            _suppressMemberAssignabilityValidation = !silentlySkipUnassignableMembers;
-            _formatPrimitiveTypesAsString = formatPrimitiveTypesAsString;
+
+            _toContext = new ObjectFormatterContext<object, DynamicObject>(ReferenceEquals(null, typeMapper) ? default(Func<Type, Type>) : typeMapper.MapType);
+
+            _resolveType = (typeResolver ?? TypeResolver.Instance).ResolveType;
+
+            _isKnownType = ReferenceEquals(null, isKnownTypeProvider)
+                ? (t => false)
+                : new Func<Type, bool>(isKnownTypeProvider.IsKnownType);
+
+            _createDynamicObject = ReferenceEquals(null, dynamicObjectFactory) 
+                ? (t, o) => new DynamicObject(t)
+                : new Func<Type, object, DynamicObject>(dynamicObjectFactory.CreateDynamicObject);
         }
 
         public System.Collections.IEnumerable Map(IEnumerable<DynamicObject> objects, Type type)
         {
             if (ReferenceEquals(null, objects))
             {
-                throw new ArgumentNullException("objects");
+                throw new ArgumentNullException(nameof(objects));
             }
 
             var items = objects.Select(x => Map(x, type));
@@ -408,7 +421,7 @@ namespace Aqua.Dynamic
                     return r2;
                 }
 
-                throw new Exception(string.Format("Failed to project collection of {0} into type {1}", elementType, targetType));
+                throw new Exception($"Failed to project collection of {elementType} into type {targetType}");
             }
 
             if (targetType.IsEnum())
@@ -462,7 +475,7 @@ namespace Aqua.Dynamic
                 facotry = (t, o, f) =>
                 {
                     var value = MapToDynamicObjectIfRequired(o, f);
-                    var dynamicObject = _dynamicObjectFactory(t, o);
+                    var dynamicObject = _createDynamicObject(t, o);
                     dynamicObject.Add(string.Empty, value);
                     return dynamicObject;
                 };
@@ -475,14 +488,14 @@ namespace Aqua.Dynamic
                         .OfType<object>()
                         .Select(x => MapToDynamicObjectIfRequired(x, f))
                         .ToArray();
-                    var dynamicObject = _dynamicObjectFactory(t, o);
+                    var dynamicObject = _createDynamicObject(t, o);
                     dynamicObject.Add(string.Empty, list.Any() ? list : null);
                     return dynamicObject;
                 };
             }
             else
             {
-                facotry = (t, o, f) => _dynamicObjectFactory(t, o);
+                facotry = (t, o, f) => _createDynamicObject(t, o);
                 initializer = PopulateObjectMembers;
             }
 
@@ -596,7 +609,7 @@ namespace Aqua.Dynamic
             if (ReferenceEquals(null, objects))
             {
                 //return null;
-                throw new ArgumentNullException("objects");
+                throw new ArgumentNullException(nameof(objects));
             }
 
             if (!objects.Any())
@@ -697,7 +710,7 @@ namespace Aqua.Dynamic
                     }
                     else
                     {
-                        throw new Exception(string.Format("Failed to pick matching contructor for type {0}", elementType.FullName));
+                        throw new Exception($"Failed to pick matching contructor for type {elementType.FullName}");
                     }
 #if NET || NET35
                 }
@@ -713,7 +726,7 @@ namespace Aqua.Dynamic
                 return (IEnumerable<T>)list;
             }
 
-            throw new Exception(string.Format("Failed to project dynamic objects into type {0}", typeof(T).FullName));
+            throw new Exception($"Failed to project dynamic objects into type {typeof(T).FullName}");
         }
 
         private object MapInternal(DynamicObject obj, Type type)
@@ -791,8 +804,9 @@ namespace Aqua.Dynamic
                 char character;
                 if (!char.TryParse(value, out character))
                 {
-                    throw new FormatException(string.Format("Value '{0}' cannot be parsed into character.", value));
+                    throw new FormatException($"Value '{value}' cannot be parsed into character.");
                 }
+
                 return character;
 #else
                 return char.Parse(value);
@@ -844,11 +858,11 @@ namespace Aqua.Dynamic
                 }
                 else
                 {
-                    throw new FormatException(string.Format("Value '{0}' cannot be parsed into complex number.", value));
+                    throw new FormatException($"Value '{value}' cannot be parsed into complex number.");
                 }
             }
 #endif
-            throw new NotImplementedException(string.Format("string parser for type {0} is not implemented", targetType));
+            throw new NotImplementedException($"string parser for type {targetType} is not implemented");
         }
 
         private static bool IsSingleValueWrapper(DynamicObject item)
@@ -940,7 +954,7 @@ namespace Aqua.Dynamic
             if (type == typeof(System.Numerics.Complex) || type == typeof(System.Numerics.Complex?))
             {
                 var c = (System.Numerics.Complex)obj;
-                return string.Format("{0:R}{1:+;-}i{2:R}", c.Real, Math.Sign(c.Imaginary), Math.Abs(c.Imaginary));
+                return $"{c.Real:R}{Math.Sign(c.Imaginary):+;-}i{Math.Abs(c.Imaginary):R}";
             }
 #endif
             return obj.ToString();
@@ -973,7 +987,7 @@ namespace Aqua.Dynamic
             {
                 return method.Invoke(instance, args);
             }
-            catch (System.Reflection.TargetInvocationException ex)
+            catch (TargetInvocationException ex)
             {
                 Exception innerException;
                 if (ReferenceEquals(null, ex.InnerException))

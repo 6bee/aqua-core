@@ -20,6 +20,14 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             public object Source { get; }
         }
 
+        class DynamicObjectFactory : IDynamicObjectFactory
+        {
+            public DynamicObject CreateDynamicObject(Type type, object instance)
+            {
+                return new DynamicObjectWithRefToSource(type, instance);
+            }
+        }
+
         class A
         {
             public B B { get; set; }
@@ -59,7 +67,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             source.B.A = source;
             source.B.C.A = source;
 
-            var mapper = new DynamicObjectMapper(dynamicObjectFactory: (t, o) => new DynamicObjectWithRefToSource(t, o));
+            var mapper = new DynamicObjectMapper(dynamicObjectFactory: new DynamicObjectFactory());
 
             dynamicObject = mapper.MapObject(source);
         }
