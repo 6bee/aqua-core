@@ -7,7 +7,5 @@ namespace Aqua.TypeSystem
     public interface ITypeResolver
     {
         Type ResolveType(TypeInfo typeInfo);
-
-        Type ResolveType(string typeName);
     }
 }

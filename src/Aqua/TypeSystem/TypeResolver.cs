@@ -15,13 +15,11 @@ namespace Aqua.TypeSystem
 
         private readonly TransparentCache<TypeInfo, Type> _typeCache = new TransparentCache<TypeInfo, Type>();
 
-        private readonly TransparentCache<string, Type> _typeCacheByName = new TransparentCache<string, Type>();
-
         /// <summary>
         /// Sets or gets an instance of ITypeResolver.
         /// </summary>
         /// <remarks>
-        /// Setting this property allows for registring a custom type resolver. 
+        /// Setting this property allows for registring a custom type resolver statically. 
         /// Setting this property to null makes it fall-back to the default resolver.
         /// </remarks>
         public static ITypeResolver Instance
@@ -33,36 +31,6 @@ namespace Aqua.TypeSystem
         public virtual Type ResolveType(TypeInfo typeInfo)
         {
             return _typeCache.GetOrCreate(typeInfo, ResolveTypeInternal);
-        }
-
-        public virtual Type ResolveType(string typeName)
-        {
-            return _typeCacheByName.GetOrCreate(typeName, ResolveTypeInternal);
-        }
-
-        private Type ResolveTypeInternal(string typeName)
-        {
-            if (string.IsNullOrEmpty(typeName))
-            {
-                throw new ArgumentNullException("typeName", "Expected a valid type name");
-            }
-
-            var type = Type.GetType(typeName);
-            if (ReferenceEquals(null, type))
-            {
-                var assemblies = GetAssemblies();
-                foreach (var assembly in assemblies)
-                {
-                    type = assembly.GetType(typeName);
-
-                    if (!ReferenceEquals(null, type))
-                    {
-                        break;
-                    }
-                }
-            }
-
-            return type;
         }
 
         private Type ResolveTypeInternal(TypeInfo typeInfo)
@@ -93,7 +61,7 @@ namespace Aqua.TypeSystem
 
             if (ReferenceEquals(null, type))
             {
-                throw new Exception(string.Format("Type '{0}' could not be resolved", typeInfo.FullName));
+                throw new Exception($"Type '{typeInfo.FullName}' could not be resolved");
             }
 
             if (typeInfo.IsGenericType)
