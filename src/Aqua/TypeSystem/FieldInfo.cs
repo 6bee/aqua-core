@@ -62,7 +62,7 @@ namespace Aqua.TypeSystem
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
+                throw new Exception($"Declaring type '{DeclaringType}' could not be reconstructed", ex);
             }
 
             var fieldInfo = declaringType.GetField(Name);

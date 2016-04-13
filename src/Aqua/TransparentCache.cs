@@ -24,7 +24,7 @@ namespace Aqua
         {
             if (cleanupDelay < -1)
             {
-                throw new ArgumentOutOfRangeException("cleanupDelay", "expected values equal or greater than -1");
+                throw new ArgumentOutOfRangeException(nameof(cleanupDelay), "expected values equal or greater than -1");
             }
 
             _cleanupDelay = cleanupDelay;

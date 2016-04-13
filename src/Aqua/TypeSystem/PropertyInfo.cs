@@ -57,7 +57,7 @@ namespace Aqua.TypeSystem
         {
             if (ReferenceEquals(null, propertyInfo))
             {
-                throw new ArgumentNullException("propertyInfo");
+                throw new ArgumentNullException(nameof(propertyInfo));
             }
             
             PropertyType = TypeInfo.Create(referenceTracker, propertyInfo.PropertyType);
@@ -90,7 +90,7 @@ namespace Aqua.TypeSystem
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
+                throw new Exception($"Declaring type '{DeclaringType}' could not be reconstructed", ex);
             }
 
             var propertyInfo = declaringType.GetProperty(Name);

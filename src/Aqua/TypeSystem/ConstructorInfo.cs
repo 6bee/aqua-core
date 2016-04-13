@@ -59,7 +59,7 @@ namespace Aqua.TypeSystem
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format("Declaring type '{0}' could not be reconstructed", DeclaringType), ex);
+                throw new Exception($"Declaring type '{DeclaringType}' could not be reconstructed", ex);
             }
 
             var genericArguments = ReferenceEquals(null, GenericArgumentTypes) ? new Type[0] : GenericArgumentTypes
@@ -72,7 +72,7 @@ namespace Aqua.TypeSystem
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(string.Format("Generic argument type '{0}' could not be reconstructed", typeInfo), ex);
+                        throw new Exception($"Generic argument type '{typeInfo}' could not be reconstructed", ex);
                     }
                 })
                 .ToArray();
@@ -87,7 +87,7 @@ namespace Aqua.TypeSystem
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(string.Format("Parameter type '{0}' could not be reconstructed", typeInfo), ex);
+                        throw new Exception($"Parameter type '{typeInfo}' could not be reconstructed", ex);
                     }
                 })
                 .ToArray();
@@ -120,7 +120,7 @@ namespace Aqua.TypeSystem
 
         public override string ToString()
         {
-            return string.Format(".ctor {1}", base.ToString());
+            return $".ctor {base.ToString()}";
         }
 
         public static explicit operator System.Reflection.ConstructorInfo(ConstructorInfo c)

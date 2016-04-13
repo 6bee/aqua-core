@@ -56,7 +56,7 @@ namespace Aqua.Dynamic
                             break;
 
                         default:
-                            throw new Exception(string.Format("Unsupported member type {0}.", member.MemberType));
+                            throw new Exception($"Unsupported member type {member.MemberType}.");
                     }
 
                     var value = MapFromDynamicObjectGraph(dynamicProperty.Value, memberType);

@@ -53,7 +53,7 @@ namespace Aqua.TypeSystem
 
         public override string ToString()
         {
-            return string.Format("{0}.{1}", DeclaringType, Name);
+            return $"{DeclaringType}.{Name}";
         }
 
         public static MemberInfo Create(System.Reflection.MemberInfo memberInfo)
@@ -73,7 +73,7 @@ namespace Aqua.TypeSystem
                     return new MethodInfo((System.Reflection.MethodInfo)memberInfo);
 
                 default:
-                    throw new Exception(string.Format("Not supported member type: {0}", memberInfo.GetMemberType()));
+                    throw new Exception($"Not supported member type: {memberInfo.GetMemberType()}");
             }
         }
 
@@ -94,7 +94,7 @@ namespace Aqua.TypeSystem
                     return ((MethodInfo)this).ResolveMethod(typeResolver);
 
                 default:
-                    throw new NotImplementedException(string.Format("Implementation missing for conversion of member type: {0}", this.MemberType));
+                    throw new NotImplementedException($"Implementation missing for conversion of member type: {MemberType}");
             }
         }
 

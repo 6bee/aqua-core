@@ -60,7 +60,7 @@ namespace Aqua.TypeSystem.Emit
 
             // define fields
             var fields = propertyInfos
-                .Select(x => type.DefineField(string.Format("_{0}", x.Name), x.PropertyType.Type, FieldAttributes.Private))
+                .Select(x => type.DefineField($"_{x.Name}", x.PropertyType.Type, FieldAttributes.Private))
                 .ToArray();
 
             // define default constructor
@@ -77,7 +77,7 @@ namespace Aqua.TypeSystem.Emit
                 {
                     var property = type.DefineProperty(x.Name, PropertyAttributes.HasDefault, x.PropertyType.Type, null);
 
-                    var propertyGetter = type.DefineMethod(string.Format("get_{0}", x.Name), MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, x.PropertyType.Type, null);
+                    var propertyGetter = type.DefineMethod($"get_{x.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, x.PropertyType.Type, null);
                     var getterPil = propertyGetter.GetILGenerator();
                     getterPil.Emit(OpCodes.Ldarg_0);
                     getterPil.Emit(OpCodes.Ldfld, fields[i]);
@@ -85,7 +85,7 @@ namespace Aqua.TypeSystem.Emit
 
                     property.SetGetMethod(propertyGetter);
 
-                    var propertySetter = type.DefineMethod(string.Format("set_{0}", x.Name), MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new[] { x.PropertyType.Type });
+                    var propertySetter = type.DefineMethod($"set_{x.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new[] { x.PropertyType.Type });
                     var setterPil = propertySetter.GetILGenerator();
                     setterPil.Emit(OpCodes.Ldarg_0);
                     setterPil.Emit(OpCodes.Ldarg_1);
@@ -119,12 +119,12 @@ namespace Aqua.TypeSystem.Emit
             type.SetCustomAttribute(new CustomAttributeBuilder(typeof(CompilerGeneratedAttribute).GetConstructor(new Type[0]), new object[0]));
 
             // define generic parameters
-            var genericTypeParameterNames = propertyNames.Select((x, i) => string.Format("T{0}", i)).ToArray();
+            var genericTypeParameterNames = propertyNames.Select((x, i) => $"T{i}").ToArray();
             var genericTypeParameters = type.DefineGenericParameters(genericTypeParameterNames);
 
             // define fields
             var fields = propertyNames
-                .Select((x, i) => type.DefineField(string.Format("_{0}", x), genericTypeParameters[i].AsType(), FieldAttributes.Private | FieldAttributes.InitOnly))
+                .Select((x, i) => type.DefineField($"_{x}", genericTypeParameters[i].AsType(), FieldAttributes.Private | FieldAttributes.InitOnly))
                 .ToArray();
 
             // define constructor
@@ -147,7 +147,7 @@ namespace Aqua.TypeSystem.Emit
                 {
                     var property = type.DefineProperty(x, PropertyAttributes.HasDefault, genericTypeParameters[i].AsType(), null);
 
-                    var propertyGetter = type.DefineMethod(string.Format("get_{0}", x), MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, genericTypeParameters[i].AsType(), null);
+                    var propertyGetter = type.DefineMethod($"get_{x}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, genericTypeParameters[i].AsType(), null);
                     var pil = propertyGetter.GetILGenerator();
                     pil.Emit(OpCodes.Ldarg_0);
                     pil.Emit(OpCodes.Ldfld, fields[i]);
@@ -167,14 +167,14 @@ namespace Aqua.TypeSystem.Emit
         private string CreateUniqueClassName()
         {
             var id = Interlocked.Increment(ref _classIndex);
-            var fullName = string.Format("{0}.<>__EmittedType__{1}", _module.Name, id);
+            var fullName = $"{_module.Name}.<>__EmittedType__{id}";
             return fullName;
         }
 
         private string CreateUniqueClassNameForAnonymousType(IEnumerable<string> properties)
         {
             var id = Interlocked.Increment(ref _classIndex);
-            var fullName = string.Format("{0}.<>__EmittedType__{1}`{2}", _module.Name, id, properties.Count());
+            var fullName = $"{_module.Name}.<>__EmittedType__{id}`{properties.Count()}";
             return fullName;
         }
     }

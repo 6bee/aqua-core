@@ -188,7 +188,7 @@ namespace Aqua.TypeSystem.Emit
                 var propertyTypeInfo = propertyInfo.PropertyType;
                 if (ReferenceEquals(null, propertyInfo))
                 {
-                    throw new Exception(string.Format("Property type missing for property '{0}'", propertyInfo.Name));
+                    throw new Exception($"Property type missing for property '{propertyInfo.Name}'");
                 }
 
                 var propertyType = propertyTypeInfo.Type;

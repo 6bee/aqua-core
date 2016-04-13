@@ -30,7 +30,7 @@ namespace Aqua.TypeSystem
                 return MemberTypes.Property;
             }
 
-            throw new Exception(string.Format("Unsupported member type: {0}", member.GetType()));
+            throw new Exception($"Unsupported member type: {member.GetType()}");
         }
     }
 }

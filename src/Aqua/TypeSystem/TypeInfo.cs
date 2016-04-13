@@ -86,7 +86,7 @@ namespace Aqua.TypeSystem
         {
             if (ReferenceEquals(null, typeInfo))
             {
-                throw new ArgumentNullException("typeInfo");
+                throw new ArgumentNullException(nameof(typeInfo));
             }
 
             referenceTracker.Add(typeInfo, this);
@@ -169,18 +169,11 @@ namespace Aqua.TypeSystem
             {
                 if (IsNested)
                 {
-                    var fullname = string.Format("{0}+{1}",
-                        DeclaringType.FullName,
-                        Name);
-                    return fullname;
+                    return $"{DeclaringType.FullName}+{Name}";
                 }
                 else
                 {
-                    var fullname = string.Format("{0}{1}{2}",
-                        Namespace,
-                        string.IsNullOrEmpty(Namespace) ? null : ".",
-                        Name);
-                    return fullname;
+                    return $"{Namespace}{(string.IsNullOrEmpty(Namespace) ? null : ".")}{Name}";
                 }
             }
         }
@@ -227,7 +220,7 @@ namespace Aqua.TypeSystem
             var genericArguments = IsGenericType
                 ? string.Format("[{0}]", string.Join(",", GenericArguments.Select(x => x.ToString()).ToArray()))
                 : null;
-            return string.Format("{0}{1}", FullName, genericArguments);
+            return $"{FullName}{genericArguments}";
         }
 
         public static explicit operator Type(TypeInfo t)
