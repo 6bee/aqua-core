@@ -5,7 +5,7 @@ aqua-core
 
 NuGet (`master`): [![](http://img.shields.io/nuget/v/aqua-core.svg?style=flat-square)](http://www.nuget.org/packages/aqua-core) 
 
-MyGet (`dev`): [![](http://img.shields.io/myget/aqua-core/v/aqua-core.svg?style=flat-square)](https://www.myget.org/gallery/aqua-core)  
+MyGet (`dnx`): [![](http://img.shields.io/myget/aqua/v/aqua-core.svg?style=flat-square)](https://www.myget.org/feed/aqua/package/nuget/aqua-core)  
 
 
 AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/98rc3yav530hlw1c?svg=true)](https://ci.appveyor.com/project/6bee/aqua-core)
