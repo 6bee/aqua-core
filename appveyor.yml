@@ -1,10 +1,21 @@
-version: 1.0.{build}
+init:
+  - git config --global core.autocrlf true
 branches:
   only:
     - master
     #- dnx
+#build_script:
+#  - build.cmd --quiet verify
+#test:
+#  assemblies:
+#    - '**\*.Tests.dll'
+version: 1.0.{build}
+cache: C:\Users\appveyor\.dnx\packages
 before_build:
-- cmd: nuget restore src/Aqua/Aqua.sln
+- cmd: dnu restore
+build_script:
+- cmd: dnu build src\Aqua test\Aqua.Tests test\Aqua.NET35.Tests
+test_script:
+- cmd: dnx -p test/Aqua.Tests test
 build:
-  project: src/Aqua/Aqua.sln
-  verbosity: minimal
+  verbosity: normal
