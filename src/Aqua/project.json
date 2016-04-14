@@ -2,12 +2,12 @@
   "name": "aqua-core",
   "authors": [ "Christof Senn" ],
   "version": "4.0.0-alpha-*",
-  "description": "Transform any object-graph into a dynamic structure like composed dictionaries, holding serializable values, type information, and dynamic-objects.",
+  "description": "Transform any object-graph into a dynamic, composed dictionaries like structure, holding serializable values and type information.",
   "licenseUrl": "https://raw.githubusercontent.com/6bee/aqua-core/master/license.txt",
   "projectUrl": "https://github.com/6bee/aqua-core/wiki",
   "iconUrl": "https://raw.githubusercontent.com/6bee/aqua-core/master/aqua-small.png",
   "copyright": "Copyright Christof Senn 2013-2016",
-  "tags": [ "type-info", "dynamic-object", "object-mapping", "object-mapper" ],
+  "tags": [ "type-info", "dynamic-object", "expando-object", "object-mapping", "object-mapper" ],
   "dependencies": {
   },
   "frameworks": {
