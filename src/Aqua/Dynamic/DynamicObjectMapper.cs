@@ -51,6 +51,7 @@ namespace Aqua.Dynamic
                         initializer(objectType, from, to);
                     }
                 }
+
                 return to;
             }
 
@@ -82,6 +83,7 @@ namespace Aqua.Dynamic
                         initializer(objectType, from, to, setTypeInformation);
                     }
                 }
+
                 return to;
             }
         }
@@ -583,7 +585,7 @@ namespace Aqua.Dynamic
                 {
                     var value = property.GetValue(from);
                     value = MapToDynamicObjectIfRequired(value, setTypeInformation);
-                    to[property.Name] = value;
+                    to.Add(property.Name, value);
                 }
 #if NET || NET35
             }

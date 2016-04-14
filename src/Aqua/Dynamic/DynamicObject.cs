@@ -5,6 +5,7 @@ namespace Aqua.Dynamic
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -12,7 +13,7 @@ namespace Aqua.Dynamic
     [Serializable]
     [DataContract(IsReference = true)]
     [DebuggerDisplay("Count = {MemberCount}")]
-    public partial class DynamicObject : IEnumerable<DynamicObject.Property>, IDictionary<string, object>
+    public partial class DynamicObject : IEnumerable<DynamicObject.Property>, IDictionary<string, object>, INotifyPropertyChanging, INotifyPropertyChanged
     {
         [Serializable]
         [DataContract(Name = "DynamicObjectProperty")]
@@ -152,6 +153,10 @@ namespace Aqua.Dynamic
             }
         }
 
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Gets or sets the type of object represented by this dynamic object instance
         /// </summary>
@@ -218,6 +223,9 @@ namespace Aqua.Dynamic
         {
             var property = Members.SingleOrDefault(x => string.Equals(x.Name, name));
 
+            var oldValue = property?.Value;
+            OnPropertyChanging(name, oldValue, value);
+
             if (ReferenceEquals(null, property))
             {
                 property = new Property(name, value);
@@ -228,7 +236,19 @@ namespace Aqua.Dynamic
                 property.Value = value;
             }
 
+            OnPropertyChanged(name, oldValue, value);
+
             return value;
+        }
+
+        protected virtual void OnPropertyChanging(string name, object oldValue, object newValue)
+        {
+            PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(name));
+        }
+
+        protected virtual void OnPropertyChanged(string name, object oldValue, object newValue)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         /// <summary>

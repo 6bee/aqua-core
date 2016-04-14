@@ -91,7 +91,7 @@ namespace Aqua.Dynamic
                 }
 
                 var value = MapToDynamicObjectIfRequired(values[i], setTypeInformation);
-                to[memberName] = value;
+                to.Add(memberName, value);
             }
         }
 
