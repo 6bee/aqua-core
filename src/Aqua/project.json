@@ -2,7 +2,7 @@
   "name": "aqua-core",
   "authors": [ "Christof Senn" ],
   "version": "4.0.0-alpha-*",
-  "description": "Library to transform any object-graph into a dynamic structure of composed dictionaries, holding serializable values, type information, and dynamic-objects.",
+  "description": "Transform any object-graph into a dynamic structure like composed dictionaries, holding serializable values, type information, and dynamic-objects.",
   "licenseUrl": "https://raw.githubusercontent.com/6bee/aqua-core/master/license.txt",
   "projectUrl": "https://github.com/6bee/aqua-core/wiki",
   "iconUrl": "https://raw.githubusercontent.com/6bee/aqua-core/master/aqua-small.png",
