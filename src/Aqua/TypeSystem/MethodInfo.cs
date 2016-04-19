@@ -13,7 +13,7 @@ namespace Aqua.TypeSystem
 
     [Serializable]
     [DataContract(Name = "Method", IsReference = true)]
-    [DebuggerDisplay("Name")]
+    [DebuggerDisplay("{Name}")]
     public class MethodInfo : MethodBaseInfo
     {
         [NonSerialized]

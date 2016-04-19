@@ -12,7 +12,7 @@ namespace Aqua.TypeSystem
 
     [Serializable]
     [DataContract(Name = "Type", IsReference = true)]
-    [DebuggerDisplay("FullName")]
+    [DebuggerDisplay("{FullName}")]
     public class TypeInfo
     {
         [NonSerialized]

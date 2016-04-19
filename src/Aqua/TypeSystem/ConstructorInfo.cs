@@ -12,7 +12,7 @@ namespace Aqua.TypeSystem
 
     [Serializable]
     [DataContract(Name = "Constructor", IsReference = true)]
-    [DebuggerDisplay("Name")]
+    [DebuggerDisplay("{Name}")]
     public class ConstructorInfo : MethodBaseInfo
     {
         [NonSerialized]

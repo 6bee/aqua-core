@@ -2,7 +2,6 @@
 
 namespace Aqua.TypeSystem
 {
-    using Extensions;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -11,8 +10,8 @@ namespace Aqua.TypeSystem
 
     [Serializable]
     [DataContract(Name = "Property", IsReference = true)]
-    [DebuggerDisplay("Name")]
-    public class PropertyInfo : MemberInfo
+    [DebuggerDisplay("{Name}")]
+    public class PropertyInfo : Aqua.TypeSystem.MemberInfo
     {
         [NonSerialized]
         private System.Reflection.PropertyInfo _property;
