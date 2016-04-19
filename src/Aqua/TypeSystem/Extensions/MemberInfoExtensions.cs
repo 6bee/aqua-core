@@ -2,7 +2,7 @@
 
 #if !(CORECLR || WINRT)
 
-namespace Aqua.TypeSystem
+namespace Aqua.TypeSystem.Extensions
 {
     using System.ComponentModel;
 

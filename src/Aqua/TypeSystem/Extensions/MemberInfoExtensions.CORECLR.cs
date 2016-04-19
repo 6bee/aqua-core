@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if WINRT || CORECLR
+#if CORECLR || WINRT
 
-namespace Aqua.TypeSystem
+namespace Aqua.TypeSystem.Extensions
 {
     using System;
 
-    internal static class MemberInfoExtensions
+    public static class MemberInfoExtensions
     {
-        internal static MemberTypes GetMemberType(this System.Reflection.MemberInfo member)
+        public static MemberTypes GetMemberType(this System.Reflection.MemberInfo member)
         {
             if (member is System.Reflection.FieldInfo)
             {
