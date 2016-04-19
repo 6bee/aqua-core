@@ -4,13 +4,15 @@ namespace Aqua.TypeSystem
 {
     using Extensions;
     using System;
+    using System.Diagnostics;
     using System.Linq;
-    using System.Runtime.Serialization;
     using System.Reflection;
+    using System.Runtime.Serialization;
     using BindingFlags = System.Reflection.BindingFlags;
 
     [Serializable]
     [DataContract(Name = "Constructor", IsReference = true)]
+    [DebuggerDisplay("Name")]
     public class ConstructorInfo : MethodBaseInfo
     {
         [NonSerialized]

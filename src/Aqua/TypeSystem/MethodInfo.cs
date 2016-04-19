@@ -5,6 +5,7 @@ namespace Aqua.TypeSystem
     using Extensions;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
@@ -12,6 +13,7 @@ namespace Aqua.TypeSystem
 
     [Serializable]
     [DataContract(Name = "Method", IsReference = true)]
+    [DebuggerDisplay("Name")]
     public class MethodInfo : MethodBaseInfo
     {
         [NonSerialized]

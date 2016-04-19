@@ -5,12 +5,14 @@ namespace Aqua.TypeSystem
     using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
 
     [Serializable]
     [DataContract(Name = "Type", IsReference = true)]
+    [DebuggerDisplay("FullName")]
     public class TypeInfo
     {
         [NonSerialized]

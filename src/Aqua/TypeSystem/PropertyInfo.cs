@@ -5,11 +5,13 @@ namespace Aqua.TypeSystem
     using Extensions;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
     using System.Runtime.Serialization;
 
     [Serializable]
     [DataContract(Name = "Property", IsReference = true)]
+    [DebuggerDisplay("Name")]
     public class PropertyInfo : MemberInfo
     {
         [NonSerialized]

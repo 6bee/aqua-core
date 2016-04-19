@@ -3,11 +3,13 @@
 namespace Aqua.TypeSystem
 {
     using System;
+    using System.Diagnostics;
     using System.Reflection;
     using System.Runtime.Serialization;
 
     [Serializable]
     [DataContract(Name = "Field", IsReference = true)]
+    [DebuggerDisplay("Name")]
     public class FieldInfo : MemberInfo
     {
         [NonSerialized]
