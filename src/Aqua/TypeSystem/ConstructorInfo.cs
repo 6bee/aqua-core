@@ -6,6 +6,7 @@ namespace Aqua.TypeSystem
     using System;
     using System.Linq;
     using System.Runtime.Serialization;
+    using System.Reflection;
     using BindingFlags = System.Reflection.BindingFlags;
 
     [Serializable]

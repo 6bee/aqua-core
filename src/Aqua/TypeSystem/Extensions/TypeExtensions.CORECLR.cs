@@ -42,13 +42,8 @@ namespace Aqua.TypeSystem.Extensions
         {
             return type.GetTypeInfo().BaseType;
         }
-
-        public static IEnumerable<ConstructorInfo> GetConstructors(this Type type, BindingFlags bindingAttr)
-        {
-            return type.GetTypeInfo().DeclaredConstructors.Filter(bindingAttr);
-        }
-
-        public static ConstructorInfo GetConstructor(this Type type, BindingFlags bindingAttr, /*Binder*/object binder, Type[] types, /*ParameterModifier[]*/object modifiers)
+        
+        internal static ConstructorInfo GetConstructor(this Type type, BindingFlags bindingAttr, /*Binder*/object binder, Type[] types, /*ParameterModifier[]*/object modifiers)
         {
             if (!ReferenceEquals(null, binder)) throw new NotSupportedException("Binder not supported by WinRT");
             if (!ReferenceEquals(null, modifiers)) throw new NotSupportedException("ParameterModifier not supported by WinRT");
@@ -105,96 +100,6 @@ namespace Aqua.TypeSystem.Extensions
             }
 
             return members.ToArray();
-        }
-
-        public static MethodInfo GetMethod(this Type type, string name)
-        {
-            var methods = type.GetTypeInfo().DeclaredMethods
-                .Where(m => string.Equals(m.Name, name, StringComparison.Ordinal))
-                .ToList();
-
-            switch (methods.Count)
-            {
-                case 0:
-                    return null;
-                case 1:
-                    return methods[0];
-                default:
-                    throw new AmbiguousMatchException("More than one method is found with the specified name.");
-            }
-        }
-
-        public static MethodInfo GetMethod(this Type type, BindingFlags bindingAttr)
-        {
-            var methods = type.GetTypeInfo().DeclaredMethods
-                .Filter(bindingAttr)
-                .ToList();
-
-            switch (methods.Count)
-            {
-                case 0:
-                    return null;
-                case 1:
-                    return methods[0];
-                default:
-                    throw new AmbiguousMatchException("More than one method is found with the specified name and matching the specified binding constraints.");
-            }
-        }
-
-        public static MethodInfo GetMethod(this Type type, string name, BindingFlags bindingAttr, /*Binder*/object binder, Type[] types, /*ParameterModifier[]*/object modifiers)
-        {
-            if (!ReferenceEquals(null, binder)) throw new NotSupportedException("Binder not supported by WinRT");
-            if (!ReferenceEquals(null, modifiers)) throw new NotSupportedException("ParameterModifier not supported by WinRT");
-
-            var methods = type.GetTypeInfo().GetDeclaredMethods(name)
-                .Filter(bindingAttr)
-                .Where(m => ParametersMatch(m, types))
-                .ToList();
-
-            switch (methods.Count)
-            {
-                case 0:
-                    return null;
-                case 1:
-                    return methods[0];
-                default:
-                    throw new AmbiguousMatchException("More than one method is found with the specified name and matching the specified binding constraints.");
-            }
-        }
-
-        public static PropertyInfo GetProperty(this Type type, string name, Type returnType)
-        {
-            var properties = type.GetProperties()
-                .Where(p => string.Equals(p.Name, name, StringComparison.Ordinal) && p.PropertyType == returnType)
-                .ToList();
-
-            switch (properties.Count)
-            {
-                case 0:
-                    return null;
-                case 1:
-                    return properties[0];
-                default:
-                    throw new AmbiguousMatchException("More than one property is found with the specified name.");
-            }
-        }
-
-        public static PropertyInfo GetProperty(this Type type, string name, BindingFlags bindingAttr)
-        {
-            var properties = type.GetProperties()
-                .Where(p => string.Equals(p.Name, name, StringComparison.Ordinal))
-                .Filter(bindingAttr)
-                .ToList();
-
-            switch (properties.Count)
-            {
-                case 0:
-                    return null;
-                case 1:
-                    return properties[0];
-                default:
-                    throw new AmbiguousMatchException("More than one property is found with the specified name and matching the specified binding constraints.");
-            }
         }
 
         private static bool ParametersMatch(MethodBase m, Type[] types)
