@@ -10,7 +10,7 @@ namespace Aqua
     /// Internal attribute as a NONFUNCTIONAL placeholder of it's .NET framework version
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, Inherited = false)]
-    internal sealed class NonSerializedAttribute : Attribute
+    public sealed class NonSerializedAttribute : Attribute
     {
     }
 }
