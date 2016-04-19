@@ -7,10 +7,10 @@ namespace Aqua
     using System;
 
     /// <summary>
-    /// Internal attribute as a NONFUNCTIONAL placeholder of it's .NET framework version
+    /// NONFUNCTIONAL placeholder of it's .NET framework version
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Delegate, Inherited = false)]
-    public sealed class SerializableAttribute : Attribute
+    internal sealed class SerializableAttribute : Attribute
     {
     }
 }
