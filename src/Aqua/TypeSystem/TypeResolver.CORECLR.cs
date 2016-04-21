@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if CORECLR || NET
+#if CORECLR
 
 namespace Aqua.TypeSystem
 {
@@ -42,6 +42,7 @@ namespace Aqua.TypeSystem
 
         private static IEnumerable<Library> DefaultLibrariesProvider()
         {
+            // TODO: Verify this works in core clr since it does not in dotnet!
             return PlatformServices.Default.LibraryManager.GetLibraries();
         }
 
