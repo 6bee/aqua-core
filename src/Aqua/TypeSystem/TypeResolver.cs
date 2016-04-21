@@ -64,9 +64,9 @@ namespace Aqua.TypeSystem
                 throw new Exception($"Type '{typeInfo.FullName}' could not be resolved");
             }
 
-            if (typeInfo.IsGenericType)
+            if (typeInfo.IsGenericType && !typeInfo.IsGenericTypeDefinition)
             {
-                var genericArguments = typeInfo.GenericArguments.Select(ResolveType).ToArray();
+                var genericArguments = (typeInfo.GenericArguments ?? Enumerable.Empty<TypeInfo>()).Select(ResolveType).ToArray();
 
                 if (typeInfo.IsArray)
                 {

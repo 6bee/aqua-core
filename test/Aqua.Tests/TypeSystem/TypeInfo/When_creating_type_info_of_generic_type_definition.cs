@@ -2,29 +2,26 @@
 
 namespace Aqua.Tests.TypeSystem.TypeInfo
 {
-    using System.Linq;
     using Aqua.TypeSystem;
+    using System.Linq;
+    using System.Reflection;
     using Xunit;
     using Xunit.Fluent;
+    using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
-    public class When_creating_type_info_of_generic_type
+    public class When_creating_type_info_of_generic_type_definition
     {
         class A<T>
         {
             public T Value { get; set; }
         }
 
-        class B
-        {
-            public string StringValue { get; set; }
-        }
-
         private readonly TypeInfo typeInfo;
 
 
-        public When_creating_type_info_of_generic_type()
+        public When_creating_type_info_of_generic_type_definition()
         {
-            typeInfo = new TypeInfo(typeof(A<B>));
+            typeInfo = new TypeInfo(typeof(A<>));
         }
 
         [Fact]
@@ -40,9 +37,9 @@ namespace Aqua.Tests.TypeSystem.TypeInfo
         }
 
         [Fact]
-        public void Type_info_should_have_is_generic_type_definition_false()
+        public void Type_info_should_have_is_generic_type_definition_true()
         {
-            typeInfo.IsGenericTypeDefinition.ShouldBeFalse();
+            typeInfo.IsGenericTypeDefinition.ShouldBeTrue();
         }
 
         [Fact]
@@ -58,22 +55,16 @@ namespace Aqua.Tests.TypeSystem.TypeInfo
         }
 
         [Fact]
-        public void Type_info_should_contain_generic_property()
+        public void Type_info_should_contain_property()
         {
             typeInfo.Properties.Single().Name.ShouldBe("Value");
-            typeInfo.Properties.Single().PropertyType.Type.ShouldBe(typeof(B));
+            typeInfo.Properties.Single().PropertyType.Type.IsGenericParameter.ShouldBeTrue();
         }
 
         [Fact]
-        public void Type_info_should_contain_generic_argument_type()
+        public void Type_info_should_not_contain_any_generic_arguments()
         {
-            typeInfo.GenericArguments.Single().Name.ShouldBe("B");
-        }
-
-        [Fact]
-        public void Generic_argument_type_should_contain_property()
-        {
-            typeInfo.GenericArguments.Single().Properties.Single().Name.ShouldBe("StringValue");
+            (typeInfo.GenericArguments?.Any() ?? false).ShouldBeFalse();
         }
     }
 }

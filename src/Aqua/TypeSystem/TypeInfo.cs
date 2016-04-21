@@ -59,7 +59,9 @@ namespace Aqua.TypeSystem
                     DeclaringType = TypeInfo.Create(referenceTracker, type.DeclaringType, false, false);
                 }
 
-                if (type.IsGenericType())
+                IsGenericType = type.IsGenericType();
+
+                if (IsGenericType && !type.GetTypeInfo().IsGenericTypeDefinition)
                 {
                     GenericArguments = type
                         .GetGenericArguments()
@@ -96,9 +98,10 @@ namespace Aqua.TypeSystem
             Name = typeInfo.Name;
             Namespace = typeInfo.Namespace;
             DeclaringType = ReferenceEquals(null, typeInfo.DeclaringType) ? null : Create(referenceTracker, typeInfo.DeclaringType);
-            GenericArguments = ReferenceEquals(null, typeInfo.GenericArguments) ? null : typeInfo.GenericArguments.Select(x => Create(referenceTracker, x)).ToList();
+            GenericArguments = typeInfo.GenericArguments?.Select(x => Create(referenceTracker, x)).ToList();
+            IsGenericType = typeInfo.IsGenericType;
             IsAnonymousType = typeInfo.IsAnonymousType;
-            Properties = ReferenceEquals(null, typeInfo.Properties) ? null : typeInfo.Properties.Select(x => new PropertyInfo(x, referenceTracker)).ToList();
+            Properties = typeInfo.Properties?.Select(x => new PropertyInfo(x, referenceTracker)).ToList();
             _type = typeInfo._type;
         }
 
@@ -150,11 +153,14 @@ namespace Aqua.TypeSystem
         public bool IsAnonymousType { get; set; }
 
         [DataMember(Order = 6, IsRequired = false, EmitDefaultValue = false)]
+        public bool IsGenericType { get; set; }
+
+        [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
         public List<PropertyInfo> Properties { get; set; }
 
         public bool IsNested { get { return !ReferenceEquals(null, DeclaringType); } }
 
-        public bool IsGenericType { get { return !ReferenceEquals(null, GenericArguments) && GenericArguments.Any(); } }
+        public bool IsGenericTypeDefinition { get { return !GenericArguments?.Any() ?? true; } }
 
         public bool IsArray
         {
@@ -219,10 +225,11 @@ namespace Aqua.TypeSystem
 
         public override string ToString()
         {
-            var genericArguments = IsGenericType
-                ? string.Format("[{0}]", string.Join(",", GenericArguments.Select(x => x.ToString()).ToArray()))
+            var genericArguments = GenericArguments;
+            var genericArgumentsString = IsGenericType && (genericArguments?.Any() ?? false)
+                ? string.Format("[{0}]", string.Join(",", genericArguments.Select(x => x.ToString()).ToArray()))
                 : null;
-            return $"{FullName}{genericArguments}";
+            return $"{FullName}{genericArgumentsString}";
         }
 
         public static explicit operator Type(TypeInfo t)
