@@ -4,7 +4,7 @@ namespace Aqua.Tests.TypeSystem.TypeInfo
 {
     using Aqua.TypeSystem;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public class When_creating_type_info_for_array_type
     {

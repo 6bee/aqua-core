@@ -2,10 +2,10 @@
 
 namespace Aqua.Tests.TypeSystem.TypeInfo
 {
-    using System.Linq;
     using Aqua.TypeSystem;
+    using Shouldly;
+    using System.Linq;
     using Xunit;
-    using Xunit.Fluent;
 
     public class When_creating_type_info_of_generic_type
     {

@@ -4,7 +4,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public class When_created_based_on_object_tree_with_circular_references
     {
@@ -47,7 +47,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             referenceFromB2ToB1.ShouldBeOfType<DynamicObject>();
             referenceFromB2ToB1["Id"].ShouldBe(sourceB1.Id);
 
-            referenceFromB2ToB1["BaseClassReference"].ShouldBeSameInstance(referenceFromB2ToB1);
+            referenceFromB2ToB1["BaseClassReference"].ShouldBeSameAs(referenceFromB2ToB1);
         }
     }
 }

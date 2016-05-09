@@ -3,8 +3,8 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using Xunit;
-    using Xunit.Fluent;
 
     public class When_mapping_from_dynamic_object
     {
@@ -20,7 +20,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_should_be_different_instance()
         {
-            dynamicObject.ShouldBeSameInstance(source);
+            dynamicObject.ShouldBeSameAs(source);
         }
     }
 }

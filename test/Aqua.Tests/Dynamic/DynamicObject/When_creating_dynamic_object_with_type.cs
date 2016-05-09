@@ -4,7 +4,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public class When_creating_dynamic_object_with_type
     {

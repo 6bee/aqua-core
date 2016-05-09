@@ -3,12 +3,11 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
-    using Aqua.TypeSystem;
+    using Shouldly;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Xunit.Fluent;
-    using System;
 
     public class When_mapping_dynamic_objects_to_list_of_known_types
     {
@@ -60,7 +59,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
                 var recreatedObject = recreatedObjectLists.ElementAt(i);
 
-                recreatedObject.ShouldBeSameInstance(sourceObject);
+                recreatedObject.ShouldBeSameAs(sourceObject);
             }
         }
     }

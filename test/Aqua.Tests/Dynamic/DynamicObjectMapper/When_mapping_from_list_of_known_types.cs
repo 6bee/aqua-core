@@ -3,11 +3,11 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
+    using Shouldly;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Xunit.Fluent;
-    using System;
 
     public class When_mapping_from_list_of_known_types
     {
@@ -80,7 +80,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
                 var sourceObject = sourceObjects.ElementAt(i);
 
-                dynamicObject[""].ShouldBeStrictlyEqual(sourceObject);
+                dynamicObject[""].ShouldBe(sourceObject);
             }
         }
     }

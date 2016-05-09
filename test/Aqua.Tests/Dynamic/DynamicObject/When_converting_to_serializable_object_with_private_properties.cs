@@ -3,10 +3,10 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using System.Reflection;
     using Xunit;
-    using Xunit.Fluent;
 
     public class When_converting_to_serializable_object_with_private_properties
     {

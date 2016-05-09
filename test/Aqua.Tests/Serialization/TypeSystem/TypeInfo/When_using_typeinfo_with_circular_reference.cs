@@ -3,9 +3,9 @@
 namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 {
     using Aqua.TypeSystem;
+    using Shouldly;
     using System;
     using Xunit;
-    using Xunit.Fluent;
 
     public abstract partial class When_using_typeinfo_with_circular_reference
     {
@@ -32,7 +32,7 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 
             serializedTypeInfo = serialize(typeInfo);
 
-            serializedTypeInfo.ShouldNotBeSameInstance(typeInfo);
+            serializedTypeInfo.ShouldNotBeSameAs(typeInfo);
         }
 
         [Fact]

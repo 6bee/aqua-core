@@ -5,7 +5,7 @@ namespace Aqua.Tests.TypeSystem.TypeInfo
     using Aqua.TypeSystem;
     using System.Linq;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public class When_creating_type_info_for_simple_type
     {

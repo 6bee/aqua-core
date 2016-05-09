@@ -2,6 +2,7 @@
 
 namespace Aqua.NET35.Tests.Lazy
 {
+    using Shouldly;
     using System.Threading;
     using Xunit;
 
@@ -31,15 +32,15 @@ namespace Aqua.NET35.Tests.Lazy
         public void Should_return_true_on_is_value_create_after_accessing_value_property()
         {
             var v = lazy.Value;
-            Assert.True(lazy.IsValueCreated);
+            lazy.IsValueCreated.ShouldBeTrue();
         }
 
         [Fact]
         public void Value_property_should_return_expected_value()
         {
-            Assert.Equal(1, lazy.Value);
-            Assert.Equal(1, lazy.Value);
-            Assert.Equal(1, lazy.Value);
+            lazy.Value.ShouldBe(1);
+            lazy.Value.ShouldBe(1);
+            lazy.Value.ShouldBe(1);
         }
 
         [Fact]
@@ -49,7 +50,7 @@ namespace Aqua.NET35.Tests.Lazy
             var v2 = lazy.Value;
             var v3 = lazy.Value;
 
-            Assert.Equal(1, count);            
+            count.ShouldBe(1);            
         }
     }
 }

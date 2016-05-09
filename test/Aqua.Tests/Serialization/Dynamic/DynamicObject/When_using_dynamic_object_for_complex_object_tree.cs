@@ -5,7 +5,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     using Aqua.Dynamic;
     using System;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public abstract partial class When_using_dynamic_object_for_complex_object_tree
     {

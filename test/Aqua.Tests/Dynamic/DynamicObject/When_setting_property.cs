@@ -5,7 +5,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using Aqua.Dynamic;
     using System;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public class When_setting_property
     {

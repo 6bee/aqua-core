@@ -5,7 +5,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using Aqua.Dynamic;
     using System.Linq;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public class When_created_based_on_object_with_abstract_properties_with_type_information
     {

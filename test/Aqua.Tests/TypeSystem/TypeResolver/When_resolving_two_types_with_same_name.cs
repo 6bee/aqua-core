@@ -5,7 +5,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
     using Aqua.TypeSystem;
     using System;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public class When_resolving_two_types_with_same_name
     {
@@ -50,13 +50,13 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         [Fact]
         public void Resolved_type_A_should_be_same()
         {
-            resolvedTypeA1.ShouldBeSameInstance(resolvedTypeA2);
+            resolvedTypeA1.ShouldBeSameAs(resolvedTypeA2);
         }
 
         [Fact]
         public void Resolved_type_B_should_be_same()
         {
-            resolvedTypeB1.ShouldBeSameInstance(resolvedTypeB2);
+            resolvedTypeB1.ShouldBeSameAs(resolvedTypeB2);
         }
 
         [Fact]

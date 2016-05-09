@@ -6,7 +6,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public class When_created_based_on_object_with_dictionary_property
     {

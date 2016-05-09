@@ -4,6 +4,7 @@
   "copyright": "Copyright Christof Senn 2013-2016",
   "dependencies": {
     "Aqua": { "target": "project" },
+    "Shouldly": "2.7.0",
     "xunit": "1.9.2",
     "xunit.runner.visualstudio": "2.1.0"
   },
@@ -11,6 +12,6 @@
     "net35-client": { }
   },
   "commands": {
-    "_test": "xunit.runner.visualstudio"
+    "test": "xunit.runner.visualstudio"
   }
 }

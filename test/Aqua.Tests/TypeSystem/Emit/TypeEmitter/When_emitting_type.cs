@@ -10,7 +10,7 @@ namespace Aqua.Tests.TypeSystem.Emit.TypeEmitter
     using System.Linq;
     using System.Reflection;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
     using PropertyInfo = Aqua.TypeSystem.PropertyInfo;
 

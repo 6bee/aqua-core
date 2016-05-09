@@ -5,7 +5,7 @@ namespace Aqua.Tests.TypeSystem.TypeInfo
     using System.Linq;
     using Aqua.TypeSystem;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public class When_creating_type_info_of_circular_type_graph
     {
@@ -42,7 +42,7 @@ namespace Aqua.Tests.TypeSystem.TypeInfo
         [Fact]
         public void Type_B_should_have_property_of_type_A()
         {
-            typeInfo.Properties.Single().PropertyType.Properties.Single().PropertyType.ShouldBeSameInstance(typeInfo);
+            typeInfo.Properties.Single().PropertyType.Properties.Single().PropertyType.ShouldBeSameAs(typeInfo);
         }
     }
 }

@@ -5,7 +5,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using Aqua.Dynamic;
     using System;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public class When_mapping_to_custom_dynamic_object
     {
@@ -77,7 +77,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             dynamicObject.ShouldBeOfType<DynamicObjectWithRefToSource>();
 
-            ((DynamicObjectWithRefToSource)dynamicObject).Source.ShouldBeSameInstance(source);
+            ((DynamicObjectWithRefToSource)dynamicObject).Source.ShouldBeSameAs(source);
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             dynamicObject["B"].ShouldBeOfType<DynamicObjectWithRefToSource>();
 
-            ((DynamicObjectWithRefToSource)dynamicObject["B"]).Source.ShouldBeSameInstance(source.B);
+            ((DynamicObjectWithRefToSource)dynamicObject["B"]).Source.ShouldBeSameAs(source.B);
         }
 
         [Fact]
@@ -96,14 +96,14 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             dynamicB["A"].ShouldBeOfType<DynamicObjectWithRefToSource>();
             dynamicB["C"].ShouldBeOfType<DynamicObjectWithRefToSource>();
 
-            dynamicB["A"].ShouldBeSameInstance(dynamicObject);
-            ((DynamicObjectWithRefToSource)dynamicB["A"]).Source.ShouldBeSameInstance(source);
-            ((DynamicObjectWithRefToSource)dynamicB["C"]).Source.ShouldBeSameInstance(source.B.C);
+            dynamicB["A"].ShouldBeSameAs(dynamicObject);
+            ((DynamicObjectWithRefToSource)dynamicB["A"]).Source.ShouldBeSameAs(source);
+            ((DynamicObjectWithRefToSource)dynamicB["C"]).Source.ShouldBeSameAs(source.B.C);
 
             var dynamicC = (DynamicObject)dynamicB["C"];
             dynamicC["Int32Value"].ShouldBe(Int32Value);
-            dynamicC["A"].ShouldBeSameInstance(dynamicObject);
-            ((DynamicObjectWithRefToSource)dynamicC["A"]).Source.ShouldBeSameInstance(source);
+            dynamicC["A"].ShouldBeSameAs(dynamicObject);
+            ((DynamicObjectWithRefToSource)dynamicC["A"]).Source.ShouldBeSameAs(source);
         }
     }
 }

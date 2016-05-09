@@ -10,7 +10,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
     using System.Linq;
     using System.Reflection;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
     public class When_resolving_unknown_type

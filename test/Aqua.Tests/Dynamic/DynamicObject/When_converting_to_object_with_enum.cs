@@ -6,7 +6,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public class When_converting_to_object_with_enum
     {

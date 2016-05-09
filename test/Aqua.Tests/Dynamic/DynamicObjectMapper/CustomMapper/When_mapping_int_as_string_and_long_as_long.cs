@@ -7,7 +7,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
     using System.Linq;
     using System.Collections.Generic;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public class When_mapping_int_as_string_and_long_as_long
     {

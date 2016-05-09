@@ -6,7 +6,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     public class When_mapping_from_list_of_strings
     {

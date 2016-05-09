@@ -5,7 +5,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using Aqua.Dynamic;
     using System;
     using Xunit;
-    using Xunit.Fluent;
+    using Shouldly;
 
     /// <summary>
     /// Covers mapping type missmatches for assignable types, i.e. no casting required
