@@ -8,6 +8,9 @@
     "xunit": "1.9.2",
     "xunit.runner.visualstudio": "2.1.0"
   },
+  "buildOptions": {
+    "warningsAsErrors": true
+  },
   "frameworks": {
     "net35-client": { }
   },
