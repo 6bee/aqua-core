@@ -52,7 +52,7 @@ namespace Aqua.TypeSystem
                 }
             }
 
-#if NET || NET35 || CORECLR
+#if NET || NET35 || NETSTANDARD || CORECLR
             if (ReferenceEquals(null, type))
             {
                 type = _typeEmitter(typeInfo);
