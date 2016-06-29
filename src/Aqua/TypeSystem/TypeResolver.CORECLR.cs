@@ -4,7 +4,7 @@
 
 namespace Aqua.TypeSystem
 {
-    using Microsoft.Extensions.PlatformAbstractions;
+    using Microsoft.Extensions.DependencyModel;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -16,7 +16,7 @@ namespace Aqua.TypeSystem
 
         private readonly Func<TypeInfo, Type> _typeEmitter;
 
-        public TypeResolver(Func<IEnumerable<Library>> librariesProvider = null, Func<TypeInfo, Type> typeEmitter = null)
+        public TypeResolver(Func<IEnumerable<RuntimeLibrary>> librariesProvider = null, Func<TypeInfo, Type> typeEmitter = null)
         {
             _typeEmitter = typeEmitter ?? new Emit.TypeEmitter().EmitType;
 
@@ -28,7 +28,7 @@ namespace Aqua.TypeSystem
                         {
                             try
                             {
-                                return Assembly.Load(_);
+                                return Assembly.Load(_.Name);
                             }
                             catch
                             {
@@ -40,7 +40,7 @@ namespace Aqua.TypeSystem
                 });
         }
 
-        private static IEnumerable<Library> DefaultLibrariesProvider()
+        private static IEnumerable<RuntimeLibrary> DefaultLibrariesProvider()
         {
             // TODO: Verify this works in core clr since it does not in dotnet!
             return PlatformServices.Default.LibraryManager.GetLibraries();
