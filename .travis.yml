@@ -11,8 +11,8 @@ sudo: false
 
 install: 
   - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
-  - curl -sSL https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/install.sh
-  | sh --channel "preview" --version "Latest" --install-dir "$DOTNET_INSTALL_DIR" --no-path
+  - curl -sSL https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.sh
+    | sh --channel "preview" --version "Latest" --install-dir "$DOTNET_INSTALL_DIR" --no-path
   - export PATH="$DOTNET_INSTALL_DIR:$PATH"
 
 script:
