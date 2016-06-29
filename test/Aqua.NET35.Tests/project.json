@@ -2,14 +2,18 @@
   "version": "1.0.0-*",
   "description": "Tests for aqua-core",
   "copyright": "Copyright Christof Senn 2013-2016",
+  "testRunner": "xunit",
   "dependencies": {
     "Aqua": { "target": "project" },
     "Shouldly": "2.7.0",
     "xunit": "1.9.2",
     "xunit.runner.visualstudio": "2.1.0"
   },
+  "buildOptions": {
+    "warningsAsErrors": true
+  },
   "frameworks": {
-    "net35-client": { }
+    "net35-client": {}
   },
   "commands": {
     "test": "xunit.runner.visualstudio"

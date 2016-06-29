@@ -1,12 +1,24 @@
 language: csharp
+
 mono:
   - beta
+
 branches:
   only:
     - master
-    #- dnx
+
 sudo: false
-install: curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh
-  | sh && source ~/.dnx/dnvm/dnvm.sh && dnvm upgrade
+
+install: 
+  - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
+  - curl -sSL https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/install.sh
+  | sh --channel "preview" --version "Latest" --install-dir "$DOTNET_INSTALL_DIR" --no-path
+  - export PATH="$DOTNET_INSTALL_DIR:$PATH"
+
 script:
-  dnu restore && dnu build src/Aqua --framework dnxcore50 --framework dnx451 --framework netcore50 --framework net451 && dnu build test/Aqua.Tests && dnx -p test/Aqua.Tests test
+  # workaround "too many open files"
+  - ulimit -n 1024
+  # dotnet info
+  - dotnet --info
+  # build and test
+  - dotnet restore && dotnet build ./src/Aqua/ --framework 'netstandard1.6' && dnu build test/Aqua.Tests --framework 'netcoreapp1.0' && dotnet test ./test/Aqua.Tests/

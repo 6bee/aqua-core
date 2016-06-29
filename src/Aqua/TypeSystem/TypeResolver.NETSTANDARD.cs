@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if CORECLR
+#if NETSTANDARD
 
 namespace Aqua.TypeSystem
 {
@@ -23,12 +23,12 @@ namespace Aqua.TypeSystem
             _assemblies = new Lazy<IEnumerable<Assembly>>(() =>
                 {
                     return (librariesProvider ?? DefaultLibrariesProvider)()
-                        .SelectMany(_ => _.Assemblies)
+                        //.SelectMany(_ => _.Assemblies)
                         .Select(_ =>
                         {
                             try
                             {
-                                return Assembly.Load(_.Name);
+                                return Assembly.Load(new AssemblyName(_.Name));
                             }
                             catch
                             {
@@ -40,16 +40,9 @@ namespace Aqua.TypeSystem
                 });
         }
 
-        private static IEnumerable<RuntimeLibrary> DefaultLibrariesProvider()
-        {
-            // TODO: Verify this works in core clr since it does not in dotnet!
-            return PlatformServices.Default.LibraryManager.GetLibraries();
-        }
+        private static IEnumerable<RuntimeLibrary> DefaultLibrariesProvider() => DependencyContext.Default.RuntimeLibraries;
 
-        private IEnumerable<Assembly> GetAssemblies()
-        {
-            return _assemblies.Value;
-        }
+        private IEnumerable<Assembly> GetAssemblies() => _assemblies.Value;
     }
 }
 

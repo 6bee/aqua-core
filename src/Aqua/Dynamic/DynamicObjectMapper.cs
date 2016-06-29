@@ -147,7 +147,7 @@ namespace Aqua.Dynamic
                 typeof(DateTimeOffset),
                 typeof(DateTimeOffset?),
 
-#if NET
+#if NET || NETSTANDARD  || CORECLR
                 typeof(System.Numerics.BigInteger),
                 typeof(System.Numerics.BigInteger?),
 
@@ -843,7 +843,7 @@ namespace Aqua.Dynamic
             {
                 return TimeSpan.Parse(value);
             }
-#if NET
+#if NET || NETSTANDARD || CORECLR
             if (targetType == typeof(System.Numerics.BigInteger) || targetType == typeof(System.Numerics.BigInteger?))
             {
                 return System.Numerics.BigInteger.Parse(value);
@@ -947,7 +947,7 @@ namespace Aqua.Dynamic
             {
                 return ((double)obj).ToString("R");
             }
-#if NET
+#if NET || NETSTANDARD || CORECLR
             if (type == typeof(System.Numerics.BigInteger) || type == typeof(System.Numerics.BigInteger?))
             {
                 return ((System.Numerics.BigInteger)obj).ToString("R");
