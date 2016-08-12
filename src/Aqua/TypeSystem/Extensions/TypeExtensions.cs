@@ -11,7 +11,7 @@ namespace Aqua.TypeSystem.Extensions
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static partial class TypeExtensions
     {
-#if NET || NET35 || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD || CORECLR
 
         public static bool IsAnonymousType(this Type type)
         {

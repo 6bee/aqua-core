@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if NET || NET35 || SILVERLIGHT
+#if NET
 
 namespace Aqua.TypeSystem.Extensions
 {
@@ -32,11 +32,7 @@ namespace Aqua.TypeSystem.Extensions
 
         public static bool IsSerializable(this Type type)
         {
-#if SILVERLIGHT
-            return false;
-#else
             return type.IsSerializable;
-#endif
         }
 
         public static Type GetBaseType(this Type type)

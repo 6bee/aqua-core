@@ -33,19 +33,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("4.0.0.0")]
 [assembly: AssemblyFileVersion("4.0.0.0")]
 
-
-#if NET
 [assembly: InternalsVisibleTo("Aqua.Test")]
-#endif
-
-#if NET35
-[assembly: InternalsVisibleTo("Aqua.NET35.Tests")]
-#endif
-
-#if SILVERLIGHT
-[assembly: InternalsVisibleTo("System.Runtime.Serialization")]
-#endif
-
-#if WINDOWS_PHONE
-[assembly: NeutralResourcesLanguageAttribute("en-US")]
-#endif

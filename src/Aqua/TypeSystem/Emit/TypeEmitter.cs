@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if NET || NET35 || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD || CORECLR
 
 namespace Aqua.TypeSystem.Emit
 {
@@ -25,11 +25,7 @@ namespace Aqua.TypeSystem.Emit
         public TypeEmitter()
         {
             var assemblyName = new AssemblyName("Aqua.TypeSystem.Emit.Types");
-#if NET35
-            _assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
-#else
             _assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
-#endif
             _module = _assemblyBuilder.DefineDynamicModule(assemblyName.Name);
         }
 

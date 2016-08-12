@@ -68,21 +68,12 @@ namespace Aqua
                 else if (_cleanupDelay > 0 && !_isCleanupScheduled)
                 {
                     _isCleanupScheduled = true;
-#if NET35 || SILVERLIGHT
-                    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(delegate
-                    {
-                        System.Threading.Thread.Sleep(_cleanupDelay);
-                        CleanUpStaleReferences();
-                        _isCleanupScheduled = false;
-                    }));
-#else
                     System.Threading.Tasks.Task.Run(async delegate
                     {
                         await System.Threading.Tasks.Task.Delay(_cleanupDelay);
                         CleanUpStaleReferences();
                         _isCleanupScheduled = false;
                     });
-#endif
                 }
             }
 

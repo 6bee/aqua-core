@@ -2,13 +2,13 @@
 
 namespace Aqua.Dynamic
 {
-    using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.Serialization;
+    using TypeSystem;
 
     [Serializable]
     [DataContract(IsReference = true)]

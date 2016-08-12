@@ -1,4 +1,5 @@
 {
+  "name": "aqua-core",
   "authors": [ "Christof Senn" ],
   "version": "4.0.0-alpha-*",
   "description": "Transform any object-graph into a dynamic, composed dictionaries like structure, holding serializable values and type information.",
@@ -9,7 +10,7 @@
       "url": "https://github.com/6bee/aqua-core.git"
     },
     "owners": [ "Christof Senn" ],
-    "projectUrl": "https://github.com/6bee/aqua-core/wiki",
+    "projectUrl": "https://github.com/6bee/aqua-core",
     "iconUrl": "https://raw.githubusercontent.com/6bee/aqua-core/master/aqua-small.png",
     "licenseUrl": "https://raw.githubusercontent.com/6bee/aqua-core/master/license.txt",
     "tags": [ "type-info", "dynamic-object", "expando-object", "object-mapping", "object-mapper" ]
@@ -32,7 +33,7 @@
         "System.Runtime.Loader": "4.0.0",
         "Newtonsoft.Json": "9.0.1",
         "Microsoft.Extensions.DependencyModel": "1.0.0",
-        "Microsoft.Extensions.PlatformAbstractions":  "1.0.0"
+        "Microsoft.Extensions.PlatformAbstractions": "1.0.0"
       },
       "buildOptions": {
         "define": [ "NETSTANDARD" ]
@@ -48,34 +49,6 @@
       },
       "buildOptions": {
         "define": [ "NET" ]
-      }
-    },
-    "net35-client": {
-      "frameworkAssemblies": {
-        "mscorlib": "",
-        "System": "",
-        "System.Core": "",
-        "System.Runtime.Serialization": "",
-        "System.Xml": ""
-      },
-      "dependencies": {
-      },
-      "buildOptions": {
-        "define": [ "NET35" ]
-      }
-    },
-    "sl5": {
-      "frameworkAssemblies": {
-        "mscorlib": "",
-        "System": "",
-        "System.Core": "",
-        "System.Runtime.Serialization": "",
-        "System.Xml": ""
-      },
-      "dependencies": {
-      },
-      "buildOptions": {
-        "define": [ "SILVERLIGHT" ]
       }
     }
   }

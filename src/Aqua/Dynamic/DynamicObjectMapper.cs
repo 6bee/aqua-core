@@ -570,7 +570,7 @@ namespace Aqua.Dynamic
         {
             // TODO: add support for ISerializable
             // TODO: add support for OnSerializingAttribute, OnSerializedAttribute, OnDeserializingAttribute, OnDeserializedAttribute
-#if NET || NET35
+#if NET
             if (type.IsSerializable())
             {
                 MapObjectMembers(from, to, setTypeInformation);
@@ -587,7 +587,7 @@ namespace Aqua.Dynamic
                     value = MapToDynamicObjectIfRequired(value, setTypeInformation);
                     to.Add(property.Name, value);
                 }
-#if NET || NET35
+#if NET
             }
 #endif
         }
@@ -649,7 +649,7 @@ namespace Aqua.Dynamic
                 // project data record
                 Func<Type, DynamicObject, object> factory;
                 Action<Type, DynamicObject, object> initializer = null;
-#if NET || NET35
+#if NET
                 if (elementType.IsSerializable())
                 {
                     factory = (type, item) => GetUninitializedObject(type);
@@ -714,7 +714,7 @@ namespace Aqua.Dynamic
                     {
                         throw new Exception($"Failed to pick matching contructor for type {elementType.FullName}");
                     }
-#if NET || NET35
+#if NET
                 }
 #endif
 
@@ -802,7 +802,7 @@ namespace Aqua.Dynamic
 
             if (targetType == typeof(char) || targetType == typeof(char?))
             {
-#if WINRT || SILVERLIGHT
+#if WINRT
                 char character;
                 if (!char.TryParse(value, out character))
                 {
@@ -822,11 +822,7 @@ namespace Aqua.Dynamic
 
             if (targetType == typeof(Guid) || targetType == typeof(Guid?))
             {
-#if NET35
-                return new Guid(value);
-#else
                 return Guid.Parse(value);
-#endif
             }
 
             if (targetType == typeof(DateTime) || targetType == typeof(DateTime?))
