@@ -4,35 +4,32 @@ namespace Aqua.TypeSystem.Extensions
 {
     using System;
     using System.Reflection;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
+    using System.Runtime.CompilerServices;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static partial class TypeExtensions
     {
-#if NET || NETSTANDARD || CORECLR
-
         public static bool IsAnonymousType(this Type type)
         {
             return type.Name.StartsWith("<>")
-                && type.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), false).Any()
+                && type.IsDefined<CompilerGeneratedAttribute>()
                 || type.IsEmittedType();
         }
 
         public static bool IsEmittedType(this Type type)
         {
-            return type.GetCustomAttributes(typeof(Aqua.TypeSystem.Emit.EmittedTypeAttribute), false).Any();
+            return type.IsDefined<Emit.EmittedTypeAttribute>();
         }
 
-#else
-
-        public static bool IsAnonymousType(this Type type)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool IsDefined<T>(this Type type) where T : Attribute
         {
-            return type.Name.StartsWith("<>")
-                && type.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), false).Any();
-        }
-
+            return type
+#if NETSTANDARD
+                .GetTypeInfo()
 #endif
+                .IsDefined(typeof(T));
+        }
     }
 }

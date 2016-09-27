@@ -10,7 +10,7 @@ namespace Aqua.Tests
     {
         public static void ShouldBeAnnotatedWith<T>(this Type type) where T : Attribute
         {
-            if (type.GetTypeInfo().GetCustomAttributes<T>().Count() < 1)
+            if (!type.GetTypeInfo().IsDefined(typeof(T)))
             {
                 throw new ExpectedAnnotation(type, typeof(T));
             }

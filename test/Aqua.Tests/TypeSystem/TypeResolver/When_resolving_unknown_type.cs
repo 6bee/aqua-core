@@ -44,7 +44,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         [Fact]
         public void Emitted_type_should_be_dynamically_emited_type()
         {
-            emitedType.GetCustomAttributes(typeof(EmittedTypeAttribute), false).Count().ShouldBe(1);
+            emitedType.ShouldBeAnnotatedWith<EmittedTypeAttribute>();
         }
 
         [Fact]
