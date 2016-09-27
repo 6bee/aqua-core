@@ -64,16 +64,6 @@ namespace Aqua.TypeSystem.Extensions
             }
         }
 
-        public static IEnumerable<Attribute> GetCustomAttributes(this Type type, Type attributeType, bool inherit)
-        {
-            return type.GetTypeInfo().GetCustomAttributes(attributeType, inherit);
-        }
-
-        public static IEnumerable<T> GetCustomAttributes<T>(this Type type, bool inherit) where T : Attribute
-        {
-            return type.GetTypeInfo().GetCustomAttributes<T>(inherit);
-        }
-
         public static IEnumerable<MemberInfo> GetMember(this Type type, string name, MemberTypes memberType, BindingFlags bindingAttr)
         {
             // Note: binding flags are simply ignored
