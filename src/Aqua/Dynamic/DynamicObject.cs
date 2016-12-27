@@ -45,6 +45,36 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
+        /// Creates a new instance of a dynamic object, setting the specified members
+        /// </summary>
+        /// <param name="properties">Initial collection of properties and values</param>
+        /// <exception cref="ArgumentNullException">The specified members collection is null</exception>
+        public DynamicObject(IEnumerable<KeyValuePair<string, object>> properties)
+        {
+            if (ReferenceEquals(null, properties))
+            {
+                throw new ArgumentNullException(nameof(properties));
+            }
+
+            Properties = new PropertySet(properties.Select(x => new Property(x)));
+        }
+
+        /// <summary>
+        /// Creates a new instance of a dynamic object, setting the specified members
+        /// </summary>
+        /// <param name="properties">Initial collection of properties and values</param>
+        /// <exception cref="ArgumentNullException">The specified members collection is null</exception>
+        public DynamicObject(IEnumerable<Property> properties)
+        {
+            if (ReferenceEquals(null, properties))
+            {
+                throw new ArgumentNullException(nameof(properties));
+            }
+
+            Properties = new Dynamic.PropertySet(properties);
+        }
+
+        /// <summary>
         /// Creates a new instance of a dynamic object, representing the object structure defined by the specified object
         /// </summary>
         /// <param name="obj">The object to be represented by the new dynamic object</param>
