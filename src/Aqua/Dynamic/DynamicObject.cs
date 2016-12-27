@@ -41,7 +41,7 @@ namespace Aqua.Dynamic
         public DynamicObject(TypeInfo type)
         {
             Type = type;
-            Properties = new Properties();
+            Properties = new PropertySet();
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Aqua.Dynamic
             if (deepCopy)
             {
                 Type = ReferenceEquals(null, dynamicObject.Type) ? null : new TypeInfo(dynamicObject.Type);
-                Properties = ReferenceEquals(null, dynamicObject.Properties) ? null : new Properties(dynamicObject.Properties.Select(x => new Property(x)));
+                Properties = ReferenceEquals(null, dynamicObject.Properties) ? null : new PropertySet(dynamicObject.Properties.Select(x => new Property(x)));
             }
             else
             {
@@ -97,7 +97,7 @@ namespace Aqua.Dynamic
         public TypeInfo Type { get; set; }
 
         [DataMember(Order = 2)]
-        public Properties Properties { get; set; }
+        public PropertySet Properties { get; set; }
 
         /// <summary>
         /// Gets the count of members (dynamically added properties) hold by this dynamic object

@@ -18,7 +18,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
             var dynamicObject = new DynamicObject
             {
-                Properties = new Properties
+                Properties = new PropertySet
                 {
                     { "Property1",  value1 },
                     { "Property2",  value2 },

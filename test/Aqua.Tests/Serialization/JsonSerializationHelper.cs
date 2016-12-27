@@ -2,6 +2,8 @@
 
 namespace Aqua.Tests.Serialization
 {
+    using System;
+    using System.IO;
     using Newtonsoft.Json;
 
     public static class JsonSerializationHelper
@@ -11,6 +13,7 @@ namespace Aqua.Tests.Serialization
         public static T Serialize<T>(this T graph)
         {
             var json = JsonConvert.SerializeObject(graph, _serializerSettings);
+            //File.AppendAllText($"Dump-{graph.GetType().Name}-JsonConvert-{Guid.NewGuid()}.json", json);
             return JsonConvert.DeserializeObject<T>(json, _serializerSettings);
         }
     }

@@ -31,14 +31,14 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             { 
                 new DynamicObject(typeof(CustomReferenceType))
                 {
-                    Properties = new Properties
+                    Properties = new PropertySet
                     {
                         { "", new CustomReferenceType { Int32Property = 1, StringProperty="One" } }
                     }
                 },
                 new DynamicObject(typeof(CustomReferenceType))
                 {
-                    Properties = new Properties
+                    Properties = new PropertySet
                     {
                         { "", new CustomReferenceType { Int32Property = 2, StringProperty="Two" } }
                     }

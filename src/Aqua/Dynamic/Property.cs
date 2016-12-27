@@ -3,6 +3,7 @@
 namespace Aqua.Dynamic
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Runtime.Serialization;
 
@@ -23,6 +24,11 @@ namespace Aqua.Dynamic
             Value = value;
         }
 
+        public Property(KeyValuePair<string, object> property)
+            : this(property.Key, property.Value)
+        {
+        }
+
         internal protected Property(Property property)
             : this(property.Name, property.Value)
         {
@@ -33,11 +39,5 @@ namespace Aqua.Dynamic
 
         [DataMember(Order = 2)]
         public object Value { get; set; }
-
-        //public static implicit operator KeyValuePair<string, object>(Property p)
-        //    => new KeyValuePair<string, object>(p.Name, p.Value);
-
-        //public static implicit operator Property(KeyValuePair<string, object> p)
-        //    => new Property(p.Key, p.Value);
     }
 }

@@ -30,7 +30,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             var dynamicObject = new DynamicObject
             {
-                Properties = new Properties
+                Properties = new PropertySet
                 {
                     { "DoubleValue", Int32Value },
                     { "NullableIntValue", Int32Value },

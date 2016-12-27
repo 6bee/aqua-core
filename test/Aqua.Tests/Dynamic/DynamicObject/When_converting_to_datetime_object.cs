@@ -19,7 +19,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             sourceValue = DateTime.Now;
             dynamicObject = new DynamicObject(typeof(DateTime))
             {
-                Properties = new Properties
+                Properties = new PropertySet
                 {
                     { string.Empty, sourceValue.ToString("o") }
                 }

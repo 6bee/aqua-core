@@ -23,7 +23,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             dynamicObject = new DynamicObject(typeof(ClassWithDictionaryProperty))
             {
-                Properties = new Properties
+                Properties = new PropertySet
                 {
                     {
                         "Dictionary",

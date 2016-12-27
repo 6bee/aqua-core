@@ -34,7 +34,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             var dynamicObject = new DynamicObject()
             {
-                Properties = new Properties
+                Properties = new PropertySet
                 {
                     { "Id", Int32Value },
                     { "DoubleValue", DoubleValue },

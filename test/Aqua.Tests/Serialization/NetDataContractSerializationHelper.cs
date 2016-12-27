@@ -4,6 +4,7 @@
 
 namespace Aqua.Tests.Serialization
 {
+    using System;
     using System.IO;
     using System.Runtime.Serialization;
 
@@ -16,6 +17,7 @@ namespace Aqua.Tests.Serialization
             using (var stream = new MemoryStream())
             {
                 serializer.Serialize(stream, graph);
+                stream.Dump($"Dump-{graph.GetType().Name}-NetDataContractSerializer-{Guid.NewGuid()}.xml");
                 stream.Seek(0, SeekOrigin.Begin);
                 return (T)serializer.Deserialize(stream);
             }

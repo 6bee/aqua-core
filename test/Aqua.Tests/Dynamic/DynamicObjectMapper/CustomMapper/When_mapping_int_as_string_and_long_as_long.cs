@@ -36,7 +36,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
                 {
                     return new DynamicObject(typeof(int))
                     {
-                        Properties = new Properties
+                        Properties = new PropertySet
                         {
                             { "Value", obj.ToString() }
                         }
@@ -46,7 +46,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
                 {
                     return new DynamicObject(typeof(long))
                     {
-                        Properties = new Properties
+                        Properties = new PropertySet
                         {
                             { "Value", obj }
                         }

@@ -32,21 +32,21 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 new DynamicObject(typeof(ClassWithEnum))
                 {
-                    Properties = new Properties
+                    Properties = new PropertySet
                     {
                         { "EnumProperty", CustomEnum.Value1 }
                     }
                 },
                 new DynamicObject(typeof(ClassWithEnum))
                 {
-                    Properties = new Properties
+                    Properties = new PropertySet
                     {
                         { "EnumProperty", CustomEnum.Value2.ToString().ToUpper() }
                     }
                 },
                 new DynamicObject(typeof(ClassWithEnum))
                 {
-                    Properties = new Properties
+                    Properties = new PropertySet
                     {
                         { "EnumProperty", (int)CustomEnum.Value3 }
                     }

@@ -46,7 +46,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             dynamicObject = new DynamicObject()
             {
-                Properties = new Properties
+                Properties = new PropertySet
                 {
                     { "Ref", new DynamicObject() },
                     { "Value1", "the value's pay load" },

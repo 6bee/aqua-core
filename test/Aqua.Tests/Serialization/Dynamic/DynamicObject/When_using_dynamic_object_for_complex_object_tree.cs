@@ -19,13 +19,13 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var originalObject = new DynamicObject()
             {
-                Properties = new Properties
+                Properties = new PropertySet
                 {
                     { "DoubleValue", DoubleValue },
                     {
                         "Reference", new DynamicObject(typeof(string))
                         {
-                            Properties = new Properties
+                            Properties = new PropertySet
                             {
                                 { "StringValue", StringValue },
                                 { "Type", CustomType },

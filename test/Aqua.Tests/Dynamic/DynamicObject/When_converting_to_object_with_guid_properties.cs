@@ -32,7 +32,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
             var dynamicObject = new DynamicObject(typeof(ClassWithGuidProperties))
             {
-                Properties = new Properties
+                Properties = new PropertySet
                 {
                     { "Guid1", guid1String },
                     { "Guid2", guid2String },

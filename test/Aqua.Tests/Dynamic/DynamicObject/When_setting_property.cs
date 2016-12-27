@@ -63,7 +63,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             dynamicObject = new DynamicObjectTest
             {
-                Properties = new Properties
+                Properties = new PropertySet
                 {
                     { StringProperty, OldValue }
                 }
