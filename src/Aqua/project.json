@@ -1,5 +1,5 @@
 {
-  "name": "Aqua",
+  "name": "aqua-core",
   "authors": [ "Christof Senn" ],
   "version": "4.0.0-alpha-*",
   "description": "Transform any object-graph into a dynamic, composed dictionaries like structure, holding serializable values and type information.",
