@@ -19,9 +19,12 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             dynamicObject = new DynamicObject()
             {
-                { "Int32Value", Int32Value },
-                { "DoubleValue", DoubleValue },
-                { "StringValue", StringValue },
+                Properties = new Properties
+                {
+                    { "Int32Value", Int32Value },
+                    { "DoubleValue", DoubleValue },
+                    { "StringValue", StringValue },
+                }
             };
         }
 

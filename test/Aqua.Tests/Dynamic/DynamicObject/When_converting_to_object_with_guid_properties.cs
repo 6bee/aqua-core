@@ -32,9 +32,12 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
             var dynamicObject = new DynamicObject(typeof(ClassWithGuidProperties))
             {
-                { "Guid1", guid1String },
-                { "Guid2", guid2String },
-                { "Guid3", null },
+                Properties = new Properties
+                {
+                    { "Guid1", guid1String },
+                    { "Guid2", guid2String },
+                    { "Guid3", null },
+                }
             }; ;
 
             obj = new DynamicObjectMapper().Map(dynamicObject) as ClassWithGuidProperties;

@@ -11,7 +11,6 @@ namespace Aqua.Tests.Serialization
         public static T Serialize<T>(this T graph)
         {
             var json = JsonConvert.SerializeObject(graph, _serializerSettings);
-
             return JsonConvert.DeserializeObject<T>(json, _serializerSettings);
         }
     }

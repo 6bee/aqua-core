@@ -55,7 +55,7 @@ namespace Aqua.Dynamic
             public override IEnumerable<string> GetDynamicMemberNames()
             {
                 var dynObj = (DynamicObject)Value;
-                return dynObj.MemberNames;
+                return dynObj.PropertyNames;
             }
         }
     }

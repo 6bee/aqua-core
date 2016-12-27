@@ -29,13 +29,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_a_single_member()
         {
-            dynamicObject.MemberCount.ShouldBe(1);
+            dynamicObject.PropertyCount.ShouldBe(1);
         }
 
         [Fact]
         public void Member_name_should_be_empty_string()
         {
-            dynamicObject.MemberNames.Single().ShouldBe(string.Empty);
+            dynamicObject.PropertyNames.Single().ShouldBe(string.Empty);
         }
 
         [Fact]

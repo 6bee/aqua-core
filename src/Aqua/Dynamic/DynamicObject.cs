@@ -2,6 +2,7 @@
 
 namespace Aqua.Dynamic
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -12,48 +13,10 @@ namespace Aqua.Dynamic
 
     [Serializable]
     [DataContract(IsReference = true)]
-    [DebuggerDisplay("Count = {MemberCount}")]
-    public partial class DynamicObject : IEnumerable<DynamicObject.Property>, IDictionary<string, object>, INotifyPropertyChanging, INotifyPropertyChanged
+    [DebuggerDisplay("Count = {PropertyCount}")]
+    [JsonObject]
+    public partial class DynamicObject : INotifyPropertyChanging, INotifyPropertyChanged
     {
-        [Serializable]
-        [DataContract(Name = "DynamicObjectProperty")]
-        [KnownType(typeof(object))]
-        [KnownType(typeof(object[]))]
-        [DebuggerDisplay("{Name} = {Value}")]
-        public class Property
-        {
-            public Property()
-            {
-            }
-
-            public Property(string name, object value)
-            {
-                Name = name;
-                Value = value;
-            }
-
-            internal protected Property(Property property)
-                : this(property.Name, property.Value)
-            {
-            }
-
-            internal Property(KeyValuePair<string, object> item)
-                : this(item.Key, item.Value)
-            {
-            }
-
-            [DataMember(Order = 1)]
-            public string Name { get; set; }
-
-            [DataMember(Order = 2)]
-            public object Value { get; set; }
-
-            public static implicit operator KeyValuePair<string, object>(Property p)
-            {
-                return new KeyValuePair<string, object>(p.Name, p.Value);
-            }
-        }
-
         /// <summary>
         /// Creates a new instance of a dynamic object
         /// </summary>
@@ -78,37 +41,7 @@ namespace Aqua.Dynamic
         public DynamicObject(TypeInfo type)
         {
             Type = type;
-            Members = new List<Property>();
-        }
-
-        /// <summary>
-        /// Creates a new instance of a dynamic object, setting the specified members
-        /// </summary>
-        /// <param name="members">Initial collection of properties and values</param>
-        /// <exception cref="ArgumentNullException">The specified members collection is null</exception>
-        public DynamicObject(IEnumerable<KeyValuePair<string, object>> members)
-        {
-            if (ReferenceEquals(null, members))
-            {
-                throw new ArgumentNullException(nameof(members));
-            }
-
-            Members = members.Select(x => new Property(x)).ToList();
-        }
-
-        /// <summary>
-        /// Creates a new instance of a dynamic object, setting the specified members
-        /// </summary>
-        /// <param name="members">Initial collection of properties and values</param>
-        /// <exception cref="ArgumentNullException">The specified members collection is null</exception>
-        public DynamicObject(IEnumerable<Property> members)
-        {
-            if (ReferenceEquals(null, members))
-            {
-                throw new ArgumentNullException(nameof(members));
-            }
-
-            Members = members.ToList();
+            Properties = new Properties();
         }
 
         /// <summary>
@@ -126,7 +59,7 @@ namespace Aqua.Dynamic
 
             var dynamicObject = (mapper ?? new DynamicObjectMapper()).MapObject(obj);
             Type = dynamicObject.Type;
-            Members = dynamicObject.Members;
+            Properties = dynamicObject.Properties;
         }
 
         /// <summary>
@@ -144,12 +77,12 @@ namespace Aqua.Dynamic
             if (deepCopy)
             {
                 Type = ReferenceEquals(null, dynamicObject.Type) ? null : new TypeInfo(dynamicObject.Type);
-                Members = ReferenceEquals(null, dynamicObject.Members) ? null : dynamicObject.Members.Select(x => new Property(x)).ToList();
+                Properties = ReferenceEquals(null, dynamicObject.Properties) ? null : new Properties(dynamicObject.Properties.Select(x => new Property(x)));
             }
             else
             {
                 Type = dynamicObject.Type;
-                Members = dynamicObject.Members;
+                Properties = dynamicObject.Properties;
             }
         }
 
@@ -164,31 +97,25 @@ namespace Aqua.Dynamic
         public TypeInfo Type { get; set; }
 
         [DataMember(Order = 2)]
-        public List<Property> Members { get; set; }
+        public Properties Properties { get; set; }
 
         /// <summary>
         /// Gets the count of members (dynamically added properties) hold by this dynamic object
         /// </summary>
-        public int MemberCount
-        {
-            get { return Members.Count; }
-        }
+        [JsonIgnore]
+        public int PropertyCount => Properties.Count;
 
         /// <summary>
         /// Gets a collection of member names hold by this dynamic object
         /// </summary>
-        public IEnumerable<string> MemberNames
-        {
-            get { return Members.Select(x => x.Name).ToList(); }
-        }
+        [JsonIgnore]
+        public IEnumerable<string> PropertyNames => Properties.Select(x => x.Name).ToList();
 
         /// <summary>
         /// Gets a collection of member values hold by this dynamic object
         /// </summary>
-        public IEnumerable<object> Values
-        {
-            get { return Members.Select(x => x.Value).ToList(); }
-        }
+        [JsonIgnore]
+        public IEnumerable<object> Values => Properties.Select(x => x.Value).ToList();
 
         /// <summary>
         /// Gets or sets a member value
@@ -221,7 +148,7 @@ namespace Aqua.Dynamic
         /// <returns>The value specified</returns>
         public object Set(string name, object value)
         {
-            var property = Members.SingleOrDefault(x => string.Equals(x.Name, name));
+            var property = Properties.SingleOrDefault(x => string.Equals(x.Name, name));
 
             var oldValue = property?.Value;
             OnPropertyChanging(name, oldValue, value);
@@ -229,7 +156,7 @@ namespace Aqua.Dynamic
             if (ReferenceEquals(null, property))
             {
                 property = new Property(name, value);
-                Members.Add(property);
+                Properties.Add(property);
             }
             else
             {
@@ -267,20 +194,14 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Adds a member and it's value
+        /// Adds a property and it's value
         /// </summary>
-        public void Add(string name, object value)
-        {
-            Add(new Property(name, value));
-        }
+        public void Add(string name, object value) => Properties.Add(name, value);
 
         /// <summary>
         /// Adds a property
         /// </summary>
-        public void Add(Property property)
-        {
-            Members.Add(property);
-        }
+        public void Add(Property property) => Properties.Add(property);
 
         /// <summary>
         /// Removes a member and it's value
@@ -288,14 +209,14 @@ namespace Aqua.Dynamic
         /// <returns>True if the member is successfully found and removed; otherwise, false</returns>
         public bool Remove(string name)
         {
-            var property = Members.SingleOrDefault(x => string.Equals(x.Name, name));
+            var property = Properties.SingleOrDefault(x => string.Equals(x.Name, name));
 
             if (ReferenceEquals(null, property))
             {
                 return false;
             }
 
-            Members.Remove(property);
+            Properties.Remove(property);
             return true;
         }
 
@@ -308,7 +229,7 @@ namespace Aqua.Dynamic
         /// <returns>True is the dynamic object contains a member with the specified name; otherwise false</returns>
         public bool TryGet(string name, out object value)
         {
-            var property = Members.SingleOrDefault(x => string.Equals(x.Name, name));
+            var property = Properties.SingleOrDefault(x => string.Equals(x.Name, name));
 
             if (ReferenceEquals(null, property))
             {
@@ -318,20 +239,6 @@ namespace Aqua.Dynamic
 
             value = property.Value;
             return true;
-        }
-
-        /// <summary>
-        /// Returns a collection of key-value-pairs representing the members and their values hold by this dynamic object.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator<Property> GetEnumerator()
-        {
-            return Members.GetEnumerator();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         /// <summary>
@@ -367,85 +274,11 @@ namespace Aqua.Dynamic
         /// <summary>
         /// Creates a dynamic objects representing the object structure defined by the specified object
         /// </summary>
+        /// <param name="obj">The object to be represented by the new dynamic object</param>
         /// <param name="mapper">Optional instance of dynamic object mapper</param>
         public static DynamicObject CreateDynamicObject(object obj, IDynamicObjectMapper mapper = null)
         {
             return (mapper ?? new DynamicObjectMapper()).MapObject(obj);
         }
-
-        #region IEnumerable<KeyValuePair<string, object>>
-
-        IEnumerator<KeyValuePair<string, object>> IEnumerable<KeyValuePair<string, object>>.GetEnumerator()
-        {
-            foreach (var member in Members)
-            {
-                yield return (KeyValuePair<string, object>)member;
-            }
-        }
-
-        #endregion IEnumerable<KeyValuePair<string, object>>
-
-        #region ICollection<KeyValuePair<string, object>>
-
-        void ICollection<KeyValuePair<string, object>>.Add(KeyValuePair<string, object> item)
-        {
-            Add(new Property(item));
-        }
-
-        void ICollection<KeyValuePair<string, object>>.Clear()
-        {
-            Members.Clear();
-        }
-
-        bool ICollection<KeyValuePair<string, object>>.Contains(KeyValuePair<string, object> item)
-        {
-            return Members.Any(x => string.Equals(x.Name, item.Key) && object.Equals(x.Value, item.Value));
-        }
-
-        void ICollection<KeyValuePair<string, object>>.CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
-        {
-            ((IEnumerable<KeyValuePair<string, object>>)this).ToList().CopyTo(array, arrayIndex);
-        }
-
-        int ICollection<KeyValuePair<string, object>>.Count
-        {
-            get { return Members.Count; }
-        }
-
-        bool ICollection<KeyValuePair<string, object>>.IsReadOnly
-        {
-            get { return false; }
-        }
-
-        bool ICollection<KeyValuePair<string, object>>.Remove(KeyValuePair<string, object> item)
-        {
-            return Remove(item.Key);
-        }
-
-        #endregion ICollection<KeyValuePair<string, object>>
-
-        #region IDictionary<string, object>
-
-        bool IDictionary<string, object>.ContainsKey(string key)
-        {
-            return Members.Any(x => string.Equals(x.Name, key));
-        }
-
-        ICollection<string> IDictionary<string, object>.Keys
-        {
-            get { return MemberNames.ToList(); }
-        }
-
-        bool IDictionary<string, object>.TryGetValue(string key, out object value)
-        {
-            return TryGet(key, out value);
-        }
-
-        ICollection<object> IDictionary<string, object>.Values
-        {
-            get { return Values.ToList(); }
-        }
-
-        #endregion IDictionary<string, object>
     }
 }

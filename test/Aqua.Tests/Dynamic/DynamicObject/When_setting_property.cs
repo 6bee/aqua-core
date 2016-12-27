@@ -61,7 +61,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         public When_setting_property()
         {
-            dynamicObject = new DynamicObjectTest { { StringProperty, OldValue } };
+            dynamicObject = new DynamicObjectTest
+            {
+                Properties = new Properties
+                {
+                    { StringProperty, OldValue }
+                }
+            };
 
             dynamicObject.PropertyChangingCount.ShouldBe(0);
             dynamicObject.PropertyChangedCount.ShouldBe(0);

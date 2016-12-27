@@ -34,7 +34,7 @@ namespace Aqua.Dynamic
             var membersByCleanName = members.ToDictionary(GetCleanMemberName);
             var memberValueMap = new Dictionary<System.Reflection.MemberInfo, object>();
 
-            foreach (var dynamicProperty in from)
+            foreach (var dynamicProperty in from.Properties)
             {
                 if (!ReferenceEquals(null, customPropertyNames) && !customPropertyNames.ContainsKey(dynamicProperty.Name))
                 {

@@ -658,7 +658,7 @@ namespace Aqua.Dynamic
                 else
                 {
 #endif
-                    var dynamicProperties = objects.SelectMany(x => x.Members).Distinct().ToList();
+                    var dynamicProperties = objects.SelectMany(x => x.Properties).Distinct().ToList();
                     var constructor = elementType.GetConstructors()
                         .Select(i =>
                         {
@@ -865,7 +865,7 @@ namespace Aqua.Dynamic
 
         private static bool IsSingleValueWrapper(DynamicObject item)
         {
-            return (item.MemberCount == 1 && string.IsNullOrEmpty(item.MemberNames.Single()));
+            return (item.PropertyCount == 1 && string.IsNullOrEmpty(item.PropertyNames.Single()));
         }
 
         private static bool IsMatchingDictionary(Type targetType, Type elementType)

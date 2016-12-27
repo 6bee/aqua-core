@@ -59,13 +59,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Member_count_should_be_one()
         {
-            dynamicObject.MemberCount.ShouldBe(1);
+            dynamicObject.PropertyCount.ShouldBe(1);
         }
 
         [Fact]
         public void Member_name_should_be_name_of_property()
         {
-            dynamicObject.MemberNames.ShouldContain("Item");
+            dynamicObject.PropertyNames.ShouldContain("Item");
         }
 
         [Fact]

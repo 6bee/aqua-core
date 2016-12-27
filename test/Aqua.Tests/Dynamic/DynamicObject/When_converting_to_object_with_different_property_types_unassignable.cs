@@ -56,12 +56,15 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             var dynamicObject = new DynamicObject
             {
-                { "NumericValue", DoubleValue },
-                { "NullableDoubleValue", Longvalue },
-                { "StringValue", StringValue },
-                { "BProperty", new A() },
-                { "CProperty", new A() },
-                { "DProperty", new A() },
+                Properties = new Properties
+                {
+                    { "NumericValue", DoubleValue },
+                    { "NullableDoubleValue", Longvalue },
+                    { "StringValue", StringValue },
+                    { "BProperty", new A() },
+                    { "CProperty", new A() },
+                    { "DProperty", new A() },
+                }
             };
 
             obj = dynamicObject.CreateObject<CustomType>();

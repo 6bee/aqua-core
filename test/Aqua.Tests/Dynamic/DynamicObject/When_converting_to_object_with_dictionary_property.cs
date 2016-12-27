@@ -23,15 +23,18 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             dynamicObject = new DynamicObject(typeof(ClassWithDictionaryProperty))
             {
-                { 
-                    "Dictionary", 
-                    new object[]
+                Properties = new Properties
+                {
                     {
-                        new KeyValuePair<string,string>("K1", "V1"),
-                        new KeyValuePair<string,string>("K2", "V2"),
-                        new KeyValuePair<string,string>("K3", "V3"),
-                    }
-                },
+                        "Dictionary",
+                        new object[]
+                        {
+                            new KeyValuePair<string,string>("K1", "V1"),
+                            new KeyValuePair<string,string>("K2", "V2"),
+                            new KeyValuePair<string,string>("K3", "V3"),
+                        }
+                    },
+                }
             };
 
             obj = new DynamicObjectMapper().Map(dynamicObject);

@@ -23,7 +23,10 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             dynamicObject = new DynamicObject
             {
-                { "Int32Value", 1.23456789 },
+                Properties = new Properties
+                {
+                    { "Int32Value", 1.23456789 },
+                }
             };
         }
 

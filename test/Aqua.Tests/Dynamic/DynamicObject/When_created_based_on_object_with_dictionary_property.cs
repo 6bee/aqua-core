@@ -42,13 +42,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_a_single_member()
         {
-            dynamicObject.MemberCount.ShouldBe(1);
+            dynamicObject.PropertyCount.ShouldBe(1);
         }
 
         [Fact]
         public void Member_name_should_be_name_of_property()
         {
-            dynamicObject.MemberNames.Single().ShouldBe("Dictionary");
+            dynamicObject.PropertyNames.Single().ShouldBe("Dictionary");
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             foreach (DynamicObject element in (object[])dynamicObject["Dictionary"])
             {
-                element.MemberCount.ShouldBe(2);
+                element.PropertyCount.ShouldBe(2);
             }
         }
 
@@ -95,8 +95,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             foreach (DynamicObject element in (object[])dynamicObject["Dictionary"])
             {
-                element.MemberNames.ShouldContain("Key");
-                element.MemberNames.ShouldContain("Value");
+                element.PropertyNames.ShouldContain("Key");
+                element.PropertyNames.ShouldContain("Value");
             }
         }
 

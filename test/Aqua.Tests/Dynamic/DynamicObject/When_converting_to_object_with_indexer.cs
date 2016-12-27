@@ -49,7 +49,10 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             var dynamicObject = new DynamicObject
             {
-                { "Item", "ItemValue1" }
+                Properties = new Properties
+                {
+                    { "Item", "ItemValue1" }
+                }
             };
 
             var obj = dynamicObject.CreateObject<ClassWithIndexerAndItemProperty>();

@@ -9,8 +9,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract partial class When_using_dynamic_object_for_complex_object_tree
     {
-        const double DoubleValue = 1.234567e-987;
+        const double DoubleValue = 1.2345679e-87;
         const string StringValue = "eleven";
+        const string CustomType = "system-string-type";
 
         DynamicObject serializedObject;
 
@@ -18,13 +19,20 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var originalObject = new DynamicObject()
             {
-                { "DoubleValue", DoubleValue },
+                Properties = new Properties
                 {
-                    "Reference", new DynamicObject()
+                    { "DoubleValue", DoubleValue },
                     {
-                        { "StringValue", StringValue },
-                    }
-                },
+                        "Reference", new DynamicObject(typeof(string))
+                        {
+                            Properties = new Properties
+                            {
+                                { "StringValue", StringValue },
+                                { "Type", CustomType },
+                            }
+                        }
+                    },
+                }
             };
 
             serializedObject = serialize(originalObject);
@@ -42,6 +50,22 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             var nestedObject = serializedObject["Reference"] as DynamicObject;
 
             nestedObject["StringValue"].ShouldBe(StringValue);
+        }
+
+        [Fact]
+        public void Clone_should_contain_nested_type_property()
+        {
+            var nestedObject = serializedObject["Reference"] as DynamicObject;
+
+            nestedObject["Type"].ShouldBe(CustomType);
+        }
+
+        [Fact]
+        public void Clone_should_contain_type_information()
+        {
+            var nestedObject = serializedObject["Reference"] as DynamicObject;
+
+            (nestedObject.Type?.Type).ShouldBe(typeof(string));
         }
     }
 }

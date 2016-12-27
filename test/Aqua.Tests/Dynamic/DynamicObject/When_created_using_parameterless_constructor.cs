@@ -14,7 +14,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_be_empty()
         {
-            dynamicObject.MemberCount.ShouldBe(0);
+            dynamicObject.PropertyCount.ShouldBe(0);
         }
 
         [Fact]

@@ -25,8 +25,11 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             var dynamicObject = new DynamicObject()
             {
-                { "StringValue", StringValue },
-                { "Int32Value", Int32Value },
+                Properties = new Properties
+                {
+                    { "StringValue", StringValue },
+                    { "Int32Value", Int32Value },
+                }
             };
 
             obj = dynamicObject.CreateObject<SerializableType>();

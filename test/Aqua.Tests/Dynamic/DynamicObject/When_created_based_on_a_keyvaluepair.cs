@@ -27,14 +27,14 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_two_members()
         {
-            dynamicObject.MemberCount.ShouldBe(2);
+            dynamicObject.PropertyCount.ShouldBe(2);
         }
 
         [Fact]
         public void Member_names_should_be_key_and_value()
         {
-            dynamicObject.MemberNames.ShouldContain("Key");
-            dynamicObject.MemberNames.ShouldContain("Value");
+            dynamicObject.PropertyNames.ShouldContain("Key");
+            dynamicObject.PropertyNames.ShouldContain("Value");
         }
 
         [Fact]

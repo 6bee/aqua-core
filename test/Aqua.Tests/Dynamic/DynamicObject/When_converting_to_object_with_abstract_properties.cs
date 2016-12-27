@@ -33,11 +33,14 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             dynamicObject = new DynamicObject()
             {
-                { "Ref", new DynamicObject(typeof(A)) },
-                { "Value1", "the value's pay load" },
-                { "Value2", 222 },
-                { "Value3", null },
-                { "Value4", new DynamicObject(typeof(object))},
+                Properties = new Properties
+                {
+                    { "Ref", new DynamicObject(typeof(A)) },
+                    { "Value1", "the value's pay load" },
+                    { "Value2", 222 },
+                    { "Value3", null },
+                    { "Value4", new DynamicObject(typeof(object))},
+                }
             };
 
             obj = dynamicObject.CreateObject<ClassWithAbstractProperties>();

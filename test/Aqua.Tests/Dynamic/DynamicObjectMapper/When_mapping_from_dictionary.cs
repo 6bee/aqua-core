@@ -44,7 +44,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             foreach (var dynamicObject in dynamicObjects)
             {
-                dynamicObject.MemberCount.ShouldBe(2);
+                dynamicObject.PropertyCount.ShouldBe(2);
             }
         }
 
@@ -53,8 +53,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             foreach (var dynamicObject in dynamicObjects)
             {
-                dynamicObject.MemberNames.ShouldContain("Key");
-                dynamicObject.MemberNames.ShouldContain("Value");
+                dynamicObject.PropertyNames.ShouldContain("Key");
+                dynamicObject.PropertyNames.ShouldContain("Value");
             }
         }
 

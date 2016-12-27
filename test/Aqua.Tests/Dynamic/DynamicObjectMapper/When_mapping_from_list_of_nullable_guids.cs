@@ -37,16 +37,16 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_objects_should_have_one_member()
         {
-            dynamicObjects.ElementAt(0).MemberCount.ShouldBe(1);
-            dynamicObjects.ElementAt(1).MemberCount.ShouldBe(1);
+            dynamicObjects.ElementAt(0).PropertyCount.ShouldBe(1);
+            dynamicObjects.ElementAt(1).PropertyCount.ShouldBe(1);
             dynamicObjects.ElementAt(2).ShouldBeNull();
         }
 
         [Fact]
         public void Dynamic_objects_member_name_should_be_empty_string()
         {
-            dynamicObjects.ElementAt(0).MemberNames.Single().ShouldBe(string.Empty);
-            dynamicObjects.ElementAt(1).MemberNames.Single().ShouldBe(string.Empty);
+            dynamicObjects.ElementAt(0).PropertyNames.Single().ShouldBe(string.Empty);
+            dynamicObjects.ElementAt(1).PropertyNames.Single().ShouldBe(string.Empty);
             dynamicObjects.ElementAt(2).ShouldBeNull();
         }
 

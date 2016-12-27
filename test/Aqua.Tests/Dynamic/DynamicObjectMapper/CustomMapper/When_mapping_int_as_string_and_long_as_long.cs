@@ -34,11 +34,23 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
             {
                 if (obj is int)
                 {
-                    return new DynamicObject(typeof(int)) { { "Value", obj.ToString() } };
+                    return new DynamicObject(typeof(int))
+                    {
+                        Properties = new Properties
+                        {
+                            { "Value", obj.ToString() }
+                        }
+                    };
                 }
                 if (obj is long)
                 {
-                    return new DynamicObject(typeof(long)) { { "Value", obj } };
+                    return new DynamicObject(typeof(long))
+                    {
+                        Properties = new Properties
+                        {
+                            { "Value", obj }
+                        }
+                    };
                 }
 
                 throw new NotSupportedException();

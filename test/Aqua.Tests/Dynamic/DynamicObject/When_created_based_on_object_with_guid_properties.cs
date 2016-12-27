@@ -41,15 +41,15 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_three_members_stored()
         {
-            dynamicObject.MemberCount.ShouldBe(3);
+            dynamicObject.PropertyCount.ShouldBe(3);
         }
 
         [Fact]
         public void Member_name_should_be_name_of_property()
         {
-            dynamicObject.MemberNames.Any(name => name == "Guid1").ShouldBeTrue();
-            dynamicObject.MemberNames.Any(name => name == "Guid2").ShouldBeTrue();
-            dynamicObject.MemberNames.Any(name => name == "Guid3").ShouldBeTrue();
+            dynamicObject.PropertyNames.Any(name => name == "Guid1").ShouldBeTrue();
+            dynamicObject.PropertyNames.Any(name => name == "Guid2").ShouldBeTrue();
+            dynamicObject.PropertyNames.Any(name => name == "Guid3").ShouldBeTrue();
         }
 
         [Fact]

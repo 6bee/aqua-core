@@ -46,11 +46,14 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             dynamicObject = new DynamicObject()
             {
-                { "Ref", new DynamicObject() },
-                { "Value1", "the value's pay load" },
-                { "Value2", 222 },
-                { "Value3", null },
-                { "Value4", new DynamicObject() },
+                Properties = new Properties
+                {
+                    { "Ref", new DynamicObject() },
+                    { "Value1", "the value's pay load" },
+                    { "Value2", 222 },
+                    { "Value3", null },
+                    { "Value4", new DynamicObject() },
+                }
             };
 
             var mapper = new CustomMapper();

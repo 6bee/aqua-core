@@ -49,7 +49,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
         [Fact]
         public void Dynamic_object_should_contain_property_two_only()
         {
-            dynamicObject.MemberNames.Single().ShouldBe("PropertyTwo");
+            dynamicObject.PropertyNames.Single().ShouldBe("PropertyTwo");
 
             dynamicObject["PropertyTwo"].ShouldBe("two");
         }

@@ -51,23 +51,23 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             dynamicObject.ShouldNotBeNull();
 
-            dynamicObject.MemberCount.ShouldBe(5);
+            dynamicObject.PropertyCount.ShouldBe(5);
 
-            dynamicObject.MemberNames.ElementAt(0).ShouldBe("Ref");
-            dynamicObject.MemberNames.ElementAt(1).ShouldBe("Value1");
-            dynamicObject.MemberNames.ElementAt(2).ShouldBe("Value2");
-            dynamicObject.MemberNames.ElementAt(3).ShouldBe("Value3");
-            dynamicObject.MemberNames.ElementAt(4).ShouldBe("Value4");
+            dynamicObject.PropertyNames.ElementAt(0).ShouldBe("Ref");
+            dynamicObject.PropertyNames.ElementAt(1).ShouldBe("Value1");
+            dynamicObject.PropertyNames.ElementAt(2).ShouldBe("Value2");
+            dynamicObject.PropertyNames.ElementAt(3).ShouldBe("Value3");
+            dynamicObject.PropertyNames.ElementAt(4).ShouldBe("Value4");
 
             dynamicObject["Ref"].ShouldBeOfType<DynamicObject>();
-            ((DynamicObject)dynamicObject["Ref"]).MemberCount.ShouldBe(0);
+            ((DynamicObject)dynamicObject["Ref"]).PropertyCount.ShouldBe(0);
             ((DynamicObject)dynamicObject["Ref"]).Type.Type.ShouldBe(typeof(A));
 
             dynamicObject["Value1"].ShouldBe(obj.Value1);
             dynamicObject["Value2"].ShouldBe(obj.Value2);
 
             dynamicObject["Value3"].ShouldBeOfType<DynamicObject>();
-            ((DynamicObject)dynamicObject["Value3"]).MemberCount.ShouldBe(0);
+            ((DynamicObject)dynamicObject["Value3"]).PropertyCount.ShouldBe(0);
             ((DynamicObject)dynamicObject["Value3"]).Type.Type.ShouldBe(typeof(object));
 
             dynamicObject["Value4"].ShouldBeOfType<byte[]>();

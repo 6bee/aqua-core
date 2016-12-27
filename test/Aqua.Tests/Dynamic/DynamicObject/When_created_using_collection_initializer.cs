@@ -18,16 +18,19 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
             var dynamicObject = new DynamicObject
             {
-                { "Property1",  value1 },
-                { "Property2",  value2 },
-                { "P -- 3", value3 },
+                Properties = new Properties
+                {
+                    { "Property1",  value1 },
+                    { "Property2",  value2 },
+                    { "P -- 3", value3 },
+                }
             };
 
-            dynamicObject.MemberCount.ShouldBe(3);
+            dynamicObject.PropertyCount.ShouldBe(3);
 
-            dynamicObject.MemberNames.ShouldContain("Property1");
-            dynamicObject.MemberNames.ShouldContain("Property2");
-            dynamicObject.MemberNames.ShouldContain("P -- 3");
+            dynamicObject.PropertyNames.ShouldContain("Property1");
+            dynamicObject.PropertyNames.ShouldContain("Property2");
+            dynamicObject.PropertyNames.ShouldContain("P -- 3");
 
             dynamicObject["Property1"].ShouldBe(value1);
             dynamicObject["Property2"].ShouldBe(value2);

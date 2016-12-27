@@ -30,10 +30,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             var dynamicObject = new DynamicObject
             {
-                { "DoubleValue", Int32Value },
-                { "NullableIntValue", Int32Value },
-                { "Timestamp", Timestamp },
-                { "StringValue", StringValue },
+                Properties = new Properties
+                {
+                    { "DoubleValue", Int32Value },
+                    { "NullableIntValue", Int32Value },
+                    { "Timestamp", Timestamp },
+                    { "StringValue", StringValue },
+                }
             };
 
             obj = dynamicObject.CreateObject<CustomType>();
