@@ -39,5 +39,5 @@ before_script:
 
 script: 
   - dotnet restore
-  - dotnet build ./src/Aqua -c Release -f "netstandard1.6"
-  - dotnet test ./test/Aqua.Tests -c Release -f "netcoreapp1.0"
+  - dotnet build ./src/Aqua -c $CONFIGURATION -f netstandard1.6
+  - dotnet test ./test/Aqua.Tests -c $CONFIGURATION -f netcoreapp1.0
