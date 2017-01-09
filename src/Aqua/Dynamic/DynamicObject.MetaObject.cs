@@ -5,6 +5,7 @@ namespace Aqua.Dynamic
     using System;
     using System.Collections.Generic;
     using System.Dynamic;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
     using MethodInfo = System.Reflection.MethodInfo;
@@ -25,7 +26,7 @@ namespace Aqua.Dynamic
             static MetaObject()
             {
                 _dynamicObjectType = typeof(DynamicObject);
-                _getMethod = _dynamicObjectType.GetMethod("Get", BindingFlags.Public | BindingFlags.Instance);
+                _getMethod = _dynamicObjectType.GetMethods(BindingFlags.Public | BindingFlags.Instance).Single(m => m.Name == "Get" && !m.IsGenericMethodDefinition);
                 _setMethod = _dynamicObjectType.GetMethod("Set", BindingFlags.Public | BindingFlags.Instance);
             }
 

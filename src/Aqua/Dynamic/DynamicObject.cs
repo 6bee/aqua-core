@@ -224,6 +224,16 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
+        /// Gets a member's value or default(T) if the specified member is null or unknown
+        /// </summary>
+        /// <returns>The value assigned to the member specified, default(T) if member is null or not set</returns>
+        public T Get<T>(string name)
+        {
+            var value = Get(name);
+            return value is T ? (T)value : default(T);
+        }
+
+        /// <summary>
         /// Adds a property and it's value
         /// </summary>
         public void Add(string name, object value) => Properties.Add(name, value);
