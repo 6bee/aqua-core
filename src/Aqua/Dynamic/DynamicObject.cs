@@ -13,8 +13,8 @@ namespace Aqua.Dynamic
 
     [Serializable]
     [DataContract(IsReference = true)]
+    [JsonObject(IsReference = true)]
     [DebuggerDisplay("Count = {PropertyCount}")]
-    [JsonObject]
     public partial class DynamicObject : INotifyPropertyChanging, INotifyPropertyChanged
     {
         /// <summary>
