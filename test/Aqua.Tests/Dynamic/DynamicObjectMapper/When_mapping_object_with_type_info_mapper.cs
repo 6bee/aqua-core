@@ -7,7 +7,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using Xunit;
     using Shouldly;
 
-    public class When_mapping_with_type_info_mapper
+    public class When_mapping_object_with_type_info_mapper
     {
         class TypeMapper : ITypeMapper
         {
@@ -20,7 +20,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
         DynamicObject dynamicObject;
 
-        public When_mapping_with_type_info_mapper()
+        public When_mapping_object_with_type_info_mapper()
         {
             dynamicObject = new DynamicObjectMapper(typeMapper: new TypeMapper()).MapObject(new A());
         }

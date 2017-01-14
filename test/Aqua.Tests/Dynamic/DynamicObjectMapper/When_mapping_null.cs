@@ -104,7 +104,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Map_should_be_null_for_null_object_enumerable()
         {
-            var objects = new object[] 
+            var objects = new object[]
             {
                 new CustomClass(),
                 null,
@@ -115,9 +115,28 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             result.ShouldNotBeNull();
             result.Count().ShouldBe(3);
-            result.ElementAt(0).ShouldNotBeNull();
+            result.ElementAt(0).ShouldBeOfType<DynamicObject>();
             result.ElementAt(1).ShouldBeNull();
-            result.ElementAt(2).ShouldNotBeNull();
+            result.ElementAt(2).ShouldBeOfType<DynamicObject>();
+        }
+
+        [Fact]
+        public void Map_array_as_object_should_set_item_null_for_null_reference()
+        {
+            var objects = new object[]
+            {
+                new CustomClass(),
+                null,
+                new CustomClass(),
+            };
+
+            var result = new DynamicObjectMapper().MapObject(objects);
+
+            var array = result.Get<object[]>();
+            array.Length.ShouldBe(3);
+            array[0].ShouldBeOfType<DynamicObject>();
+            array[1].ShouldBeNull();
+            array[2].ShouldBeOfType<DynamicObject>();
         }
     }
 }

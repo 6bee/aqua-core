@@ -8,7 +8,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using Xunit;
     using Shouldly;
 
-    public class When_mapping_from_list_of_custom_reference_type
+    public class When_mapping_collection_from_list_of_custom_reference_type
     {
         class CustomReferenceType
         {
@@ -19,7 +19,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         List<CustomReferenceType> source;
         IEnumerable<DynamicObject> dynamicObjects;
 
-        public When_mapping_from_list_of_custom_reference_type()
+        public When_mapping_collection_from_list_of_custom_reference_type()
         {
             source = new List<CustomReferenceType> 
             { 

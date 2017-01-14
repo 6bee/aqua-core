@@ -9,12 +9,12 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using Xunit;
     using Shouldly;
 
-    public class When_mapping_from_list_of_guids
+    public class When_mapping_collection_from_list_of_guids
     {
         List<Guid> source;
         IEnumerable<DynamicObject> dynamicObjects;
 
-        public When_mapping_from_list_of_guids()
+        public When_mapping_collection_from_list_of_guids()
         {
             source = new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
             dynamicObjects = new DynamicObjectMapper().MapCollection(source);

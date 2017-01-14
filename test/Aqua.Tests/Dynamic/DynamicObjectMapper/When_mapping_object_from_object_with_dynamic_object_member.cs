@@ -6,7 +6,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using Shouldly;
     using Xunit;
 
-    public class When_mapping_from_object_with_dynamic_object_member
+    public class When_mapping_object_from_object_with_dynamic_object_member
     {
         class CustomClass
         {
@@ -16,7 +16,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         CustomClass source;
         DynamicObject dynamicObject;
 
-        public When_mapping_from_object_with_dynamic_object_member()
+        public When_mapping_object_from_object_with_dynamic_object_member()
         {
             source = new CustomClass { Reference = new DynamicObject() };
             dynamicObject = new DynamicObjectMapper().MapObject(source);

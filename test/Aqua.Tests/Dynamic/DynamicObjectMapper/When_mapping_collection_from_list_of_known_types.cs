@@ -9,7 +9,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using System.Linq;
     using Xunit;
 
-    public class When_mapping_from_list_of_known_types
+    public class When_mapping_collection_from_list_of_known_types
     {
         class IsKnownTypeProvider : IIsKnownTypeProvider
         {
@@ -25,7 +25,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         CustomReferenceType[] sourceObjects;
         IEnumerable<DynamicObject> dynamicObjects;
 
-        public When_mapping_from_list_of_known_types()
+        public When_mapping_collection_from_list_of_known_types()
         {
             sourceObjects = new[]
             { 

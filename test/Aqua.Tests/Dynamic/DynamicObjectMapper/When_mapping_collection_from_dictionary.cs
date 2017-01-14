@@ -8,12 +8,12 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using Xunit;
     using Shouldly;
 
-    public class When_mapping_from_dictionary
+    public class When_mapping_collection_from_dictionary
     {
         Dictionary<string, string> source;
         IEnumerable<DynamicObject> dynamicObjects;
 
-        public When_mapping_from_dictionary()
+        public When_mapping_collection_from_dictionary()
         {
             source = new Dictionary<string, string>
             {

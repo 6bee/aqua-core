@@ -212,7 +212,7 @@ namespace Aqua.Dynamic
         /// Gets a member's value or null if the specified member is unknown
         /// </summary>
         /// <returns>The value assigned to the member specified, null if member is not set</returns>
-        public object Get(string name)
+        public object Get(string name = "")
         {
             object value;
             if (!TryGet(name, out value))
@@ -227,7 +227,7 @@ namespace Aqua.Dynamic
         /// Gets a member's value or default(T) if the specified member is null or unknown
         /// </summary>
         /// <returns>The value assigned to the member specified, default(T) if member is null or not set</returns>
-        public T Get<T>(string name)
+        public T Get<T>(string name = "")
         {
             var value = Get(name);
             return value is T ? (T)value : default(T);

@@ -223,7 +223,7 @@ namespace Aqua.Dynamic
                 : new Func<Type, object, DynamicObject>(dynamicObjectFactory.CreateDynamicObject);
         }
 
-        public System.Collections.IEnumerable Map(IEnumerable<DynamicObject> objects, Type type)
+        public System.Collections.IEnumerable Map(IEnumerable<DynamicObject> objects, Type type = null)
         {
             if (ReferenceEquals(null, objects))
             {
@@ -380,7 +380,7 @@ namespace Aqua.Dynamic
 
             var objectType = obj.GetType();
 
-            if (objectType == targetType)
+            if (objectType == targetType && !IsCollection(obj))
             {
                 return obj;
             }
@@ -395,10 +395,11 @@ namespace Aqua.Dynamic
                 return obj is string ? ParseToNativeType(targetType, (string)obj) : obj;
             }
 
-            if (obj is System.Collections.IEnumerable && !(obj is string))
+            if (IsCollection(obj))
             {
                 var elementType = TypeHelper.GetElementType(targetType);
-                var items = ((System.Collections.IEnumerable)obj).OfType<object>()
+                var items = ((System.Collections.IEnumerable)obj)
+                    .Cast<object>()
                     .Select(x => MapFromDynamicObjectGraph(x, elementType))
                     .ToList();
                 var r1 = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
@@ -413,7 +414,7 @@ namespace Aqua.Dynamic
                 {
                     var targetTypeGenericArguments = targetType.GetGenericArguments();
                     var method = ToDictionaryMethodInfo.MakeGenericMethod(targetTypeGenericArguments.ToArray());
-                    var r2 = method.Invoke(null, new object[] { r1 });
+                    var r2 = method.Invoke(null, new[] { r1 });
                     return r2;
                 }
 
@@ -452,6 +453,11 @@ namespace Aqua.Dynamic
             return obj;
         }
 
+        private static bool IsCollection(object obj)
+        {
+            return obj is System.Collections.IEnumerable && !(obj is string);
+        }
+
         /// <summary>
         /// Maps an object to a dynamic object
         /// </summary>
@@ -487,7 +493,7 @@ namespace Aqua.Dynamic
                 facotry = (t, o, f) =>
                 {
                     var list = ((System.Collections.IEnumerable)o)
-                        .OfType<object>()
+                        .Cast<object>()
                         .Select(x => MapToDynamicObjectIfRequired(x, f))
                         .ToArray();
                     var dynamicObject = _createDynamicObject(t, o);
@@ -554,7 +560,7 @@ namespace Aqua.Dynamic
                 }
 
                 var list = ((System.Collections.IEnumerable)obj)
-                    .OfType<object>()
+                    .Cast<object>()
                     .Select(x => MapToDynamicObjectIfRequired(x, setTypeInformation))
                     .ToArray();
                 return list;
@@ -725,6 +731,7 @@ namespace Aqua.Dynamic
                     list.Add(obj);
 
                 }
+
                 return (IEnumerable<T>)list;
             }
 

@@ -8,12 +8,12 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using Xunit;
     using Shouldly;
 
-    public class When_mapping_from_list_of_strings
+    public class When_mapping_collection_from_list_of_strings
     {
         List<string> source;
         IEnumerable<DynamicObject> dynamicObjects;
 
-        public When_mapping_from_list_of_strings()
+        public When_mapping_collection_from_list_of_strings()
         {
             source = new List<string> { "V1", "V2", "V3" };
             dynamicObjects = new DynamicObjectMapper().MapCollection(source);

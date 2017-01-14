@@ -8,7 +8,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using Xunit;
     using Shouldly;
 
-    public class When_mapping_from_list_of_custom_value_type
+    public class When_mapping_collection_from_list_of_custom_value_type
     {
         struct CustomValueType
         {
@@ -19,7 +19,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         List<CustomValueType> source;
         IEnumerable<DynamicObject> dynamicObjects;
 
-        public When_mapping_from_list_of_custom_value_type()
+        public When_mapping_collection_from_list_of_custom_value_type()
         {
             source = new List<CustomValueType> 
             { 
