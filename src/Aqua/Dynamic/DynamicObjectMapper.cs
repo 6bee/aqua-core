@@ -698,23 +698,12 @@ namespace Aqua.Dynamic
                             var obj = constructor.Info.Invoke(arguments);
                             return obj;
                         };
-                        initializer = (type, item, obj) =>
-                        {
-                            var targetProperties = obj.GetType().GetProperties().Where(p => p.CanWrite);
-                            foreach (var property in targetProperties)
-                            {
-                                object rawValue;
-                                if (item.TryGet(property.Name, out rawValue))
-                                {
-                                    var value = MapFromDynamicObjectGraph(rawValue, property.PropertyType);
-
-                                    if (_suppressMemberAssignabilityValidation || IsAssignable(property.PropertyType, value))
-                                    {
-                                        property.SetValue(obj, value);
-                                    }
-                                }
-                            }
-                        };
+                        initializer = CreatePropertyInitializer();
+                    }
+                    else if (elementType.IsValueType())
+                    {
+                        factory = (type, item) => Activator.CreateInstance(type);
+                        initializer = CreatePropertyInitializer();
                     }
                     else
                     {
@@ -729,13 +718,33 @@ namespace Aqua.Dynamic
                 {
                     var obj = ReferenceEquals(null, item) ? null : _fromContext.TryGetOrCreateNew(elementType, item, factory, initializer);
                     list.Add(obj);
-
                 }
 
                 return (IEnumerable<T>)list;
             }
 
             throw new Exception($"Failed to project dynamic objects into type {typeof(T).FullName}");
+        }
+
+        private Action<Type, DynamicObject, object> CreatePropertyInitializer()
+        {
+            return (type, item, obj) =>
+            {
+                var targetProperties = obj.GetType().GetProperties().Where(p => p.CanWrite);
+                foreach (var property in targetProperties)
+                {
+                    object rawValue;
+                    if (item.TryGet(property.Name, out rawValue))
+                    {
+                        var value = MapFromDynamicObjectGraph(rawValue, property.PropertyType);
+
+                        if (_suppressMemberAssignabilityValidation || IsAssignable(property.PropertyType, value))
+                        {
+                            property.SetValue(obj, value);
+                        }
+                    }
+                }
+            };
         }
 
         private object MapInternal(DynamicObject obj, Type type)
