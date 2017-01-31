@@ -630,7 +630,9 @@ namespace Aqua.Dynamic
                 return objects.Cast<T>();
             }
 
-            var elementType = TypeHelper.GetElementType(typeof(T));
+            // TODO: why would we need element type here?
+            //var elementType = TypeHelper.GetElementType(typeof(T));
+            var elementType = typeof(T);
             if (objects.All(item => ReferenceEquals(null, item) || IsSingleValueWrapper(item)))
             {
                 // project single property

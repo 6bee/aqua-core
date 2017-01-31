@@ -3,8 +3,10 @@
 namespace Aqua.TypeSystem.Extensions
 {
     using System;
-    using System.Reflection;
+    using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
+    using System.Reflection;
     using System.Runtime.CompilerServices;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -30,6 +32,89 @@ namespace Aqua.TypeSystem.Extensions
                 .GetTypeInfo()
 #endif
                 .IsDefined(typeof(T));
+        }
+
+        public static bool Implements(this Type type, Type interfaceType)
+        {
+            return type.Implements(interfaceType, new Type[1][]);
+        }
+
+        public static bool Implements(this Type type, Type interfaceType, out Type[] genericTypeArguments)
+        {
+            var typeArgs = new Type[1][];
+            var implements = type.Implements(interfaceType, typeArgs);
+            genericTypeArguments = implements ? typeArgs[0] : null;
+            return implements;
+        }
+
+        private static bool Implements(this Type type, Type interfaceType, Type[][] typeArgs)
+        {
+            var isAssignableFromSpecifiedInterface = interfaceType.IsGenericTypeDefinition()
+                ? IsAssignableToGenericTypeDefinition(interfaceType, typeArgs)
+                : interfaceType.IsGenericType()
+                ? IsAssignableToGenericType(interfaceType, typeArgs)
+                : interfaceType.IsAssignableFrom;
+
+            return isAssignableFromSpecifiedInterface(type)
+                || type.GetInterfaces().Any(isAssignableFromSpecifiedInterface);
+        }
+
+        private static Func<Type, bool> IsAssignableToGenericTypeDefinition(Type interfaceTypeInfo, Type[][] typeArgs)
+        {
+            var genericArgumentsCount = interfaceTypeInfo.GetGenericArguments().Length;
+
+            return i =>
+            {
+                var genericArguments = i.GenericTypeArguments;
+                var isAssignable = i.IsGenericType()
+                    && genericArguments.Count() == genericArgumentsCount
+                    && interfaceTypeInfo.MakeGenericType(genericArguments).IsAssignableFrom(i);
+                if (isAssignable)
+                {
+                    typeArgs[0] = genericArguments;
+                }
+
+                return isAssignable;
+            };
+        }
+
+        private static Func<Type, bool> IsAssignableToGenericType(Type interfaceTypeInfo, Type[][] typeArgs)
+        {
+            var interfaceTypeDefinition = interfaceTypeInfo.GetGenericTypeDefinition();
+            var interfaceGenericArguments = interfaceTypeInfo.GetGenericArguments();
+
+            return i =>
+            {
+                if (i.IsGenericType() && !i.IsGenericTypeDefinition())
+                {
+                    var typeDefinition = i.GetGenericTypeDefinition();
+                    if (typeDefinition == interfaceTypeDefinition)
+                    {
+                        var genericArguments = i.GetGenericArguments();
+                        var allArgumentsAreAssignable = For(0, genericArguments.Length - 1)
+                            .All(index => Implements(genericArguments[index], interfaceGenericArguments[index], typeArgs));
+                        if (allArgumentsAreAssignable)
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            };
+        }
+
+        private static IEnumerable<int> For(int start, int end)
+        {
+            if (start > end)
+            {
+                throw new ArgumentOutOfRangeException(nameof(end), "end must not be smaller than start");
+            }
+
+            for (int i = start; i <= end; i++)
+            {
+                yield return i;
+            }
         }
     }
 }

@@ -20,6 +20,11 @@ namespace Aqua.TypeSystem.Extensions
             return type.IsGenericType;
         }
 
+        public static bool IsGenericTypeDefinition(this Type type)
+        {
+            return type.IsGenericTypeDefinition;
+        }
+
         public static bool IsEnum(this Type type)
         {
             return type.IsEnum;
