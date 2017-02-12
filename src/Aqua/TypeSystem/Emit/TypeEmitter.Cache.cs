@@ -202,13 +202,13 @@ namespace Aqua.TypeSystem.Emit
             internal Type GetOrCreate(IEnumerable<string> properties, Func<IEnumerable<string>, Type> factory)
             {
                 var key = new PropertyList(properties);
-                return base.GetOrCreate(key, x => factory(properties));
+                return GetOrCreate(key, x => factory(properties));
             }
 
             internal Type GetOrCreate(TypeInfo typeInfo, Func<TypeInfo, Type> factory)
             {
                 var key = new TypeWithPropertyList(typeInfo);
-                return base.GetOrCreate(key, x => factory(typeInfo));
+                return GetOrCreate(key, x => factory(typeInfo));
             }
         }
     }
