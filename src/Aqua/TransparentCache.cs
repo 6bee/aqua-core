@@ -12,7 +12,7 @@ namespace Aqua
     /// </summary>
     public class TransparentCache<TKey, TValue>
     {
-        private readonly Dictionary<TKey, WeakReference> _cache = new Dictionary<TKey, WeakReference>();
+        private readonly Dictionary<TKey, WeakReference> _cache;
         private readonly int _cleanupDelay;
         private bool _isCleanupScheduled = false;
 
@@ -20,7 +20,7 @@ namespace Aqua
         /// Creates an new instance of <see cref="TransparentCache"/>
         /// </summary>
         /// <param name="cleanupDelay">Number of milliseconds to delay the task to clean-up stale references. Set to -1 to suppress clean-up or 0 to run clean-up synchronously.</param>
-        public TransparentCache(int cleanupDelay = 2000)
+        public TransparentCache(int cleanupDelay = 2000, IEqualityComparer<TKey> comparer = null)
         {
             if (cleanupDelay < -1)
             {
@@ -28,6 +28,7 @@ namespace Aqua
             }
 
             _cleanupDelay = cleanupDelay;
+            _cache = new Dictionary<TKey, WeakReference>(comparer);
         }
 
         /// <summary>

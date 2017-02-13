@@ -4,7 +4,6 @@
 
 namespace Aqua.TypeSystem.Emit
 {
-    using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Linq;

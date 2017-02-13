@@ -201,35 +201,16 @@ namespace Aqua.TypeSystem
             }
         }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj as TypeInfo);
-        }
-
-        public bool Equals(TypeInfo typeInfo)
-        {
-            if (ReferenceEquals(null, typeInfo)) return false;
-            if (ReferenceEquals(this, typeInfo)) return true;
-            var s0 = ToString();
-            var s1 = typeInfo.ToString();
-            return string.Equals(s0, s1, StringComparison.Ordinal);
-        }
-
-        public override int GetHashCode()
-        {
-            var s = ToString();
-            return s.GetHashCode();
-        }
-
         public override string ToString()
+            => $"{FullName}{GetGenericArgumentsString()}";
+
+        private string GetGenericArgumentsString()
         {
             var genericArguments = GenericArguments;
             var genericArgumentsString = IsGenericType && (genericArguments?.Any() ?? false)
                 ? string.Format("[{0}]", string.Join(",", genericArguments.Select(x => x.ToString()).ToArray()))
                 : null;
-            return $"{FullName}{genericArgumentsString}";
+            return genericArgumentsString;
         }
 
         public static explicit operator Type(TypeInfo t)

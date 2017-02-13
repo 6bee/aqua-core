@@ -78,6 +78,7 @@ namespace Aqua.TypeSystem
                 {
                     _property = ResolveProperty(TypeResolver.Instance);
                 }
+
                 return _property;
             }
         }

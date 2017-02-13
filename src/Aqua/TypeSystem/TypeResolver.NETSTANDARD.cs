@@ -23,19 +23,18 @@ namespace Aqua.TypeSystem
             _assemblies = new Lazy<IEnumerable<Assembly>>(() =>
                 {
                     return (librariesProvider ?? DefaultLibrariesProvider)()
-                        //.SelectMany(_ => _.Assemblies)
-                        .Select(_ =>
+                        .Select(library =>
                         {
                             try
                             {
-                                return Assembly.Load(new AssemblyName(_.Name));
+                                return Assembly.Load(new AssemblyName(library.Name));
                             }
                             catch
                             {
                                 return null;
                             }
                         })
-                        .Where(_ => _ != null)
+                        .Where(assembly => assembly != null)
                         .ToArray();
                 });
         }

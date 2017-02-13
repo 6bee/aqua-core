@@ -4,6 +4,7 @@
 
 namespace Aqua.TypeSystem.Emit
 {
+    using Aqua.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -20,25 +21,10 @@ namespace Aqua.TypeSystem.Emit
             internal PropertyList(IEnumerable<string> properties)
             {
                 _properties = properties.ToList().AsReadOnly();
-                _hash = new Lazy<int>(() =>
-                {
-                    unchecked
-                    {
-                        var hash = 0;
-                        foreach (var property in _properties)
-                        {
-                            hash = (hash * 397) ^ property?.GetHashCode() ?? 0;
-                        }
-
-                        return hash;
-                    }
-                });
+                _hash = new Lazy<int>(_properties.GetCollectionHashCode);
             }
 
-            public IEnumerable<string> Properties
-            {
-                get { return _properties; }
-            }
+            public IEnumerable<string> Properties => _properties;
 
             public override bool Equals(object obj)
             {
@@ -52,12 +38,7 @@ namespace Aqua.TypeSystem.Emit
                     return true;
                 }
 
-                if (obj.GetType() == typeof(PropertyList))
-                {
-                    return Equals((PropertyList)obj);
-                }
-
-                return false;
+                return obj.GetType() == typeof(PropertyList) && Equals((PropertyList)obj);
             }
 
             private bool Equals(PropertyList other)
@@ -78,10 +59,7 @@ namespace Aqua.TypeSystem.Emit
                 return true;
             }
 
-            public override int GetHashCode()
-            {
-                return _hash.Value;
-            }
+            public override int GetHashCode() => _hash.Value;
         }
 
         private sealed class TypeWithPropertyList
@@ -101,30 +79,12 @@ namespace Aqua.TypeSystem.Emit
                     ? new List<Tuple<string, Type>>().AsReadOnly()
                     : properties.Select(CreatePropertyInfo).ToList().AsReadOnly();
 
-                _hash = new Lazy<int>(() =>
-                {
-                    unchecked
-                    {
-                        var hash = 0;
-                        foreach (var property in _properties)
-                        {
-                            hash = (hash * 397) ^ property?.GetHashCode() ?? 0;
-                        }
-
-                        return hash;
-                    }
-                });
+                _hash = new Lazy<int>(_properties.GetCollectionHashCode);
             }
 
-            public string TypeFullName
-            {
-                get { return _typeFullName; }
-            }
+            public string TypeFullName => _typeFullName;
 
-            public IEnumerable<Tuple<string, Type>> Properties
-            {
-                get { return _properties; }
-            }
+            public IEnumerable<Tuple<string, Type>> Properties => _properties;
 
             public override bool Equals(object obj)
             {
@@ -138,12 +98,7 @@ namespace Aqua.TypeSystem.Emit
                     return true;
                 }
 
-                if (obj.GetType() == typeof(TypeWithPropertyList))
-                {
-                    return Equals((TypeWithPropertyList)obj);
-                }
-
-                return false;
+                return obj.GetType() == typeof(TypeWithPropertyList) && Equals((TypeWithPropertyList)obj);
             }
 
             private bool Equals(TypeWithPropertyList other)
@@ -158,19 +113,10 @@ namespace Aqua.TypeSystem.Emit
                     return false;
                 }
 
-                var match = other._properties.All(x => _properties.Contains(x));
-                if (!match)
-                {
-                    return false;
-                }
-
-                return true;
+                return _properties.CollectionEquals(other._properties);
             }
 
-            public override int GetHashCode()
-            {
-                return _hash.Value;
-            }
+            public override int GetHashCode() => _hash.Value;
 
             private static Tuple<string, Type> CreatePropertyInfo(PropertyInfo propertyInfo)
             {
