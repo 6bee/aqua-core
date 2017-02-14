@@ -339,15 +339,33 @@ namespace Aqua.Dynamic
             return MapToDynamicObjectGraph(obj, setTypeInformation);
         }
 
+        /// <summary>
+        /// Maps an item of an object graph of <see cref="DynamicObject"/> back into its normal representation.
+        /// May be overridden in a derived class to implement a customized mapping strategy.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
         protected virtual object MapFromDynamicObjectGraph(object obj, Type targetType)
         {
             return MapFromDynamicObjectIfRequired(obj, targetType);
         }
 
+        /// <summary>
+        /// Maps an item of an object graph into a <see cref="DynamicObject"/>. 
+        /// May be overridden in a derived class to implement a customized mapping strategy.
+        /// </summary>
         protected virtual DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
         {
             return MapInternal(obj, setTypeInformation);
         }
+
+        /// <summary>
+        /// When overridden in a derived class, determines whether a collection should be mapped into a single <see cref="DynamicObject"/>,
+        /// rather than into a collection of <see cref="DynamicObject"/>s. Default is false. 
+        /// </summary>
+        /// <returns>True if the collection should be mapped into a single <see cref="DynamicObject"/>, false if each element should be mapped separately. Default is false.</returns>
+        protected virtual bool ShouldMapToDynamicObject(System.Collections.IEnumerable collection) => false;
 
         private object MapFromDynamicObjectIfRequired(object obj, Type targetType)
         {
@@ -543,7 +561,8 @@ namespace Aqua.Dynamic
                 return obj.ToString();
             }
 
-            if (obj is System.Collections.IEnumerable)
+            var collection = obj as System.Collections.IEnumerable;
+            if (!ReferenceEquals(null, collection) && !ShouldMapToDynamicObject(collection))
             {
                 var elementType = TypeHelper.GetElementType(type);
                 if (elementType != type)
@@ -559,7 +578,7 @@ namespace Aqua.Dynamic
                     }
                 }
 
-                var list = ((System.Collections.IEnumerable)obj)
+                var list = collection
                     .Cast<object>()
                     .Select(x => MapToDynamicObjectIfRequired(x, setTypeInformation))
                     .ToArray();

@@ -5,7 +5,6 @@ namespace Aqua.Tests.Extensions.EnumerableExtensions
     using Aqua.Extensions;
     using Shouldly;
     using System.Collections.Generic;
-    using System.Linq;
     using Xunit;
 
     public class When_comparing_collections
