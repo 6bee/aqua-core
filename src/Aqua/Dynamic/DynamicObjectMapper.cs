@@ -174,13 +174,6 @@ namespace Aqua.Dynamic
         private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper)
             .GetMethod("ToDictionary", BindingFlags.Static | BindingFlags.NonPublic);
 
-        private static readonly MethodInfo _mapDynamicObjectInternalMethod = typeof(DynamicObjectMapper)
-            .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
-            .Where(x => x.Name == "MapInternal")
-            .Where(x => x.IsGenericMethod && x.GetGenericArguments().Length == 1)
-            .Where(x => MatchParameters(x, typeof(DynamicObject)))
-            .Single();
-
         private readonly ObjectFormatterContext<DynamicObject, object> _fromContext;
         private readonly ObjectFormatterContext<object, DynamicObject> _toContext;
         private readonly Func<TypeSystem.TypeInfo, Type> _resolveType;
@@ -631,123 +624,82 @@ namespace Aqua.Dynamic
             return null;
         }
 
-        // used by reflection
-        private T MapInternal<T>(DynamicObject obj)
+        private object MapInternal(DynamicObject obj, Type type)
         {
-            return MapInternal<T>(new[] { obj }).Single();
-        }
-
-        private IEnumerable<T> MapInternal<T>(IEnumerable<DynamicObject> objects)
-        {
-            if (ReferenceEquals(null, objects))
+            if (type.IsAssignableFrom(typeof(DynamicObject)) && type != typeof(object))
             {
-                //return null;
-                throw new ArgumentNullException(nameof(objects));
+                return obj;
             }
-
-            if (!objects.Any())
-            {
-                return new T[0];
-            }
-
-            if (typeof(T).IsAssignableFrom(typeof(DynamicObject)) && typeof(T) != typeof(object))
-            {
-                return objects.Cast<T>();
-            }
-
-            var elementType = typeof(T);
-            if (objects.All(item => ReferenceEquals(null, item) || IsSingleValueWrapper(item)))
+            
+            if (IsSingleValueWrapper(obj))
             {
                 // project single property
-                var items = objects
-                    .SelectMany(i => ReferenceEquals(null, i) ? new object[] { null } : i.Values)
-                    .Select(x => MapFromDynamicObjectGraph(x, elementType))
-                    .ToArray();
-                var array = CastCollectionToArrayOfType(elementType, items);
-                try
-                {
-                    return (IEnumerable<T>)array;
-                }
-                catch (InvalidCastException)
-                {
-                    var enumerable = (System.Collections.IEnumerable)array;
-                    return enumerable.Cast<T>();
-                }
+                var propertyValue = obj.Values.Single();
+                return MapFromDynamicObjectGraph(propertyValue, type);
+            }
+
+            // project data record
+            Func<Type, DynamicObject, object> factory;
+            Action<Type, DynamicObject, object> initializer = null;
+#if NET
+            if (type.IsSerializable())
+            {
+                factory = (t, item) => GetUninitializedObject(t);
+                initializer = PopulateObjectMembers;
             }
             else
             {
-                // project data record
-                Func<Type, DynamicObject, object> factory;
-                Action<Type, DynamicObject, object> initializer = null;
-#if NET
-                if (elementType.IsSerializable())
-                {
-                    factory = (type, item) => GetUninitializedObject(type);
-                    initializer = PopulateObjectMembers;
-                }
-                else
-                {
 #endif
-                    var dynamicProperties = objects.SelectMany(x => x.Properties).Distinct().ToList();
-                    var constructor = elementType.GetConstructors()
-                        .Select(i =>
-                        {
-                            var paramterList = i.GetParameters();
-                            return new
+            var dynamicProperties = obj.Properties.ToList();
+            var constructor = type.GetConstructors()
+                .Select(i =>
+                {
+                    var paramterList = i.GetParameters();
+                    return new
+                    {
+                        Info = i,
+                        ParametersCount = paramterList.Length,
+                        Parameters = paramterList
+                            .Select(parameter => new
                             {
-                                Info = i,
-                                ParametersCount = paramterList.Length,
-                                Parameters = paramterList
-                                    .Select(parameter => new
-                                    {
-                                        Info = parameter,
-                                        Property = dynamicProperties
-                                            .Where(dynamicProperty => string.Equals(dynamicProperty.Name, parameter.Name, StringComparison.OrdinalIgnoreCase))
-                                            .Select(dynamicProperty => new { Name = dynamicProperty.Name, Value = MapFromDynamicObjectGraph(dynamicProperty.Value, parameter.ParameterType) })
-                                            .SingleOrDefault(dynamicProperty => IsAssignable(parameter.ParameterType, dynamicProperty.Value)),
-                                    })
-                                    .ToArray(),
-                            };
-                        })
-                        .OrderByDescending(i => i.ParametersCount == 0 ? int.MaxValue : i.ParametersCount)
-                        .FirstOrDefault(i => i.Parameters.All(p => !ReferenceEquals(null, p.Property)));
+                                Info = parameter,
+                                Property = dynamicProperties
+                                    .Where(dynamicProperty => string.Equals(dynamicProperty.Name, parameter.Name, StringComparison.OrdinalIgnoreCase))
+                                    .Select(dynamicProperty => new { Name = dynamicProperty.Name, Value = MapFromDynamicObjectGraph(dynamicProperty.Value, parameter.ParameterType) })
+                                    .SingleOrDefault(dynamicProperty => IsAssignable(parameter.ParameterType, dynamicProperty.Value)),
+                            })
+                            .ToArray(),
+                    };
+                })
+                .OrderByDescending(i => i.ParametersCount == 0 ? int.MaxValue : i.ParametersCount)
+                .FirstOrDefault(i => i.Parameters.All(p => !ReferenceEquals(null, p.Property)));
 
-                    if (!ReferenceEquals(null, constructor))
-                    {
-                        factory = (type, item) =>
-                        {
-                            var arguments = constructor.Parameters
-                                .Select(x => x.Property.Value)
-                                .ToArray();
-                            var obj = constructor.Info.Invoke(arguments);
-                            return obj;
-                        };
-                        initializer = CreatePropertyInitializer();
-                    }
-                    else if (elementType.IsValueType())
-                    {
-                        factory = (type, item) => Activator.CreateInstance(type);
-                        initializer = CreatePropertyInitializer();
-                    }
-                    else
-                    {
-                        throw new Exception($"Failed to pick matching contructor for type {elementType.FullName}");
-                    }
+            if (!ReferenceEquals(null, constructor))
+            {
+                factory = (t, item) =>
+                {
+                    var arguments = constructor.Parameters
+                        .Select(x => x.Property.Value)
+                        .ToArray();
+                    var instance = constructor.Info.Invoke(arguments);
+                    return instance;
+                };
+                initializer = CreatePropertyInitializer();
+            }
+            else if (type.IsValueType())
+            {
+                factory = (t, item) => Activator.CreateInstance(t);
+                initializer = CreatePropertyInitializer();
+            }
+            else
+            {
+                throw new Exception($"Failed to pick matching contructor for type {type.FullName}");
+            }
 #if NET
-                }
+            }
 #endif
 
-                var list = (System.Collections.IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
-                foreach (var item in objects)
-                {
-                    var obj = ReferenceEquals(null, item) ? null : _fromContext.TryGetOrCreateNew(elementType, item, factory, initializer);
-                    list.Add(obj);
-                }
-
-                return (IEnumerable<T>)list;
-            }
-
-            throw new Exception($"Failed to project dynamic objects into type {typeof(T).FullName}");
+            return _fromContext.TryGetOrCreateNew(type, obj, factory, initializer);
         }
 
         private Action<Type, DynamicObject, object> CreatePropertyInitializer()
@@ -769,13 +721,6 @@ namespace Aqua.Dynamic
                     }
                 }
             };
-        }
-
-        private object MapInternal(DynamicObject obj, Type type)
-        {
-            var mapper = GetMapInternalMethod(type);
-            var result = InvokeMethod(this, mapper, obj);
-            return result;
         }
 
         private static object CastCollectionToArrayOfType(Type elementType, object items)
@@ -1004,53 +949,6 @@ namespace Aqua.Dynamic
             }
 #endif
             return obj.ToString();
-        }
-
-        private static bool MatchParameters(MethodInfo x, params Type[] types)
-        {
-            var parameters = x.GetParameters();
-            if (parameters.Length != types.Length)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < parameters.Length; i++)
-            {
-                if (parameters[i].ParameterType != types[i]) return false;
-            }
-
-            return true;
-        }
-
-        private static MethodInfo GetMapInternalMethod(Type type)
-        {
-            return _mapDynamicObjectInternalMethod.MakeGenericMethod(type);
-        }
-
-        private static object InvokeMethod(DynamicObjectMapper instance, MethodInfo method, params object[] args)
-        {
-            try
-            {
-                return method.Invoke(instance, args);
-            }
-            catch (TargetInvocationException ex)
-            {
-                Exception innerException;
-                if (ReferenceEquals(null, ex.InnerException))
-                {
-                    innerException = ex;
-                }
-                else if (ReferenceEquals(null, ex.InnerException.InnerException))
-                {
-                    innerException = ex.InnerException;
-                }
-                else
-                {
-                    innerException = ex.InnerException.InnerException;
-                }
-
-                throw new Exception(innerException.Message, innerException);
-            }
         }
     }
 }

@@ -35,10 +35,9 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             var mapper = new DynamicObjectMapper(new DynamicObjectMapperSettings { SilentlySkipUnassignableMembers = false });
 
-            var ex = Assert.Throws<Exception>(() => mapper.Map<CustomType>(dynamicObject));
+            var ex = Assert.Throws<ArgumentException>(() => mapper.Map<CustomType>(dynamicObject));
 
-            ex.InnerException.ShouldBeOfType<ArgumentException>();
-            ex.InnerException.Message.ShouldBe("Object of type 'System.Double' cannot be converted to type 'System.Int32'.");
+            ex.Message.ShouldBe("Object of type 'System.Double' cannot be converted to type 'System.Int32'.");
         }
 
         [Fact]
