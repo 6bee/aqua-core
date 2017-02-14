@@ -238,9 +238,8 @@ namespace Aqua.Dynamic
             }
             else
             {
-                var r1 = MethodInfos.Enumerable.Cast.MakeGenericMethod(type).Invoke(null, new[] { items });
-                var r2 = MethodInfos.Enumerable.ToArray.MakeGenericMethod(type).Invoke(null, new[] { r1 });
-                return (System.Collections.IEnumerable)r2;
+                var array = CastCollectionToArrayOfType(type, items);
+                return (System.Collections.IEnumerable)array;
             }
         }
 
@@ -564,25 +563,31 @@ namespace Aqua.Dynamic
             var collection = obj as System.Collections.IEnumerable;
             if (!ReferenceEquals(null, collection) && !ShouldMapToDynamicObject(collection))
             {
+                var items = collection
+                    .Cast<object>()
+                    .Select(x => MapToDynamicObjectIfRequired(x, setTypeInformation))
+                    .ToArray();
+
                 var elementType = TypeHelper.GetElementType(type);
                 if (elementType != type)
                 {
                     if (_isKnownType(elementType))
                     {
-                        return obj;
+                        return CastCollectionToArrayOfType(elementType, items);
                     }
 
-                    if (_isNativeType(elementType) && !_formatPrimitiveTypesAsString)
+                    if (_isNativeType(elementType))
                     {
-                        return obj;
+                        if (_formatPrimitiveTypesAsString)
+                        {
+                            return CastCollectionToArrayOfType(typeof(string), items);
+                        }
+
+                        return CastCollectionToArrayOfType(elementType, items);
                     }
                 }
 
-                var list = collection
-                    .Cast<object>()
-                    .Select(x => MapToDynamicObjectIfRequired(x, setTypeInformation))
-                    .ToArray();
-                return list;
+                return items;
             }
 
             return MapToDynamicObjectGraph(obj, setTypeInformation);
@@ -626,6 +631,7 @@ namespace Aqua.Dynamic
             return null;
         }
 
+        // used by reflection
         private T MapInternal<T>(DynamicObject obj)
         {
             return MapInternal<T>(new[] { obj }).Single();
@@ -657,15 +663,14 @@ namespace Aqua.Dynamic
                     .SelectMany(i => ReferenceEquals(null, i) ? new object[] { null } : i.Values)
                     .Select(x => MapFromDynamicObjectGraph(x, elementType))
                     .ToArray();
-                var r1 = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
-                var r2 = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
+                var array = CastCollectionToArrayOfType(elementType, items);
                 try
                 {
-                    return (IEnumerable<T>)r2;
+                    return (IEnumerable<T>)array;
                 }
                 catch (InvalidCastException)
                 {
-                    var enumerable = (System.Collections.IEnumerable)r2;
+                    var enumerable = (System.Collections.IEnumerable)array;
                     return enumerable.Cast<T>();
                 }
             }
@@ -771,6 +776,13 @@ namespace Aqua.Dynamic
             var mapper = GetMapInternalMethod(type);
             var result = InvokeMethod(this, mapper, obj);
             return result;
+        }
+
+        private static object CastCollectionToArrayOfType(Type elementType, object items)
+        {
+            var castedItems = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
+            var array = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { castedItems });
+            return array;
         }
 
         private static object ParseToNativeType(Type targetType, string value)
@@ -932,6 +944,7 @@ namespace Aqua.Dynamic
             return true;
         }
 
+        // used by reflection
         private static object ToDictionary<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> items)
         {
             return items.ToDictionary(x => x.Key, x => x.Value);

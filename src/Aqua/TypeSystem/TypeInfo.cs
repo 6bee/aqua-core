@@ -9,12 +9,15 @@ namespace Aqua.TypeSystem
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
+    using System.Text.RegularExpressions;
 
     [Serializable]
     [DataContract(Name = "Type", IsReference = true)]
     [DebuggerDisplay("{FullName}")]
     public class TypeInfo
     {
+        private static readonly Regex _arrayNameRegex = new Regex(@"^.*\[,*\]$");
+
         [NonSerialized]
         private Type _type;
 
@@ -167,7 +170,7 @@ namespace Aqua.TypeSystem
             get
             {
                 var name = Name;
-                return !ReferenceEquals(null, name) && name.EndsWith("[]");
+                return !ReferenceEquals(null, name) && _arrayNameRegex.IsMatch(name);
             }
         }
 
