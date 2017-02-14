@@ -184,10 +184,15 @@ namespace Aqua.Extensions
             }
 
             var counters = new Dictionary<T, int>(comparer);
+            var nullCounter = 0;
 
             foreach (T s in collection1)
             {
-                if (counters.ContainsKey(s))
+                if (ReferenceEquals(null, s))
+                {
+                    nullCounter++;
+                }
+                else if (counters.ContainsKey(s))
                 {
                     counters[s]++;
                 }
@@ -199,7 +204,11 @@ namespace Aqua.Extensions
 
             foreach (T s in collection2)
             {
-                if (counters.ContainsKey(s))
+                if (ReferenceEquals(null, s))
+                {
+                    nullCounter--;
+                }
+                else if (counters.ContainsKey(s))
                 {
                     counters[s]--;
                 }
@@ -209,7 +218,7 @@ namespace Aqua.Extensions
                 }
             }
 
-            return counters.Values.All(c => c == 0);
+            return nullCounter == 0 && counters.Values.All(c => c == 0);
         }
 
 
@@ -223,7 +232,7 @@ namespace Aqua.Extensions
                 {
                     foreach (var item in collection)
                     {
-                        hashCode = (hashCode * 397) ^ item?.GetHashCode() ?? 0;
+                        hashCode ^= item?.GetHashCode() ?? -1;
                     }
                 }
 
