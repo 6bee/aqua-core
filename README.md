@@ -17,3 +17,36 @@ Aqua-core provides a bunch of serializable classes:
 * `ConstructorInfo`
 
 Any object graph may be translated into a `DynamicObject` structure and back to it's original type using `DynamicObjectMapper`.
+
+
+## Sample
+
+Mapping an object graph into a `DynamicObject` and then back to it's original type
+```C#
+Blog blog = new Blog
+{
+    Title = ".NET Blog",
+    Description = "A first-hand look from the .NET engineering teams",
+    Posts = new[]
+    {
+        new Post
+        {
+            Title = "Announcing .NET Core 1.0",
+            Date = new DateTime(2016, 6, 27),
+            Author = "rlander"
+            Text = "We are excited to announce the release of .NET Core 1.0, ASP.NET Core 1.0 and Entity Framework Core 1.0, available on Windows, OS X and Linux! .NET Core is a cross-platform, open source, and modular .NET platform [...]"
+        },
+        new Post
+        {
+            Title = "Happy 15th Birthday .NET!",
+            Date = new DateTime(2017, 2, 13),
+            Author = "bmassi",
+            Text = "Today marks the 15th anniversary since .NET debuted to the world [...]"
+        }
+    }
+}
+
+DynamicObject dynamicObject = new DynamicObjectMapper().MapObject(blog);
+
+Blog restoredBlog = new DynamicObjectMapper().Map(dynamicObject) as Blog;
+```
