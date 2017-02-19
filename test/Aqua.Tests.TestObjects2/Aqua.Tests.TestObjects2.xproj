@@ -10,7 +10,7 @@
     <ProjectGuid>726abe0d-36cd-42c9-9f00-6f08ecea794c</ProjectGuid>
     <RootNamespace>Aqua.Tests.TestObjects2</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
-    <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
+    <OutputPath Condition="'$(OutputPath)'=='' ">.\bin</OutputPath>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
   </PropertyGroup>
 
