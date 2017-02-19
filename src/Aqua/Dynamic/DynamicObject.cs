@@ -2,7 +2,6 @@
 
 namespace Aqua.Dynamic
 {
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -13,7 +12,6 @@ namespace Aqua.Dynamic
 
     [Serializable]
     [DataContract(IsReference = true)]
-    [JsonObject(IsReference = true)]
     [DebuggerDisplay("Count = {PropertyCount}")]
     public partial class DynamicObject : INotifyPropertyChanging, INotifyPropertyChanged
     {
@@ -132,19 +130,16 @@ namespace Aqua.Dynamic
         /// <summary>
         /// Gets the count of members (dynamically added properties) hold by this dynamic object
         /// </summary>
-        [JsonIgnore]
         public int PropertyCount => Properties.Count;
 
         /// <summary>
         /// Gets a collection of member names hold by this dynamic object
         /// </summary>
-        [JsonIgnore]
         public IEnumerable<string> PropertyNames => Properties.Select(x => x.Name).ToList();
 
         /// <summary>
         /// Gets a collection of member values hold by this dynamic object
         /// </summary>
-        [JsonIgnore]
         public IEnumerable<object> Values => Properties.Select(x => x.Value).ToList();
 
         /// <summary>

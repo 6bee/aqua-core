@@ -5,6 +5,7 @@
   "testRunner": "xunit",
   "dependencies": {
     "Aqua": { "target": "project" },
+    "Aqua.Newtonsoft.Json": { "target": "project" },
     "Aqua.Tests.TestObjects1": { "target": "project" },
     "Aqua.Tests.TestObjects2": { "target": "project" },
     "Shouldly": "2.8.0",

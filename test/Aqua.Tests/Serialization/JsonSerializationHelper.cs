@@ -8,7 +8,7 @@ namespace Aqua.Tests.Serialization
 
     public static class JsonSerializationHelper
     {
-        static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings().ConfigureAqua();
 
         public static T Serialize<T>(this T graph)
         {

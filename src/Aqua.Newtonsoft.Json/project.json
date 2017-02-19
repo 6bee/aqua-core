@@ -1,0 +1,33 @@
+{
+  "name": "aqua-core.Newtonsoft.Json",
+  "authors": [ "Christof Senn" ],
+  "version": "4.0.0-alpha-*",
+  "description": "Provides Newtonsoft.Json JsonConverters for Aqua types.",
+  "copyright": "Copyright Christof Senn 2017",
+  "packOptions": {
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/6bee/aqua-core.git"
+    },
+    "owners": [ "Christof Senn" ],
+    "projectUrl": "https://github.com/6bee/aqua-core",
+    "iconUrl": "https://raw.githubusercontent.com/6bee/aqua-core/master/aqua-small.png",
+    "licenseUrl": "https://raw.githubusercontent.com/6bee/aqua-core/master/license.txt",
+    "tags": [ "aqua-core", "json-net", "newtonsoft-json" ]
+  },
+  "buildOptions": {
+    "warningsAsErrors": true
+  },
+  "dependencies": {
+    "Aqua": { "target": "project" },
+    "Newtonsoft.Json": "9.0.1"
+  },
+  "frameworks": {
+    "netstandard1.6": {
+      "dependencies": {
+        "System.Reflection.TypeExtensions": "4.1.0"
+      }
+    },
+    "net451": { }
+  }
+}
