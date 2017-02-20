@@ -40,6 +40,7 @@ before_script:
 script: 
   - dotnet restore
   - dotnet build ./src/Aqua -c $CONFIGURATION -f netstandard1.6
+  - dotnet build ./src/Aqua.Newtonsoft.Json -c $CONFIGURATION -f netstandard1.6
   - dotnet build ./test/Aqua.Tests.TestObjects1 -c $CONFIGURATION -f netstandard1.6
   - dotnet build ./test/Aqua.Tests.TestObjects2 -c $CONFIGURATION -f netstandard1.6
   - dotnet test ./test/Aqua.Tests -c $CONFIGURATION -f netcoreapp1.0
