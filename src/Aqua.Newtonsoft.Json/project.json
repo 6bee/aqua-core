@@ -2,7 +2,7 @@
   "name": "aqua-core.Newtonsoft.Json",
   "authors": [ "Christof Senn" ],
   "version": "4.0.0-alpha-*",
-  "description": "Provides Newtonsoft.Json JsonConverters for Aqua types.",
+  "description": "Provides Json.NET serialization settings for Aqua types.",
   "copyright": "Copyright Christof Senn 2017",
   "packOptions": {
     "repository": {
