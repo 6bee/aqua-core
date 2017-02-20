@@ -46,7 +46,7 @@ namespace Aqua.TypeSystem
                     return 0;
                 }
 
-                return (obj.ToString().GetHashCode() * 397) ^ obj.Properties?.Select(x => x.Name).GetCollectionHashCode() ?? 0;
+                return (obj.ToString().GetHashCode() * 397) ^ (obj.Properties?.Select(x => x.Name).GetCollectionHashCode() ?? 0);
             }
 
             public bool Equals(PropertyInfo x, PropertyInfo y)
@@ -77,7 +77,7 @@ namespace Aqua.TypeSystem
                     return 0;
                 }
                 
-                return (obj.Name.GetHashCode() * 397) ^ obj.PropertyType?.ToString().GetHashCode() ?? 0;
+                return (obj.Name.GetHashCode() * 397) ^ (obj.PropertyType?.ToString().GetHashCode() ?? 0);
             }
         }
 
