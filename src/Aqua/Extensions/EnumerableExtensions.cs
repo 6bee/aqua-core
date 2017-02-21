@@ -165,8 +165,9 @@ namespace Aqua.Extensions
                     (x, y) => resultSelector(y, x.Key));
         }
 
+        public static bool CollectionEquals<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2) => CollectionEquals(collection1, collection2, null);
 
-        public static bool CollectionEquals<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> comparer = null)
+        public static bool CollectionEquals<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> comparer)
         {
             if (ReferenceEquals(null, collection1) && ReferenceEquals(null, collection2))
             {
@@ -221,9 +222,15 @@ namespace Aqua.Extensions
             return nullCounter == 0 && counters.Values.All(c => c == 0);
         }
 
+        public static int GetCollectionHashCode<T>(this IEnumerable<T> collection) => GetCollectionHashCode(collection, null);
 
-        public static int GetCollectionHashCode<T>(this IEnumerable<T> collection)
+        public static int GetCollectionHashCode<T>(this IEnumerable<T> collection, IEqualityComparer<T> comparer)
         {
+            if (ReferenceEquals(null, comparer))
+            {
+                comparer = EqualityComparer<T>.Default;
+            }
+
             unchecked
             {
                 var hashCode = 0;
@@ -232,7 +239,7 @@ namespace Aqua.Extensions
                 {
                     foreach (var item in collection)
                     {
-                        hashCode ^= item?.GetHashCode() ?? -1;
+                        hashCode ^= (ReferenceEquals(null, item) ? -1 : comparer.GetHashCode(item));
                     }
                 }
 
