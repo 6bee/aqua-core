@@ -9,19 +9,10 @@ namespace Aqua
     {
         private static ReferenceEqualityComparer<T> _default;
 
-        public static ReferenceEqualityComparer<T> Default
-        {
-            get { return _default ?? (_default = new ReferenceEqualityComparer<T>()); }
-        }
+        public static ReferenceEqualityComparer<T> Default => _default ?? (_default = new ReferenceEqualityComparer<T>());
 
-        public bool Equals(T x, T y)
-        {
-            return ReferenceEquals(x, y);
-        }
+        public bool Equals(T x, T y) => ReferenceEquals(x, y);
 
-        public int GetHashCode(T obj)
-        {
-            return RuntimeHelpers.GetHashCode(obj);
-        }
+        public int GetHashCode(T obj) => RuntimeHelpers.GetHashCode(obj);
     }
 }
