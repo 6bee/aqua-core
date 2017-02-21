@@ -1,16 +1,20 @@
+image: Visual Studio 2017 RC
 init:
   - git config --global core.autocrlf true
 version: 1.0.{build}
 before_build:
-  - cmd: dotnet restore
+  - nuget install nuget.commandline -source https://dotnet.myget.org/F/nuget-build -prerelease -excludeversion
+  - set PATH=%appveyor_build_folder%\NuGet.CommandLine\tools;%PATH%
+  - nuget restore
 build_script:
-  - cmd: >-  
-      dotnet build src\Aqua
-      dotnet build src\Aqua.Newtonsoft.Json
-      dotnet build test\Aqua.Tests.TestObjects1
-      dotnet build test\Aqua.Tests.TestObjects2
-      dotnet build test\Aqua.Tests
+  - dotnet --info
+  - dotnet restore
+  - dotnet build src\Aqua
+  - dotnet build src\Aqua.Newtonsoft.Json
+  - dotnet build test\Aqua.Tests.TestObjects1
+  - dotnet build test\Aqua.Tests.TestObjects2
+  - dotnet build test\Aqua.Tests
 test_script:
-  - cmd: dotnet test test\Aqua.Tests\Aqua.Tests.csproj
+  - dotnet test test\Aqua.Tests\Aqua.Tests.csproj
 build:
   verbosity: normal
