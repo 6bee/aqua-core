@@ -48,14 +48,33 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         {
             var typeResolver = new TypeResolver();
 
-            var resolverdA = typeResolver.ResolveType(new Aqua.TypeSystem.TypeInfo(typeA));
-            var resolverdB = typeResolver.ResolveType(new Aqua.TypeSystem.TypeInfo(typeB));
-            var resolverdA2 = typeResolver.ResolveType(new Aqua.TypeSystem.TypeInfo(typeA));
+            var resolverdA = typeResolver.ResolveType(new TypeInfo(typeA));
+            var resolverdB = typeResolver.ResolveType(new TypeInfo(typeB));
+            var resolverdA2 = typeResolver.ResolveType(new TypeInfo(typeA));
 
             resolverdA.ShouldBe(typeA);
             resolverdA.ShouldNotBe(typeB);
             resolverdA.ShouldBe(resolverdA2);
             resolverdB.ShouldBe(typeB);
+        }
+
+        [Fact]
+        public void Resolved_types_should_be_original()
+        {
+            Type type1 = TestObjects1.Helper.GetAnonymousType1();
+            Type type2 = TestObjects2.Helper.GetAnonymousType1();
+
+            var chickeOne = typeof(Chicken<>).MakeGenericType(type1);
+            var chickeTwo = typeof(Chicken<>).MakeGenericType(type2);
+
+            var typeResolver = new TypeResolver();
+
+            var resolverdChickenOne = typeResolver.ResolveType(new TypeInfo(chickeOne));
+            var resolverdChickenTwo = typeResolver.ResolveType(new TypeInfo(chickeTwo));
+
+            resolverdChickenOne.ShouldBe(chickeOne);
+            resolverdChickenTwo.ShouldBe(chickeTwo);
+            resolverdChickenOne.ShouldNotBe(resolverdChickenTwo);
         }
     }
 }
