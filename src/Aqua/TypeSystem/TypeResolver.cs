@@ -18,56 +18,57 @@ namespace Aqua.TypeSystem
             {
             }
 
-            public bool Equals(TypeInfo x, TypeInfo y)
+            public bool Equals(TypeInfo x, TypeInfo y) => Equals(x, y, true);
+
+            private bool Equals(TypeInfo x, TypeInfo y, bool followProperties)
             {
-                if (ReferenceEquals(x, y))
-                {
-                    return true;
-                }
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(null, x)) return false;
+                if (ReferenceEquals(null, y)) return false;
 
-                if (ReferenceEquals(null, x))
-                {
-                    return false;
-                }
+                var genericArguments1 = x.GenericArguments;
+                var genericArguments2 = y.GenericArguments;
 
-                if (ReferenceEquals(null, y))
-                {
-                    return false;
-                }
-
-                return string.Equals(x.ToString(), y.ToString())
-                    && x.Properties.CollectionEquals(y.Properties, this);
+                return string.Equals(x.FullName, y.FullName, StringComparison.Ordinal)
+                    && x.IsGenericType == y.IsGenericType
+                    && (!x.IsGenericType ||
+                       (
+                        !ReferenceEquals(null, genericArguments1) &&
+                        !ReferenceEquals(null, genericArguments2) &&
+                        genericArguments1.SequenceEqual(genericArguments2, this))
+                       )
+                    && (!followProperties || x.Properties.CollectionEquals(y.Properties, this));
             }
 
-            public int GetHashCode(TypeInfo obj)
+            public int GetHashCode(TypeInfo obj) => GetHashCode(obj, true);
+
+            private int GetHashCode(TypeInfo obj, bool followProperties)
             {
                 if (ReferenceEquals(null, obj))
                 {
                     return 0;
                 }
 
-                return (obj.ToString().GetHashCode() * 397) ^ (obj.Properties?.Select(x => x.Name).GetCollectionHashCode() ?? 0);
+                unchecked
+                {
+                    var hashCode = (obj.FullName.GetHashCode() * 397) ^ obj.GenericArguments.GetCollectionHashCode(this);
+                    if (followProperties)
+                    {
+                        hashCode = (hashCode * 397) ^ (obj.Properties?.Select(x => GetHashCode(x)).GetCollectionHashCode() ?? 0);
+                    }
+
+                    return hashCode;
+                }
             }
 
             public bool Equals(PropertyInfo x, PropertyInfo y)
             {
-                if (ReferenceEquals(x, y))
-                {
-                    return true;
-                }
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(null, x)) return false;
+                if (ReferenceEquals(null, y)) return false;
 
-                if (ReferenceEquals(null, x))
-                {
-                    return false;
-                }
-
-                if (ReferenceEquals(null, y))
-                {
-                    return false;
-                }
-
-                return string.Equals(x.Name, y.Name)
-                    && string.Equals(x.PropertyType?.ToString(), y.PropertyType?.ToString()); // break potential cyclic loop by comparing type name only
+                return string.Equals(x.Name, y.Name, StringComparison.Ordinal)
+                    && Equals(x.PropertyType, y.PropertyType, false);
             }
 
             public int GetHashCode(PropertyInfo obj)
@@ -76,8 +77,11 @@ namespace Aqua.TypeSystem
                 {
                     return 0;
                 }
-                
-                return (obj.Name.GetHashCode() * 397) ^ (obj.PropertyType?.ToString().GetHashCode() ?? 0);
+
+                unchecked
+                {
+                    return (obj.Name.GetHashCode() * 397) ^ GetHashCode(obj.PropertyType, false);
+                }
             }
         }
 

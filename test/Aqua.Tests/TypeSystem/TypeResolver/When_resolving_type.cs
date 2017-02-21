@@ -11,22 +11,15 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
     {
         class A
         {
-
-        }
-
-        private readonly Type type;
-
-
-        public When_resolving_type()
-        {
-            var typeInfo = new TypeInfo(typeof(A));
-
-            type = TypeResolver.Instance.ResolveType(typeInfo);
         }
 
         [Fact]
-        public void Type_should_be_expected_type()
+        public void Resolved_type_should_be_original()
         {
+            var typeInfo = new TypeInfo(typeof(A));
+
+            var type = TypeResolver.Instance.ResolveType(typeInfo);
+
             type.ShouldBe(typeof(A));
         }
     }
