@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Provides Newtonsoft.Json JsonConverters for Aqua types.</Description>
+    <Description>Provides Json.NET serialization settings for Aqua types.</Description>
     <Copyright>Copyright Christof Senn 2017</Copyright>
     <VersionPrefix>4.0.0-alpha</VersionPrefix>
     <Authors>Christof Senn</Authors>
