@@ -2,10 +2,6 @@ image: Visual Studio 2017 RC
 init:
   - git config --global core.autocrlf true
 version: 1.0.{build}
-before_build:
-  - nuget install nuget.commandline -source https://dotnet.myget.org/F/nuget-build -prerelease -excludeversion
-  - set PATH=%appveyor_build_folder%\NuGet.CommandLine\tools;%PATH%
-  - nuget restore
 build_script:
   - dotnet --info
   - dotnet restore
