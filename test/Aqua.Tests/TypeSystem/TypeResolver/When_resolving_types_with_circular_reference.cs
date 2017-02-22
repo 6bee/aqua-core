@@ -59,7 +59,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         }
 
         [Fact]
-        public void Resolved_types_should_be_original()
+        public void Resolved_types_with_anonymous_generic_argument_should_be_original()
         {
             Type type1 = TestObjects1.Helper.GetAnonymousType1();
             Type type2 = TestObjects2.Helper.GetAnonymousType1();

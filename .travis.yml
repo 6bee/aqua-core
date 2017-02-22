@@ -15,15 +15,15 @@ matrix:
     - os: linux
       dist: trusty
       sudo: required
-      env: CONFIGURATION=Debug CLI_VERSION=1.0.0-preview2-003121
+      env: CONFIGURATION=Debug CLI_VERSION=1.0.0-rc4-004771
     - os: linux
       dist: trusty
       sudo: required
-      env: CONFIGURATION=Release CLI_VERSION=1.0.0-preview2-003121
+      env: CONFIGURATION=Release CLI_VERSION=1.0.0-rc4-004771
     - os: osx
-      env: CONFIGURATION=Debug CLI_VERSION=1.0.0-preview2-003121
+      env: CONFIGURATION=Debug CLI_VERSION=1.0.0-rc4-004771
     - os: osx
-      env: CONFIGURATION=Release CLI_VERSION=1.0.0-preview2-003121
+      env: CONFIGURATION=Release CLI_VERSION=1.0.0-rc4-004771
 
 before_install:  
   - if test "$TRAVIS_OS_NAME" == "osx"; then brew update; brew install openssl; brew link --force openssl; fi
@@ -35,12 +35,12 @@ install:
 
 before_script:  
   - if test "$TRAVIS_OS_NAME" == "osx"; then export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib; fi
-  - dotnet --info
 
 script: 
+  - dotnet --info
   - dotnet restore
   - dotnet build ./src/Aqua -c $CONFIGURATION -f netstandard1.6
   - dotnet build ./src/Aqua.Newtonsoft.Json -c $CONFIGURATION -f netstandard1.6
   - dotnet build ./test/Aqua.Tests.TestObjects1 -c $CONFIGURATION -f netstandard1.6
   - dotnet build ./test/Aqua.Tests.TestObjects2 -c $CONFIGURATION -f netstandard1.6
-  - dotnet test ./test/Aqua.Tests -c $CONFIGURATION -f netcoreapp1.0
+  - dotnet test ./test/Aqua.Tests/Aqua.Tests.csproj -c $CONFIGURATION -f netcoreapp1.0
