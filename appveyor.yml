@@ -1,16 +1,23 @@
 image: Visual Studio 2017 RC
+
 init:
   - git config --global core.autocrlf true
+
 version: 1.0.{build}
-build_script:
+
+before_build:
   - dotnet --info
   - dotnet restore
+
+build_script:
   - dotnet build src\Aqua
   - dotnet build src\Aqua.Newtonsoft.Json
   - dotnet build test\Aqua.Tests.TestObjects1
   - dotnet build test\Aqua.Tests.TestObjects2
   - dotnet build test\Aqua.Tests
+
 test_script:
   - dotnet test test\Aqua.Tests\Aqua.Tests.csproj
+
 build:
   verbosity: normal
