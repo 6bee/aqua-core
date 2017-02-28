@@ -78,27 +78,6 @@ namespace Aqua.TypeSystem
             }
         }
 
-        public System.Reflection.MemberInfo ResolveMemberInfo(ITypeResolver typeResolver)
-        {
-            switch (MemberType)
-            {
-                case MemberTypes.Field:
-                    return ((FieldInfo)this).ResolveField(typeResolver);
-
-                case MemberTypes.Constructor:
-                    return ((ConstructorInfo)this).ResolveConstructor(typeResolver);
-
-                case MemberTypes.Property:
-                    return ((PropertyInfo)this).ResolveProperty(typeResolver);
-
-                case MemberTypes.Method:
-                    return ((MethodInfo)this).ResolveMethod(typeResolver);
-
-                default:
-                    throw new NotImplementedException($"Implementation missing for conversion of member type: {MemberType}");
-            }
-        }
-
         public static explicit operator System.Reflection.MemberInfo(MemberInfo memberInfo)
         {
             return memberInfo.ResolveMemberInfo(TypeResolver.Instance);

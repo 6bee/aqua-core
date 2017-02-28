@@ -40,7 +40,7 @@ namespace Aqua.TypeSystem
         {
         }
 
-        public override MemberTypes MemberType { get { return Aqua.TypeSystem.MemberTypes.Field; } }
+        public override MemberTypes MemberType => MemberTypes.Field;
 
         internal System.Reflection.FieldInfo Field
         {
@@ -48,27 +48,11 @@ namespace Aqua.TypeSystem
             {
                 if (ReferenceEquals(null, _field))
                 {
-                    _field = ResolveField(TypeResolver.Instance);
+                    _field = this.ResolveField(TypeResolver.Instance);
                 }
 
                 return _field;
             }
-        }
-
-        public System.Reflection.FieldInfo ResolveField(ITypeResolver typeResolver)
-        {
-            Type declaringType;
-            try
-            {
-                declaringType = typeResolver.ResolveType(DeclaringType);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Declaring type '{DeclaringType}' could not be reconstructed", ex);
-            }
-
-            var fieldInfo = declaringType.GetField(Name);
-            return fieldInfo;
         }
 
         public static explicit operator System.Reflection.FieldInfo(FieldInfo f)

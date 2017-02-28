@@ -11,7 +11,7 @@ namespace Aqua.TypeSystem
     [Serializable]
     [DataContract(Name = "Property", IsReference = true)]
     [DebuggerDisplay("{Name}")]
-    public class PropertyInfo : Aqua.TypeSystem.MemberInfo
+    public class PropertyInfo : MemberInfo
     {
         [NonSerialized]
         private System.Reflection.PropertyInfo _property;
@@ -65,7 +65,7 @@ namespace Aqua.TypeSystem
             _property = propertyInfo._property;
         }
 
-        public override MemberTypes MemberType { get { return Aqua.TypeSystem.MemberTypes.Property; } }
+        public override MemberTypes MemberType => MemberTypes.Property;
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo PropertyType { get; set; }
@@ -76,27 +76,11 @@ namespace Aqua.TypeSystem
             {
                 if (ReferenceEquals(null, _property))
                 {
-                    _property = ResolveProperty(TypeResolver.Instance);
+                    _property = this.ResolveProperty(TypeResolver.Instance);
                 }
 
                 return _property;
             }
-        }
-
-        public System.Reflection.PropertyInfo ResolveProperty(ITypeResolver typeResolver)
-        {
-            Type declaringType;
-            try
-            {
-                declaringType = typeResolver.ResolveType(DeclaringType);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Declaring type '{DeclaringType}' could not be reconstructed", ex);
-            }
-
-            var propertyInfo = declaringType.GetProperty(Name);
-            return propertyInfo;
         }
 
         public static explicit operator System.Reflection.PropertyInfo(PropertyInfo p)

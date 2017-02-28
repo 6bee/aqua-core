@@ -200,6 +200,7 @@ namespace Aqua.TypeSystem
                 {
                     _type = TypeResolver.Instance.ResolveType(this);
                 }
+
                 return _type;
             }
         }

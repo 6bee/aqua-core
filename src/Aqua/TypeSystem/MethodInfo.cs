@@ -45,7 +45,7 @@ namespace Aqua.TypeSystem
         {
         }
 
-        public override MemberTypes MemberType { get { return TypeSystem.MemberTypes.Method; } }
+        public override MemberTypes MemberType => MemberTypes.Method;
 
         public System.Reflection.MethodInfo Method
         {
@@ -53,77 +53,11 @@ namespace Aqua.TypeSystem
             {
                 if (ReferenceEquals(null, _method))
                 {
-                    _method = ResolveMethod(TypeResolver.Instance);
+                    _method = this.ResolveMethod(TypeResolver.Instance);
                 }
 
                 return _method;
             }
-        }
-
-        public System.Reflection.MethodInfo ResolveMethod(ITypeResolver typeResolver)
-        {
-            Type declaringType;
-            try
-            {
-                declaringType = typeResolver.ResolveType(DeclaringType);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Declaring type '{DeclaringType}' could not be reconstructed", ex);
-            }
-
-            var genericArguments = ReferenceEquals(null, GenericArgumentTypes) ? new Type[0] : GenericArgumentTypes
-                .Select(typeInfo =>
-                {
-                    try
-                    {
-                        var genericArgumentType = typeResolver.ResolveType(typeInfo);
-                        return genericArgumentType;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception($"Generic argument type '{typeInfo}' could not be reconstructed", ex);
-                    }
-                })
-                .ToArray();
-
-            var parameterTypes = ReferenceEquals(null, ParameterTypes) ? new Type[0] : ParameterTypes
-                .Select(typeInfo =>
-                {
-                    try
-                    {
-                        var parameterType = typeResolver.ResolveType(typeInfo);
-                        return parameterType;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception($"Parameter type '{typeInfo}' could not be reconstructed", ex);
-                    }
-                })
-                .ToArray();
-
-
-            var methodInfo = declaringType.GetMethods(BindingFlags)
-                .Where(m => m.Name == Name)
-                .Where(m => !m.IsGenericMethod || m.GetGenericArguments().Length == genericArguments.Length)
-                .Where(m => m.GetParameters().Length == parameterTypes.Length)
-                .Select(m => m.IsGenericMethod ? m.MakeGenericMethod(genericArguments) : m)
-                .Where(m =>
-                {
-                    var paramTypes = m.GetParameters();
-                    for (int i = 0; i < parameterTypes.Length; i++)
-                    {
-                        if (paramTypes[i].ParameterType != parameterTypes[i])
-                        {
-                            return false;
-                        }
-                    }
-
-                    return true;
-                })
-                .Single();
-
-            return methodInfo;
         }
 
         public override string ToString()

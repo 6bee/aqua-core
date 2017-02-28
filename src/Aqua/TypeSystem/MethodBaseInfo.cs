@@ -80,7 +80,7 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
         public List<TypeInfo> ParameterTypes { get; set; }
 
-        public bool IsGenericMethod { get { return !ReferenceEquals(null, GenericArgumentTypes) && GenericArgumentTypes.Any(); } }
+        public bool IsGenericMethod => !ReferenceEquals(null, GenericArgumentTypes) && GenericArgumentTypes.Any();
 
         public override string ToString()
         {
