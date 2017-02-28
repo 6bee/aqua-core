@@ -10,6 +10,7 @@ namespace Aqua.Dynamic
     using System.Reflection;
     using MethodInfo = System.Reflection.MethodInfo;
     using PropertyInfo = System.Reflection.PropertyInfo;
+    using FieldInfo = System.Reflection.FieldInfo;
 
     public partial class DynamicObjectMapper : IDynamicObjectMapper
     {
@@ -591,8 +592,6 @@ namespace Aqua.Dynamic
         /// </summary>
         private void PopulateObjectMembers(Type type, object from, DynamicObject to, Func<Type, bool> setTypeInformation)
         {
-            // TODO: add support for ISerializable
-            // TODO: add support for OnSerializingAttribute, OnSerializedAttribute, OnDeserializingAttribute, OnDeserializedAttribute
 #if NET
             if (type.IsSerializable())
             {
@@ -601,15 +600,22 @@ namespace Aqua.Dynamic
             else
             {
 #endif
-                var properties = GetPropertiesForMapping(type) ??
-                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                        .Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
-                foreach (var property in properties)
-                {
-                    var value = property.GetValue(from);
-                    value = MapToDynamicObjectIfRequired(value, setTypeInformation);
-                    to.Add(property.Name, value);
-                }
+            var properties = GetPropertiesForMapping(type) ??
+                type.GetProperties().Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
+            foreach (var property in properties)
+            {
+                var value = property.GetValue(from);
+                value = MapToDynamicObjectIfRequired(value, setTypeInformation);
+                to.Add(property.Name, value);
+            }
+
+            var fields = GetFieldsForMapping(type) ?? type.GetFields();
+            foreach (var field in fields)
+            {
+                var value = field.GetValue(from);
+                value = MapToDynamicObjectIfRequired(value, setTypeInformation);
+                to.Add(field.Name, value);
+            }
 #if NET
             }
 #endif
@@ -620,6 +626,15 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <returns>If overriden in a derived class, returns a list of <see cref="PropertyInfo"/> for a given type or null if defaul behaviour should be applied</returns>
         protected virtual IEnumerable<PropertyInfo> GetPropertiesForMapping(Type type)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Can be overriden in a derived class to return a list of <see cref="FieldInfo"/> for a given type or null if defaul behaviour should be applied
+        /// </summary>
+        /// <returns>If overriden in a derived class, returns a list of <see cref="FieldInfo"/> for a given type or null if defaul behaviour should be applied</returns>
+        protected virtual IEnumerable<FieldInfo> GetFieldsForMapping(Type type)
         {
             return null;
         }
@@ -706,8 +721,9 @@ namespace Aqua.Dynamic
         {
             return (type, item, obj) =>
             {
-                var targetProperties = obj.GetType().GetProperties().Where(p => p.CanWrite);
-                foreach (var property in targetProperties)
+                var properties = GetPropertiesForMapping(type) ??
+                    type.GetProperties().Where(p => p.CanWrite && p.GetIndexParameters().Length == 0);
+                foreach (var property in properties)
                 {
                     object rawValue;
                     if (item.TryGet(property.Name, out rawValue))
@@ -717,6 +733,21 @@ namespace Aqua.Dynamic
                         if (_suppressMemberAssignabilityValidation || IsAssignable(property.PropertyType, value))
                         {
                             property.SetValue(obj, value);
+                        }
+                    }
+                }
+
+                var fields = GetFieldsForMapping(type) ?? type.GetFields();
+                foreach(var field in fields)
+                {
+                    object rawValue;
+                    if (item.TryGet(field.Name, out rawValue))
+                    {
+                        var value = MapFromDynamicObjectGraph(rawValue, field.FieldType);
+
+                        if (_suppressMemberAssignabilityValidation || IsAssignable(field.FieldType, value))
+                        {
+                            field.SetValue(obj, value);
                         }
                     }
                 }
