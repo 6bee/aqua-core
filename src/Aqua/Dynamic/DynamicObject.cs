@@ -275,43 +275,17 @@ namespace Aqua.Dynamic
             value = property.Value;
             return true;
         }
-
-        /// <summary>
-        /// Creates an instance of the object represented by this dynamic object.
-        /// </summary>
-        /// <remarks>Requires the Type property to be set on this dynamic object.</remarks>
-        /// <param name="mapper">Optional instance of dynamic object mapper</param>
-        public object CreateObject(IDynamicObjectMapper mapper = null)
-        {
-            return (mapper ?? new DynamicObjectMapper()).Map(this);
-        }
-
-        /// <summary>
-        /// Creates an instance of the object type specified and populates the object structure represented by this dynamic object.
-        /// </summary>
-        /// <param name="type">Type of object to be created</param>
-        /// <param name="mapper">Optional instance of dynamic object mapper</param>
-        public object CreateObject(Type type, IDynamicObjectMapper mapper = null)
-        {
-            return (mapper ?? new DynamicObjectMapper()).Map(this, type);
-        }
-
-        /// <summary>
-        /// Creates an instance of the object type specified and populates the object structure represented by this dynamic object.
-        /// </summary>
-        /// <typeparam name="T">Type of object to be created</typeparam>
-        /// <param name="mapper">Optional instance of dynamic object mapper</param>
-        public T CreateObject<T>(IDynamicObjectMapper mapper = null)
-        {
-            return (mapper ?? new DynamicObjectMapper()).Map<T>(this);
-        }
+        
+        [Obsolete("Method renamed to Create", true)]
+        public static DynamicObject CreateDynamicObject(object obj, IDynamicObjectMapper mapper = null)
+            => Create(obj, mapper);
 
         /// <summary>
         /// Creates a dynamic objects representing the object structure defined by the specified object
         /// </summary>
         /// <param name="obj">The object to be represented by the new dynamic object</param>
         /// <param name="mapper">Optional instance of dynamic object mapper</param>
-        public static DynamicObject CreateDynamicObject(object obj, IDynamicObjectMapper mapper = null)
+        public static DynamicObject Create(object obj, IDynamicObjectMapper mapper = null)
         {
             return (mapper ?? new DynamicObjectMapper()).MapObject(obj);
         }
