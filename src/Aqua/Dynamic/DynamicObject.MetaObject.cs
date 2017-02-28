@@ -27,7 +27,7 @@ namespace Aqua.Dynamic
             {
                 _dynamicObjectType = typeof(DynamicObject);
                 _getMethod = _dynamicObjectType.GetMethods(BindingFlags.Public | BindingFlags.Instance).Single(m => m.Name == "Get" && !m.IsGenericMethodDefinition);
-                _setMethod = _dynamicObjectType.GetMethod("Set", BindingFlags.Public | BindingFlags.Instance);
+                _setMethod = _dynamicObjectType.GetMethod(nameof(Set), BindingFlags.Public | BindingFlags.Instance);
             }
 
             public MetaObject(Expression expression, BindingRestrictions restrictions, DynamicObject dynamicObject)
