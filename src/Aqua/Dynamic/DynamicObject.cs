@@ -276,7 +276,7 @@ namespace Aqua.Dynamic
             return true;
         }
         
-        [Obsolete("Method renamed to Create", true)]
+        [Obsolete("Method renamed to Create. This method is beeing removed in a future version.", true)]
         public static DynamicObject CreateDynamicObject(object obj, IDynamicObjectMapper mapper = null)
             => Create(obj, mapper);
 
