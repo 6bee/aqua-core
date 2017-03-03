@@ -4,12 +4,6 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 {
     partial class When_using_typeinfo_with_circular_reference
     {
-        public class XmlSerializer : When_using_typeinfo_with_circular_reference
-        {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.Serialize)
-            {
-            }
-        }
+        // XmlSerializer doesn't support circular references
     }
 }
