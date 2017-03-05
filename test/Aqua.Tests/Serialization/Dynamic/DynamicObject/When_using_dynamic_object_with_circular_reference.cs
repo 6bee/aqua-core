@@ -7,8 +7,32 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     using System;
     using Xunit;
 
-    public abstract partial class When_using_dynamic_object_with_circular_reference
+    public abstract class When_using_dynamic_object_with_circular_reference
     {
+        public class JsonSerializer : When_using_dynamic_object_with_circular_reference
+        {
+            public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
+        }
+
+        public class DataContractSerializer : When_using_dynamic_object_with_circular_reference
+        {
+            public DataContractSerializer() : base(DataContractSerializationHelper.Serialize) { }
+        }
+
+        // XML serialization doesn't support circular references
+
+#if NET
+        public class BinaryFormatter : When_using_dynamic_object_with_circular_reference
+        {
+            public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
+        }
+
+        public class NetDataContractSerializer : When_using_dynamic_object_with_circular_reference
+        {
+            public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
+        }
+#endif
+
         DynamicObject serializedObject;
 
         protected When_using_dynamic_object_with_circular_reference(Func<DynamicObject, DynamicObject> serialize)
@@ -17,13 +41,11 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             dynamic object_1 = new DynamicObject();
             dynamic object_2 = new DynamicObject();
 
-            object_0["Ref_1"] = object_1;
-            object_1["Ref_2"] = object_2;
-            object_2["Ref_0"] = object_0;
+            object_0.Ref_1 = object_1;
+            object_1.Ref_2 = object_2;
+            object_2.Ref_0 = object_0;
 
             serializedObject = serialize(object_0);
-
-            ShouldBeTestExtensions.ShouldNotBeSameAs(serializedObject, object_0);
         }
 
         [Fact]
@@ -34,7 +56,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
                 .Get<DynamicObject>("Ref_2")
                 .Get<DynamicObject>("Ref_0");
 
-            ShouldBeTestExtensions.ShouldBeSameAs(reference, serializedObject);
+            reference.ShouldBeSameAs(serializedObject);
         }
     }
 }

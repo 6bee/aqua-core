@@ -7,8 +7,35 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     using Xunit;
     using Shouldly;
 
-    public abstract partial class When_using_dynamic_object_for_complex_object_tree
+    public abstract class When_using_dynamic_object_for_complex_object_tree
     {
+        public class JsonSerializer : When_using_dynamic_object_for_complex_object_tree
+        {
+            public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
+        }
+
+        public class DataContractSerializer : When_using_dynamic_object_for_complex_object_tree
+        {
+            public DataContractSerializer() : base(DataContractSerializationHelper.Serialize) { }
+        }
+
+        public class XmlSerializer : When_using_dynamic_object_for_complex_object_tree
+        {
+            public XmlSerializer() : base(XmlSerializationHelper.Serialize) { }
+        }
+
+#if NET
+        public class BinaryFormatter : When_using_dynamic_object_for_complex_object_tree
+        {
+            public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
+        }
+
+        public class NetDataContractSerializer : When_using_dynamic_object_for_complex_object_tree
+        {
+            public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
+        }
+#endif
+
         const double DoubleValue = 1.2345679e-87;
         const string StringValue = "eleven";
         const string CustomType = "system-string-type";
