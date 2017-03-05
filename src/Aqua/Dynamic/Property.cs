@@ -6,11 +6,12 @@ namespace Aqua.Dynamic
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     [Serializable]
     [DataContract]
-    [KnownType(typeof(object))]
-    [KnownType(typeof(object[]))]
+    [KnownType(typeof(object)), XmlInclude(typeof(object))]
+    [KnownType(typeof(object[])), XmlInclude(typeof(object[]))]
     [DebuggerDisplay("{Name} = {Value}")]
     public class Property
     {
