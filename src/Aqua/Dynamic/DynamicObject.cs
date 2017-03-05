@@ -19,7 +19,7 @@ namespace Aqua.Dynamic
         /// Creates a new instance of a dynamic object
         /// </summary>
         public DynamicObject()
-            : this(default(TypeInfo))
+            : this(default(TypeInfo), default(PropertySet))
         {
         }
 
@@ -28,7 +28,7 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <param name="type">The type to be set</param>
         public DynamicObject(Type type)
-            : this(ReferenceEquals(null, type) ? null : new TypeInfo(type, includePropertyInfos: false))
+            : this(ReferenceEquals(null, type) ? null : new TypeInfo(type, includePropertyInfos: false), default(PropertySet))
         {
         }
 
@@ -37,9 +37,18 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <param name="type">The type to be set</param>
         public DynamicObject(TypeInfo type)
+            :this(type, default(PropertySet))
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of a dynamic object, setting the specified <see cref="TypeInfo"/> and <see cref="PropertySet"/>
+        /// </summary>
+        /// <param name="type">The type to be set</param>
+        public DynamicObject(TypeInfo type, PropertySet propertySet)
         {
             Type = type;
-            Properties = new PropertySet();
+            Properties = propertySet ?? new PropertySet();
         }
 
         /// <summary>
@@ -69,7 +78,7 @@ namespace Aqua.Dynamic
                 throw new ArgumentNullException(nameof(properties));
             }
 
-            Properties = new Dynamic.PropertySet(properties);
+            Properties = new PropertySet(properties);
         }
 
         /// <summary>
@@ -93,7 +102,8 @@ namespace Aqua.Dynamic
         /// <summary>
         /// Copy constructor
         /// </summary>
-        /// <param name="members">Initial collection of properties and values</param>
+        /// <param name="dynamicObject">The instance to copy</param>
+        /// <param name="deepCopy">If true re-creates <see cref="Property"/> instances, otherwise fills existing <see cref="Property"/> instances into a new <see cref="PropertySet"/></param>
         /// <exception cref="ArgumentNullException">The specified members collection is null</exception>
         internal protected DynamicObject(DynamicObject dynamicObject, bool deepCopy = true)
         {
@@ -102,15 +112,19 @@ namespace Aqua.Dynamic
                 throw new ArgumentNullException(nameof(dynamicObject));
             }
 
-            if (deepCopy)
+            Type = ReferenceEquals(null, dynamicObject.Type) ? null : new TypeInfo(dynamicObject.Type);
+
+            if (ReferenceEquals(null, dynamicObject.Properties))
             {
-                Type = ReferenceEquals(null, dynamicObject.Type) ? null : new TypeInfo(dynamicObject.Type);
-                Properties = ReferenceEquals(null, dynamicObject.Properties) ? null : new PropertySet(dynamicObject.Properties.Select(x => new Property(x)));
+                Properties = null;
+            }
+            else if (deepCopy)
+            {
+                Properties = new PropertySet(dynamicObject.Properties.Select(x => new Property(x)));
             }
             else
             {
-                Type = dynamicObject.Type;
-                Properties = dynamicObject.Properties;
+                Properties = new PropertySet(dynamicObject.Properties);
             }
         }
 
