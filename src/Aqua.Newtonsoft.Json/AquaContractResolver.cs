@@ -49,7 +49,7 @@ namespace Aqua
                     property.Ignored = true;
                 }
             }
-            
+
             return contract;
         }
     }
