@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if NETSTANDARD
+#if NETSTANDARD && !NETSTANDARD1_3
 
 namespace Aqua.TypeSystem
 {
@@ -36,7 +36,7 @@ namespace Aqua.TypeSystem
                         })
                         .Where(assembly => assembly != null)
                         .ToArray();
-                });
+                }, true);
         }
 
         private static IEnumerable<RuntimeLibrary> DefaultLibrariesProvider() => DependencyContext.Default.RuntimeLibraries;
