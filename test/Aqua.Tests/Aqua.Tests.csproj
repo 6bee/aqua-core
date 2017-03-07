@@ -4,7 +4,7 @@
     <Description>Tests for aqua-core</Description>
     <Copyright>Copyright Christof Senn 2013-2017</Copyright>
     <TargetFrameworks>net451;netcoreapp1.0</TargetFrameworks>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
