@@ -10,7 +10,6 @@ namespace Aqua.TypeSystem
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Threading.Tasks;
 
     partial class TypeResolver
     {
@@ -34,9 +33,9 @@ namespace Aqua.TypeSystem
                             {
                                 assemblies.Add(Assembly.Load(new AssemblyName { Name = Path.GetFileNameWithoutExtension(file.Name) }));
                             }
-                            catch (Exception e)
+                            catch (Exception ex)
                             {
-                                Debug.WriteLine(e.Message);
+                                Debug.WriteLine(ex.Message);
                             }
                         }
                     }
