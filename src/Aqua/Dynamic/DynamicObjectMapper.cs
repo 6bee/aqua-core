@@ -272,7 +272,7 @@ namespace Aqua.Dynamic
                 // cast
                 enumerable = (IEnumerable<DynamicObject>)obj;
             }
-            else if (obj is System.Collections.IEnumerable && !(obj is string))
+            else if (IsCollection(obj))
             {
                 enumerable = ((System.Collections.IEnumerable)obj)
                     .Cast<object>()
@@ -467,7 +467,7 @@ namespace Aqua.Dynamic
                     return dynamicObject;
                 };
             }
-            else if (type.IsArray)
+            else if (IsCollection(obj) && !ShouldMapToDynamicObject((System.Collections.IEnumerable)obj))
             {
                 facotry = (t, o, f) =>
                 {

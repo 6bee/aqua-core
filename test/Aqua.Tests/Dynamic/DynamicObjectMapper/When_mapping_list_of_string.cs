@@ -5,6 +5,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using Aqua.Dynamic;
     using Shouldly;
     using System.Collections.Generic;
+    using System.Linq;
     using Xunit;
 
     public class When_mapping_list_of_string
@@ -17,9 +18,9 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         }
 
         [Fact]
-        public void Dynamic_object_should_have_one_property_foreach_list_member()
+        public void Dynamic_object_should_have_one_property_with_empty_name()
         {
-            dynamicObject.PropertyCount.ShouldBe(3);
+            dynamicObject.Properties.Single().Name.ShouldBe("");
         }
 
         [Fact]
@@ -31,12 +32,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_should_have_items_property_with_list()
         {
-#if NET
-            var itemsPropertyName = "_items";
-#else
-            var itemsPropertyName = "Items";
-#endif
-            var items = dynamicObject[itemsPropertyName].ShouldBeOfType<object[]>();
+            var items = dynamicObject.Values.Single().ShouldBeOfType<object[]>();
             items[0].ShouldBe("One");
             items[1].ShouldBe("Two");
         }
