@@ -100,62 +100,30 @@ namespace Aqua.Dynamic
         private static readonly Func<Type, bool> _isNativeType = new[]
             {
                 typeof(string),
-
                 typeof(int),
-                typeof(int?),
                 typeof(uint),
-                typeof(uint?),
-
                 typeof(byte),
-                typeof(byte?),
                 typeof(sbyte),
-                typeof(sbyte?),
-
                 typeof(short),
-                typeof(short?),
                 typeof(ushort),
-                typeof(ushort?),
-
                 typeof(long),
-                typeof(long?),
                 typeof(ulong),
-                typeof(ulong?),
-
                 typeof(float),
-                typeof(float?),
-
                 typeof(double),
-                typeof(double?),
-
                 typeof(decimal),
-                typeof(decimal?),
-
                 typeof(char),
-                typeof(char?),
-
                 typeof(bool),
-                typeof(bool?),
-
                 typeof(Guid),
-                typeof(Guid?),
-
                 typeof(DateTime),
-                typeof(DateTime?),
-
                 typeof(TimeSpan),
-                typeof(TimeSpan?),
-
                 typeof(DateTimeOffset),
-                typeof(DateTimeOffset?),
-
 #if NET || NETSTANDARD  || CORECLR
                 typeof(System.Numerics.BigInteger),
-                typeof(System.Numerics.BigInteger?),
-
                 typeof(System.Numerics.Complex),
-                typeof(System.Numerics.Complex?),
 #endif
-            }.ToDictionary(x => x, x => (object)null).ContainsKey;
+            }
+            .SelectMany(x => x.IsValueType() ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
+            .ToDictionary(x => x, x => (object)null).ContainsKey;
 
         private readonly static Dictionary<Type, Dictionary<Type, object>> _implicitNumericConversionsTable = new Dictionary<Type, Dictionary<Type, object>>() 
         {
