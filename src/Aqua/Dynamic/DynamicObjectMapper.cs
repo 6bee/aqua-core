@@ -529,26 +529,6 @@ namespace Aqua.Dynamic
                     .Cast<object>()
                     .Select(x => MapToDynamicObjectIfRequired(x, setTypeInformation))
                     .ToArray();
-
-                var elementType = TypeHelper.GetElementType(type);
-                if (elementType != type)
-                {
-                    if (_isKnownType(elementType))
-                    {
-                        return CastCollectionToArrayOfType(elementType, items);
-                    }
-
-                    if (_isNativeType(elementType))
-                    {
-                        if (_formatPrimitiveTypesAsString)
-                        {
-                            return CastCollectionToArrayOfType(typeof(string), items);
-                        }
-
-                        return CastCollectionToArrayOfType(elementType, items);
-                    }
-                }
-
                 return items;
             }
 
@@ -593,19 +573,13 @@ namespace Aqua.Dynamic
         /// Can be overriden in a derived class to return a list of <see cref="PropertyInfo"/> for a given type or null if defaul behaviour should be applied
         /// </summary>
         /// <returns>If overriden in a derived class, returns a list of <see cref="PropertyInfo"/> for a given type or null if defaul behaviour should be applied</returns>
-        protected virtual IEnumerable<PropertyInfo> GetPropertiesForMapping(Type type)
-        {
-            return null;
-        }
+        protected virtual IEnumerable<PropertyInfo> GetPropertiesForMapping(Type type) => null;
 
         /// <summary>
         /// Can be overriden in a derived class to return a list of <see cref="FieldInfo"/> for a given type or null if defaul behaviour should be applied
         /// </summary>
         /// <returns>If overriden in a derived class, returns a list of <see cref="FieldInfo"/> for a given type or null if defaul behaviour should be applied</returns>
-        protected virtual IEnumerable<FieldInfo> GetFieldsForMapping(Type type)
-        {
-            return null;
-        }
+        protected virtual IEnumerable<FieldInfo> GetFieldsForMapping(Type type) => null;
 
         private object MapInternal(DynamicObject obj, Type type)
         {

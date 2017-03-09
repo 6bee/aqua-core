@@ -4,7 +4,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
     using Shouldly;
-    using System.Collections.Generic;
     using System.Linq;
     using Xunit;
 
@@ -32,7 +31,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_should_have_one_property_with_object_array_value()
         {
-            var array = dynamicObject.Properties.Single().Value.ShouldBeOfType<object[]>();
+            var array = dynamicObject.Values.Single().ShouldBeOfType<object[]>();
             array[0].ShouldBe("One");
             array[1].ShouldBe("Two");
         }

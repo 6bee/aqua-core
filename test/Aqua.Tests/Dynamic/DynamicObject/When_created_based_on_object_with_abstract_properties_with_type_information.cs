@@ -59,23 +59,23 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             dynamicObject.PropertyNames.ElementAt(3).ShouldBe("Value3");
             dynamicObject.PropertyNames.ElementAt(4).ShouldBe("Value4");
 
-            dynamicObject["Ref"].ShouldBeOfType<DynamicObject>();
-            ((DynamicObject)dynamicObject["Ref"]).PropertyCount.ShouldBe(0);
-            ((DynamicObject)dynamicObject["Ref"]).Type.Type.ShouldBe(typeof(A));
+            var refObj = dynamicObject["Ref"].ShouldBeOfType<DynamicObject>();
+            refObj.PropertyCount.ShouldBe(0);
+            refObj.Type.Type.ShouldBe(typeof(A));
 
             dynamicObject["Value1"].ShouldBe(obj.Value1);
             dynamicObject["Value2"].ShouldBe(obj.Value2);
 
-            dynamicObject["Value3"].ShouldBeOfType<DynamicObject>();
-            ((DynamicObject)dynamicObject["Value3"]).PropertyCount.ShouldBe(0);
-            ((DynamicObject)dynamicObject["Value3"]).Type.Type.ShouldBe(typeof(object));
+            var value3 = dynamicObject["Value3"].ShouldBeOfType<DynamicObject>();
+            value3.PropertyCount.ShouldBe(0);
+            value3.Type.Type.ShouldBe(typeof(object));
 
-            dynamicObject["Value4"].ShouldBeOfType<byte[]>();
-            ((byte[])dynamicObject["Value4"]).Length.ShouldBe(4);
-            ((byte[])dynamicObject["Value4"])[0].ShouldBe((byte)1);
-            ((byte[])dynamicObject["Value4"])[1].ShouldBe((byte)22);
-            ((byte[])dynamicObject["Value4"])[2].ShouldBe((byte)0);
-            ((byte[])dynamicObject["Value4"])[3].ShouldBe((byte)44);
+            var bytes = dynamicObject["Value4"].ShouldBeOfType<object[]>();
+            bytes.Length.ShouldBe(4);
+            bytes[0].ShouldBe((byte)1);
+            bytes[1].ShouldBe((byte)22);
+            bytes[2].ShouldBe((byte)0);
+            bytes[3].ShouldBe((byte)44);
         }
     }
 }
