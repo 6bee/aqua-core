@@ -41,11 +41,14 @@ namespace Aqua
                     if (string.Equals(type.FullName, typeof(List<>).FullName) && type.GenericArguments?.Count == 1)
                     {
                         var converter = GetConverter(type.GenericArguments.Single());
-                        var convertedValues = ((IEnumerable)dynamicObject.Values.Single())
-                            .Cast<object>()
-                            .Select(converter)
-                            .ToList();
-                        dynamicObject.Properties.Single().Value = convertedValues;
+                        if (!ReferenceEquals(null, converter))
+                        {
+                            var convertedValues = ((IEnumerable)dynamicObject.Values.Single())
+                                .Cast<object>()
+                                .Select(converter)
+                                .ToList();
+                            dynamicObject.Properties.Single().Value = convertedValues;
+                        }
                     }
 
                     var properties = type.Properties;
