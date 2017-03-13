@@ -4,7 +4,6 @@
     <TargetFrameworks>netstandard1.2;net451</TargetFrameworks>
     <AssemblyName>Aqua.Tests.TestObjects1</AssemblyName>
     <PackageId>Aqua.Tests.TestObjects1</PackageId>
-    <NetStandardImplicitPackageVersion>1.2.0</NetStandardImplicitPackageVersion>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
