@@ -30,7 +30,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         }
 
         [Fact]
-        public void Dynamic_object_should_have_items_property_with_list()
+        public void Dynamic_object_should_have_items_property_with_object_array()
         {
             var items = dynamicObject.Values.Single().ShouldBeOfType<object[]>();
             items[0].ShouldBe("One");
@@ -38,7 +38,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         }
         
         [Fact]
-        public void Dynamic_object_should_result_in_string_array_when_mapped_back()
+        public void Dynamic_object_should_result_in_list_of_string_when_mapped_back()
         {
             var list = dynamicObject.CreateObject().ShouldBeOfType<List<string>>();
             list[0].ShouldBe("One");
