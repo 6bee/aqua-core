@@ -284,6 +284,7 @@ namespace Aqua.Dynamic
                 var value = MapObject(obj, setTypeInformation);
                 enumerable = new[] { value };
             }
+
             var list = ReferenceEquals(null, enumerable) ? null : enumerable.ToList();
             return list;
         }
@@ -476,7 +477,7 @@ namespace Aqua.Dynamic
                         .Select(x => MapToDynamicObjectIfRequired(x, f))
                         .ToArray();
                     var dynamicObject = _createDynamicObject(t, o);
-                    dynamicObject.Add(string.Empty, list.Any() ? list : null);
+                    dynamicObject.Add(string.Empty, list);
                     return dynamicObject;
                 };
             }
