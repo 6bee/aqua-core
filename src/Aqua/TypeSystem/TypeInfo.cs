@@ -84,8 +84,8 @@ namespace Aqua.TypeSystem
             }
         }
 
-        internal protected TypeInfo(TypeInfo typeInfo)
-            : this(typeInfo, new Dictionary<TypeInfo, TypeInfo>(ReferenceEqualityComparer<TypeInfo>.Default))
+        public TypeInfo(TypeInfo typeInfo)
+            : this(typeInfo, TypeInfo.CreateReferenceTracker<TypeInfo>())
         {
         }
 
