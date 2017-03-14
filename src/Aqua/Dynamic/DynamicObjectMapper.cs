@@ -141,7 +141,7 @@ namespace Aqua.Dynamic
         };
 
         private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper)
-            .GetMethod("ToDictionary", BindingFlags.Static | BindingFlags.NonPublic);
+            .GetMethod(nameof(ToDictionary), BindingFlags.Static | BindingFlags.NonPublic);
 
         private readonly ObjectFormatterContext<DynamicObject, object> _fromContext;
         private readonly ObjectFormatterContext<object, DynamicObject> _toContext;
