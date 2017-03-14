@@ -3,10 +3,11 @@
 namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Aqua.TypeSystem;
+    using Shouldly;
     using System;
     using System.Collections.Generic;
     using Xunit;
-    using Shouldly;
 
     public abstract class When_serializing_dynamic_object
     {
@@ -52,6 +53,43 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         [Fact]
+        public void Array_of_int_should_serialize()
+        {
+            var result = Serialize(new int[] { 1, 11 });
+        }
+
+        [Fact]
+        public void Array_of_nullable_int_should_serialize()
+        {
+            var result = Serialize(new int?[] { null, 1, 11 });
+        }
+
+        [Fact]
+        public void Three_dimensional_array_of_nullable_int_should_serialize()
+        {
+            var array = new int?[,,]
+            {
+                {
+                    { null, 8, 1, 1, 1 }, { 1, 8, 1, 1, 1 }, { 11, 8, 1, 1, 1 },
+                    { 8, null, 1, 1, 1 }, { 8, 1, 1, 1, 1 }, { 8, 11, 1, 1, 1 },
+                },
+                {
+                    { null, 4, 1, 1, 1 }, { 1, 4, 1, 1, 1 }, { 11, 4, 1, 1, 1 },
+                    { null, 4, 1, 1, 1 }, { 1, 4, 1, 1, 1 }, { 11, 4, 1, 1, 1 },
+                }
+            };
+
+            var result = Serialize<int?[], int?[,,]>(array);
+            result.Length.ShouldBe(60);
+        }
+
+        [Fact]
+        public void Array_of_char_should_serialize()
+        {
+            var result = Serialize(new[] { 'h', 'e', 'l', 'l', 'o' });
+        }
+
+        [Fact]
         public void Anonymous_type_with_nullable_int_property_should_serialize()
         {
             int? i = 1;
@@ -68,11 +106,20 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             var result = Serialize(new { B = b1, N = new { I = i, B = b2 } });
         }
 
-        private T Serialize<T>(T value)
+        private T Serialize<T>(T value, bool setTypeFromGenericArgument = true)
+            => Serialize<T, T>(value, setTypeFromGenericArgument);
+
+        private TResult Serialize<TResult,TSource>(TSource value, bool setTypeFromGenericArgument = true)
         {
             var dynamicObject = DynamicObject.Create(value);
+            if (setTypeFromGenericArgument)
+            {
+                dynamicObject.Type = new TypeInfo(typeof(TSource));
+            }
+
             var serializedDynamicObject = _serialize(dynamicObject);
-            var resurectedValue = new DynamicObjectMapper().Map<T>(serializedDynamicObject);
+
+            var resurectedValue = new DynamicObjectMapper().Map<TResult>(serializedDynamicObject);
             return resurectedValue;
         }
     }
