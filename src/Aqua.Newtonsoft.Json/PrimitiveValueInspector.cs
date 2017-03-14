@@ -3,14 +3,18 @@
 namespace Aqua
 {
     using Aqua.Dynamic;
+    using Aqua.TypeSystem;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
+    using System.Text.RegularExpressions;
 
     public static class PrimitiveValueInspector
     {
+        private static readonly Regex _arrayNameRegex = new Regex(@"^(.*)\[\,*\]$");
+
         private static readonly Dictionary<string, Func<object, object>> _converterMap =
             new Dictionary<Type, Func<object, object>>
             {
@@ -38,16 +42,35 @@ namespace Aqua
                 var type = dynamicObject.Type;
                 if (!ReferenceEquals(null, type))
                 {
-                    if (string.Equals(type.FullName, typeof(List<>).FullName) && type.GenericArguments?.Count == 1)
+                    if (dynamicObject.Values?.Count() == 1)
                     {
-                        var converter = GetConverter(type.GenericArguments.Single());
-                        if (!ReferenceEquals(null, converter))
+                        var enumerable = dynamicObject.Values.Single() as IEnumerable;
+                        if (!ReferenceEquals(null, enumerable))
                         {
-                            var convertedValues = ((IEnumerable)dynamicObject.Values.Single())
-                                .Cast<object>()
-                                .Select(converter)
-                                .ToList();
-                            dynamicObject.Properties.Single().Value = convertedValues;
+                            TypeInfo elementType = null;
+                            var array = _arrayNameRegex.Match(type.Name);
+                            if (array.Success)
+                            {
+                                elementType = new TypeInfo(type);
+                                elementType.Name = array.Groups[1].Value;
+                            }
+                            else if (type.GenericArguments?.Count == 1)
+                            {
+                                elementType = type.GenericArguments.Single();
+                            }
+
+                            if (!ReferenceEquals(null, elementType))
+                            {
+                                var converter = GetConverter(elementType);
+                                if (!ReferenceEquals(null, converter))
+                                {
+                                    var convertedValues = enumerable
+                                        .Cast<object>()
+                                        .Select(converter)
+                                        .ToArray();
+                                    dynamicObject.Properties.Single().Value = convertedValues;
+                                }
+                            }
                         }
                     }
 
