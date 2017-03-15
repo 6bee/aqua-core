@@ -53,8 +53,13 @@ namespace Aqua.TypeSystem.Extensions
             if (!ReferenceEquals(null, binder)) throw new NotSupportedException("Binder not supported by WinRT");
             if (!ReferenceEquals(null, modifiers)) throw new NotSupportedException("ParameterModifier not supported by WinRT");
 
-            var constructors = type.GetTypeInfo().DeclaredConstructors
+            var constructors = type.GetTypeInfo()
+#if NETSTANDARD && !NETSTANDARD1_3
+                .GetConstructors(bindingAttr)
+#else
+                .DeclaredConstructors
                 .Filter(bindingAttr)
+#endif
                 .Where(c => ParametersMatch(c, types))
                 .ToList();
 
@@ -116,10 +121,11 @@ namespace Aqua.TypeSystem.Extensions
             return false;
         }
 
-        private static IEnumerable<T> Filter<T>(this IEnumerable<T> memberInfos, BindingFlags bindingAttr) where T : MemberInfo
+        private static IEnumerable<T> Filter<T>(this IEnumerable<T> methodInfos, BindingFlags bindingAttr) where T : MethodBase
         {
-            // Note: binding flags are simply ignored
-            return memberInfos;
+            return methodInfos
+                .Where(c => c.IsStatic == ((bindingAttr & BindingFlags.Static) == BindingFlags.Static))
+                .Where(c => c.IsPublic == ((bindingAttr & BindingFlags.Public) == BindingFlags.Public));
         }
     }
 }
