@@ -95,7 +95,7 @@ namespace Aqua
             }
         }
 
-        public static Func<object, object> GetConverter(Aqua.TypeSystem.TypeInfo typeInfo)
+        public static Func<object, object> GetConverter(TypeInfo typeInfo)
         {
             if (ReferenceEquals(null, typeInfo))
             {
