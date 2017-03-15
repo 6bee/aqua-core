@@ -65,7 +65,7 @@ namespace Aqua.TypeSystem.Extensions
                 case 1:
                     return constructors[0];
                 default:
-                    throw new AmbiguousMatchException("More than one construtor found matching the specified binding constraints. (Note: binding flags are not supported by WinRT)");
+                    throw new AmbiguousMatchException("More than one constructor found matching the specified binding constraints. (Note: binding flags are not supported by WinRT)");
             }
         }
 

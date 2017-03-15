@@ -651,7 +651,7 @@ namespace Aqua.Dynamic
             }
             else
             {
-                throw new Exception($"Failed to pick matching contructor for type {type.FullName}");
+                throw new Exception($"Failed to pick matching constructor for type {type.FullName}");
             }
 #if NET
             }
