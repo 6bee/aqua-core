@@ -49,13 +49,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         }
 
         [Fact]
-        public void Should_not_be_convertible_to_anonymous_type_with_aditional_properties()
+        public void Should_not_be_convertible_to_anonymous_type_with_additional_properties()
         {
             var objType = new { Int32Value, DoubleValue, StringValue, DateTimeValue = DateTime.Now };
 
             var ex = Assert.Throws<Exception>(() => dynamicObject.CreateObject(objType.GetType()));
 
-            Assert.True(ex.Message.StartsWith("Failed to pick matching contructor for type"));
+            ex.Message.ShouldStartWith("Failed to pick matching constructor for type");
         }
 
         [Fact]
