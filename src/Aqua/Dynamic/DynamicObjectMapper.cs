@@ -731,7 +731,7 @@ namespace Aqua.Dynamic
                 return sbyte.Parse(value);
             }
 
-            if (targetType == typeof(short) || targetType == typeof(short))
+            if (targetType == typeof(short) || targetType == typeof(short?))
             {
                 return short.Parse(value);
             }
