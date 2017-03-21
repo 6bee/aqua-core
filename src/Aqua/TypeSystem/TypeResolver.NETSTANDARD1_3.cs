@@ -17,8 +17,10 @@ namespace Aqua.TypeSystem
 
         private readonly Lazy<IEnumerable<Assembly>> _assemblies;
 
-        public TypeResolver(Func<TypeInfo, Type> typeEmitter = null)
+        public TypeResolver(Func<TypeInfo, Type> typeEmitter = null, bool validateIncludingPropertyInfos = false)
         {
+            _validateIncludingPropertyInfos = validateIncludingPropertyInfos;
+
             _typeEmitter = typeEmitter ?? new Emit.TypeEmitter().EmitType;
 
             _assemblies = new Lazy<IEnumerable<Assembly>>(() =>

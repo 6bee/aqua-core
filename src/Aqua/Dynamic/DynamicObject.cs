@@ -299,9 +299,10 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <param name="obj">The object to be represented by the new dynamic object</param>
         /// <param name="mapper">Optional instance of dynamic object mapper</param>
-        public static DynamicObject Create(object obj, IDynamicObjectMapper mapper = null)
+        /// <param name="setTypeInformation">Optional instance of a function to define per type whether to set type information</param>
+        public static DynamicObject Create(object obj, IDynamicObjectMapper mapper = null, Func<Type, bool> setTypeInformation = null)
         {
-            return (mapper ?? new DynamicObjectMapper()).MapObject(obj);
+            return (mapper ?? new DynamicObjectMapper()).MapObject(obj, setTypeInformation);
         }
     }
 }

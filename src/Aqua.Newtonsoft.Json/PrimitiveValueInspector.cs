@@ -8,6 +8,7 @@ namespace Aqua
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Numerics;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
@@ -25,12 +26,14 @@ namespace Aqua
                 { typeof(short), x => Convert.ToInt16(x) },
                 { typeof(ushort), x => Convert.ToUInt16(x) },
                 { typeof(long), x => Convert.ToInt64(x) },
-                { typeof(ulong), x => Convert.ToUInt64(x) },
+                { typeof(ulong), x => x is BigInteger ? (ulong)(BigInteger)x : Convert.ToUInt64(x) },
                 { typeof(float), x => Convert.ToSingle(x) },
                 //{ typeof(double), x => Convert.ToDouble(x) },
                 { typeof(decimal), x => Convert.ToDecimal(x) },
                 { typeof(char), x => Convert.ToChar(x) },
                 //{ typeof(bool), x => Convert.ToBoolean(x) },
+                { typeof(DateTimeOffset), x => x is DateTime ? new DateTimeOffset((DateTime)x) : x },
+                { typeof(BigInteger), x => x is long ? new BigInteger((long)x) : x },
             }
             .ToDictionary(k => k.Key.FullName, v => v.Value);
 
@@ -44,8 +47,9 @@ namespace Aqua
                 {
                     if (dynamicObject.Values?.Count() == 1)
                     {
-                        var enumerable = dynamicObject.Values.Single() as IEnumerable;
-                        if (!ReferenceEquals(null, enumerable))
+                        var value = dynamicObject.Values.Single();
+                        var enumerable = value as IEnumerable;
+                        if (!ReferenceEquals(null, enumerable) && !(value is string))
                         {
                             TypeInfo elementType = null;
                             var array = _arrayNameRegex.Match(type.Name);
@@ -70,6 +74,14 @@ namespace Aqua
                                         .ToArray();
                                     dynamicObject.Properties.Single().Value = convertedValues;
                                 }
+                            }
+                        }
+                        else
+                        {
+                            var converter = GetConverter(type);
+                            if (!ReferenceEquals(null, converter))
+                            {
+                                dynamicObject.Properties.Single().Value = converter(value);
                             }
                         }
                     }

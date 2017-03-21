@@ -91,6 +91,8 @@ namespace Aqua.TypeSystem
 
         private readonly TransparentCache<TypeInfo, Type> _typeCache = new TransparentCache<TypeInfo, Type>(comparer: EqualityComparer.Instance);
 
+        private readonly bool _validateIncludingPropertyInfos;
+
         /// <summary>
         /// Sets or gets an instance of ITypeResolver.
         /// </summary>
@@ -181,7 +183,7 @@ namespace Aqua.TypeSystem
 
                     var resolvedProperties = type
                         .GetProperties()
-                        .Select(x => new PropertyInfo { Name = x.Name, PropertyType = new TypeInfo(x.PropertyType, includePropertyInfos: false) });
+                        .Select(x => new PropertyInfo { Name = x.Name, PropertyType = new TypeInfo(x.PropertyType, includePropertyInfos: _validateIncludingPropertyInfos) });
                     
                     if (!typeInfo.Properties.CollectionEquals(resolvedProperties, EqualityComparer.Instance))
                     {

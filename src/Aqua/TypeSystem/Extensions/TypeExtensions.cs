@@ -12,6 +12,11 @@ namespace Aqua.TypeSystem.Extensions
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static partial class TypeExtensions
     {
+        public static bool IsClass(this Type type)
+        {
+            return type.GetTypeInfo().IsClass;
+        }
+
         public static bool IsAnonymousType(this Type type)
         {
             return type.Name.StartsWith("<>")

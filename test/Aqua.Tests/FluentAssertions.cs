@@ -41,5 +41,11 @@ namespace Aqua.Tests
                 return Message;
             }
         }
+
+        public static T With<T>(this T t, Action<T> assertion)
+        {
+            assertion(t);
+            return t;
+        }
     }
 }
