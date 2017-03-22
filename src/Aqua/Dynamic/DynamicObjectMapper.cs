@@ -1083,6 +1083,12 @@ namespace Aqua.Dynamic
                 }
             }
 
+            if (type == typeof(string))
+            {
+                value = ParseToNativeType(targetType, (string)value);
+                return true;
+            }
+
             return false;
         }
 
