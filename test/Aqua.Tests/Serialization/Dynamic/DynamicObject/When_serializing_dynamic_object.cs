@@ -133,7 +133,15 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [MemberData(nameof(TestData))]
         public void Value_should_serialize_value_as_property(Type type, object value)
         {
-            var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true });
+            var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, false });
+            result.ShouldBe(value);
+        }
+
+        [Theory]
+        [MemberData(nameof(TestData))]
+        public void Value_should_serialize_value_as_property_when_using_string_formatting(Type type, object value)
+        {
+            var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, true });
             result.ShouldBe(value);
         }
 
@@ -193,12 +201,13 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         private T Serialize<T>(T value, bool setTypeFromGenericArgument = true)
             => Serialize<T, T>(value, setTypeFromGenericArgument);
 
-        private T SerializeAsProperty<T>(T value, bool setTypeFromGenericArgument = true)
+        private T SerializeAsProperty<T>(T value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
             => Serialize<A<T>, A<T>>(new A<T> { Value = value }, setTypeFromGenericArgument).Value;
 
-        private TResult Serialize<TResult, TSource>(TSource value, bool setTypeFromGenericArgument = true)
+        private TResult Serialize<TResult, TSource>(TSource value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
         {
-            var dynamicObject = DynamicObject.Create(value);
+            var settings = new DynamicObjectMapperSettings { FormatPrimitiveTypesAsString = formatValuesAsStrings };
+            var dynamicObject = new DynamicObjectMapper(settings).MapObject(value);
             if (setTypeFromGenericArgument)
             {
                 dynamicObject.Type = new TypeInfo(typeof(TSource), false);
