@@ -8,6 +8,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Numerics;
     using System.Reflection;
     using Xunit;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
@@ -22,7 +23,14 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
         public class DataContractSerializer : When_serializing_dynamic_object
         {
-            public DataContractSerializer() : base(DataContractSerializationHelper.Serialize) { }
+            private static readonly Type[] _knownTypes = new[] 
+            {
+                typeof(DateTimeOffset),
+                typeof(BigInteger),
+                typeof(Complex),
+            };
+
+            public DataContractSerializer() : base(x => DataContractSerializationHelper.Serialize(x, _knownTypes)) { }
         }
 
         // XML serialization doesn't support circular references
@@ -86,11 +94,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
                 DateTime.Now,
                 new TimeSpan(),
                 new DateTimeOffset(),
-                new DateTimeOffset(new DateTime(2012,12,12), new TimeSpan(12,12,0)),
-#if NET || NETSTANDARD || CORECLR
-                new System.Numerics.BigInteger(),
-                new System.Numerics.Complex(),
-#endif
+                new DateTimeOffset(new DateTime(2012, 12, 12), new TimeSpan(12, 12, 0)),
+                new BigInteger(),
+                new Complex(),
             }
             .SelectMany(x => new Tuple<Type, object>[]
             {

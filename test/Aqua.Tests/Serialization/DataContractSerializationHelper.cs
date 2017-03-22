@@ -9,8 +9,11 @@ namespace Aqua.Tests.Serialization
     public static class DataContractSerializationHelper
     {
         public static T Serialize<T>(this T graph)
+            => Serialize(graph, null);
+
+        public static T Serialize<T>(this T graph, Type[] knownTypes)
         {
-            var serializer = new DataContractSerializer(typeof(T));
+            var serializer = new DataContractSerializer(typeof(T), knownTypes);
 
             using (var stream = new MemoryStream())
             {
