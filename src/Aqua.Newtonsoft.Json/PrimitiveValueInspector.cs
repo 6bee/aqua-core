@@ -32,6 +32,7 @@ namespace Aqua
                 { typeof(decimal), x => Convert.ToDecimal(x) },
                 { typeof(char), x => Convert.ToChar(x) },
                 //{ typeof(bool), x => Convert.ToBoolean(x) },
+                { typeof(TimeSpan), x => x is string ? TimeSpan.Parse((string)x) : x },
                 { typeof(DateTimeOffset), x => x is DateTime ? new DateTimeOffset((DateTime)x) : x },
                 { typeof(BigInteger), x => x is long ? new BigInteger((long)x) : x },
             }
