@@ -12,11 +12,6 @@ namespace Aqua.Dynamic
     [DataContract]
     [KnownType(typeof(object)), XmlInclude(typeof(object))]
     [KnownType(typeof(object[])), XmlInclude(typeof(object[]))]
-    [KnownType(typeof(DateTimeOffset)), XmlInclude(typeof(DateTimeOffset))]
-#if NET || NETSTANDARD  || CORECLR
-    [KnownType(typeof(System.Numerics.BigInteger)), XmlInclude(typeof(System.Numerics.BigInteger))]
-    [KnownType(typeof(System.Numerics.Complex)), XmlInclude(typeof(System.Numerics.Complex))]
-#endif
     [DebuggerDisplay("{Name} = {Value}")]
     public class Property
     {
