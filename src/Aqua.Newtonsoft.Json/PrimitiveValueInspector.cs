@@ -4,6 +4,7 @@ namespace Aqua
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
+    using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -33,8 +34,9 @@ namespace Aqua
                 { typeof(char), x => Convert.ToChar(x) },
                 //{ typeof(bool), x => Convert.ToBoolean(x) },
                 { typeof(TimeSpan), x => x is string ? TimeSpan.Parse((string)x) : x },
-                { typeof(DateTimeOffset), x => x is DateTime ? new DateTimeOffset((DateTime)x) : x },
+                { typeof(DateTimeOffset), x => x is DateTime ? new DateTimeOffset(((DateTime)x).ToLocalTime()): x },
                 { typeof(BigInteger), x => x is long ? new BigInteger((long)x) : x },
+                //{ typeof(Complex), x => x },
             }
             .ToDictionary(k => k.Key.FullName, v => v.Value);
 
@@ -62,6 +64,13 @@ namespace Aqua
                             else if (type.GenericArguments?.Count == 1)
                             {
                                 elementType = type.GenericArguments.Single();
+
+                                array = _arrayNameRegex.Match(elementType.Name);
+                                if (array.Success)
+                                {
+                                    elementType.Name = array.Groups[1].Value;
+                                }
+                                //else (elementType.Implements(typeof(IEnumerable<>))) { would be nice to be able to detect collection types... to retrieve the element type. }
                             }
 
                             if (!ReferenceEquals(null, elementType))

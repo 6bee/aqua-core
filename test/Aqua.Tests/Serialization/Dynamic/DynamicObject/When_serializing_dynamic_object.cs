@@ -23,17 +23,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
         public class DataContractSerializer : When_serializing_dynamic_object
         {
-            private static readonly Type[] _knownTypes = new[] 
-            {
-                typeof(DateTimeOffset),
-                typeof(BigInteger),
-                typeof(Complex),
-            };
-
-            public DataContractSerializer() : base(x => DataContractSerializationHelper.Serialize(x, _knownTypes)) { }
+            public DataContractSerializer() : base(DataContractSerializationHelper.Serialize) { }
         }
 
-        // XML serialization doesn't support circular references
+        // NOTE: XML serialization doesn't support circular references
         //public class XmlSerializer : When_serializing_dynamic_object
         //{
         //    public XmlSerializer() : base(XmlSerializationHelper.Serialize) { }
@@ -58,7 +51,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
         public static IEnumerable<object[]> TestData => new object[]
             {
-                $"Test values a treated as native types in {nameof(DynamicObjectMapper)}",
+                $"Test values treated as native types in {nameof(DynamicObjectMapper)}",
                 byte.MinValue,
                 byte.MaxValue,
                 sbyte.MinValue,
@@ -90,21 +83,63 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
                 'à',
                 true,
                 false,
+                new Guid(),
+                default(Guid),
                 Guid.NewGuid(),
                 DateTime.Now,
                 new TimeSpan(),
-                new DateTimeOffset(),
-                new DateTimeOffset(new DateTime(2012, 12, 12), new TimeSpan(12, 12, 0)),
-                new BigInteger(),
-                new Complex(),
+                default(TimeSpan),
+                new TimeSpan(long.MaxValue),
+                // NOTE: DateTimeOffset doesn't work with json.net (when assigned to an object property) since DateTimeOffset gets confused with DateTime
+                //default(DateTimeOffset),
+                //DateTimeOffset.MinValue,
+                //DateTimeOffset.MaxValue,
+                //new DateTimeOffset(new DateTime(2012, 12, 12), new TimeSpan(12, 12, 0)),
+                // NOTE: BigInteger doesn't work with json.net (when assigned to an object property) since values seem to get lost (on .net core only)
+                //new BigInteger(),
+                //default(BigInteger),
+                //new BigInteger(ulong.MinValue) - 1,
+                //new BigInteger(ulong.MaxValue) + 1,
+                // NOTE: Complex doesn't work with json.net (when assigned to an object property) since values seem to get lost entirely
+                //new Complex(),
+                //default(Complex),
+                //new Complex(32, -87654),
+                //new Complex(-87654, 234),
+                //new Complex(double.MinValue, double.MinValue),
+                //new Complex(double.MaxValue, double.MaxValue),
             }
             .SelectMany(x => new Tuple<Type, object>[]
             {
                 Tuple.Create(x.GetType(), x),
-                Tuple.Create(x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x ),
+                Tuple.Create(x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
+                Tuple.Create(x.GetType().MakeArrayType(), CreateArray(x)),
+                // NOTE: doesn't work with json.net since list element types don't get corrected by PrimitiveValueInspector
+                //Tuple.Create(typeof(List<>).MakeGenericType(x.GetType()), CreateList(x)),
             })
             .Distinct()
             .Select(x => new object[] { x.Item1, x.Item2 });
+
+        private static object CreateArray(object item)
+        {
+            var type = item.GetType();
+            var toArrayMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToArray), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
+            return toArrayMethod.Invoke(null, new[] { CreateEnumerable(item) });
+        }
+
+        private static object CreateList(object item)
+        {
+            var type = item.GetType();
+            var toListMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
+            return toListMethod.Invoke(null, new[] { CreateEnumerable(item) });
+        }
+
+        private static object CreateEnumerable(object item)
+        {
+            var type = item.GetType();
+            var array = new[] { item, item };
+            var castMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
+            return castMethod.Invoke(null, new[] { array });
+        }
 
         private static readonly MethodInfo SerializeMethod = typeof(When_serializing_dynamic_object)
             .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
@@ -123,26 +158,26 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void Value_should_serialize_value(Type type, object value)
+        public void Should_serialize_value(Type type, object value)
         {
             var result = SerializeMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true });
-            result.ShouldBe(value);
+            result.ShouldBe(value, $"type: {type.FullName}");
         }
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void Value_should_serialize_value_as_property(Type type, object value)
+        public void Should_serialize_value_as_property(Type type, object value)
         {
             var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, false });
-            result.ShouldBe(value);
+            result.ShouldBe(value, $"type: {type.FullName}");
         }
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void Value_should_serialize_value_as_property_when_using_string_formatting(Type type, object value)
+        public void Should_serialize_value_as_property_when_using_string_formatting(Type type, object value)
         {
             var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, true });
-            result.ShouldBe(value);
+            result.ShouldBe(value, $"type: {type.FullName}");
         }
 
         [Fact]

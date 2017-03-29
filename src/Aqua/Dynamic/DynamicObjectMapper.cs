@@ -298,7 +298,10 @@ namespace Aqua.Dynamic
             } },
 #endif
             { typeof(DateTime), new Dictionary<Type, Func<object, object>> {
-                { typeof(DateTimeOffset), x => checked((DateTimeOffset)(DateTime)x) },
+                { typeof(DateTimeOffset), x => {
+                    var d = (DateTime)x;
+                    return new DateTimeOffset(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Millisecond, default(TimeSpan));
+                }},
             } },
         };
 
