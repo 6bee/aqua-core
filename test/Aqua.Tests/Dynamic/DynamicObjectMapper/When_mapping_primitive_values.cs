@@ -6,8 +6,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using Aqua.TypeSystem.Extensions;
     using Shouldly;
     using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using System.Reflection;
     using Xunit;
 
@@ -17,54 +15,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             public T Value { get; set; }
         }
-        
-        public static IEnumerable<object[]> TestData => new object[]
-            {
-                $"Test values a treated as native types in {nameof(DynamicObjectMapper)}",
-                byte.MinValue,
-                byte.MaxValue,
-                sbyte.MinValue,
-                sbyte.MaxValue,
-                short.MinValue,
-                short.MaxValue,
-                ushort.MinValue,
-                ushort.MaxValue,
-                int.MinValue,
-                int.MaxValue,
-                uint.MinValue,
-                uint.MaxValue,
-                long.MinValue,
-                long.MaxValue,
-                ulong.MinValue,
-                ulong.MaxValue,
-                float.MinValue,
-                float.MaxValue,
-                double.MinValue,
-                double.MaxValue,
-                decimal.MinValue,
-                decimal.MaxValue,
-                char.MinValue,
-                char.MaxValue,
-                'à',
-                true,
-                false,
-                Guid.NewGuid(),
-                DateTime.Now,
-                new TimeSpan(),
-                new DateTimeOffset(),
-#if NET || NETSTANDARD  || CORECLR
-                new System.Numerics.BigInteger(),
-                new System.Numerics.Complex(),
-#endif
-            }
-            .SelectMany(x => new Tuple<Type, object>[]
-            {
-                Tuple.Create(x.GetType(), x),
-                Tuple.Create(x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x ),
-                Tuple.Create(x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), (object)null),
-            })
-            .Distinct()
-            .Select(x => new object[] { x.Item1, x.Item2 });
 
         private static readonly MethodInfo MapAsValueMethod =
             typeof(When_mapping_primitive_values).GetMethod(nameof(MapAsValue), BindingFlags.Static | BindingFlags.NonPublic);
@@ -73,7 +23,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             typeof(When_mapping_primitive_values).GetMethod(nameof(MapAsProperty), BindingFlags.Static | BindingFlags.NonPublic);
 
         [Theory]
-        [MemberData(nameof(TestData))]
+        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
         public void Should_map_primitive_value(Type type, object value)
         {
             var result = MapAsValueMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
@@ -96,7 +46,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         }
 
         [Theory]
-        [MemberData(nameof(TestData))]
+        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
         public void Should_map_primitive_value_property(Type type, object value)
         {
             var result = MapAsPropertyMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
