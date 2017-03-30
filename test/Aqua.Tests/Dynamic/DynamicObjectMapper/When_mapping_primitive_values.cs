@@ -24,6 +24,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
         [Theory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_map_primitive_value(Type type, object value)
         {
             var result = MapAsValueMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
@@ -47,6 +48,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
         [Theory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_map_primitive_value_property(Type type, object value)
         {
             var result = MapAsPropertyMethod.MakeGenericMethod(type).Invoke(null, new[] { value });

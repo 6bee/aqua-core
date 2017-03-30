@@ -28,7 +28,7 @@ namespace Aqua.Tests
                 uint.MaxValue,
                 long.MinValue,
                 long.MaxValue,
-#if NET // Newtonsoft.Json.JsonReaderException : JSON integer 18446744073709551615 is too large/small for an Int64.
+#if NET // Newtonsoft.Json.JsonReaderException : JSON integer 18446744073709551615 is too large (small) for an Int64, fails on .net core while ok on .net full
                 ulong.MinValue,
                 ulong.MaxValue,
 #endif
@@ -36,8 +36,9 @@ namespace Aqua.Tests
                 float.MaxValue,
                 double.MinValue,
                 double.MaxValue,
-                //decimal.MinValue, // json.net screws-up decimal when serialized as object property
-                //decimal.MaxValue, // json.net screws-up decimal when serialized as object property
+                // NOTE: decimal doesn't work with json.net (when assigned to an object property)
+                //decimal.MinValue,
+                //decimal.MaxValue,
                 new decimal(Math.E),
                 new decimal(Math.PI),
                 char.MinValue,
@@ -75,30 +76,39 @@ namespace Aqua.Tests
                 Tuple.Create(x.GetType(), x),
                 Tuple.Create(x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
                 Tuple.Create(x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), default(object)),
-                Tuple.Create(x.GetType().MakeArrayType(), CreateArray(x)),
-                // NOTE: doesn't work with json.net since list element types don't get corrected by PrimitiveValueInspector
-                //Tuple.Create(typeof(List<>).MakeGenericType(x.GetType()), CreateList(x)),
             })
             .Distinct()
             .Select(x => new object[] { x.Item1, x.Item2 });
 
-        private static object CreateArray(object item)
+        public static IEnumerable<object[]> PrimitiveValueArrays => PrimitiveValues
+            .Select(x => new[]
+            {
+                ((Type)x[0]).MakeArrayType(),
+                CreateArray((Type)x[0], x[1])
+            });
+
+        // NOTE: PrimitiveValueLists don't work with json.net since list element types don't get corrected by PrimitiveValueInspector
+        public static IEnumerable<object[]> PrimitiveValueLists => PrimitiveValues
+            .Select(x => new[]
+            {
+                typeof(List<>).MakeGenericType((Type)x[0]),
+                CreateList((Type)x[0], x[1])
+            });
+
+        private static object CreateArray(Type type, object item)
         {
-            var type = item.GetType();
             var toArrayMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToArray), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
-            return toArrayMethod.Invoke(null, new[] { CreateEnumerable(item) });
+            return toArrayMethod.Invoke(null, new[] { CreateEnumerable(type, item) });
         }
 
-        private static object CreateList(object item)
+        private static object CreateList(Type type, object item)
         {
-            var type = item.GetType();
             var toListMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
-            return toListMethod.Invoke(null, new[] { CreateEnumerable(item) });
+            return toListMethod.Invoke(null, new[] { CreateEnumerable(type, item) });
         }
 
-        private static object CreateEnumerable(object item)
+        private static object CreateEnumerable(Type type, object item)
         {
-            var type = item.GetType();
             var array = new[] { item, item };
             var castMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
             return castMethod.Invoke(null, new[] { array });

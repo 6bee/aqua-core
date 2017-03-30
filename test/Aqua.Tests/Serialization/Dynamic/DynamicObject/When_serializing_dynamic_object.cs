@@ -63,6 +63,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
         [Theory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_serialize_value(Type type, object value)
         {
             var result = SerializeMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true });
@@ -71,6 +72,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
         [Theory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property(Type type, object value)
         {
             var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, false });
@@ -79,6 +81,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
         [Theory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property_when_using_string_formatting(Type type, object value)
         {
             var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, true });
