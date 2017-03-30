@@ -13,7 +13,7 @@ namespace Aqua.Tests.Serialization
         public static T Serialize<T>(this T graph)
         {
             var json = JsonConvert.SerializeObject(graph, _serializerSettings);
-            //File.AppendAllText($"Dump-{graph.GetType().Name}-JsonConvert-{Guid.NewGuid()}.json", json);
+            //File.AppendAllText($"Dump-{graph?.GetType().Name}-JsonConvert-{Guid.NewGuid()}.json", json);
             return JsonConvert.DeserializeObject<T>(json, _serializerSettings);
         }
     }

@@ -39,6 +39,12 @@ namespace Aqua.TypeSystem.Extensions
                 .IsDefined(typeof(T));
         }
 
+        internal static Type AsNonNullableType(this Type type)
+        {
+            var isNullable = type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+            return isNullable ? type.GetGenericArguments()[0] : type;
+        }
+
         public static bool Implements(this Type type, Type interfaceType)
         {
             return type.Implements(interfaceType, new Type[1][]);
@@ -96,7 +102,7 @@ namespace Aqua.TypeSystem.Extensions
                     if (typeDefinition == interfaceTypeDefinition)
                     {
                         var genericArguments = i.GetGenericArguments();
-                        var allArgumentsAreAssignable = For(0, genericArguments.Length - 1)
+                        var allArgumentsAreAssignable = Enumerable.Range(0, genericArguments.Length - 1)
                             .All(index => Implements(genericArguments[index], interfaceGenericArguments[index], typeArgs));
                         if (allArgumentsAreAssignable)
                         {
@@ -107,19 +113,6 @@ namespace Aqua.TypeSystem.Extensions
 
                 return false;
             };
-        }
-
-        private static IEnumerable<int> For(int start, int end)
-        {
-            if (start > end)
-            {
-                throw new ArgumentOutOfRangeException(nameof(end), "end must not be smaller than start");
-            }
-
-            for (int i = start; i <= end; i++)
-            {
-                yield return i;
-            }
         }
     }
 }

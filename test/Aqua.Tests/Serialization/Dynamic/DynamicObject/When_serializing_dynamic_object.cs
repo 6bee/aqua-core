@@ -112,6 +112,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
                 Tuple.Create(x.GetType(), x),
                 Tuple.Create(x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
+                Tuple.Create(x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), default(object)),
                 Tuple.Create(x.GetType().MakeArrayType(), CreateArray(x)),
                 // NOTE: doesn't work with json.net since list element types don't get corrected by PrimitiveValueInspector
                 //Tuple.Create(typeof(List<>).MakeGenericType(x.GetType()), CreateList(x)),
@@ -243,7 +244,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var settings = new DynamicObjectMapperSettings { FormatPrimitiveTypesAsString = formatValuesAsStrings };
             var dynamicObject = new DynamicObjectMapper(settings).MapObject(value);
-            if (setTypeFromGenericArgument)
+            if (dynamicObject != null && setTypeFromGenericArgument)
             {
                 dynamicObject.Type = new TypeInfo(typeof(TSource), false);
             }

@@ -27,7 +27,10 @@ namespace Aqua.TypeSystem.Extensions
 
         public static bool IsEnum(this Type type)
         {
-            return type.IsEnum;
+            return type.IsEnum ||
+                (type.IsGenericType
+                && type.GetGenericTypeDefinition() == typeof(Nullable<>)
+                && type.GetGenericArguments()[0].IsEnum());
         }
 
         public static bool IsValueType(this Type type)

@@ -574,25 +574,19 @@ namespace Aqua.Dynamic
 
             if (targetType.IsEnum())
             {
-                if (objectType.IsEnum())
+                if (targetType.IsAssignableFrom(objectType))
                 {
-                    if (objectType.Equals(targetType))
-                    {
-                        return obj;
-                    }
-                    // TODO: else we could convert by string or numeric value
+                    return obj;
                 }
+
+                var targetEnumType = targetType.AsNonNullableType();
 
                 if (obj is string)
                 {
-                    var enumValue = Enum.Parse(targetType, (string)obj, true);
-                    return enumValue;
+                    return Enum.Parse(targetEnumType, (string)obj, true);
                 }
 
-                {
-                    var enumValue = Enum.ToObject(targetType, obj);
-                    return enumValue;
-                }
+                return Enum.ToObject(targetEnumType, obj);
             }
 
             return obj;

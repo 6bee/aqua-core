@@ -11,6 +11,11 @@ namespace Aqua.Tests.Serialization
     {
         public static T Serialize<T>(this T graph)
         {
+            if (graph == null)
+            {
+                return graph;
+            }
+
             var serializer = new BinaryFormatter();
             using (var stream = new MemoryStream())
             {

@@ -20,7 +20,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         class ClassWithEnum
         {
-            public CustomEnum EnumProperty { get; set; }
+            public CustomEnum? EnumProperty { get; set; }
         }
 
         DynamicObject[] dynamicObjects;
@@ -51,6 +51,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                         { "EnumProperty", (int)CustomEnum.Value3 }
                     }
                 },
+                new DynamicObject(typeof(ClassWithEnum))
+                {
+                    Properties = new PropertySet
+                    {
+                        { "EnumProperty", null }
+                    }
+                },
             };
 
             objects = new DynamicObjectMapper().Map<ClassWithEnum>(dynamicObjects);
@@ -78,6 +85,12 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         public void Enum_property_should_be_set_according_int_value()
         {
             objects.ElementAt(2).EnumProperty.ShouldBe(CustomEnum.Value3);
+        }
+
+        [Fact]
+        public void Enum_property_should_be_set_to_null()
+        {
+            objects.ElementAt(3).EnumProperty.ShouldBeNull();
         }
     }
 }
