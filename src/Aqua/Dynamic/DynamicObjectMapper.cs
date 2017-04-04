@@ -537,7 +537,7 @@ namespace Aqua.Dynamic
 
             if (_isNativeType(targetType))
             {
-                return obj is string ? ParseToNativeType(targetType, (string)obj) : obj;
+                return obj is string ? ParseToNativeType(targetType.AsNonNullableType(), (string)obj) : obj;
             }
 
             if (IsCollection(obj))
@@ -617,7 +617,7 @@ namespace Aqua.Dynamic
             Action<Type, object, DynamicObject, Func<Type, bool>> initializer = null;
 
             var type = obj.GetType();
-            if (_isNativeType(type) || _isKnownType(type))
+            if (_isNativeType(type) || _isKnownType(type) || type.IsEnum())
             {
                 facotry = (t, o, f) =>
                 {
@@ -874,62 +874,62 @@ namespace Aqua.Dynamic
                 return value;
             }
 
-            if (targetType == typeof(int) || targetType == typeof(int?))
+            if (targetType == typeof(int))
             {
                 return int.Parse(value);
             }
 
-            if (targetType == typeof(uint) || targetType == typeof(uint?))
+            if (targetType == typeof(uint))
             {
                 return uint.Parse(value);
             }
 
-            if (targetType == typeof(byte) || targetType == typeof(byte?))
+            if (targetType == typeof(byte))
             {
                 return byte.Parse(value);
             }
 
-            if (targetType == typeof(sbyte) || targetType == typeof(sbyte?))
+            if (targetType == typeof(sbyte))
             {
                 return sbyte.Parse(value);
             }
 
-            if (targetType == typeof(short) || targetType == typeof(short?))
+            if (targetType == typeof(short))
             {
                 return short.Parse(value);
             }
 
-            if (targetType == typeof(ushort) || targetType == typeof(ushort?))
+            if (targetType == typeof(ushort))
             {
                 return ushort.Parse(value);
             }
 
-            if (targetType == typeof(long) || targetType == typeof(long?))
+            if (targetType == typeof(long))
             {
                 return long.Parse(value);
             }
 
-            if (targetType == typeof(ulong) || targetType == typeof(ulong?))
+            if (targetType == typeof(ulong))
             {
                 return ulong.Parse(value);
             }
 
-            if (targetType == typeof(float) || targetType == typeof(float?))
+            if (targetType == typeof(float))
             {
                 return float.Parse(value);
             }
 
-            if (targetType == typeof(double) || targetType == typeof(double?))
+            if (targetType == typeof(double))
             {
                 return double.Parse(value);
             }
 
-            if (targetType == typeof(decimal) || targetType == typeof(decimal?))
+            if (targetType == typeof(decimal))
             {
                 return decimal.Parse(value);
             }
 
-            if (targetType == typeof(char) || targetType == typeof(char?))
+            if (targetType == typeof(char))
             {
 #if WINRT
                 char character;
@@ -944,37 +944,37 @@ namespace Aqua.Dynamic
 #endif
             }
 
-            if (targetType == typeof(bool) || targetType == typeof(bool?))
+            if (targetType == typeof(bool))
             {
                 return bool.Parse(value);
             }
 
-            if (targetType == typeof(Guid) || targetType == typeof(Guid?))
+            if (targetType == typeof(Guid))
             {
                 return Guid.Parse(value);
             }
 
-            if (targetType == typeof(DateTime) || targetType == typeof(DateTime?))
+            if (targetType == typeof(DateTime))
             {
                 return DateTime.Parse(value);
             }
 
-            if (targetType == typeof(DateTimeOffset) || targetType == typeof(DateTimeOffset?))
+            if (targetType == typeof(DateTimeOffset))
             {
                 return DateTimeOffset.Parse(value);
             }
 
-            if (targetType == typeof(TimeSpan) || targetType == typeof(TimeSpan?))
+            if (targetType == typeof(TimeSpan))
             {
                 return TimeSpan.Parse(value);
             }
 #if NET || NETSTANDARD || CORECLR
-            if (targetType == typeof(System.Numerics.BigInteger) || targetType == typeof(System.Numerics.BigInteger?))
+            if (targetType == typeof(System.Numerics.BigInteger))
             {
                 return System.Numerics.BigInteger.Parse(value);
             }
 
-            if (targetType == typeof(System.Numerics.Complex) || targetType == typeof(System.Numerics.Complex?))
+            if (targetType == typeof(System.Numerics.Complex))
             {
                 var m = System.Text.RegularExpressions.Regex.Match(value, ComplexNumberParserRegexPattern);
                 if (m.Success)
@@ -1065,13 +1065,12 @@ namespace Aqua.Dynamic
             }
 
             var type = value.GetType();
-            type = GetNonNullableType(type);
-            
+            type = type.AsNonNullableType();
+            targetType = targetType.AsNonNullableType();
+
             Dictionary<Type, Func<object, object>> converterMap;
             if (_explicitConversionsTable.TryGetValue(type, out converterMap))
             {
-                targetType = GetNonNullableType(targetType);
-
                 Func <object, object> converter;
                 if (converterMap.TryGetValue(targetType, out converter))
                 {
@@ -1082,21 +1081,20 @@ namespace Aqua.Dynamic
 
             if (type == typeof(string))
             {
-                value = ParseToNativeType(targetType, (string)value);
-                return true;
+                if (_isNativeType(targetType))
+                {
+                    value = ParseToNativeType(targetType, (string)value);
+                    return true;
+                }
+
+                if (targetType.IsEnum())
+                {
+                    value = Enum.Parse(targetType, (string)value);
+                    return true;
+                }
             }
 
             return false;
-        }
-
-        private static Type GetNonNullableType(Type type)
-        {
-            if (type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-            {
-                return type.GetGenericArguments()[0];
-            }
-
-            return type;
         }
         
         private static object FormatNativeTypeAsString(object obj, Type type)

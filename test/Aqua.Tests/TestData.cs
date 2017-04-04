@@ -11,6 +11,12 @@ namespace Aqua.Tests
 
     public static class TestData
     {
+        public enum TestEnum
+        {
+            Foo,
+            Bar,
+        }
+
         public static IEnumerable<object[]> PrimitiveValues => new object[]
             {
                 $"Test values treated as native types in {nameof(DynamicObjectMapper)}",
@@ -70,6 +76,9 @@ namespace Aqua.Tests
                 //new Complex(-87654, 234),
                 //new Complex(double.MinValue, double.MinValue),
                 //new Complex(double.MaxValue, double.MaxValue),
+                (TestEnum)(-1),
+                TestEnum.Foo,
+                TestEnum.Bar,
             }
             .SelectMany(x => new Tuple<Type, object>[]
             {
