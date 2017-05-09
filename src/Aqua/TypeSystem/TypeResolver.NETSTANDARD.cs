@@ -16,7 +16,12 @@ namespace Aqua.TypeSystem
 
         private readonly Func<TypeInfo, Type> _typeEmitter;
 
-        public TypeResolver(Func<IEnumerable<RuntimeLibrary>> librariesProvider = null, Func<TypeInfo, Type> typeEmitter = null, bool validateIncludingPropertyInfos = false)
+        public TypeResolver(Func<TypeInfo, Type> typeEmitter = null, bool validateIncludingPropertyInfos = false)
+            : this(null, typeEmitter, validateIncludingPropertyInfos)
+        {
+        }
+
+        public TypeResolver(Func<IEnumerable<RuntimeLibrary>> librariesProvider, Func<TypeInfo, Type> typeEmitter = null, bool validateIncludingPropertyInfos = false)
         {
             _validateIncludingPropertyInfos = validateIncludingPropertyInfos;
 
