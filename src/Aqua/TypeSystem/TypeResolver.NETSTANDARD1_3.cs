@@ -13,39 +13,28 @@ namespace Aqua.TypeSystem
 
     partial class TypeResolver
     {
-        private readonly Func<TypeInfo, Type> _typeEmitter;
-
-        private readonly Lazy<IEnumerable<Assembly>> _assemblies;
-
-        public TypeResolver(Func<TypeInfo, Type> typeEmitter = null, bool validateIncludingPropertyInfos = false)
-        {
-            _validateIncludingPropertyInfos = validateIncludingPropertyInfos;
-
-            _typeEmitter = typeEmitter ?? new Emit.TypeEmitter().EmitType;
-
-            _assemblies = new Lazy<IEnumerable<Assembly>>(() =>
+        private readonly Lazy<IEnumerable<Assembly>> _assemblies = new Lazy<IEnumerable<Assembly>>(() =>
+            {
+                var assemblies = new List<Assembly>();
+                foreach (var file in Directory.EnumerateFiles(AppContext.BaseDirectory).Select(x => new FileInfo(x)))
                 {
-                    var assemblies = new List<Assembly>();
-                    foreach (var file in Directory.EnumerateFiles(AppContext.BaseDirectory).Select(x => new FileInfo(x)))
+                    if (string.Equals(file.Extension, ".dll", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(file.Extension, ".exe", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (string.Equals(file.Extension, ".dll", StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(file.Extension, ".exe", StringComparison.OrdinalIgnoreCase))
+                        try
                         {
-                            try
-                            {
-                                assemblies.Add(Assembly.Load(new AssemblyName { Name = Path.GetFileNameWithoutExtension(file.Name) }));
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.WriteLine(ex.Message);
-                            }
+                            assemblies.Add(Assembly.Load(new AssemblyName { Name = Path.GetFileNameWithoutExtension(file.Name) }));
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.Message);
                         }
                     }
+                }
 
-                    return assemblies;
-                },
-                true);
-        }
+                return assemblies;
+            },
+            true);
 
         /// <summary>
         /// Returns a list of assemblies to be scanned on resolving types. 

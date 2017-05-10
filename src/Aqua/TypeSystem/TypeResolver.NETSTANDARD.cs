@@ -12,43 +12,26 @@ namespace Aqua.TypeSystem
 
     partial class TypeResolver
     {
-        private readonly Lazy<IEnumerable<Assembly>> _assemblies;
-
-        private readonly Func<TypeInfo, Type> _typeEmitter;
-
-        public TypeResolver(Func<TypeInfo, Type> typeEmitter = null, bool validateIncludingPropertyInfos = false)
-            : this(null, typeEmitter, validateIncludingPropertyInfos)
-        {
-        }
-
-        public TypeResolver(Func<IEnumerable<RuntimeLibrary>> librariesProvider, Func<TypeInfo, Type> typeEmitter = null, bool validateIncludingPropertyInfos = false)
-        {
-            _validateIncludingPropertyInfos = validateIncludingPropertyInfos;
-
-            _typeEmitter = typeEmitter ?? new Emit.TypeEmitter().EmitType;
-
-            _assemblies = new Lazy<IEnumerable<Assembly>>(() =>
-                {
-                    return (librariesProvider ?? DefaultLibrariesProvider)()
-                        .Select(library =>
+        private readonly Lazy<IEnumerable<Assembly>> _assemblies = new Lazy<IEnumerable<Assembly>>(() =>
+            {
+                return DependencyContext.Default.RuntimeLibraries
+                    .Select(library =>
+                    {
+                        try
                         {
-                            try
-                            {
-                                return Assembly.Load(new AssemblyName(library.Name));
-                            }
-                            catch
-                            {
-                                return null;
-                            }
-                        })
-                        .Where(assembly => assembly != null)
-                        .ToArray();
-                }, true);
-        }
+                            return Assembly.Load(new AssemblyName(library.Name));
+                        }
+                        catch
+                        {
+                            return null;
+                        }
+                    })
+                    .Where(assembly => assembly != null)
+                    .ToArray();
+            }, 
+            true);
 
-        private static IEnumerable<RuntimeLibrary> DefaultLibrariesProvider() => DependencyContext.Default.RuntimeLibraries;
-
-        private IEnumerable<Assembly> GetAssemblies() => _assemblies.Value;
+        protected virtual IEnumerable<Assembly> GetAssemblies() => _assemblies.Value;
     }
 }
 

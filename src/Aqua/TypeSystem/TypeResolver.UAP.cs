@@ -9,9 +9,9 @@ namespace Aqua.TypeSystem
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-    using Windows.Storage;
     using System.Reflection;
     using System.Threading.Tasks;
+    using Windows.Storage;
 
     partial class TypeResolver
     {

@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if NET
+#if NET || NETSTANDARD
 
 namespace Aqua.TypeSystem
 {
@@ -18,11 +18,9 @@ namespace Aqua.TypeSystem
             _typeEmitter = typeEmitter ?? new Emit.TypeEmitter().EmitType;
         }
 
-        private static IEnumerable<Assembly> GetAssemblies()
-        {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            return assemblies;
-        }
+#if NET
+        protected virtual IEnumerable<Assembly> GetAssemblies() => AppDomain.CurrentDomain.GetAssemblies();
+#endif
     }
 }
 
