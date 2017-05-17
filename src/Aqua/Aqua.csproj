@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Transform any object-graph into a dynamic, composed dictionaries like structure, holding serializable values and type information.</Description>
     <Copyright>Copyright Christof Senn 2013-2016</Copyright>
-    <VersionPrefix>4.0.0-alpha</VersionPrefix>
+    <VersionPrefix>4.0.0-beta</VersionPrefix>
     <Authors>Christof Senn</Authors>
     <TargetFrameworks>net451;netstandard1.3;netstandard1.6</TargetFrameworks>
     <AssemblyName>Aqua</AssemblyName>
