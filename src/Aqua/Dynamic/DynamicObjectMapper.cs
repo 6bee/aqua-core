@@ -569,6 +569,19 @@ namespace Aqua.Dynamic
                     return r2;
                 }
 
+                var enumerableType = typeof(IEnumerable<>).MakeGenericType(elementType);
+                var ctor = targetType.GetConstructors().FirstOrDefault(c =>
+                {
+                    var parameters = c.GetParameters();
+                    return parameters.Length == 1 
+                        && parameters[0].ParameterType.IsAssignableFrom(enumerableType);
+                });
+
+                if (!ReferenceEquals(null, ctor))
+                {
+                    return ctor.Invoke(new[] { r1 });
+                }
+
                 throw new Exception($"Failed to project collection of {elementType} into type {targetType}");
             }
 
