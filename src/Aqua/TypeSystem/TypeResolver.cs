@@ -40,26 +40,7 @@ namespace Aqua.TypeSystem
                     && (!followProperties || x.Properties.CollectionEquals(y.Properties, this));
             }
 
-            public int GetHashCode(TypeInfo obj) => GetHashCode(obj, true);
-
-            private int GetHashCode(TypeInfo obj, bool followProperties)
-            {
-                if (ReferenceEquals(null, obj))
-                {
-                    return 0;
-                }
-
-                unchecked
-                {
-                    var hashCode = (obj.FullName.GetHashCode() * 397) ^ obj.GenericArguments.GetCollectionHashCode(this);
-                    if (followProperties)
-                    {
-                        hashCode = (hashCode * 397) ^ (obj.Properties?.Select(x => GetHashCode(x)).GetCollectionHashCode() ?? 0);
-                    }
-
-                    return hashCode;
-                }
-            }
+            public int GetHashCode(TypeInfo obj) => obj?.FullName?.GetHashCode() ?? 0;
 
             public bool Equals(PropertyInfo x, PropertyInfo y)
             {
@@ -71,18 +52,7 @@ namespace Aqua.TypeSystem
                     && Equals(x.PropertyType, y.PropertyType, false);
             }
 
-            public int GetHashCode(PropertyInfo obj)
-            {
-                if (ReferenceEquals(null, obj))
-                {
-                    return 0;
-                }
-
-                unchecked
-                {
-                    return (obj.Name.GetHashCode() * 397) ^ GetHashCode(obj.PropertyType, false);
-                }
-            }
+            public int GetHashCode(PropertyInfo obj) => obj?.Name?.GetHashCode() ?? 0;
         }
 
         private static readonly ITypeResolver _defaultTypeResolver = new TypeResolver();
