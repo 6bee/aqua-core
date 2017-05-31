@@ -17,10 +17,8 @@ namespace Aqua.TypeSystem
     {
         private readonly Lazy<IEnumerable<Assembly>> _assemblies;
 
-        public TypeResolver(bool validateIncludingPropertyInfos = false)
+        public TypeResolver()
         {
-            _validateIncludingPropertyInfos = validateIncludingPropertyInfos;
-
             _assemblies = new Lazy<IEnumerable<Assembly>>(
                 Task.Run<IEnumerable<Assembly>>(async () =>
                 {
