@@ -2,6 +2,7 @@
 
 namespace Aqua.Tests.TypeSystem.TypeResolver
 {
+    using System;
     using Aqua.TypeSystem;
     using System.Diagnostics;
     using Xunit;
@@ -11,22 +12,25 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         [Fact]
         public void Performance_test_for_resolving_of_nested_anonymous_types()
         {
-            TypeInfo GenerateAnonymousType<T>(uint nestingCount, T value)
+            Type GenerateAnonymousType<T>(uint nestingCount, T value)
             {
                 if (nestingCount == 0)
                     return null;
 
                 var newValue = new { Prop = value };
-                return GenerateAnonymousType(nestingCount - 1, newValue) ?? new TypeInfo(newValue.GetType());
+                return GenerateAnonymousType(nestingCount - 1, newValue) ?? newValue.GetType();
             }
 
-            for (uint i = 15; i <= 30; ++i)
+            for (uint i = 15; i <= 20; ++i)
             {
-                TypeInfo type = GenerateAnonymousType(i, "hello");
+                var type = GenerateAnonymousType(i, "hello");
+                var typeInfo1 = new TypeInfo(type);
+                var typeInfo2 = new TypeInfo(type);
                 var typeResolver = new TypeResolver();
 
                 var watch = Stopwatch.StartNew();
-                typeResolver.ResolveType(type);
+                typeResolver.ResolveType(typeInfo1);
+                typeResolver.ResolveType(typeInfo2);
                 watch.Stop();
 
                 Debug.WriteLine($"{i} | {watch.ElapsedMilliseconds}");
