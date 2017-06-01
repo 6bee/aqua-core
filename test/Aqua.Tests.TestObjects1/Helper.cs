@@ -26,11 +26,6 @@ namespace Aqua.Tests.TestObjects1
         {
             return typeof(CustomType1);
         }
-
-        public static Type GetCustomType2()
-        {
-            return typeof(CustomType2);
-        }
     }
 }
 
@@ -42,11 +37,6 @@ namespace Aqua.Tests.TestObjects
     }
 
     internal class CustomType1
-    {
-        public int Foo { get; set; }
-    }
-
-    internal class CustomType2
     {
         public int Foo { get; set; }
     }
