@@ -44,13 +44,13 @@ namespace Aqua.TypeSystem
         private Type ResolveTypeInternal(TypeInfo typeInfo)
         {
             var type = Type.GetType(typeInfo.FullName);
-            if (!IsValid(typeInfo, ref type))
+            if (!IsValid(typeInfo, type))
             {
                 var assemblies = GetAssemblies();
                 foreach (var assembly in assemblies)
                 {
                     type = assembly.GetType(typeInfo.FullName);
-                    if (IsValid(typeInfo, ref type))
+                    if (IsValid(typeInfo, type))
                     {
                         break;
                     }
@@ -98,7 +98,7 @@ namespace Aqua.TypeSystem
             return type;
         }
 
-        private bool IsValid(TypeInfo typeInfo, ref Type resolvedType)
+        private bool IsValid(TypeInfo typeInfo, Type resolvedType)
         {
             if (!ReferenceEquals(null, resolvedType))
             {
