@@ -17,6 +17,11 @@ namespace Aqua.Tests.TestObjects2
             return new { Bar = 1 }.GetType();
         }
 
+        public static Type GetAnonymousTypeYX()
+        {
+            return new { Y = 2, X = 1.0 }.GetType();
+        }
+
         public static Type GetCustomType0()
         {
             return typeof(CustomType0);
