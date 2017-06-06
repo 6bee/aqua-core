@@ -33,7 +33,7 @@ namespace Aqua.TypeSystem
             var cacheKey = string.Join(
                 " ",
                 Enumerable.Repeat(typeInfo.FullName, 1).Concat(
-                    typeInfo.Properties?.Select(p => p.Name).OrderBy(name => name)
+                    typeInfo.Properties?.Select(p => p.Name)
                     ?? Enumerable.Empty<string>()));
 
             var type = _typeCache.GetOrCreate(cacheKey, _ => ResolveTypeInternal(typeInfo));
@@ -110,9 +110,12 @@ namespace Aqua.TypeSystem
 
                     var resolvedProperties = type
                         .GetProperties()
+#if !NETSTANDARD1_3
+                        .OrderBy(x => x.MetadataToken)
+#endif
                         .Select(x => x.Name);
                     
-                    if (!typeInfo.Properties.Select(x => x.Name).CollectionEquals(resolvedProperties))
+                    if (!typeInfo.Properties.Select(x => x.Name).SequenceEqual(resolvedProperties))
                     {
                         return false;
                     }
