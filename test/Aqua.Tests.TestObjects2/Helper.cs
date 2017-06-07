@@ -17,6 +17,11 @@ namespace Aqua.Tests.TestObjects2
             return new { Bar = 1 }.GetType();
         }
 
+        public static Type GetAnonymousTypeYX()
+        {
+            return new { Y = 2, X = 1.0 }.GetType();
+        }
+
         public static Type GetCustomType0()
         {
             return typeof(CustomType0);
@@ -25,11 +30,6 @@ namespace Aqua.Tests.TestObjects2
         public static Type GetCustomType1()
         {
             return typeof(CustomType1);
-        }
-
-        public static Type GetCustomType2()
-        {
-            return typeof(CustomType2);
         }
     }
 }
@@ -44,10 +44,5 @@ namespace Aqua.Tests.TestObjects
     internal class CustomType1
     {
         public int Bar { get; set; }
-    }
-
-    internal class CustomType2
-    {
-        public string Foo { get; set; }
     }
 }

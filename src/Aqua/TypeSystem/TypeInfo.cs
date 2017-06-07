@@ -78,6 +78,9 @@ namespace Aqua.TypeSystem
                 {
                     Properties = type
                         .GetProperties()
+#if !NETSTANDARD1_3
+                        .OrderBy(x => x.MetadataToken)
+#endif
                         .Select(x => new PropertyInfo(x.Name, TypeInfo.Create(referenceTracker, x.PropertyType, includePropertyInfos, setMemberDeclaringTypes), setMemberDeclaringTypes ? this : null))
                         .ToList();
                 }

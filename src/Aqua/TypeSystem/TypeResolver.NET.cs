@@ -12,9 +12,8 @@ namespace Aqua.TypeSystem
     {
         private readonly Func<TypeInfo, Type> _typeEmitter;
 
-        public TypeResolver(Func<TypeInfo, Type> typeEmitter = null, bool validateIncludingPropertyInfos = false)
+        public TypeResolver(Func<TypeInfo, Type> typeEmitter = null)
         {
-            _validateIncludingPropertyInfos = validateIncludingPropertyInfos;
             _typeEmitter = typeEmitter ?? new Emit.TypeEmitter().EmitType;
         }
 

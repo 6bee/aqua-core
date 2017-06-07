@@ -4,64 +4,16 @@ namespace Aqua.TypeSystem
 {
     using Aqua.Extensions;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
     public partial class TypeResolver : ITypeResolver
     {
-        private sealed class EqualityComparer : IEqualityComparer<TypeInfo>, IEqualityComparer<PropertyInfo>
-        {
-            public static readonly EqualityComparer Instance = new EqualityComparer();
-
-            private EqualityComparer()
-            {
-            }
-
-            public bool Equals(TypeInfo x, TypeInfo y) => Equals(x, y, true);
-
-            private bool Equals(TypeInfo x, TypeInfo y, bool followProperties)
-            {
-                if (ReferenceEquals(x, y)) return true;
-                if (ReferenceEquals(null, x)) return false;
-                if (ReferenceEquals(null, y)) return false;
-
-                var genericArguments1 = x.GenericArguments;
-                var genericArguments2 = y.GenericArguments;
-
-                return string.Equals(x.FullName, y.FullName, StringComparison.Ordinal)
-                    && x.IsGenericType == y.IsGenericType
-                    && (!x.IsGenericType ||
-                       (
-                        !ReferenceEquals(null, genericArguments1) &&
-                        !ReferenceEquals(null, genericArguments2) &&
-                        genericArguments1.SequenceEqual(genericArguments2, this))
-                       )
-                    && (!followProperties || x.Properties.CollectionEquals(y.Properties, this));
-            }
-
-            public int GetHashCode(TypeInfo obj) => obj?.FullName?.GetHashCode() ?? 0;
-
-            public bool Equals(PropertyInfo x, PropertyInfo y)
-            {
-                if (ReferenceEquals(x, y)) return true;
-                if (ReferenceEquals(null, x)) return false;
-                if (ReferenceEquals(null, y)) return false;
-
-                return string.Equals(x.Name, y.Name, StringComparison.Ordinal)
-                    && Equals(x.PropertyType, y.PropertyType, false);
-            }
-
-            public int GetHashCode(PropertyInfo obj) => obj?.Name?.GetHashCode() ?? 0;
-        }
-
         private static readonly ITypeResolver _defaultTypeResolver = new TypeResolver();
 
         private static ITypeResolver _instance;
 
-        private readonly TransparentCache<TypeInfo, Type> _typeCache = new TransparentCache<TypeInfo, Type>(comparer: EqualityComparer.Instance);
-
-        private readonly bool _validateIncludingPropertyInfos;
+        private readonly TransparentCache<string, Type> _typeCache = new TransparentCache<string, Type>();
 
         /// <summary>
         /// Sets or gets an instance of ITypeResolver.
@@ -78,19 +30,27 @@ namespace Aqua.TypeSystem
 
         public virtual Type ResolveType(TypeInfo typeInfo)
         {
-            return _typeCache.GetOrCreate(typeInfo, ResolveTypeInternal);
+            var cacheKey = string.Join(
+                " ",
+                Enumerable.Repeat(typeInfo.FullName, 1).Concat(
+                    typeInfo.Properties?.Select(p => p.Name)
+                    ?? Enumerable.Empty<string>()));
+
+            var type = _typeCache.GetOrCreate(cacheKey, _ => ResolveTypeInternal(typeInfo));
+
+            return ResolveOpenGenericType(typeInfo, type);
         }
 
         private Type ResolveTypeInternal(TypeInfo typeInfo)
         {
             var type = Type.GetType(typeInfo.FullName);
-            if (!IsValid(typeInfo, ref type))
+            if (!IsValid(typeInfo, type))
             {
                 var assemblies = GetAssemblies();
                 foreach (var assembly in assemblies)
                 {
                     type = assembly.GetType(typeInfo.FullName);
-                    if (IsValid(typeInfo, ref type))
+                    if (IsValid(typeInfo, type))
                     {
                         break;
                     }
@@ -103,7 +63,6 @@ namespace Aqua.TypeSystem
             if (ReferenceEquals(null, type))
             {
                 type = _typeEmitter(typeInfo);
-                type = ResolveOpenGenericType(typeInfo, type);
             }
 #endif
 
@@ -139,12 +98,10 @@ namespace Aqua.TypeSystem
             return type;
         }
 
-        private bool IsValid(TypeInfo typeInfo, ref Type resolvedType)
+        private bool IsValid(TypeInfo typeInfo, Type resolvedType)
         {
             if (!ReferenceEquals(null, resolvedType))
             {
-                resolvedType = ResolveOpenGenericType(typeInfo, resolvedType);
-
                 if (typeInfo.Properties?.Any() ?? false) // can only validate properties if set in typeinfo
                 {
                     var type = resolvedType.IsArray
@@ -153,9 +110,12 @@ namespace Aqua.TypeSystem
 
                     var resolvedProperties = type
                         .GetProperties()
-                        .Select(x => new PropertyInfo { Name = x.Name, PropertyType = new TypeInfo(x.PropertyType, includePropertyInfos: _validateIncludingPropertyInfos) });
+#if !NETSTANDARD1_3
+                        .OrderBy(x => x.MetadataToken)
+#endif
+                        .Select(x => x.Name);
                     
-                    if (!typeInfo.Properties.CollectionEquals(resolvedProperties, EqualityComparer.Instance))
+                    if (!typeInfo.Properties.Select(x => x.Name).SequenceEqual(resolvedProperties))
                     {
                         return false;
                     }
