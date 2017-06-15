@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Provides Json.NET serialization settings for Aqua types.</Description>
     <Copyright>Copyright Christof Senn 2017</Copyright>
-    <VersionPrefix>4.0.0</VersionPrefix>
+    <VersionPrefix>4.0.1</VersionPrefix>
     <Authors>Christof Senn</Authors>
     <TargetFrameworks>net451;netstandard1.3;netstandard1.6</TargetFrameworks>
     <AssemblyName>Aqua.Newtonsoft.Json</AssemblyName>
