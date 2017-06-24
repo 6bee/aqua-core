@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\src\Aqua\SerializableAttribute.CORECLR.cs;..\..\src\Aqua\NonSerializedAttribute.CORECLR.cs" Exclude="bin\**;obj\**;**\*.xproj;packages\**" />
+    <Compile Include="..\..\src\Aqua\SerializableAttribute.NETSTANDARD.cs;..\..\src\Aqua\NonSerializedAttribute.NETSTANDARD.cs" Exclude="bin\**;obj\**;**\*.xproj;packages\**" />
   </ItemGroup>
 
   <ItemGroup>

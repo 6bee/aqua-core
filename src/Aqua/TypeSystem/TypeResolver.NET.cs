@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if NET || NETSTANDARD
+#if NET
 
 namespace Aqua.TypeSystem
 {
@@ -10,16 +10,7 @@ namespace Aqua.TypeSystem
 
     partial class TypeResolver
     {
-        private readonly Func<TypeInfo, Type> _typeEmitter;
-
-        public TypeResolver(Func<TypeInfo, Type> typeEmitter = null)
-        {
-            _typeEmitter = typeEmitter ?? new Emit.TypeEmitter().EmitType;
-        }
-
-#if NET
         protected virtual IEnumerable<Assembly> GetAssemblies() => AppDomain.CurrentDomain.GetAssemblies();
-#endif
     }
 }
 

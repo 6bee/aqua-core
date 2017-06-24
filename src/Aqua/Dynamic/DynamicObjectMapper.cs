@@ -117,7 +117,7 @@ namespace Aqua.Dynamic
                 typeof(DateTime),
                 typeof(TimeSpan),
                 typeof(DateTimeOffset),
-#if NET || NETSTANDARD  || CORECLR
+#if NET || NETSTANDARD 
                 typeof(System.Numerics.BigInteger),
                 typeof(System.Numerics.Complex),
 #endif
@@ -149,14 +149,14 @@ namespace Aqua.Dynamic
                 { typeof(uint), x => checked((uint)(sbyte)x) },
                 { typeof(ulong), x => checked((ulong)(sbyte)x) },
                 { typeof(char), x => checked((char)(sbyte)x) },
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
                 { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(sbyte)x) },
 #endif
             } },
             { typeof(byte), new Dictionary<Type, Func<object, object>> {
                 { typeof(sbyte), x => checked((sbyte)(byte)x) },
                 { typeof(char), x => checked((char)(byte)x) },
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
                 { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(byte)x) },
 #endif
             } },
@@ -167,7 +167,7 @@ namespace Aqua.Dynamic
                 { typeof(uint), x => checked((uint)(short)x) },
                 { typeof(ulong), x => checked((ulong)(short)x) },
                 { typeof(char), x => checked((char)(short)x) },
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
                 { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(short)x) },
 #endif
             } },
@@ -176,7 +176,7 @@ namespace Aqua.Dynamic
                 { typeof(byte), x => checked((byte)(ushort)x) },
                 { typeof(short), x => checked((short)(ushort)x) },
                 { typeof(char), x => checked((char)(ushort)x) },
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
                 { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(ushort)x) },
 #endif
             } },
@@ -188,7 +188,7 @@ namespace Aqua.Dynamic
                 { typeof(uint), x => checked((uint)(int)x) },
                 { typeof(ulong), x => checked((ulong)(int)x) },
                 { typeof(char), x => checked((char)(int)x) },
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
                 { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(int)x) },
 #endif
             } },
@@ -209,7 +209,7 @@ namespace Aqua.Dynamic
                 { typeof(uint), x => checked((uint)(long)x) },
                 { typeof(ulong), x => checked((ulong)(long)x) },
                 { typeof(char), x => checked((char)(long)x) },
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
                 { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(long)x) },
 #endif
             } },
@@ -222,7 +222,7 @@ namespace Aqua.Dynamic
                 { typeof(uint), x => checked((uint)(ulong)x) },
                 { typeof(long), x => checked((long)(ulong)x) },
                 { typeof(char), x => checked((char)(ulong)x) },
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
                 { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(ulong)x) },
 #endif
             } },
@@ -230,7 +230,7 @@ namespace Aqua.Dynamic
                 { typeof(sbyte), x => checked((sbyte)(char)x) },
                 { typeof(byte), x => checked((byte)(char)x) },
                 { typeof(short), x => checked((short)(char)x) },
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
                 { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(char)x) },
 #endif
             } },
@@ -245,7 +245,7 @@ namespace Aqua.Dynamic
                 { typeof(ulong), x => checked((ulong)(float)x) },
                 { typeof(char), x => checked((char)(float)x) },
                 { typeof(decimal), x => checked((decimal)(float)x) },
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
                 { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(float)x) },
 #endif
             } },
@@ -261,7 +261,7 @@ namespace Aqua.Dynamic
                 { typeof(char), x => checked((char)(double)x) },
                 { typeof(float), x => checked((float)(double)x) },
                 { typeof(decimal), x => checked((decimal)(double)x) },
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
                 { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(double)x) },
 #endif
             } },
@@ -277,11 +277,11 @@ namespace Aqua.Dynamic
                 { typeof(char), x => checked((char)(decimal)x) },
                 { typeof(float), x => checked((float)(decimal)x) },
                 { typeof(double), x => checked((double)(decimal)x) },
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
                 { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(decimal)x) },
 #endif
             } },
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
             { typeof(System.Numerics.BigInteger), new Dictionary<Type, Func<object, object>> {
                 { typeof(sbyte), x => checked((sbyte)(System.Numerics.BigInteger)x) },
                 { typeof(byte), x => checked((byte)(System.Numerics.BigInteger)x) },
@@ -944,7 +944,7 @@ namespace Aqua.Dynamic
 
             if (targetType == typeof(char))
             {
-#if WINRT
+#if UAP
                 char character;
                 if (!char.TryParse(value, out character))
                 {
@@ -981,7 +981,7 @@ namespace Aqua.Dynamic
             {
                 return TimeSpan.Parse(value);
             }
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
             if (targetType == typeof(System.Numerics.BigInteger))
             {
                 return System.Numerics.BigInteger.Parse(value);
@@ -1126,7 +1126,7 @@ namespace Aqua.Dynamic
             {
                 return ((double)obj).ToString("R");
             }
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
             if (type == typeof(System.Numerics.BigInteger) || type == typeof(System.Numerics.BigInteger?))
             {
                 return ((System.Numerics.BigInteger)obj).ToString("R");

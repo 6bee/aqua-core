@@ -1,6 +1,6 @@
 @echo off
-set configuration=Release
-set version-suffix=""
+set configuration=Debug
+set version-suffix="002"
 clean ^
   && dotnet restore ^
   && dotnet build src\Aqua --configuration %configuration% ^

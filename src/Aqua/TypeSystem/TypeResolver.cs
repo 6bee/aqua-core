@@ -15,6 +15,13 @@ namespace Aqua.TypeSystem
 
         private readonly TransparentCache<string, Type> _typeCache = new TransparentCache<string, Type>();
 
+        private readonly Func<TypeInfo, Type> _typeEmitter;
+
+        public TypeResolver(Func<TypeInfo, Type> typeEmitter = null)
+        {
+            _typeEmitter = typeEmitter ?? new Emit.TypeEmitter().EmitType;
+        }
+
         /// <summary>
         /// Sets or gets an instance of ITypeResolver.
         /// </summary>
@@ -59,7 +66,7 @@ namespace Aqua.TypeSystem
                 }
             }
 
-#if NET || NETSTANDARD || CORECLR
+#if NET || NETSTANDARD
             if (ReferenceEquals(null, type))
             {
                 type = _typeEmitter(typeInfo);
