@@ -68,15 +68,7 @@ namespace Aqua.TypeSystem
         }
 
         public static Type ResolveType(this TypeInfo typeInfo, ITypeResolver typeResolver)
-        {
-            if (ReferenceEquals(null, typeInfo))
-            {
-                return null;
-            }
-
-            var result = typeResolver.ResolveType(typeInfo);
-            return result;
-        }
+            => ReferenceEquals(null, typeInfo) ? null: typeResolver.ResolveType(typeInfo);
 
         public static System.Reflection.MemberInfo ResolveMemberInfo(this MemberInfo memberInfo, ITypeResolver typeResolver)
         {
@@ -111,15 +103,7 @@ namespace Aqua.TypeSystem
                 return null;
             }
 
-            Type declaringType;
-            try
-            {
-                declaringType = typeResolver.ResolveType(constructorInfo.DeclaringType);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Declaring type '{constructorInfo.DeclaringType}' could not be reconstructed", ex);
-            }
+            var declaringType = constructorInfo.ResolveDeclaringType(typeResolver);
 
             var genericArguments = ReferenceEquals(null, constructorInfo.GenericArgumentTypes) ? new Type[0] : constructorInfo.GenericArgumentTypes
                 .Select(typeInfo =>
@@ -178,25 +162,10 @@ namespace Aqua.TypeSystem
         }
 
         public static System.Reflection.FieldInfo ResolveField(this FieldInfo fieldInfo, ITypeResolver typeResolver)
-        {
-            if (ReferenceEquals(null, fieldInfo))
-            {
-                return null;
-            }
+            => fieldInfo?.ResolveDeclaringType(typeResolver).GetField(fieldInfo.Name);
 
-            Type declaringType;
-            try
-            {
-                declaringType = typeResolver.ResolveType(fieldInfo.DeclaringType);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Declaring type '{fieldInfo.DeclaringType}' could not be reconstructed", ex);
-            }
-
-            var result = declaringType.GetField(fieldInfo.Name);
-            return result;
-        }
+        public static System.Reflection.FieldInfo ResolveField(this FieldInfo fieldInfo, ITypeResolver typeResolver, BindingFlags bindingAttr)
+            => fieldInfo?.ResolveDeclaringType(typeResolver).GetField(fieldInfo.Name, bindingAttr);
 
         public static System.Reflection.MethodInfo ResolveMethod(this MethodInfo methodInfo, ITypeResolver typeResolver)
         {
@@ -205,15 +174,7 @@ namespace Aqua.TypeSystem
                 return null;
             }
 
-            Type declaringType;
-            try
-            {
-                declaringType = typeResolver.ResolveType(methodInfo.DeclaringType);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Declaring type '{methodInfo.DeclaringType}' could not be reconstructed", ex);
-            }
+            var declaringType = methodInfo.ResolveDeclaringType(typeResolver);
 
             var genericArguments = ReferenceEquals(null, methodInfo.GenericArgumentTypes) ? new Type[0] : methodInfo.GenericArgumentTypes
                 .Select(typeInfo =>
@@ -270,24 +231,21 @@ namespace Aqua.TypeSystem
         }
 
         public static System.Reflection.PropertyInfo ResolveProperty(this PropertyInfo propertyInfo, ITypeResolver typeResolver)
-        {
-            if (ReferenceEquals(null, propertyInfo))
-            {
-                return null;
-            }
+            => propertyInfo?.ResolveDeclaringType(typeResolver).GetProperty(propertyInfo.Name);
 
-            Type declaringType;
+        public static System.Reflection.PropertyInfo ResolveProperty(this PropertyInfo propertyInfo, ITypeResolver typeResolver, BindingFlags bindingAttr)
+            => propertyInfo?.ResolveDeclaringType(typeResolver).GetProperty(propertyInfo.Name, bindingAttr);
+
+        private static Type ResolveDeclaringType(this MemberInfo memberInfo, ITypeResolver typeResolver)
+        {
             try
             {
-                declaringType = typeResolver.ResolveType(propertyInfo.DeclaringType);
+                return typeResolver.ResolveType(memberInfo.DeclaringType);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Declaring type '{propertyInfo.DeclaringType}' could not be reconstructed", ex);
+                throw new Exception($"Declaring type '{memberInfo.DeclaringType}' could not be reconstructed", ex);
             }
-
-            var result = declaringType.GetProperty(propertyInfo.Name);
-            return result;
         }
     }
 }
