@@ -76,10 +76,8 @@ namespace Aqua.Dynamic
         /// <summary>
         /// Retrieves object members type by using <see cref="FormatterServices" /> and populates dynamic object
         /// </summary>
-        private void MapObjectMembers(object from, DynamicObject to, Func<Type, bool> setTypeInformation)
+        private void MapObjectMembers(Type type, object from, DynamicObject to, Func<Type, bool> setTypeInformation)
         {
-            var type = _resolveType(to.Type);
-
             var customPropertySet = GetPropertiesForMapping(type);
             var customPropertyNames = ReferenceEquals(null, customPropertySet) ? null : customPropertySet.ToDictionary(x => x.Name);
             var members = FormatterServices.GetSerializableMembers(type);

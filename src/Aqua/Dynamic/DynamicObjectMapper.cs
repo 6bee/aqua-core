@@ -512,6 +512,11 @@ namespace Aqua.Dynamic
                     {
                         targetType = type;
                     }
+                    else if (targetType == typeof(Type) && type == typeof(TypeSystem.TypeInfo))
+                    {
+                        var typeInfo = (TypeSystem.TypeInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.TypeInfo));
+                        return _resolveType(typeInfo);
+                    }
                 }
 
                 if (IsSingleValueWrapper(dynamicObj))
@@ -625,6 +630,11 @@ namespace Aqua.Dynamic
             {
                 return (DynamicObject)obj;
             }
+            
+            if (obj is Type)
+            {
+                obj = new TypeSystem.TypeInfo((Type)obj, false, false);
+            }
 
             Func<Type, object, Func<Type, bool>, DynamicObject> facotry;
             Action<Type, object, DynamicObject, Func<Type, bool>> initializer = null;
@@ -716,7 +726,7 @@ namespace Aqua.Dynamic
 #if NET
             if (type.IsSerializable())
             {
-                MapObjectMembers(from, to, setTypeInformation);
+                MapObjectMembers(type, from, to, setTypeInformation);
             }
             else
             {
