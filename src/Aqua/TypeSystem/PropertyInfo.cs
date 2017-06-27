@@ -14,6 +14,7 @@ namespace Aqua.TypeSystem
     public class PropertyInfo : MemberInfo
     {
         [NonSerialized]
+        [Dynamic.Unmapped]
         private System.Reflection.PropertyInfo _property;
 
         public PropertyInfo()
@@ -70,6 +71,7 @@ namespace Aqua.TypeSystem
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo PropertyType { get; set; }
 
+        [Dynamic.Unmapped]
         internal System.Reflection.PropertyInfo Property
         {
             get

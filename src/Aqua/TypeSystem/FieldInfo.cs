@@ -13,6 +13,7 @@ namespace Aqua.TypeSystem
     public class FieldInfo : MemberInfo
     {
         [NonSerialized]
+        [Dynamic.Unmapped]
         private System.Reflection.FieldInfo _field;
 
         public FieldInfo()
@@ -42,6 +43,7 @@ namespace Aqua.TypeSystem
 
         public override MemberTypes MemberType => MemberTypes.Field;
 
+        [Dynamic.Unmapped]
         internal System.Reflection.FieldInfo Field
         {
             get

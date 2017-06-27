@@ -125,7 +125,7 @@ namespace Aqua.Dynamic
             .SelectMany(x => x.IsValueType() ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
             .ToDictionary(x => x, x => (object)null).ContainsKey;
 
-        private readonly static Dictionary<Type, Dictionary<Type, object>> _implicitNumericConversionsTable = new Dictionary<Type, Dictionary<Type, object>>() 
+        private readonly static Dictionary<Type, Dictionary<Type, object>> _implicitNumericConversionsTable = new Dictionary<Type, Dictionary<Type, object>>()
         {
             // source: http://msdn.microsoft.com/en-us/library/y5b434w4.aspx
             { typeof(sbyte), new[] { typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal) }.ToDictionary(x => x, x => default(object)) },
@@ -345,7 +345,7 @@ namespace Aqua.Dynamic
                 ? (t => false)
                 : new Func<Type, bool>(isKnownTypeProvider.IsKnownType);
 
-            _createDynamicObject = ReferenceEquals(null, dynamicObjectFactory) 
+            _createDynamicObject = ReferenceEquals(null, dynamicObjectFactory)
                 ? (t, o) => new DynamicObject(t)
                 : new Func<Type, object, DynamicObject>(dynamicObjectFactory.CreateDynamicObject);
         }
@@ -508,7 +508,12 @@ namespace Aqua.Dynamic
                 if (!ReferenceEquals(null, dynamicObj.Type))
                 {
                     var type = _resolveType(dynamicObj.Type);
-                    if (ReferenceEquals(null, targetType) || targetType.IsAssignableFrom(type))
+                    if (targetType == typeof(Type) && (type == typeof(Type) || type == typeof(TypeSystem.TypeInfo)))
+                    {
+                        var typeInfo = (TypeSystem.TypeInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.TypeInfo));
+                        return _resolveType(typeInfo);
+                    }
+                    else if (ReferenceEquals(null, targetType) || targetType.IsAssignableFrom(type))
                     {
                         targetType = type;
                     }
@@ -573,7 +578,7 @@ namespace Aqua.Dynamic
                 var ctor = targetType.GetConstructors().FirstOrDefault(c =>
                 {
                     var parameters = c.GetParameters();
-                    return parameters.Length == 1 
+                    return parameters.Length == 1
                         && parameters[0].ParameterType.IsAssignableFrom(enumerableType);
                 });
 
@@ -653,6 +658,12 @@ namespace Aqua.Dynamic
                     return dynamicObject;
                 };
             }
+            else if (obj is Type)
+            {
+                var typeInfo = new TypeSystem.TypeInfo((Type)obj, false, false);
+                facotry = (t, o, f) => _createDynamicObject(typeof(Type), typeInfo);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo, to, f);
+            }
             else
             {
                 facotry = (t, o, f) => _createDynamicObject(t, o);
@@ -716,30 +727,28 @@ namespace Aqua.Dynamic
 #if NET
             if (type.IsSerializable())
             {
-                MapObjectMembers(from, to, setTypeInformation);
+                MapObjectMembers(type, from, to, setTypeInformation);
             }
             else
-            {
 #endif
-            var properties = GetPropertiesForMapping(type) ??
-                type.GetProperties().Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
-            foreach (var property in properties)
             {
-                var value = property.GetValue(from);
-                value = MapToDynamicObjectIfRequired(value, setTypeInformation);
-                to.Add(property.Name, value);
-            }
+                var properties = GetPropertiesForMapping(type) ??
+                    type.GetProperties().Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
+                foreach (var property in properties.Where(p => p.GetCustomAttribute<UnmappedAttribute>() == null))
+                {
+                    var value = property.GetValue(from);
+                    value = MapToDynamicObjectIfRequired(value, setTypeInformation);
+                    to.Add(property.Name, value);
+                }
 
-            var fields = GetFieldsForMapping(type) ?? type.GetFields();
-            foreach (var field in fields)
-            {
-                var value = field.GetValue(from);
-                value = MapToDynamicObjectIfRequired(value, setTypeInformation);
-                to.Add(field.Name, value);
+                var fields = GetFieldsForMapping(type) ?? type.GetFields();
+                foreach (var field in fields.Where(f => f.GetCustomAttribute<UnmappedAttribute>() == null))
+                {
+                    var value = field.GetValue(from);
+                    value = MapToDynamicObjectIfRequired(value, setTypeInformation);
+                    to.Add(field.Name, value);
+                }
             }
-#if NET
-            }
-#endif
         }
 
         /// <summary>
@@ -760,7 +769,7 @@ namespace Aqua.Dynamic
             {
                 return obj;
             }
-            
+
             if (IsSingleValueWrapper(obj))
             {
                 // project single property
@@ -778,56 +787,54 @@ namespace Aqua.Dynamic
                 initializer = PopulateObjectMembers;
             }
             else
-            {
 #endif
-            var dynamicProperties = obj.Properties.ToList();
-            var constructor = type.GetConstructors()
-                .Select(i =>
-                {
-                    var paramterList = i.GetParameters();
-                    return new
+            {
+                var dynamicProperties = obj.Properties.ToList();
+                var constructor = type.GetConstructors()
+                    .Select(i =>
                     {
-                        Info = i,
-                        ParametersCount = paramterList.Length,
-                        Parameters = paramterList
-                            .Select(parameter => new
-                            {
-                                Info = parameter,
-                                Property = dynamicProperties
-                                    .Where(dynamicProperty => string.Equals(dynamicProperty.Name, parameter.Name, StringComparison.OrdinalIgnoreCase))
-                                    .Select(dynamicProperty => new { Name = dynamicProperty.Name, Value = MapFromDynamicObjectGraph(dynamicProperty.Value, parameter.ParameterType) })
-                                    .SingleOrDefault(dynamicProperty => IsAssignable(parameter.ParameterType, dynamicProperty.Value)),
-                            })
-                            .ToArray(),
-                    };
-                })
-                .OrderByDescending(i => i.ParametersCount == 0 ? int.MaxValue : i.ParametersCount)
-                .FirstOrDefault(i => i.Parameters.All(p => !ReferenceEquals(null, p.Property)));
+                        var paramterList = i.GetParameters();
+                        return new
+                        {
+                            Info = i,
+                            ParametersCount = paramterList.Length,
+                            Parameters = paramterList
+                                .Select(parameter => new
+                                {
+                                    Info = parameter,
+                                    Property = dynamicProperties
+                                        .Where(dynamicProperty => string.Equals(dynamicProperty.Name, parameter.Name, StringComparison.OrdinalIgnoreCase))
+                                        .Select(dynamicProperty => new { Name = dynamicProperty.Name, Value = MapFromDynamicObjectGraph(dynamicProperty.Value, parameter.ParameterType) })
+                                        .SingleOrDefault(dynamicProperty => IsAssignable(parameter.ParameterType, dynamicProperty.Value)),
+                                })
+                                .ToArray(),
+                        };
+                    })
+                    .OrderByDescending(i => i.ParametersCount == 0 ? int.MaxValue : i.ParametersCount)
+                    .FirstOrDefault(i => i.Parameters.All(p => !ReferenceEquals(null, p.Property)));
 
-            if (!ReferenceEquals(null, constructor))
-            {
-                factory = (t, item) =>
+                if (!ReferenceEquals(null, constructor))
                 {
-                    var arguments = constructor.Parameters
-                        .Select(x => x.Property.Value)
-                        .ToArray();
-                    var instance = constructor.Info.Invoke(arguments);
-                    return instance;
-                };
-                initializer = CreatePropertyInitializer();
+                    factory = (t, item) =>
+                    {
+                        var arguments = constructor.Parameters
+                            .Select(x => x.Property.Value)
+                            .ToArray();
+                        var instance = constructor.Info.Invoke(arguments);
+                        return instance;
+                    };
+                    initializer = CreatePropertyInitializer();
+                }
+                else if (type.IsValueType())
+                {
+                    factory = (t, item) => Activator.CreateInstance(t);
+                    initializer = CreatePropertyInitializer();
+                }
+                else
+                {
+                    throw new Exception($"Failed to pick matching constructor for type {type.FullName}");
+                }
             }
-            else if (type.IsValueType())
-            {
-                factory = (t, item) => Activator.CreateInstance(t);
-                initializer = CreatePropertyInitializer();
-            }
-            else
-            {
-                throw new Exception($"Failed to pick matching constructor for type {type.FullName}");
-            }
-#if NET
-            }
-#endif
 
             return _fromContext.TryGetOrCreateNew(type, obj, factory, initializer);
         }
@@ -838,7 +845,7 @@ namespace Aqua.Dynamic
             {
                 var properties = GetPropertiesForMapping(type) ??
                     type.GetProperties().Where(p => p.CanWrite && p.GetIndexParameters().Length == 0);
-                foreach (var property in properties)
+                foreach (var property in properties.Where(p => p.GetCustomAttribute<UnmappedAttribute>() == null))
                 {
                     object rawValue;
                     if (item.TryGet(property.Name, out rawValue))
@@ -855,7 +862,7 @@ namespace Aqua.Dynamic
                 }
 
                 var fields = GetFieldsForMapping(type) ?? type.GetFields();
-                foreach(var field in fields)
+                foreach(var field in fields.Where(f => f.GetCustomAttribute<UnmappedAttribute>() == null))
                 {
                     object rawValue;
                     if (item.TryGet(field.Name, out rawValue))
