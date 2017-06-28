@@ -19,6 +19,7 @@ namespace Aqua.TypeSystem
         private static readonly Regex _arrayNameRegex = new Regex(@"^.*\[,*\]$");
 
         [NonSerialized]
+        [Dynamic.Unmapped]
         private Type _type;
 
         public TypeInfo()
@@ -177,6 +178,7 @@ namespace Aqua.TypeSystem
             }
         }
 
+        [Dynamic.Unmapped]
         public string FullName
         {
             get
@@ -195,6 +197,7 @@ namespace Aqua.TypeSystem
         /// <summary>
         /// Resolves this type info instance to it's type using the default type resolver instance.
         /// </summary>
+        [Dynamic.Unmapped]
         public Type Type
         {
             get

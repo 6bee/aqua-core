@@ -7,6 +7,7 @@ namespace Aqua.Dynamic
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
 
@@ -28,7 +29,9 @@ namespace Aqua.Dynamic
         private void PopulateObjectMembers(Type type, DynamicObject from, object to)
         {
             var customPropertySet = GetPropertiesForMapping(type);
-            var customPropertyNames = ReferenceEquals(null, customPropertySet) ? null : customPropertySet.ToDictionary(x => x.Name);
+            var customPropertyNames = customPropertySet?
+                .Where(p => p.GetCustomAttribute<UnmappedAttribute>() == null)
+                .ToDictionary(x => x.Name);
 
             var members = FormatterServices.GetSerializableMembers(type);
             var membersByCleanName = members.ToDictionary(GetCleanMemberName);
@@ -79,7 +82,10 @@ namespace Aqua.Dynamic
         private void MapObjectMembers(Type type, object from, DynamicObject to, Func<Type, bool> setTypeInformation)
         {
             var customPropertySet = GetPropertiesForMapping(type);
-            var customPropertyNames = ReferenceEquals(null, customPropertySet) ? null : customPropertySet.ToDictionary(x => x.Name);
+            var customPropertyNames = customPropertySet?
+                .Where(p => p.GetCustomAttribute<UnmappedAttribute>() == null)
+                .ToDictionary(x => x.Name);
+
             var members = FormatterServices.GetSerializableMembers(type);
             var values = FormatterServices.GetObjectData(from, members);
             for (int i = 0; i < members.Length; i++)

@@ -17,6 +17,7 @@ namespace Aqua.TypeSystem
     public class MethodInfo : MethodBaseInfo
     {
         [NonSerialized]
+        [Dynamic.Unmapped]
         private System.Reflection.MethodInfo _method;
 
         public MethodInfo()
@@ -47,6 +48,7 @@ namespace Aqua.TypeSystem
 
         public override MemberTypes MemberType => MemberTypes.Method;
 
+        [Dynamic.Unmapped]
         public System.Reflection.MethodInfo Method
         {
             get

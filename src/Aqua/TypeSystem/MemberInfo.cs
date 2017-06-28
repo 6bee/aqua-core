@@ -44,6 +44,7 @@ namespace Aqua.TypeSystem
             }
         }
 
+        [Dynamic.Unmapped]
         public abstract MemberTypes MemberType { get; }
 
         [DataMember(Order = 1, EmitDefaultValue = false)]
