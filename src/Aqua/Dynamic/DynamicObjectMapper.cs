@@ -508,14 +508,14 @@ namespace Aqua.Dynamic
                 if (!ReferenceEquals(null, dynamicObj.Type))
                 {
                     var type = _resolveType(dynamicObj.Type);
-                    if (ReferenceEquals(null, targetType) || targetType.IsAssignableFrom(type))
-                    {
-                        targetType = type;
-                    }
-                    else if (targetType == typeof(Type) && type == typeof(TypeSystem.TypeInfo))
+                    if (targetType == typeof(Type) && (type == typeof(Type) || type == typeof(TypeSystem.TypeInfo)))
                     {
                         var typeInfo = (TypeSystem.TypeInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.TypeInfo));
                         return _resolveType(typeInfo);
+                    }
+                    else if (ReferenceEquals(null, targetType) || targetType.IsAssignableFrom(type))
+                    {
+                        targetType = type;
                     }
                 }
 
@@ -631,11 +631,6 @@ namespace Aqua.Dynamic
                 return (DynamicObject)obj;
             }
 
-            if (obj is Type)
-            {
-                obj = new TypeSystem.TypeInfo((Type)obj, false, false);
-            }
-
             Func<Type, object, Func<Type, bool>, DynamicObject> facotry;
             Action<Type, object, DynamicObject, Func<Type, bool>> initializer = null;
 
@@ -662,6 +657,12 @@ namespace Aqua.Dynamic
                     dynamicObject.Add(string.Empty, list);
                     return dynamicObject;
                 };
+            }
+            else if (obj is Type)
+            {
+                var typeInfo = new TypeSystem.TypeInfo((Type)obj, false, false);
+                facotry = (t, o, f) => _createDynamicObject(typeof(Type), typeInfo);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo, to, f);
             }
             else
             {

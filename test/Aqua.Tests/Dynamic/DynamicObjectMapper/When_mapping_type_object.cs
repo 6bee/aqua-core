@@ -12,19 +12,17 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     {
         DynamicObject dynamicObject;
         Type resurectedType;
-        TypeInfo resurectedTypeInfo;
 
         public When_mapping_type_object()
         {
             dynamicObject = new DynamicObjectMapper().MapObject(typeof(int));
-            resurectedTypeInfo = (TypeInfo)new DynamicObjectMapper().Map(dynamicObject);
-            resurectedType = new DynamicObjectMapper().Map<Type>(dynamicObject);
+            resurectedType = (Type)new DynamicObjectMapper().Map(dynamicObject);
         }
 
         [Fact]
         public void Dynamic_object_type_should_typeinfo()
         {
-            dynamicObject.Type.Type.ShouldBe(typeof(TypeInfo));
+            dynamicObject.Type.Type.ShouldBe(typeof(Type));
         }
 
         [Fact]
@@ -37,24 +35,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         public void Dynamic_object_should_hold_type_namespace()
         {
             dynamicObject[nameof(TypeInfo.Namespace)].ShouldBe(typeof(int).Namespace);
-        }
-
-        [Fact]
-        public void TypeInfo_type_should_be_typeof_int()
-        {
-            resurectedTypeInfo.Type.ShouldBe(typeof(int));
-        }
-
-        [Fact]
-        public void TypeInfo_name_should_be_nameof_int()
-        {
-            resurectedTypeInfo.Name.ShouldBe(typeof(int).Name);
-        }
-
-        [Fact]
-        public void TypeInfo_namespace_should_be_system()
-        {
-            resurectedTypeInfo.Namespace.ShouldBe(typeof(int).Namespace);
         }
 
         [Fact]

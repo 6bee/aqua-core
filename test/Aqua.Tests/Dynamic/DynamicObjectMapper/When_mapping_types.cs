@@ -15,16 +15,11 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         public void Should_map_type_to_dynamic_object_and_back(Type type)
         {
             var dynamicObject = new DynamicObjectMapper().MapObject(type);
-            var resurectedTypeInfo = (TypeInfo)new DynamicObjectMapper().Map(dynamicObject);
-            var resurectedType = new DynamicObjectMapper().Map<Type>(dynamicObject);
+            var resurectedType = (Type)new DynamicObjectMapper().Map(dynamicObject);
 
-            dynamicObject.Type.Type.ShouldBe(typeof(TypeInfo));
+            dynamicObject.Type.Type.ShouldBe(typeof(Type));
             dynamicObject[nameof(TypeInfo.Name)].ShouldBe(type.Name);
             dynamicObject[nameof(TypeInfo.Namespace)].ShouldBe(type.Namespace);
-
-            resurectedTypeInfo.Type.ShouldBe(type);
-            resurectedTypeInfo.Name.ShouldBe(type.Name);
-            resurectedTypeInfo.Namespace.ShouldBe(type.Namespace);
 
             resurectedType.ShouldBe(type);
         }
