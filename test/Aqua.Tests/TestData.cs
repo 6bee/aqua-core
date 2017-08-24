@@ -7,6 +7,7 @@ namespace Aqua.Tests
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Numerics;
     using System.Reflection;
 
     public static class TestData
@@ -59,17 +60,14 @@ namespace Aqua.Tests
                 uint.MaxValue,
                 long.MinValue,
                 long.MaxValue,
-#if NET // Newtonsoft.Json.JsonReaderException : JSON integer 18446744073709551615 is too large (small) for an Int64, fails on .net core while ok on .net full
                 ulong.MinValue,
                 ulong.MaxValue,
-#endif
                 float.MinValue,
                 float.MaxValue,
                 double.MinValue,
                 double.MaxValue,
-                // NOTE: decimal doesn't work with json.net (when assigned to an object property)
-                //decimal.MinValue,
-                //decimal.MaxValue,
+                decimal.MinValue,
+                decimal.MaxValue,
                 new decimal(Math.E),
                 new decimal(Math.PI),
                 char.MinValue,
@@ -81,26 +79,25 @@ namespace Aqua.Tests
                 default(Guid),
                 Guid.NewGuid(),
                 DateTime.Now,
+                new DateTime(),
                 new TimeSpan(),
                 default(TimeSpan),
+                new TimeSpan(),
                 new TimeSpan(long.MaxValue),
-                // NOTE: DateTimeOffset doesn't work with json.net (when assigned to an object property) since DateTimeOffset gets confused with DateTime
-                //default(DateTimeOffset),
-                //DateTimeOffset.MinValue,
-                //DateTimeOffset.MaxValue,
-                //new DateTimeOffset(new DateTime(2012, 12, 12), new TimeSpan(12, 12, 0)),
-                // NOTE: BigInteger doesn't work with json.net (when assigned to an object property) since values seem to get lost (on .net core only)
-                //new BigInteger(),
-                //default(BigInteger),
-                //new BigInteger(ulong.MinValue) - 1,
-                //new BigInteger(ulong.MaxValue) + 1,
-                // NOTE: Complex doesn't work with json.net (when assigned to an object property) since values seem to get lost entirely
-                //new Complex(),
-                //default(Complex),
-                //new Complex(32, -87654),
-                //new Complex(-87654, 234),
-                //new Complex(double.MinValue, double.MinValue),
-                //new Complex(double.MaxValue, double.MaxValue),
+                default(DateTimeOffset),
+                DateTimeOffset.MinValue,
+                DateTimeOffset.MaxValue,
+                new DateTimeOffset(new DateTime(2012, 12, 12), new TimeSpan(12, 12, 0)),
+                new BigInteger(),
+                default(BigInteger),
+                new BigInteger(ulong.MinValue) - 1,
+                new BigInteger(ulong.MaxValue) + 1,
+                new Complex(),
+                default(Complex),
+                new Complex(32, -87654),
+                new Complex(-87654, 234),
+                new Complex(double.MinValue, double.MinValue),
+                new Complex(double.MaxValue, double.MaxValue),
                 (TestEnum)(-1),
                 TestEnum.Foo,
                 TestEnum.Bar,

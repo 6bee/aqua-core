@@ -7,6 +7,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Numerics;
     using System.Reflection;
     using Xunit;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
@@ -61,31 +62,90 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             _serialize = serialize;
         }
 
-        [Theory]
+        [SkippableTheory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_serialize_value(Type type, object value)
         {
+            Skip.If(TestIs<JsonSerializer>() && TypeIs<DateTimeOffset>(type), "DateTimeOffset not supported by JsonSerializer");
+            Skip.If(TestIs<JsonSerializer>() && TypeIs<Complex>(type), "Complex not supported by JsonSerializer");
+            Skip.If(TestIs<JsonSerializer>() && TypeIs<decimal>(type), "Decimal not supported by JsonSerializer");
+            Skip.If(CoreClr && TestIs<JsonSerializer>() && TypeIs<BigInteger>(type), "BigInteger not supported by JsonSerializer on CORE CLR");
+            Skip.If(CoreClr && TestIs<JsonSerializer>() && TypeIs<ulong>(type), "UInt64 not supported by JsonSerializer on CORE CLR");
+            Skip.If(CoreClr && TestIs<DataContractSerializer>() && TypeIs<BigInteger>(type), "BigInteger not supported by DataContractSerializer on CORE CLR");
+            Skip.If(CoreClr && TestIs<DataContractSerializer>() && TypeIs<Complex>(type), "Complex not supported by DataContractSerializer on CORE CLR");
+
             var result = SerializeMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true });
             result.ShouldBe(value, $"type: {type.FullName}");
         }
 
-        [Theory]
+        [SkippableTheory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property(Type type, object value)
         {
+            Skip.If(TestIs<JsonSerializer>() && TypeIs<DateTimeOffset>(type), "DateTimeOffset not supported by JsonSerializer");
+            Skip.If(TestIs<JsonSerializer>() && TypeIs<Complex>(type), "Complex not supported by JsonSerializer");
+            Skip.If(TestIs<JsonSerializer>() && TypeIs<Decimal>(type), "Decimal not supported by JsonSerializer");
+            Skip.If(CoreClr && TestIs<JsonSerializer>() && TypeIs<BigInteger>(type), "BigInteger not supported by JsonSerializer on CORE CLR");
+            Skip.If(CoreClr && TestIs<JsonSerializer>() && TypeIs<ulong>(type), "UInt64 not supported by JsonSerializer on CORE CLR");
+            Skip.If(CoreClr && TestIs<DataContractSerializer>() && TypeIs<BigInteger>(type), "BigInteger not supported by DataContractSerializer on CORE CLR");
+            Skip.If(CoreClr && TestIs<DataContractSerializer>() && TypeIs<Complex>(type), "Complex not supported by DataContractSerializer on CORE CLR");
+
             var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, false });
             result.ShouldBe(value, $"type: {type.FullName}");
         }
 
-        [Theory]
+        [SkippableTheory]
         [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property_when_using_string_formatting(Type type, object value)
         {
+            Skip.If(TestIs<JsonSerializer>() && TypeIs<DateTimeOffset>(type), "DateTimeOffset not supported by JsonSerializer");
+            Skip.If(TestIs<JsonSerializer>() && TypeIs<Complex>(type), "Complex not supported by JsonSerializer");
+            Skip.If(TestIs<JsonSerializer>() && TypeIs<decimal>(type), "Decimal not supported by JsonSerializer");
+            Skip.If(CoreClr && TestIs<JsonSerializer>() && TypeIs<BigInteger>(type), "BigInteger not supported by JsonSerializer on CORE CLR");
+            Skip.If(CoreClr && TestIs<JsonSerializer>() && TypeIs<ulong>(type), "UInt64 not supported by JsonSerializer on CORE CLR");
+            Skip.If(CoreClr && TestIs<DataContractSerializer>() && TypeIs<BigInteger>(type), "BigInteger not supported by DataContractSerializer on CORE CLR");
+            Skip.If(CoreClr && TestIs<DataContractSerializer>() && TypeIs<Complex>(type), "Complex not supported by DataContractSerializer on CORE CLR");
+
             var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, true });
             result.ShouldBe(value, $"type: {type.FullName}");
+        }
+
+        [SkippableFact]
+        public void Should_serialize_DateTimeOffset_as_property()
+        {
+            Skip.If(TestIs<JsonSerializer>(), "DateTimeOffset not supported by JsonSerializer");
+            
+            var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
+            var result = SerializeAsPropertyMethod.MakeGenericMethod(value.GetType()).Invoke(this, new object[] { value, true, false });
+            result.ShouldBe(value);
+        }
+
+        [SkippableFact]
+        public void Should_serialize_DateTimeOffset_as_property_when_using_string_formatting()
+        {
+            Skip.If(TestIs<JsonSerializer>(), "DateTimeOffset not supported by JsonSerializer");
+            
+            var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
+            var result = SerializeAsPropertyMethod.MakeGenericMethod(value.GetType()).Invoke(this, new object[] { value, true, true });
+            result.ShouldBe(value);
+        }
+
+        [SkippableFact]
+        public void Should_serialize_DateTimeOffset_as_property_when_using_string_formatting2()
+        {
+            Skip.If(TestIs<JsonSerializer>(), "DateTimeOffset not supported by JsonSerializer");
+            
+            var mapperSettings = new DynamicObjectMapperSettings { FormatPrimitiveTypesAsString = true };
+            var mapper = new DynamicObjectMapper(mapperSettings);
+
+            var dto1 = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
+            var dtoDynamic = mapper.MapObject(dto1);
+            var dto2 = mapper.Map<DateTimeOffset>(dtoDynamic);
+
+            dto2.ShouldBe(dto1);
         }
 
         [Fact]
@@ -161,5 +221,22 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             var resurectedValue = new DynamicObjectMapper().Map<TResult>(serializedDynamicObject);
             return resurectedValue;
         }
+
+        private bool TestIs<T>() => GetType() == typeof(T);
+
+        private static bool TypeIs<T>(Type type) where T : struct
+        {
+            return type == typeof(T)
+                || type == typeof(T?)
+                || type == typeof(T[])
+                || type == typeof(T?[]);
+        }
+
+        private static bool CoreClr
+#if CORECLR
+            => true;
+#else
+            => false;
+#endif
     }
 }
