@@ -11,6 +11,7 @@ namespace Aqua.Dynamic
     using MethodInfo = System.Reflection.MethodInfo;
     using PropertyInfo = System.Reflection.PropertyInfo;
     using FieldInfo = System.Reflection.FieldInfo;
+    using System.Globalization;
 
     public partial class DynamicObjectMapper : IDynamicObjectMapper
     {
@@ -976,7 +977,7 @@ namespace Aqua.Dynamic
 
             if (targetType == typeof(DateTime))
             {
-                return DateTime.Parse(value);
+                return DateTime.Parse(value, null, DateTimeStyles.RoundtripKind);
             }
 
             if (targetType == typeof(DateTimeOffset))
@@ -1122,6 +1123,11 @@ namespace Aqua.Dynamic
             if (type == typeof(DateTime) || type == typeof(DateTime?))
             {
                 return ((DateTime)obj).ToString("o");
+            }
+
+            if (type == typeof(DateTimeOffset) || type == typeof(DateTimeOffset?))
+            {
+                return ((DateTimeOffset)obj).ToString("o");
             }
 
             if (type == typeof(float) || type == typeof(float?))
