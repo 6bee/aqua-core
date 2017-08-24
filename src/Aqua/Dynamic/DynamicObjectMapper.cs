@@ -6,12 +6,12 @@ namespace Aqua.Dynamic
     using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
+    using FieldInfo = System.Reflection.FieldInfo;
     using MethodInfo = System.Reflection.MethodInfo;
     using PropertyInfo = System.Reflection.PropertyInfo;
-    using FieldInfo = System.Reflection.FieldInfo;
-    using System.Globalization;
 
     public partial class DynamicObjectMapper : IDynamicObjectMapper
     {
