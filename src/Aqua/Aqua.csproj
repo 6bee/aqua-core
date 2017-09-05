@@ -3,9 +3,9 @@
   <PropertyGroup>
     <Description>Transform any object-graph into a dynamic, composed dictionaries like structure, holding serializable values and type information.</Description>
     <Copyright>Copyright © Christof Senn 2013-2017</Copyright>
-    <VersionPrefix>4.1.1</VersionPrefix>
+    <VersionPrefix>4.2.0-alpha</VersionPrefix>
     <Authors>Christof Senn</Authors>
-    <TargetFrameworks>net451;netstandard1.3;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net451;netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>
     <AssemblyName>Aqua</AssemblyName>
     <PackageId>aqua-core</PackageId>
     <PackageTags>type-info;dynamic-object;expando-object;object-mapping;object-mapper</PackageTags>
@@ -41,6 +41,10 @@
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.1.0" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+  </ItemGroup>
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net451' ">
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
   </PropertyGroup>
@@ -51,6 +55,10 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
     <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <DefineConstants>$(DefineConstants);NET</DefineConstants>
   </PropertyGroup>
 
 </Project>

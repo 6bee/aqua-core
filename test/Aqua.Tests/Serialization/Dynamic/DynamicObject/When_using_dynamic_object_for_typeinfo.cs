@@ -30,7 +30,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
+#endif
 
+#if NET && !NETCOREAPP2
         public class NetDataContractSerializer : When_using_dynamic_object_for_typeinfo
         {
             public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
