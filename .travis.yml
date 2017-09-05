@@ -19,15 +19,19 @@ matrix:
     - os: linux
       dist: trusty
       sudo: required
-      env: CONFIGURATION=Debug CLI_VERSION=2.0.0
+      env: CONFIGURATION=Debug FRAMEWORK_VERSION=2.0 CLI_VERSION=2.0.0
     - os: linux
       dist: trusty
       sudo: required
-      env: CONFIGURATION=Release CLI_VERSION=2.0.0
+      env: CONFIGURATION=Release FRAMEWORK_VERSION=1.0 CLI_VERSION=1.0.1
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: CONFIGURATION=Release FRAMEWORK_VERSION=2.0 CLI_VERSION=2.0.0
     - os: osx
-      env: CONFIGURATION=Debug CLI_VERSION=2.0.0
+      env: CONFIGURATION=Debug FRAMEWORK_VERSION=2.0 CLI_VERSION=2.0.0
     - os: osx
-      env: CONFIGURATION=Release CLI_VERSION=2.0.0
+      env: CONFIGURATION=Release FRAMEWORK_VERSION=2.0 CLI_VERSION=2.0.0
 
 #before_install:  
 #  - if test "$TRAVIS_OS_NAME" == "osx"; then brew update; brew install openssl; brew link --force openssl; fi
@@ -42,5 +46,4 @@ before_script:
   - dotnet --info
 
 script: 
-  - dotnet test ./test/Aqua.Tests/Aqua.Tests.csproj -c $CONFIGURATION -f netcoreapp1.0
-  - dotnet test ./test/Aqua.Tests/Aqua.Tests.csproj -c $CONFIGURATION -f netcoreapp2.0
+  - dotnet test ./test/Aqua.Tests/Aqua.Tests.csproj -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
