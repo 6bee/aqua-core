@@ -10,4 +10,4 @@ clean ^
   && dotnet build test\Aqua.Tests --configuration %configuration% ^
   && dotnet test test\Aqua.Tests\Aqua.Tests.csproj --configuration %configuration% ^
   && dotnet pack src\Aqua\Aqua.csproj --output "..\..\artifacts" --configuration %configuration% --include-symbols --version-suffix %version-suffix% ^
-  && dotnet pack src\Aqua.Newtonsoft.Json\Aqua.Newtonsoft.Json.csproj --output "..\..\artifacts" --configuration %configuration% --include-symbols --version-suffix %version-suffix%
+  && dotnet pack src\Aqua.Newtonsoft.Json\Aqua.Newtonsoft.Json.csproj --output "..\..\artifacts" --configuration %configuration% --include-symbols --version-suffix "%version-suffix%"
