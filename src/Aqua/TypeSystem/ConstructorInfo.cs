@@ -49,18 +49,15 @@ namespace Aqua.TypeSystem
                 {
                     _constructor = this.ResolveConstructor(TypeResolver.Instance);
                 }
+
                 return _constructor;
             }
         }
 
-        public override string ToString()
-        {
-            return $".ctor {base.ToString()}";
-        }
-
         public static explicit operator System.Reflection.ConstructorInfo(ConstructorInfo c)
-        {
-            return c.Constructor;
-        }
+            => c.Constructor;
+
+        public override string ToString()
+            => $".ctor {base.ToString()}";
     }
 }

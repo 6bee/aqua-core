@@ -3,12 +3,12 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
-    using Xunit;
     using Shouldly;
+    using Xunit;
 
     public class When_converting_to_type_requiring_ctor_and_property_setter
     {
-        class Data
+        private class Data
         {
             private readonly int _id;
 
@@ -17,18 +17,18 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 _id = id;
             }
 
-            public int Id { get { return _id; } }
+            public int Id => _id;
 
             public double DoubleValue { get; set; }
 
             public string StringValue { get; set; }
         }
 
-        const int Int32Value = 11;
-        const double DoubleValue = 1.234567891;
-        const string StringValue = "eleven";
+        private const int Int32Value = 11;
+        private const double DoubleValue = 1.234567891;
+        private const string StringValue = "eleven";
 
-        Data obj;
+        private readonly Data obj;
 
         public When_converting_to_type_requiring_ctor_and_property_setter()
         {
@@ -39,7 +39,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                     { "Id", Int32Value },
                     { "DoubleValue", DoubleValue },
                     { "StringValue", StringValue },
-                }
+                },
             };
 
             obj = dynamicObject.CreateObject<Data>();

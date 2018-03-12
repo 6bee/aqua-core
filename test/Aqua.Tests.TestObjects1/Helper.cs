@@ -33,16 +33,3 @@ namespace Aqua.Tests.TestObjects1
         }
     }
 }
-
-namespace Aqua.Tests.TestObjects
-{
-    internal class CustomType0
-    {
-        public int Foo { get; set; }
-    }
-
-    internal class CustomType1
-    {
-        public int Foo { get; set; }
-    }
-}

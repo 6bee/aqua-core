@@ -10,12 +10,12 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 
     public abstract partial class When_using_typeinfo_with_circular_reference
     {
-        class A
+        private class A
         {
             public A SelfReference { get; set; }
         }
 
-        TypeInfo serializedTypeInfo;
+        private readonly TypeInfo serializedTypeInfo;
 
         protected When_using_typeinfo_with_circular_reference(Func<TypeInfo, TypeInfo> serialize)
         {

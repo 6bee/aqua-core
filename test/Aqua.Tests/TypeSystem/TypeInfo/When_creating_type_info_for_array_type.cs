@@ -3,18 +3,16 @@
 namespace Aqua.Tests.TypeSystem.TypeInfo
 {
     using Aqua.TypeSystem;
-    using Xunit;
     using Shouldly;
+    using Xunit;
 
     public class When_creating_type_info_for_array_type
     {
-        class A
+        private class A
         {
-
         }
 
         private readonly TypeInfo typeInfo;
-
 
         public When_creating_type_info_for_array_type()
         {

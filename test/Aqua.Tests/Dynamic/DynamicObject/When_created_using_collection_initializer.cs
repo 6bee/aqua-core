@@ -3,9 +3,9 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public class When_created_using_collection_initializer
     {
@@ -23,7 +23,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                     { "Property1",  value1 },
                     { "Property2",  value2 },
                     { "P -- 3", value3 },
-                }
+                },
             };
 
             dynamicObject.PropertyCount.ShouldBe(3);

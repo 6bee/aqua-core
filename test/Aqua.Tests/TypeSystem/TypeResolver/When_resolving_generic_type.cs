@@ -3,25 +3,22 @@
 namespace Aqua.Tests.TypeSystem.TypeResolver
 {
     using Aqua.TypeSystem;
+    using Shouldly;
     using System;
     using System.Collections.Generic;
     using Xunit;
-    using Shouldly;
 
     public class When_resolving_generic_type
     {
-        class A<T>
+        private class A<T>
         {
-
         }
 
-        class B
+        private class B
         {
-
         }
 
         private readonly Type type;
-
 
         public When_resolving_generic_type()
         {

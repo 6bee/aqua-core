@@ -7,7 +7,7 @@ namespace Aqua
     using System.Linq;
 
     /// <summary>
-    /// A weak-reference cache that can be hooked-in method calls to serve cached instances 
+    /// A weak-reference cache that can be hooked-in method calls to serve cached instances
     /// or transparently create the requested value if not contained in cache
     /// </summary>
     public class TransparentCache<TKey, TValue>
@@ -17,7 +17,7 @@ namespace Aqua
         private bool _isCleanupScheduled = false;
 
         /// <summary>
-        /// Creates an new instance of <see cref="TransparentCache"/>
+        /// Initializes a new instance of the <see cref="TransparentCache{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="cleanupDelay">Number of milliseconds to delay the task to clean-up stale references. Set to -1 to suppress clean-up or 0 to run clean-up synchronously.</param>
         public TransparentCache(int cleanupDelay = 2000, IEqualityComparer<TKey> comparer = null)
@@ -69,7 +69,7 @@ namespace Aqua
                 else if (_cleanupDelay > 0 && !_isCleanupScheduled)
                 {
                     _isCleanupScheduled = true;
-                    System.Threading.Tasks.Task.Run(async delegate
+                    System.Threading.Tasks.Task.Run(async () =>
                     {
                         await System.Threading.Tasks.Task.Delay(_cleanupDelay);
                         CleanUpStaleReferences();

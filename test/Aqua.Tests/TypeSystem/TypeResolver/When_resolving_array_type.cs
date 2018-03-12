@@ -3,19 +3,17 @@
 namespace Aqua.Tests.TypeSystem.TypeResolver
 {
     using Aqua.TypeSystem;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public class When_resolving_array_type
     {
-        class A
+        private class A
         {
-
         }
 
         private readonly Type type;
-
 
         public When_resolving_array_type()
         {

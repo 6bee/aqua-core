@@ -3,21 +3,21 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_converting_to_object_with_dictionary_property
     {
-        class ClassWithDictionaryProperty
+        private class ClassWithDictionaryProperty
         {
             public IDictionary<string, string> Dictionary { get; set; }
         }
 
-        DynamicObject dynamicObject;
-        object obj;
-        ClassWithDictionaryProperty objectWithDictionaryProperty;
+        private readonly DynamicObject dynamicObject;
+        private readonly object obj;
+        private readonly ClassWithDictionaryProperty objectWithDictionaryProperty;
 
         public When_converting_to_object_with_dictionary_property()
         {
@@ -29,12 +29,12 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                         "Dictionary",
                         new object[]
                         {
-                            new KeyValuePair<string,string>("K1", "V1"),
-                            new KeyValuePair<string,string>("K2", "V2"),
-                            new KeyValuePair<string,string>("K3", "V3"),
+                            new KeyValuePair<string, string>("K1", "V1"),
+                            new KeyValuePair<string, string>("K2", "V2"),
+                            new KeyValuePair<string, string>("K3", "V3"),
                         }
                     },
-                }
+                },
             };
 
             obj = new DynamicObjectMapper().Map(dynamicObject);
@@ -71,14 +71,14 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Dictionary_elements_should_contain_dynamic_object_values()
         {
-            var elements = ((object[])dynamicObject["Dictionary"]).Cast<KeyValuePair<string,string>>().ToList();
-            for(int i = 0; i < elements.Count; i++)
+            var elements = ((object[])dynamicObject["Dictionary"]).Cast<KeyValuePair<string, string>>().ToList();
+            for (int i = 0; i < elements.Count; i++)
             {
                 var key = elements[i].Key;
                 var value = elements[i].Value;
 
                 objectWithDictionaryProperty.Dictionary[key].ShouldBe(value);
-            };
+            }
         }
     }
 }

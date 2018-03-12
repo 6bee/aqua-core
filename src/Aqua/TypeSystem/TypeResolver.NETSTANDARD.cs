@@ -12,9 +12,8 @@ namespace Aqua.TypeSystem
 
     partial class TypeResolver
     {
-        private readonly Lazy<IEnumerable<Assembly>> _assemblies = new Lazy<IEnumerable<Assembly>>(() =>
-            {
-                return DependencyContext.Default.RuntimeLibraries
+        private readonly Lazy<IEnumerable<Assembly>> _assemblies = new Lazy<IEnumerable<Assembly>>(
+            () => DependencyContext.Default.RuntimeLibraries
                     .Select(library =>
                     {
                         try
@@ -27,8 +26,7 @@ namespace Aqua.TypeSystem
                         }
                     })
                     .Where(assembly => assembly != null)
-                    .ToArray();
-            }, 
+                    .ToArray(),
             true);
 
         protected virtual IEnumerable<Assembly> GetAssemblies() => _assemblies.Value;

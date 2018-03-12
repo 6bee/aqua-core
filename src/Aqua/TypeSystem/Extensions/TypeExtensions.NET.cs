@@ -5,8 +5,8 @@
 namespace Aqua.TypeSystem.Extensions
 {
     using System;
-    using System.Reflection;
     using System.Collections.Generic;
+    using System.Reflection;
 
     partial class TypeExtensions
     {

@@ -8,12 +8,12 @@ namespace Aqua.Tests.Serialization
     {
         public static void Dump(this Stream stream, string path)
         {
-            //using (var fileStream = File.OpenWrite(path))
-            //{
-            //    stream.Seek(0, SeekOrigin.Begin);
-            //    stream.CopyTo(fileStream);
-            //    fileStream.Flush();
-            //}
+            // using (var fileStream = File.OpenWrite(path))
+            // {
+            //     stream.Seek(0, SeekOrigin.Begin);
+            //     stream.CopyTo(fileStream);
+            //     fileStream.Flush();
+            // }
         }
     }
 }

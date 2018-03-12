@@ -10,12 +10,12 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
     public class When_mapping_object_from_array
     {
-        class CustomType
+        private class CustomType
         {
             public long Int64Property { get; set; }
         }
 
-        DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
         public When_mapping_object_from_array()
         {

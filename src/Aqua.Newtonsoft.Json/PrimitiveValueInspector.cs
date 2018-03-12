@@ -4,7 +4,6 @@ namespace Aqua
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
-    using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -29,15 +28,16 @@ namespace Aqua
                 { typeof(long), x => Convert.ToInt64(x) },
                 { typeof(ulong), x => x is BigInteger ? (ulong)(BigInteger)x : Convert.ToUInt64(x) },
                 { typeof(float), x => Convert.ToSingle(x) },
-                //{ typeof(double), x => Convert.ToDouble(x) },
                 { typeof(decimal), x => Convert.ToDecimal(x) },
                 { typeof(char), x => Convert.ToChar(x) },
-                //{ typeof(bool), x => Convert.ToBoolean(x) },
                 { typeof(Guid), x => x is string ? Guid.Parse((string)x) : x },
                 { typeof(TimeSpan), x => x is string ? TimeSpan.Parse((string)x) : x },
-                { typeof(DateTimeOffset), x => x is DateTime ? new DateTimeOffset(((DateTime)x).ToLocalTime()): x },
+                { typeof(DateTimeOffset), x => x is DateTime ? new DateTimeOffset(((DateTime)x).ToLocalTime()) : x },
                 { typeof(BigInteger), x => x is long ? new BigInteger((long)x) : x },
-                //{ typeof(Complex), x => x },
+
+                // { typeof(double), x => Convert.ToDouble(x) },
+                // { typeof(bool), x => Convert.ToBoolean(x) },
+                // { typeof(Complex), x => x },
             }
             .ToDictionary(k => k.Key.FullName, v => v.Value);
 
@@ -71,7 +71,9 @@ namespace Aqua
                                 {
                                     elementType.Name = array.Groups[1].Value;
                                 }
-                                //else (elementType.Implements(typeof(IEnumerable<>))) { would be nice to be able to detect collection types... to retrieve the element type. }
+
+                                // would be nice to be able to detect collection types... to retrieve the element type.
+                                // else (elementType.Implements(typeof(IEnumerable<>))) { ... }
                             }
 
                             if (!ReferenceEquals(null, elementType))

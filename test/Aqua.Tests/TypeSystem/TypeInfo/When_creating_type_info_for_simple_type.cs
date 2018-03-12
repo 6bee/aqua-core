@@ -3,21 +3,20 @@
 namespace Aqua.Tests.TypeSystem.TypeInfo
 {
     using Aqua.TypeSystem;
+    using Shouldly;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_creating_type_info_for_simple_type
     {
-        class A
+        private class A
         {
             public int Int32Value { get; set; }
-            
+
             public string StringValue { get; set; }
         }
 
         private readonly TypeInfo typeInfo;
-
 
         public When_creating_type_info_for_simple_type()
         {

@@ -3,13 +3,13 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public class When_created_using_parameterless_constructor
     {
-        DynamicObject dynamicObject = new DynamicObject();
+        private readonly DynamicObject dynamicObject = new DynamicObject();
 
         [Fact]
         public void Should_be_empty()

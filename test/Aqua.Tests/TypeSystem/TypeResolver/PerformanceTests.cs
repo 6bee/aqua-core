@@ -2,8 +2,8 @@
 
 namespace Aqua.Tests.TypeSystem.TypeResolver
 {
-    using System;
     using Aqua.TypeSystem;
+    using System;
     using System.Diagnostics;
     using Xunit;
 
@@ -15,7 +15,9 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
             Type GenerateAnonymousType<T>(uint nestingCount, T value)
             {
                 if (nestingCount == 0)
+                {
                     return null;
+                }
 
                 var newValue = new { Prop = value };
                 return GenerateAnonymousType(nestingCount - 1, newValue) ?? newValue.GetType();

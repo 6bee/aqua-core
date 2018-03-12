@@ -21,7 +21,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
 
         private readonly Type resolvedType1;
         private readonly Type resolvedType2;
-        
+
         public When_resolving_different_anonymous_types_with_same_name_and_different_property_type()
         {
             type1 = TestObjects1.Helper.GetAnonymousType0<int, string>();

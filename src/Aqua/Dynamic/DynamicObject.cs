@@ -16,7 +16,7 @@ namespace Aqua.Dynamic
     public partial class DynamicObject : INotifyPropertyChanging, INotifyPropertyChanged
     {
         /// <summary>
-        /// Creates a new instance of a dynamic object
+        /// Initializes a new instance of the <see cref="DynamicObject"/> class.
         /// </summary>
         public DynamicObject()
             : this(default(TypeInfo), default(PropertySet))
@@ -24,7 +24,7 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Creates a new instance of a dynamic object, setting the specified type
+        /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified type
         /// </summary>
         /// <param name="type">The type to be set</param>
         public DynamicObject(Type type)
@@ -33,16 +33,17 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Creates a new instance of a dynamic object, setting the specified type
+        /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified type
         /// </summary>
         /// <param name="type">The type to be set</param>
         public DynamicObject(TypeInfo type)
-            :this(type, default(PropertySet))
+            : this(type, default(PropertySet))
         {
         }
 
         /// <summary>
-        /// Creates a new instance of a dynamic object, setting the specified <see cref="TypeInfo"/> and <see cref="PropertySet"/>
+        /// Initializes a new instance of the <see cref="DynamicObject"/> class,
+        /// setting the specified <see cref="TypeInfo"/> and <see cref="PropertySet"/>
         /// </summary>
         /// <param name="type">The type to be set</param>
         public DynamicObject(TypeInfo type, PropertySet propertySet)
@@ -52,7 +53,7 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Creates a new instance of a dynamic object, setting the specified members
+        /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified members
         /// </summary>
         /// <param name="properties">Initial collection of properties and values</param>
         /// <exception cref="ArgumentNullException">The specified members collection is null</exception>
@@ -67,7 +68,7 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Creates a new instance of a dynamic object, setting the specified members
+        /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified members
         /// </summary>
         /// <param name="properties">Initial collection of properties and values</param>
         /// <exception cref="ArgumentNullException">The specified members collection is null</exception>
@@ -82,7 +83,8 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Creates a new instance of a dynamic object, representing the object structure defined by the specified object
+        /// Initializes a new instance of the <see cref="DynamicObject"/> class,
+        /// representing the object structure defined by the specified object
         /// </summary>
         /// <param name="obj">The object to be represented by the new dynamic object</param>
         /// <param name="mapper">Optional instance of dynamic object mapper</param>
@@ -100,7 +102,7 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Copy constructor
+        /// Initializes a new instance of the <see cref="DynamicObject"/> class
         /// </summary>
         /// <param name="dynamicObject">The instance to copy</param>
         /// <param name="deepCopy">If true re-creates <see cref="Property"/> instances, otherwise fills existing <see cref="Property"/> instances into a new <see cref="PropertySet"/></param>
@@ -163,20 +165,10 @@ namespace Aqua.Dynamic
         /// <returns>Value of the member specified</returns>
         public object this[string name]
         {
-            get
-            {
-                object value;
-                if (TryGet(name, out value))
-                {
-                    return value;
-                }
-
-                throw new Exception($"Member not found for name '{name}'");
-            }
-            set
-            {
-                Set(name, value);
-            }
+            get => TryGet(name, out object value)
+                ? value
+                : throw new Exception($"Member not found for name '{name}'");
+            set => Set(name, value);
         }
 
         /// <summary>
@@ -207,30 +199,14 @@ namespace Aqua.Dynamic
             return value;
         }
 
-        protected virtual void OnPropertyChanging(string name, object oldValue, object newValue)
-        {
-            PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(name));
-        }
-
-        protected virtual void OnPropertyChanged(string name, object oldValue, object newValue)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
         /// <summary>
         /// Gets a member's value or null if the specified member is unknown
         /// </summary>
         /// <returns>The value assigned to the member specified, null if member is not set</returns>
         public object Get(string name = "")
-        {
-            object value;
-            if (!TryGet(name, out value))
-            {
-                value = null;
-            }
-
-            return value;
-        }
+            => TryGet(name, out object value)
+                ? value
+                : null;
 
         /// <summary>
         /// Gets a member's value or default(T) if the specified member is null or unknown
@@ -239,7 +215,7 @@ namespace Aqua.Dynamic
         public T Get<T>(string name = "")
         {
             var value = Get(name);
-            return value is T ? (T)value : default(T);
+            return value is T ? (T)value : default;
         }
 
         /// <summary>
@@ -273,7 +249,7 @@ namespace Aqua.Dynamic
         /// Gets the value assigned to the specified member
         /// </summary>
         /// <param name="name">The name of the member</param>
-        /// <param name="value">When this method returns, contains the value assgned with the specified member, 
+        /// <param name="value">When this method returns, contains the value assgned with the specified member,
         /// if the member is found; null if the member is not found.</param>
         /// <returns>True is the dynamic object contains a member with the specified name; otherwise false</returns>
         public bool TryGet(string name, out object value)
@@ -289,7 +265,13 @@ namespace Aqua.Dynamic
             value = property.Value;
             return true;
         }
-        
+
+        protected virtual void OnPropertyChanging(string name, object oldValue, object newValue)
+            => PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(name));
+
+        protected virtual void OnPropertyChanged(string name, object oldValue, object newValue)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
         [Obsolete("Method renamed to Create. This method is beeing removed in a future version.", true)]
         public static DynamicObject CreateDynamicObject(object obj, IDynamicObjectMapper mapper = null)
             => Create(obj, mapper);
@@ -299,10 +281,7 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <param name="obj">The object to be represented by the new dynamic object</param>
         /// <param name="mapper">Optional instance of dynamic object mapper</param>
-        /// <param name="setTypeInformation">Optional instance of a function to define per type whether to set type information</param>
         public static DynamicObject Create(object obj, IDynamicObjectMapper mapper = null)
-        {
-            return (mapper ?? new DynamicObjectMapper()).MapObject(obj);
-        }
+            => (mapper ?? new DynamicObjectMapper()).MapObject(obj);
     }
 }

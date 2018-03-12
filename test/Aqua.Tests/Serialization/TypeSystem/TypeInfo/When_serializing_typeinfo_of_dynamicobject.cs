@@ -10,8 +10,8 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 
     public abstract partial class When_serializing_typeinfo_of_dynamicobject
     {
-        TypeInfo typeInfo;
-        TypeInfo serializedTypeInfo;
+        private readonly TypeInfo typeInfo;
+        private readonly TypeInfo serializedTypeInfo;
 
         protected When_serializing_typeinfo_of_dynamicobject(Func<TypeInfo, TypeInfo> serialize)
         {

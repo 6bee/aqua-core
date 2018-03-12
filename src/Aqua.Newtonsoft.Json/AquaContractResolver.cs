@@ -45,7 +45,7 @@ namespace Aqua
             {
                 contract.OnDeserializedCallbacks.Add(PrimitiveValueInspector.DynamicObjectSerializationCallback);
                 contract.IsReference = true;
-                foreach(var property in contract.Properties.Where(x => !x.Writable || !x.Readable))
+                foreach (var property in contract.Properties.Where(x => !x.Writable || !x.Readable))
                 {
                     property.Ignored = true;
                 }

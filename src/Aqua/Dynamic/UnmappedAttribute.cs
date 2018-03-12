@@ -5,7 +5,7 @@ namespace Aqua.Dynamic
     using System;
 
     /// <summary>
-    /// Prevents annotated members to be mapped into <see cref="DynamicObject"/> 
+    /// Prevents annotated members to be mapped into <see cref="DynamicObject"/>
     /// using <see cref="DynamicObjectMapper"/>
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, Inherited = true)]

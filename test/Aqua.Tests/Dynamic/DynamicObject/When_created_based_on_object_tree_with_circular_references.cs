@@ -3,23 +3,24 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
-    using Xunit;
     using Shouldly;
+    using Xunit;
 
     public class When_created_based_on_object_tree_with_circular_references
     {
-        abstract class BaseClass
+        private abstract class BaseClass
         {
             public int Id { get; set; }
         }
 
-        class SubClassA : BaseClass
+        private class SubClassA : BaseClass
         {
             public string Name { get; set; }
+
             public SubClassB SubClassBReference { get; set; }
         }
 
-        class SubClassB : BaseClass
+        private class SubClassB : BaseClass
         {
             public BaseClass BaseClassReference { get; set; }
         }

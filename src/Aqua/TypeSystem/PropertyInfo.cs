@@ -5,7 +5,6 @@ namespace Aqua.TypeSystem
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Reflection;
     using System.Runtime.Serialization;
 
     [Serializable]
@@ -25,21 +24,9 @@ namespace Aqua.TypeSystem
             : this(propertyInfo, TypeInfo.CreateReferenceTracker<Type>())
         {
         }
-        
-        private PropertyInfo(System.Reflection.PropertyInfo propertyInfo, Dictionary<Type, TypeInfo> referenceTracker)
-            : base(propertyInfo, referenceTracker)
-        {
-            _property = propertyInfo;
-            PropertyType = TypeInfo.Create(referenceTracker, propertyInfo.PropertyType, false, false);
-        }
 
         public PropertyInfo(string propertyName, Type propertyType, Type declaringType)
             : this(propertyName, propertyType, declaringType, TypeInfo.CreateReferenceTracker<Type>())
-        {
-        }
-
-        private PropertyInfo(string propertyName, Type propertyType, Type declaringType, Dictionary<Type, TypeInfo> referenceTracker)
-            : this(propertyName, TypeInfo.Create(referenceTracker, propertyType, false, false), TypeInfo.Create(referenceTracker, declaringType, false, false))
         {
         }
 
@@ -61,9 +48,21 @@ namespace Aqua.TypeSystem
             {
                 throw new ArgumentNullException(nameof(propertyInfo));
             }
-            
+
             PropertyType = TypeInfo.Create(referenceTracker, propertyInfo.PropertyType);
             _property = propertyInfo._property;
+        }
+
+        private PropertyInfo(System.Reflection.PropertyInfo propertyInfo, Dictionary<Type, TypeInfo> referenceTracker)
+            : base(propertyInfo, referenceTracker)
+        {
+            _property = propertyInfo;
+            PropertyType = TypeInfo.Create(referenceTracker, propertyInfo.PropertyType, false, false);
+        }
+
+        private PropertyInfo(string propertyName, Type propertyType, Type declaringType, Dictionary<Type, TypeInfo> referenceTracker)
+            : this(propertyName, TypeInfo.Create(referenceTracker, propertyType, false, false), TypeInfo.Create(referenceTracker, declaringType, false, false))
+        {
         }
 
         public override MemberTypes MemberType => MemberTypes.Property;
@@ -86,8 +85,6 @@ namespace Aqua.TypeSystem
         }
 
         public static explicit operator System.Reflection.PropertyInfo(PropertyInfo p)
-        {
-            return p.Property;
-        }
+            => p.Property;
     }
 }

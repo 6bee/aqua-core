@@ -3,13 +3,13 @@
 namespace Aqua.Tests.TypeSystem.TypeResolver
 {
     using Aqua.TypeSystem;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public class When_resolving_a_types_with_two_resolvers
     {
-        class A
+        private class A
         {
             public int Int32Value { get; set; }
 
@@ -21,7 +21,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
 
         public When_resolving_a_types_with_two_resolvers()
         {
-            var a = new A { Int32Value = 0, StringValue = "" };
+            var a = new A { Int32Value = 0, StringValue = string.Empty };
 
             var typeInfo = new TypeInfo(a.GetType());
 
@@ -30,7 +30,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
             typeInfo.DeclaringType = null;
 
             resolvedType1 = new TypeResolver().ResolveType(typeInfo);
-            
+
             resolvedType2 = new TypeResolver().ResolveType(typeInfo);
         }
 

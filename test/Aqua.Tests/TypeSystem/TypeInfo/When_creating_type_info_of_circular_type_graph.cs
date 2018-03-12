@@ -2,25 +2,24 @@
 
 namespace Aqua.Tests.TypeSystem.TypeInfo
 {
-    using System.Linq;
     using Aqua.TypeSystem;
-    using Xunit;
     using Shouldly;
+    using System.Linq;
+    using Xunit;
 
     public class When_creating_type_info_of_circular_type_graph
     {
-        class A
+        private class A
         {
             public B B { get; set; }
         }
 
-        class B
+        private class B
         {
             public A A { get; set; }
         }
 
         private readonly TypeInfo typeInfo;
-
 
         public When_creating_type_info_of_circular_type_graph()
         {

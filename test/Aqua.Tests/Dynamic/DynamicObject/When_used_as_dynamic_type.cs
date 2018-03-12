@@ -9,21 +9,21 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
     public class When_used_as_dynamic_type
     {
-        class A
+        private class A
         {
             public B B { get; set; }
         }
 
-        class B
+        private class B
         {
             public double DoubleValue { get; set; }
         }
 
-        const int Int32Value = 11;
-        const double DoubleValue = 1.234567891;
-        const string StringValue = "eleven";
+        private const int Int32Value = 11;
+        private const double DoubleValue = 1.234567891;
+        private const string StringValue = "eleven";
 
-        dynamic dynamicObject;
+        private readonly dynamic dynamicObject;
 
         public When_used_as_dynamic_type()
         {

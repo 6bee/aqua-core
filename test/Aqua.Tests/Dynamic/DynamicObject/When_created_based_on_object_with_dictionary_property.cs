@@ -3,20 +3,20 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_created_based_on_object_with_dictionary_property
     {
-        class ClassWithDictionaryProperty
+        private class ClassWithDictionaryProperty
         {
             public IDictionary<string, string> Dictionary { get; set; }
         }
 
-        ClassWithDictionaryProperty source;
-        DynamicObject dynamicObject;
+        private readonly ClassWithDictionaryProperty source;
+        private readonly DynamicObject dynamicObject;
 
         public When_created_based_on_object_with_dictionary_property()
         {
@@ -27,7 +27,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                     { "K1", "V1" },
                     { "K2", "V2" },
                     { "K3", "V3" },
-                }
+                },
             };
 
             dynamicObject = new DynamicObject(source);

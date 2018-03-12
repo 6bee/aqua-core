@@ -134,6 +134,7 @@ namespace Aqua.TypeSystem.Emit
                 il.Emit(OpCodes.Ldarg, i + 1);
                 il.Emit(OpCodes.Stfld, fields[i]);
             }
+
             il.Emit(OpCodes.Ret);
 
             // define properties

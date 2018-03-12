@@ -3,13 +3,13 @@
 namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 {
     using Aqua.TypeSystem;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public abstract partial class When_using_typeinfo_with_circular_reference_with_anonymous_type
     {
-        TypeInfo serializedTypeInfo;
+        private readonly TypeInfo serializedTypeInfo;
 
         public When_using_typeinfo_with_circular_reference_with_anonymous_type(Func<TypeInfo, TypeInfo> serialize)
         {
@@ -18,11 +18,8 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
                 Number = 1,
                 Value = new
                 {
-                    X = new 
-                    { 
-                        Name = "" 
-                    }
-                }
+                    X = new { Name = string.Empty },
+                },
             };
 
             var typeInfo = new TypeInfo(instance.GetType(), false, false);

@@ -3,15 +3,15 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_created_based_on_nullable_guid
     {
-        Guid? guid;
-        DynamicObject dynamicObject;
+        private readonly Guid? guid;
+        private readonly DynamicObject dynamicObject;
 
         public When_created_based_on_nullable_guid()
         {

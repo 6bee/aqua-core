@@ -2,17 +2,15 @@
 
 namespace Aqua.Tests.TypeSystem.Emit.TypeEmitter
 {
-    using Aqua.TypeSystem;
     using Aqua.TypeSystem.Emit;
-    using Aqua.TypeSystem.Extensions;
+    using Shouldly;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using Xunit;
-    using Shouldly;
-    using TypeInfo = Aqua.TypeSystem.TypeInfo;
     using PropertyInfo = Aqua.TypeSystem.PropertyInfo;
+    using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
     public class When_emitting_type
     {
@@ -28,7 +26,7 @@ namespace Aqua.Tests.TypeSystem.Emit.TypeEmitter
                 {
                     new PropertyInfo { Name = "Int32Value", PropertyType = new TypeInfo(typeof(int)) },
                     new PropertyInfo { Name = "StringValue", PropertyType = new TypeInfo(typeof(string)) },
-                }
+                },
             };
 
             emittedType = new TypeEmitter().EmitType(typeInfo);

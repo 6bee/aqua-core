@@ -167,6 +167,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Should_map_multidimensional_int_array_to_int_array()
         {
+#pragma warning disable SA1500 // Braces for multi-line statements should not share line
             var obj = new
             {
                 Items = new int[,,]
@@ -181,17 +182,18 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
                     },
                     {
                         { 13, 14, 15 },
-                        { 16, 17, 18 }
-                    }
-                }
+                        { 16, 17, 18 },
+                    },
+                },
             };
+#pragma warning restore SA1500 // Braces for multi-line statements should not share line
 
             var dynamicObject = new DynamicObjectMapper().MapObject(obj);
 
             var items = dynamicObject["Items"];
 
             var array = items.ShouldBeOfType<object[]>();
-            array.SequenceEqual(Enumerable.Range(1,18).Select(x => (object)x)).ShouldBeTrue();
+            array.SequenceEqual(Enumerable.Range(1, 18).Select(x => (object)x)).ShouldBeTrue();
         }
     }
 }

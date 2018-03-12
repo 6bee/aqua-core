@@ -3,20 +3,20 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public class When_converting_to_object_based_on_typeinfo
     {
-        class CustomType
+        private class CustomType
         {
             public string StringValue { get; set; }
         }
 
-        const string StringValue = "eleven";
+        private const string StringValue = "eleven";
 
-        CustomType obj;
+        private readonly CustomType obj;
 
         public When_converting_to_object_based_on_typeinfo()
         {
@@ -25,7 +25,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 Properties = new PropertySet
                 {
                     { "StringValue", StringValue },
-                }
+                },
             };
 
             obj = dynamicObject.CreateObject() as CustomType;

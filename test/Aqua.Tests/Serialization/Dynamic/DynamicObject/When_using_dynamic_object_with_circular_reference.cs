@@ -9,6 +9,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_using_dynamic_object_with_circular_reference
     {
+#pragma warning disable SA1128 // Put constructor initializers on their own line
+#pragma warning disable SA1502 // Element should not be on a single line
+
         public class JsonSerializer : When_using_dynamic_object_with_circular_reference
         {
             public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
@@ -20,7 +23,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         // XML serialization doesn't support circular references
-
 #if NET
         public class BinaryFormatter : When_using_dynamic_object_with_circular_reference
         {
@@ -35,7 +37,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 #endif
 
-        DynamicObject serializedObject;
+#pragma warning restore SA1502 // Element should not be on a single line
+#pragma warning restore SA1128 // Put constructor initializers on their own line
+
+        private readonly DynamicObject serializedObject;
 
         protected When_using_dynamic_object_with_circular_reference(Func<DynamicObject, DynamicObject> serialize)
         {

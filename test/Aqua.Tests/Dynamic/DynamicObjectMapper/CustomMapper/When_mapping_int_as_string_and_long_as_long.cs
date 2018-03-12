@@ -10,7 +10,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
 
     public class When_mapping_int_as_string_and_long_as_long
     {
-        class CustomMapper : DynamicObjectMapper
+        private class CustomMapper : DynamicObjectMapper
         {
             protected override object MapFromDynamicObjectGraph(object obj, Type targetType)
             {
@@ -37,18 +37,19 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
                     {
                         Properties = new PropertySet
                         {
-                            { "Value", obj.ToString() }
-                        }
+                            { "Value", obj.ToString() },
+                        },
                     };
                 }
+
                 if (obj is long)
                 {
                     return new DynamicObject(typeof(long))
                     {
                         Properties = new PropertySet
                         {
-                            { "Value", obj }
-                        }
+                            { "Value", obj },
+                        },
                     };
                 }
 
@@ -56,8 +57,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
             }
         }
 
-        DynamicObject dynamicObjectWithInt;
-        DynamicObject dynamicObjectWithLong;
+        private readonly DynamicObject dynamicObjectWithInt;
+        private readonly DynamicObject dynamicObjectWithLong;
 
         public When_mapping_int_as_string_and_long_as_long()
         {

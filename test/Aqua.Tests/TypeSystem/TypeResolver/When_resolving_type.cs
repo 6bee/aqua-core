@@ -3,13 +3,12 @@
 namespace Aqua.Tests.TypeSystem.TypeResolver
 {
     using Aqua.TypeSystem;
-    using System;
-    using Xunit;
     using Shouldly;
+    using Xunit;
 
     public class When_resolving_type
     {
-        class A
+        private class A
         {
         }
 

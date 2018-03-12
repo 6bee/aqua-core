@@ -3,13 +3,13 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public class When_converting_to_object_with_abstract_properties_in_absence_of_type_information
     {
-        class CustomMapper : DynamicObjectMapper
+        private class CustomMapper : DynamicObjectMapper
         {
             protected override object MapFromDynamicObjectGraph(object obj, Type targetType)
             {
@@ -17,30 +17,35 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 {
                     targetType = typeof(A);
                 }
+
                 return base.MapFromDynamicObjectGraph(obj, targetType);
             }
         }
 
-        abstract class BaseA
-        {   
-        }
-
-        class A : BaseA
+        private abstract class BaseA
         {
         }
 
-        class ClassWithAbstractProperties
+        private class A : BaseA
+        {
+        }
+
+        private class ClassWithAbstractProperties
         {
             public BaseA Ref { get; set; }
+
             public object Value1 { get; set; }
+
             public object Value2 { get; set; }
+
             public object Value3 { get; set; }
+
             public object Value4 { get; set; }
         }
 
-        DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
-        object obj;
+        private readonly object obj;
 
         public When_converting_to_object_with_abstract_properties_in_absence_of_type_information()
         {
@@ -53,7 +58,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                     { "Value2", 222 },
                     { "Value3", null },
                     { "Value4", new DynamicObject() },
-                }
+                },
             };
 
             var mapper = new CustomMapper();

@@ -3,21 +3,21 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     /// <summary>
     /// Covers mapping type mismatches for unassignable types without validation, i.e. exeption upon assignment
     /// </summary>
     public class When_mapping_dynamic_object_to_type_with_different_property_types
     {
-        class CustomType
+        private class CustomType
         {
             public int Int32Value { get; set; }
         }
 
-        DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
         public When_mapping_dynamic_object_to_type_with_different_property_types()
         {
@@ -26,7 +26,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
                 Properties = new PropertySet
                 {
                     { "Int32Value", 1.23456789 },
-                }
+                },
             };
         }
 

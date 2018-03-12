@@ -3,13 +3,13 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public class When_mapping_object_to_custom_dynamic_object
     {
-        class DynamicObjectWithRefToSource : DynamicObject
+        private class DynamicObjectWithRefToSource : DynamicObject
         {
             public DynamicObjectWithRefToSource(Type type, object source)
                 : base(type)
@@ -20,7 +20,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             public object Source { get; }
         }
 
-        class DynamicObjectFactory : IDynamicObjectFactory
+        private class DynamicObjectFactory : IDynamicObjectFactory
         {
             public DynamicObject CreateDynamicObject(Type type, object instance)
             {
@@ -28,28 +28,30 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             }
         }
 
-        class A
+        private class A
         {
             public B B { get; set; }
         }
 
-        class B
+        private class B
         {
             public A A { get; set; }
+
             public C C { get; set; }
         }
 
-        class C
+        private class C
         {
             public A A { get; set; }
+
             public int Int32Value { get; set; }
         }
 
-        const int Int32Value = -1234;
+        private const int Int32Value = -1234;
 
-        A source;
+        private readonly A source;
 
-        DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
         public When_mapping_object_to_custom_dynamic_object()
         {
@@ -59,9 +61,9 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
                 {
                     C = new C
                     {
-                        Int32Value = Int32Value
-                    }
-                }
+                        Int32Value = Int32Value,
+                    },
+                },
             };
 
             source.B.A = source;
@@ -92,7 +94,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         public void Dynamic_object_nested_reference_on_sublevel_should_be_custom_type()
         {
             var dynamicB = (DynamicObject)dynamicObject["B"];
-            
+
             dynamicB["A"].ShouldBeOfType<DynamicObjectWithRefToSource>();
             dynamicB["C"].ShouldBeOfType<DynamicObjectWithRefToSource>();
 

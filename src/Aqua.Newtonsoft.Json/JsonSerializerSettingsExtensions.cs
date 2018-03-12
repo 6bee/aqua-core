@@ -11,7 +11,7 @@ namespace Aqua
     public static class JsonSerializerSettingsExtensions
     {
         /// <summary>
-        /// Sets the <see cref="AquaContractResolver"/> in <see cref="JsonSerializerSettings"/>, 
+        /// Sets the <see cref="AquaContractResolver"/> in <see cref="JsonSerializerSettings"/>,
         /// decorating a previousely set <see cref="IContractResolver"/> if required.
         /// </summary>
         public static JsonSerializerSettings ConfigureAqua(this JsonSerializerSettings jsonSerializerSettings)

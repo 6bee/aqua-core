@@ -8,16 +8,16 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using System.Linq;
     using Xunit;
 
-    public class When_mapping_from_list
+    public class When_mapping_collection_from_list
     {
-        class CustomType
+        private class CustomType
         {
             public long Int64Property { get; set; }
         }
 
-        IEnumerable<DynamicObject> dynamicObjects;
+        private readonly IEnumerable<DynamicObject> dynamicObjects;
 
-        public When_mapping_from_list()
+        public When_mapping_collection_from_list()
         {
             var source = new List<object> { 1, null, "test", new CustomType { Int64Property = 42L } };
             dynamicObjects = new DynamicObjectMapper().MapCollection(source);
@@ -34,7 +34,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             var element = (DynamicObject)dynamicObjects.ElementAt(0);
             element.Type.Type.ShouldBe(typeof(int));
-            element[""].ShouldBe(1);
+            element[string.Empty].ShouldBe(1);
 
             var value = new DynamicObjectMapper().Map(dynamicObjects).Cast<object>().ElementAt(0);
             value.ShouldBe(1);
@@ -54,7 +54,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             var element = (DynamicObject)dynamicObjects.ElementAt(2);
             element.Type.Type.ShouldBe(typeof(string));
-            element[""].ShouldBe("test");
+            element[string.Empty].ShouldBe("test");
 
             var value = new DynamicObjectMapper().Map(dynamicObjects).Cast<object>().ElementAt(2);
             value.ShouldBe("test");
@@ -72,11 +72,11 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             ((CustomType)value).Int64Property.ShouldBe(42L);
         }
 
-        //[Fact]
-        //public void Fourth_element_should_be_dynamicobject_for_customtype()
-        //{
-        //    element.Type.Type.ShouldBe(typeof(CustomType));
-        //    element["Int64Property"].ShouldBe(42L);
-        //}
+        // [Fact]
+        // public void Fourth_element_should_be_dynamicobject_for_customtype()
+        // {
+        //     element.Type.Type.ShouldBe(typeof(CustomType));
+        //     element["Int64Property"].ShouldBe(42L);
+        // }
     }
 }

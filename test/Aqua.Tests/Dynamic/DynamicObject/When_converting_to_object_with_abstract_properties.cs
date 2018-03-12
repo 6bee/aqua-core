@@ -3,31 +3,35 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
-    using Xunit;
     using Shouldly;
+    using Xunit;
 
     public class When_converting_to_object_with_abstract_properties
     {
-        abstract class BaseA
+        private abstract class BaseA
         {
         }
 
-        class A : BaseA
+        private class A : BaseA
         {
         }
 
-        class ClassWithAbstractProperties
+        private class ClassWithAbstractProperties
         {
             public BaseA Ref { get; set; }
+
             public object Value1 { get; set; }
+
             public object Value2 { get; set; }
+
             public object Value3 { get; set; }
+
             public object Value4 { get; set; }
         }
 
-        DynamicObject dynamicObject;
+        private DynamicObject dynamicObject;
 
-        object obj;
+        private object obj;
 
         public When_converting_to_object_with_abstract_properties()
         {
@@ -39,8 +43,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                     { "Value1", "the value's pay load" },
                     { "Value2", 222 },
                     { "Value3", null },
-                    { "Value4", new DynamicObject(typeof(object))},
-                }
+                    { "Value4", new DynamicObject(typeof(object)) },
+                },
             };
 
             obj = dynamicObject.CreateObject<ClassWithAbstractProperties>();

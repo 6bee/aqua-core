@@ -9,33 +9,33 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
 
     public class When_resolving_types_with_circular_reference
     {
-        class A
+        private class A
         {
             public B B { get; set; }
         }
 
-        class B
+        private class B
         {
             public A A { get; set; }
         }
 
-        interface IOrigin<T>
+        private interface IOrigin<T>
         {
         }
 
-        class Egg : Egg<Chicken>, IOrigin<Chicken>
+        private class Egg : Egg<Chicken>, IOrigin<Chicken>
         {
         }
 
-        class Chicken : Chicken<Egg>, IOrigin<Egg>
+        private class Chicken : Chicken<Egg>, IOrigin<Egg>
         {
         }
 
-        class Egg<T> : IOrigin<T>
+        private class Egg<T> : IOrigin<T>
         {
         }
 
-        class Chicken<T> : IOrigin<T>
+        private class Chicken<T> : IOrigin<T>
         {
         }
 

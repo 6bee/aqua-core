@@ -3,23 +3,23 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
-    using Xunit;
     using Shouldly;
+    using Xunit;
 
     /// <summary>
     /// Covers mapping type missmatches for types which allow exlicit conversion only
     /// </summary>
     public class When_converting_to_object_with_different_property_types_unassignable
     {
-        class A
+        private class A
         {
         }
 
-        class B
+        private class B
         {
         }
 
-        class C
+        private class C
         {
             public static explicit operator C(A a)
             {
@@ -27,30 +27,34 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             }
         }
 
-        class D
+        private class D
         {
             public static implicit operator D(A a)
             {
                 return new D();
             }
-
         }
 
-        class CustomType
+        private class CustomType
         {
             public int Int32Value { get; set; }
+
             public double? NullableDoubleValue { get; set; }
+
             public string StringValue { get; set; }
+
             public B BProperty { get; set; }
+
             public C CProperty { get; set; }
+
             public D DProperty { get; set; }
         }
 
-        const long Longvalue = 12345L;
-        const double DoubleValue = 12.3456789;
-        const string StringValue = "eleven";
+        private const long Longvalue = 12345L;
+        private const double DoubleValue = 12.3456789;
+        private const string StringValue = "eleven";
 
-        CustomType obj;
+        private readonly CustomType obj;
 
         public When_converting_to_object_with_different_property_types_unassignable()
         {
@@ -64,7 +68,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                     { "BProperty", new A() },
                     { "CProperty", new A() },
                     { "DProperty", new A() },
-                }
+                },
             };
 
             obj = dynamicObject.CreateObject<CustomType>();

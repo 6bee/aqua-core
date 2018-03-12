@@ -10,7 +10,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
     public class When_mapping_object_from_immutable_value_type
     {
-        struct CustomValueType
+        private struct CustomValueType
         {
             public CustomValueType(long int64Property)
             {
@@ -20,7 +20,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             public long Int64Property { get; }
         }
 
-        DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
         public When_mapping_object_from_immutable_value_type()
         {

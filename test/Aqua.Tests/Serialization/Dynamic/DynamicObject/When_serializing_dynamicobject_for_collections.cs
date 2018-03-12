@@ -14,6 +14,9 @@ namespace Aqua.Tests.Serialization.DynamicObject
 
     public abstract class When_serializing_dynamicobject_for_collections
     {
+#pragma warning disable SA1128 // Put constructor initializers on their own line
+#pragma warning disable SA1502 // Element should not be on a single line
+
         public class DataContractSerializer : When_serializing_dynamicobject_for_collections
         {
             public DataContractSerializer() : base(DataContractSerializationHelper.Serialize) { }
@@ -43,10 +46,13 @@ namespace Aqua.Tests.Serialization.DynamicObject
         }
 #endif
 
+#pragma warning restore SA1502 // Element should not be on a single line
+#pragma warning restore SA1128 // Put constructor initializers on their own line
+
         public sealed class QueryableProxy<T> : IQueryable<T>
         {
             private readonly IQueryable<T> _source;
-            
+
             public QueryableProxy(IEnumerable<T> source)
             {
                 _source = source.AsQueryable();
@@ -82,7 +88,7 @@ namespace Aqua.Tests.Serialization.DynamicObject
             IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_source).GetEnumerator();
         }
 
-        Func<DynamicObject, DynamicObject> _serialize;
+        private Func<DynamicObject, DynamicObject> _serialize;
 
         protected When_serializing_dynamicobject_for_collections(Func<DynamicObject, DynamicObject> serialize)
         {

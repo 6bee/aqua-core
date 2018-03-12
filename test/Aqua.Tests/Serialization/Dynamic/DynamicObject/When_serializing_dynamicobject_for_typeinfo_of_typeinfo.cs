@@ -10,6 +10,9 @@ namespace Aqua.Tests.Serialization.DynamicObject
 
     public abstract class When_serializing_dynamicobject_for_typeinfo_of_typeinfo
     {
+#pragma warning disable SA1128 // Put constructor initializers on their own line
+#pragma warning disable SA1502 // Element should not be on a single line
+
 #if NET
         // TODO: fails on netcoreapp1.0 - not sure why!?
         // Error: The active Test Run was aborted.
@@ -27,7 +30,7 @@ namespace Aqua.Tests.Serialization.DynamicObject
             public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
         }
 #endif
-        
+
         // XML serialization doesn't support circular references
 
 #if NET
@@ -44,8 +47,11 @@ namespace Aqua.Tests.Serialization.DynamicObject
         }
 #endif
 
-        DynamicObject dynamicObject;
-        DynamicObject serializedDynamicObject;
+#pragma warning restore SA1502 // Element should not be on a single line
+#pragma warning restore SA1128 // Put constructor initializers on their own line
+
+        private readonly DynamicObject dynamicObject;
+        private readonly DynamicObject serializedDynamicObject;
 
         protected When_serializing_dynamicobject_for_typeinfo_of_typeinfo(Func<DynamicObject, DynamicObject> serialize)
         {

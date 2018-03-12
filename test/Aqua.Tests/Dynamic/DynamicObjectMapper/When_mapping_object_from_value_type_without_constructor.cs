@@ -10,12 +10,12 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
     public class When_mapping_object_from_value_type_without_constructor
     {
-        struct CustomValueType
+        private struct CustomValueType
         {
             public long Int64Property { get; set; }
         }
 
-        DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
         public When_mapping_object_from_value_type_without_constructor()
         {

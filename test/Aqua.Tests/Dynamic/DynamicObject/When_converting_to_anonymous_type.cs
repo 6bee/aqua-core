@@ -3,17 +3,17 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public class When_converting_to_anonymous_type
     {
-        const int Int32Value = 11;
-        const double DoubleValue = 1.234567891;
-        const string StringValue = "eleven";
+        private const int Int32Value = 11;
+        private const double DoubleValue = 1.234567891;
+        private const string StringValue = "eleven";
 
-        DynamicObject dynamicObject;
+        private DynamicObject dynamicObject;
 
         public When_converting_to_anonymous_type()
         {
@@ -24,7 +24,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                     { "Int32Value", Int32Value },
                     { "DoubleValue", DoubleValue },
                     { "StringValue", StringValue },
-                }
+                },
             };
         }
 

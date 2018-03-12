@@ -3,15 +3,15 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_mapping_null
     {
-        class CustomClass
+        private class CustomClass
         {
         }
 
@@ -51,7 +51,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Map_generic_type_should_return_a_null_element_for_null_dynamic_object_enumerable_element()
         {
-            var dynamicObjects = new DynamicObject[] 
+            var dynamicObjects = new DynamicObject[]
             {
                 new DynamicObject(new CustomClass()),
                 null,
@@ -59,7 +59,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             };
 
             var result = new DynamicObjectMapper().Map<CustomClass>(dynamicObjects);
-            
+
             result.ShouldNotBeNull();
             result.Count().ShouldBe(3);
             result.ElementAt(0).ShouldNotBeNull();
@@ -67,11 +67,10 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             result.ElementAt(2).ShouldNotBeNull();
         }
 
-
         [Fact]
         public void Map_type_should_return_a_null_element_for_null_dynamic_object_enumerable_element()
         {
-            var dynamicObjects = new DynamicObject[] 
+            var dynamicObjects = new DynamicObject[]
             {
                 new DynamicObject(new CustomClass()),
                 null,

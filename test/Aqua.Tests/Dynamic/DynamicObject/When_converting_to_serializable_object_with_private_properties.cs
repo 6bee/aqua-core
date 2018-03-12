@@ -11,18 +11,20 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     public class When_converting_to_serializable_object_with_private_properties
     {
         [Serializable]
-        class SerializableType
+        private class SerializableType
         {
             public int Int32Value { get; set; }
+
             private double DoubleValue { get; set; }
+
             private string StringValue { get; set; }
         }
 
-        const int Int32Value = 11;
-        const double DoubleValue = 12.3456789;
-        const string StringValue = "eleven";
+        private const int Int32Value = 11;
+        private const double DoubleValue = 12.3456789;
+        private const string StringValue = "eleven";
 
-        SerializableType obj;
+        private readonly SerializableType obj;
 
         public When_converting_to_serializable_object_with_private_properties()
         {
@@ -33,7 +35,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                     { "Int32Value", Int32Value },
                     { "DoubleValue", DoubleValue },
                     { "StringValue", StringValue },
-                }
+                },
             };
 
             obj = dynamicObject.CreateObject<SerializableType>();
@@ -66,7 +68,6 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         }
 
 #endif
-
 
 #if CORECLR
 

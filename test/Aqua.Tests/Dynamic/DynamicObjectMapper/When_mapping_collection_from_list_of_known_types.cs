@@ -11,30 +11,31 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
     public class When_mapping_collection_from_list_of_known_types
     {
-        class IsKnownTypeProvider : IIsKnownTypeProvider
+        private class IsKnownTypeProvider : IIsKnownTypeProvider
         {
             public bool IsKnownType(Type type) => type == typeof(CustomReferenceType);
         }
 
-        class CustomReferenceType
+        private class CustomReferenceType
         {
             public int Int32Property { get; set; }
+
             public string StringProperty { get; set; }
         }
 
-        CustomReferenceType[] sourceObjects;
-        IEnumerable<DynamicObject> dynamicObjects;
+        private readonly CustomReferenceType[] sourceObjects;
+        private readonly IEnumerable<DynamicObject> dynamicObjects;
 
         public When_mapping_collection_from_list_of_known_types()
         {
             sourceObjects = new[]
-            { 
-                new CustomReferenceType { Int32Property = 1, StringProperty="One" },
-                new CustomReferenceType { Int32Property = 2, StringProperty="Two" },
+            {
+                new CustomReferenceType { Int32Property = 1, StringProperty = "One" },
+                new CustomReferenceType { Int32Property = 2, StringProperty = "Two" },
             };
 
             var mapper = new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider());
-            
+
             dynamicObjects = mapper.MapCollection(sourceObjects);
         }
 
@@ -80,7 +81,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
                 var sourceObject = sourceObjects.ElementAt(i);
 
-                dynamicObject[""].ShouldBe(sourceObject);
+                dynamicObject[string.Empty].ShouldBe(sourceObject);
             }
         }
     }

@@ -3,25 +3,28 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public class When_converting_to_serializable_object_with_additional_properies
     {
         [Serializable]
-        class SerializableType
+        private class SerializableType
         {
             public int Int32Value { get; set; }
+
             public double DoubleValue { get; set; }
+
             public DateTime? NullableDateTime { get; set; }
+
             public string StringValue { get; set; }
         }
 
-        const int Int32Value = 11;
-        const string StringValue = "eleven";
+        private const int Int32Value = 11;
+        private const string StringValue = "eleven";
 
-        SerializableType obj;
+        private readonly SerializableType obj;
 
         public When_converting_to_serializable_object_with_additional_properies()
         {
@@ -31,7 +34,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 {
                     { "Int32Value", Int32Value },
                     { "StringValue", StringValue },
-                }
+                },
             };
 
             obj = dynamicObject.CreateObject<SerializableType>();

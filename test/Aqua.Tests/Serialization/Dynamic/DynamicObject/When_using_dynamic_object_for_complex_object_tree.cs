@@ -3,12 +3,15 @@
 namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public abstract class When_using_dynamic_object_for_complex_object_tree
     {
+#pragma warning disable SA1128 // Put constructor initializers on their own line
+#pragma warning disable SA1502 // Element should not be on a single line
+
         public class JsonSerializer : When_using_dynamic_object_for_complex_object_tree
         {
             public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
@@ -38,11 +41,14 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 #endif
 
-        const double DoubleValue = 1.2345679e-87;
-        const string StringValue = "eleven";
-        const string CustomType = "system-string-type";
+#pragma warning restore SA1502 // Element should not be on a single line
+#pragma warning restore SA1128 // Put constructor initializers on their own line
 
-        DynamicObject serializedObject;
+        private const double DoubleValue = 1.2345679e-87;
+        private const string StringValue = "eleven";
+        private const string CustomType = "system-string-type";
+
+        private readonly DynamicObject serializedObject;
 
         protected When_using_dynamic_object_for_complex_object_tree(Func<DynamicObject, DynamicObject> serialize)
         {
@@ -58,10 +64,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
                             {
                                 { "StringValue", StringValue },
                                 { "Type", CustomType },
-                            }
+                            },
                         }
                     },
-                }
+                },
             };
 
             serializedObject = serialize(originalObject);

@@ -64,7 +64,7 @@ namespace Aqua.TypeSystem
 
         public override string ToString()
         {
-            string returnType = null;
+            string returnType;
             try
             {
                 returnType = new TypeInfo(Method.ReturnType, includePropertyInfos: false).ToString();
@@ -78,8 +78,6 @@ namespace Aqua.TypeSystem
         }
 
         public static explicit operator System.Reflection.MethodInfo(MethodInfo m)
-        {
-            return m.Method;
-        }
+            => m.Method;
     }
 }

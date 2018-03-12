@@ -3,19 +3,19 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_created_based_on_custom_value_type
     {
-        struct CustomValue
+        private struct CustomValue
         {
             public int Id { get; set; }
         }
 
-        CustomValue source;
-        DynamicObject dynamicObject;
+        private readonly CustomValue source;
+        private readonly DynamicObject dynamicObject;
 
         public When_created_based_on_custom_value_type()
         {

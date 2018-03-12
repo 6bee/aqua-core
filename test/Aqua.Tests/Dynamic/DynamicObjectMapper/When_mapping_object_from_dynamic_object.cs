@@ -8,8 +8,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
     public class When_mapping_object_from_dynamic_object
     {
-        DynamicObject source;
-        DynamicObject dynamicObject;
+        private readonly DynamicObject source;
+        private readonly DynamicObject dynamicObject;
 
         public When_mapping_object_from_dynamic_object()
         {

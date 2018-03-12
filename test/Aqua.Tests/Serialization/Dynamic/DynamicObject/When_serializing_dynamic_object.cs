@@ -14,6 +14,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_serializing_dynamic_object
     {
+#pragma warning disable SA1128 // Put constructor initializers on their own line
+#pragma warning disable SA1502 // Element should not be on a single line
+
         public class JsonSerializer : When_serializing_dynamic_object
         {
             public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
@@ -25,11 +28,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         // NOTE: XML serialization doesn't support circular references
-        //public class XmlSerializer : When_serializing_dynamic_object
-        //{
-        //    public XmlSerializer() : base(XmlSerializationHelper.Serialize) { }
-        //}
-
+        // public class XmlSerializer : When_serializing_dynamic_object
+        // {
+        //     public XmlSerializer() : base(XmlSerializationHelper.Serialize) { }
+        // }
 #if NET
         public class BinaryFormatter : When_serializing_dynamic_object
         {
@@ -44,7 +46,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 #endif
 
-        class A<T>
+#pragma warning restore SA1502 // Element should not be on a single line
+#pragma warning restore SA1128 // Put constructor initializers on their own line
+
+        private class A<T>
         {
             public T Value { get; set; }
         }
@@ -88,7 +93,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<DateTimeOffset>(), "DateTimeOffset not supported by JsonSerializer");
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<Complex>(), "Complex not supported by JsonSerializer");
-            Skip.If(this.TestIs<JsonSerializer>() && type.Is<Decimal>(), "Decimal not supported by JsonSerializer");
+            Skip.If(this.TestIs<JsonSerializer>() && type.Is<decimal>(), "Decimal not supported by JsonSerializer");
             SkipOnCoreClr.If(this.TestIs<JsonSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by JsonSerializer on CORE CLR");
             SkipOnCoreClr.If(this.TestIs<JsonSerializer>() && type.Is<ulong>(), "UInt64 not supported by JsonSerializer on CORE CLR");
             SkipOnCoreClr.If(this.TestIs<DataContractSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by DataContractSerializer on CORE CLR");
@@ -119,7 +124,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         public void Should_serialize_DateTimeOffset_as_property()
         {
             Skip.If(this.TestIs<JsonSerializer>(), "DateTimeOffset not supported by JsonSerializer");
-            
+
             var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
             var result = SerializeAsPropertyMethod.MakeGenericMethod(value.GetType()).Invoke(this, new object[] { value, true, false });
             result.ShouldBe(value);
@@ -129,7 +134,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         public void Should_serialize_DateTimeOffset_as_property_when_using_string_formatting()
         {
             Skip.If(this.TestIs<JsonSerializer>(), "DateTimeOffset not supported by JsonSerializer");
-            
+
             var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
             var result = SerializeAsPropertyMethod.MakeGenericMethod(value.GetType()).Invoke(this, new object[] { value, true, true });
             result.ShouldBe(value);
@@ -139,7 +144,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         public void Should_serialize_DateTimeOffset_as_property_when_using_string_formatting2()
         {
             Skip.If(this.TestIs<JsonSerializer>(), "DateTimeOffset not supported by JsonSerializer");
-            
+
             var mapperSettings = new DynamicObjectMapperSettings { FormatPrimitiveTypesAsString = true };
             var mapper = new DynamicObjectMapper(mapperSettings);
 
@@ -171,6 +176,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [Fact]
         public void Three_dimensional_array_of_nullable_int_should_serialize()
         {
+#pragma warning disable SA1500 // Braces for multi-line statements should not share line
             var array = new int?[,,]
             {
                 {
@@ -180,8 +186,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
                 {
                     { null, 4, 1, 1, 1 }, { 1, 4, 1, 1, 1 }, { 11, 4, 1, 1, 1 },
                     { null, 4, 1, 1, 1 }, { 1, 4, 1, 1, 1 }, { 11, 4, 1, 1, 1 },
-                }
+                },
             };
+#pragma warning restore SA1500 // Braces for multi-line statements should not share line
 
             var result = Serialize<int?[], int?[,,]>(array);
             result.Length.ShouldBe(60);
@@ -219,7 +226,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
 
             var serializedDynamicObject = _serialize(dynamicObject);
-            
+
             var resurectedValue = new DynamicObjectMapper().Map<TResult>(serializedDynamicObject);
             return resurectedValue;
         }

@@ -64,8 +64,8 @@ namespace Aqua.Dynamic
 
                     var value = MapFromDynamicObjectGraph(dynamicProperty.Value, memberType);
 
-                    if (_suppressMemberAssignabilityValidation || 
-                        IsAssignable(memberType, value) || 
+                    if (_suppressMemberAssignabilityValidation ||
+                        IsAssignable(memberType, value) ||
                         TryExplicitConversions(memberType, ref value))
                     {
                         memberValueMap[member] = value;

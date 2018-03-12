@@ -10,7 +10,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
     public class When_mapping_list_of_string
     {
-        DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
         public When_mapping_list_of_string()
         {
@@ -20,7 +20,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_should_have_one_property_with_empty_name()
         {
-            dynamicObject.Properties.Single().Name.ShouldBe("");
+            dynamicObject.Properties.Single().Name.ShouldBe(string.Empty);
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             items[0].ShouldBe("One");
             items[1].ShouldBe("Two");
         }
-        
+
         [Fact]
         public void Dynamic_object_should_result_in_list_of_string_when_mapped_back()
         {

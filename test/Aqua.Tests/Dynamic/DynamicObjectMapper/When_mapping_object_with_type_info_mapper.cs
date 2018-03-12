@@ -2,23 +2,27 @@
 
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
-    using System;
     using Aqua.Dynamic;
-    using Xunit;
     using Shouldly;
+    using System;
+    using Xunit;
 
     public class When_mapping_object_with_type_info_mapper
     {
-        class TypeMapper : ITypeMapper
+        private class TypeMapper : ITypeMapper
         {
             public Type MapType(Type type) => typeof(B);
         }
 
-        class A { }
+        private class A
+        {
+        }
 
-        class B { }
+        private class B
+        {
+        }
 
-        DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
         public When_mapping_object_with_type_info_mapper()
         {

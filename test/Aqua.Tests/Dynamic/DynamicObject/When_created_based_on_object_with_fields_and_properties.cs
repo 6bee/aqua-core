@@ -9,7 +9,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
     public class When_created_based_on_object_with_fields_and_properties
     {
-        class CustomType
+        private class CustomType
         {
             public CustomType(string s1, string s2, int i, double d)
             {
@@ -19,21 +19,30 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 DoubleValue = d;
             }
 
+#pragma warning disable SA1401 // Fields should be private
+#pragma warning disable SA1306 // Field names should begin with lower-case letter
+
             public readonly string StringValue = null;
             private string PrivateStringValue;
             public DateTime Date;
+
+#pragma warning restore SA1306 // Field names should begin with lower-case letter
+#pragma warning restore SA1401 // Fields should be private
+
             private double DoubleValue { get; }
+
             public int Int32Value { get; }
+
             public string RedundantValue => StringValue;
         }
 
-        static readonly DateTime Date = new DateTime(2002, 2, 13);
-        const int Int32Value = 11;
-        const double DoubleValue = 12.3456789;
-        const string StringValue1 = "Foo";
-        const string StringValue2 = "Bar";
+        private const int Int32Value = 11;
+        private const double DoubleValue = 12.3456789;
+        private const string StringValue1 = "Foo";
+        private const string StringValue2 = "Bar";
+        private static readonly DateTime Date = new DateTime(2002, 2, 13);
 
-        DynamicObject dynamicObject; 
+        private readonly DynamicObject dynamicObject;
 
         public When_created_based_on_object_with_fields_and_properties()
         {
@@ -41,7 +50,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 Date = Date,
             };
-            
+
             dynamicObject = new DynamicObject(source);
         }
 

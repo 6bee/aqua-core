@@ -12,7 +12,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
     public class When_mapping_primitive_values
     {
-        class A<T>
+        private class A<T>
         {
             public T Value { get; set; }
         }

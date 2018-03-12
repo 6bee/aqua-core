@@ -3,22 +3,24 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_created_based_on_object_with_guid_properties
     {
-        class ClassWithGuidProperties
+        private class ClassWithGuidProperties
         {
             public Guid Guid1 { get; set; }
+
             public Guid? Guid2 { get; set; }
+
             public Guid? Guid3 { get; set; }
         }
 
-        ClassWithGuidProperties source;
-        DynamicObject dynamicObject;
+        private readonly ClassWithGuidProperties source;
+        private readonly DynamicObject dynamicObject;
 
         public When_created_based_on_object_with_guid_properties()
         {

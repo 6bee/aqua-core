@@ -3,14 +3,14 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System.Collections.Generic;
     using Xunit;
-    using Shouldly;
 
     public class When_created_based_on_a_keyvaluepair
     {
-        KeyValuePair<string, string> source;
-        DynamicObject dynamicObject;
+        private readonly KeyValuePair<string, string> source;
+        private readonly DynamicObject dynamicObject;
 
         public When_created_based_on_a_keyvaluepair()
         {

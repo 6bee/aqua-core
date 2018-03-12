@@ -19,8 +19,8 @@ namespace Aqua.TypeSystem.Extensions
 
         public static bool IsAnonymousType(this Type type)
         {
-            return type.Name.StartsWith("<>")
-                && type.IsDefined<CompilerGeneratedAttribute>()
+            return (type.Name.StartsWith("<>")
+                && type.IsDefined<CompilerGeneratedAttribute>())
                 || type.IsEmittedType();
         }
 

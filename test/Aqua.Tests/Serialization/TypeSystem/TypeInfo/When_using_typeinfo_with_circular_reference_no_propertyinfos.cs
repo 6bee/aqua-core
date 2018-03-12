@@ -3,28 +3,27 @@
 namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 {
     using Aqua.TypeSystem;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public abstract partial class When_using_typeinfo_with_circular_reference_no_propertyinfos
     {
-        abstract class A
+        private abstract class A
         {
             public int Number { get; set; }
         }
 
-        class C<T> : A
+        private class C<T> : A
         {
             public T Reference { get; set; }
         }
 
-        class X
+        private class X
         {
-
         }
 
-        TypeInfo serializedTypeInfo;
+        private readonly TypeInfo serializedTypeInfo;
 
         protected When_using_typeinfo_with_circular_reference_no_propertyinfos(Func<TypeInfo, TypeInfo> serialize)
         {

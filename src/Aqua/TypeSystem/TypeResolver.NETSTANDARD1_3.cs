@@ -13,7 +13,8 @@ namespace Aqua.TypeSystem
 
     partial class TypeResolver
     {
-        private readonly Lazy<IEnumerable<Assembly>> _assemblies = new Lazy<IEnumerable<Assembly>>(() =>
+        private readonly Lazy<IEnumerable<Assembly>> _assemblies = new Lazy<IEnumerable<Assembly>>(
+            () =>
             {
                 var assemblies = new List<Assembly>();
                 foreach (var file in Directory.EnumerateFiles(AppContext.BaseDirectory).Select(x => new FileInfo(x)))
@@ -37,7 +38,7 @@ namespace Aqua.TypeSystem
             true);
 
         /// <summary>
-        /// Returns a list of assemblies to be scanned on resolving types. 
+        /// Returns a list of assemblies to be scanned on resolving types.
         /// It's recommended to override this method in a derived class.
         /// </summary>
         protected virtual IEnumerable<Assembly> GetAssemblies() => _assemblies.Value;

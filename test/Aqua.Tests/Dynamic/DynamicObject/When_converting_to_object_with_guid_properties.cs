@@ -3,24 +3,26 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_converting_to_object_with_guid_properties
     {
-        class ClassWithGuidProperties
+        private class ClassWithGuidProperties
         {
             public Guid Guid1 { get; set; }
+
             public Guid? Guid2 { get; set; }
+
             public Guid? Guid3 { get; set; }
         }
 
-        Guid guid1;
-        Guid guid2;
-        ClassWithGuidProperties obj;
+        private readonly Guid guid1;
+        private readonly Guid guid2;
+        private readonly ClassWithGuidProperties obj;
 
         public When_converting_to_object_with_guid_properties()
         {
@@ -37,8 +39,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                     { "Guid1", guid1String },
                     { "Guid2", guid2String },
                     { "Guid3", null },
-                }
-            }; ;
+                },
+            };
 
             obj = new DynamicObjectMapper().Map(dynamicObject) as ClassWithGuidProperties;
         }

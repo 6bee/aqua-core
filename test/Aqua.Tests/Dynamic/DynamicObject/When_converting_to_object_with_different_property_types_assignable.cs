@@ -3,28 +3,31 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     /// <summary>
     /// Covers mapping type missmatches for assignable types, i.e. no casting required
     /// </summary>
     public class When_converting_to_object_with_different_property_types_assignable
     {
-        class CustomType
+        private class CustomType
         {
             public double DoubleValue { get; set; }
+
             public int? NullableIntValue { get; set; }
+
             public object Timestamp { get; set; }
+
             public string StringValue { get; set; }
         }
 
-        const int Int32Value = 11;
-        readonly DateTime Timestamp = DateTime.Now;
-        const string StringValue = "eleven";
+        private const int Int32Value = 11;
+        private const string StringValue = "eleven";
+        private readonly DateTime Timestamp = DateTime.Now;
 
-        CustomType obj;
+        private readonly CustomType obj;
 
         public When_converting_to_object_with_different_property_types_assignable()
         {
@@ -36,7 +39,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                     { "NullableIntValue", Int32Value },
                     { "Timestamp", Timestamp },
                     { "StringValue", StringValue },
-                }
+                },
             };
 
             obj = dynamicObject.CreateObject<CustomType>();

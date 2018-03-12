@@ -3,15 +3,15 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_mapping_collection_from_dictionary
     {
-        Dictionary<string, string> source;
-        IEnumerable<DynamicObject> dynamicObjects;
+        private readonly Dictionary<string, string> source;
+        private readonly IEnumerable<DynamicObject> dynamicObjects;
 
         public When_mapping_collection_from_dictionary()
         {

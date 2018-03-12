@@ -23,16 +23,16 @@ namespace Aqua.TypeSystem
         }
 
         /// <summary>
-        /// Sets or gets an instance of ITypeResolver.
+        /// Gets or sets an instance of ITypeResolver.
         /// </summary>
         /// <remarks>
-        /// Setting this property allows for registring a custom type resolver statically. 
+        /// Setting this property allows for registring a custom type resolver statically.
         /// Setting this property to null makes it fall-back to the default resolver.
         /// </remarks>
         public static ITypeResolver Instance
         {
-            get { return _instance ?? _defaultTypeResolver; }
-            set { _instance = value; }
+            get => _instance ?? _defaultTypeResolver;
+            set => _instance = value;
         }
 
         public virtual Type ResolveType(TypeInfo typeInfo)
@@ -109,7 +109,8 @@ namespace Aqua.TypeSystem
         {
             if (!ReferenceEquals(null, resolvedType))
             {
-                if (typeInfo.Properties?.Any() ?? false) // can only validate properties if set in typeinfo
+                // can only validate properties if set in typeinfo
+                if (typeInfo.Properties?.Any() ?? false)
                 {
                     var type = resolvedType.IsArray
                         ? resolvedType.GetElementType()
@@ -121,7 +122,7 @@ namespace Aqua.TypeSystem
                         .OrderBy(x => x.MetadataToken)
 #endif
                         .Select(x => x.Name);
-                    
+
                     if (!typeInfo.Properties.Select(x => x.Name).SequenceEqual(resolvedProperties))
                     {
                         return false;

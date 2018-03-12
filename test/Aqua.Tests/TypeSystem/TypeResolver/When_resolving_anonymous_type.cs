@@ -3,18 +3,18 @@
 namespace Aqua.Tests.TypeSystem.TypeResolver
 {
     using Aqua.TypeSystem;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public class When_resolving_anonymous_type
     {
         private readonly Type actualType;
         private readonly Type resolvedType;
-        
+
         public When_resolving_anonymous_type()
         {
-            var instance = new { Int32Value = 0, StringValue = "" };
+            var instance = new { Int32Value = 0, StringValue = string.Empty };
 
             actualType = instance.GetType();
 

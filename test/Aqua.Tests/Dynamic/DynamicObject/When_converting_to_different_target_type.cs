@@ -3,28 +3,28 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
-    using System;
-    using Xunit;
     using Shouldly;
+    using Xunit;
 
     public class When_converting_to_different_target_type
     {
-        class SourceType
+        private class SourceType
         {
-            //public int Int32Value { get; set; }
-            //public string StringValue { get; set; }
+            // public int Int32Value { get; set; }
+            // public string StringValue { get; set; }
         }
 
-        class TargetType
+        private class TargetType
         {
             public int Int32Value { get; set; }
+
             public string StringValue { get; set; }
         }
 
-        const int Int32Value = 11;
-        const string StringValue = "eleven";
+        private const int Int32Value = 11;
+        private const string StringValue = "eleven";
 
-        TargetType obj;
+        private readonly TargetType obj;
 
         public When_converting_to_different_target_type()
         {
@@ -34,7 +34,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 {
                     { "StringValue", StringValue },
                     { "Int32Value", Int32Value },
-                }
+                },
             };
 
             obj = dynamicObject.CreateObject(typeof(TargetType)) as TargetType;

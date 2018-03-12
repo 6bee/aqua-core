@@ -53,10 +53,11 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 2, EmitDefaultValue = false)]
         public TypeInfo DeclaringType { get; set; }
 
+        public static explicit operator System.Reflection.MemberInfo(MemberInfo memberInfo)
+            => memberInfo.ResolveMemberInfo(TypeResolver.Instance);
+
         public override string ToString()
-        {
-            return $"{DeclaringType}.{Name}";
-        }
+            => $"{DeclaringType}.{Name}";
 
         public static MemberInfo Create(System.Reflection.MemberInfo memberInfo)
         {
@@ -77,11 +78,6 @@ namespace Aqua.TypeSystem
                 default:
                     throw new Exception($"Not supported member type: {memberInfo.GetMemberType()}");
             }
-        }
-
-        public static explicit operator System.Reflection.MemberInfo(MemberInfo memberInfo)
-        {
-            return memberInfo.ResolveMemberInfo(TypeResolver.Instance);
         }
     }
 }

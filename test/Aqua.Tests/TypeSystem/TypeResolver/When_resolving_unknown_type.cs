@@ -2,20 +2,19 @@
 
 namespace Aqua.Tests.TypeSystem.TypeResolver
 {
-    using Aqua;
     using Aqua.TypeSystem;
     using Aqua.TypeSystem.Emit;
     using Aqua.TypeSystem.Extensions;
+    using Shouldly;
     using System;
     using System.Linq;
     using System.Reflection;
     using Xunit;
-    using Shouldly;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
     public class When_resolving_unknown_type
     {
-        class A
+        private class A
         {
             public int Int32Value { get; set; }
 

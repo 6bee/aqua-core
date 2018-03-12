@@ -10,8 +10,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
     public class When_mapping_type_object
     {
-        DynamicObject dynamicObject;
-        Type resurectedType;
+        private readonly DynamicObject dynamicObject;
+        private readonly Type resurectedType;
 
         public When_mapping_type_object()
         {

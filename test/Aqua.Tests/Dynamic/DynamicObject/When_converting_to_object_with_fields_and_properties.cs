@@ -10,7 +10,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
     public class When_converting_to_object_with_fields_and_properties
     {
-        class CustomType
+        private class CustomType
         {
 #pragma warning disable
             public readonly string StringValue;
@@ -22,13 +22,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             public string RedundantValue => StringValue;
         }
 
-        static readonly DateTime Date = new DateTime(2002, 2, 13);
-        const int Int32Value = 11;
-        const double DoubleValue = 12.3456789;
-        const string StringValue1 = "Foo";
-        const string StringValue2 = "Bar";
+        private static readonly DateTime Date = new DateTime(2002, 2, 13);
+        private const int Int32Value = 11;
+        private const double DoubleValue = 12.3456789;
+        private const string StringValue1 = "Foo";
+        private const string StringValue2 = "Bar";
 
-        CustomType obj;
+        private readonly CustomType obj;
 
         public When_converting_to_object_with_fields_and_properties()
         {

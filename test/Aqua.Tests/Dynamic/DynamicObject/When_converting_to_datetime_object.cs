@@ -2,17 +2,16 @@
 
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
-    using System;
-    using System.Linq;
     using Aqua.Dynamic;
-    using Xunit;
     using Shouldly;
+    using System;
+    using Xunit;
 
     public class When_converting_to_datetime_object
     {
-        DateTime sourceValue;
-        DateTime? value;
-        DynamicObject dynamicObject;
+        private readonly DateTime sourceValue;
+        private readonly DateTime? value;
+        private readonly DynamicObject dynamicObject;
 
         public When_converting_to_datetime_object()
         {
@@ -21,8 +20,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 Properties = new PropertySet
                 {
-                    { string.Empty, sourceValue.ToString("o") }
-                }
+                    { string.Empty, sourceValue.ToString("o") },
+                },
             };
             value = dynamicObject.CreateObject() as DateTime?;
         }

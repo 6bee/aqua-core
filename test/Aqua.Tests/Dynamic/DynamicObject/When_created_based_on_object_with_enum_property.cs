@@ -3,31 +3,31 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
-    using Xunit;
     using Shouldly;
+    using Xunit;
 
     public class When_created_based_on_object_with_enum_property
     {
-        enum CustomEnum
+        private enum CustomEnum
         {
             Value1,
             Value2,
             Value3,
         }
 
-        class ClassWithEnum
+        private class ClassWithEnum
         {
             public CustomEnum EnumProperty { get; set; }
         }
 
-        ClassWithEnum source;
-        DynamicObject dynamicObject;
+        private readonly ClassWithEnum source;
+        private readonly DynamicObject dynamicObject;
 
         public When_created_based_on_object_with_enum_property()
         {
             source = new ClassWithEnum
             {
-                EnumProperty = CustomEnum.Value2
+                EnumProperty = CustomEnum.Value2,
             };
 
             dynamicObject = new DynamicObject(source);

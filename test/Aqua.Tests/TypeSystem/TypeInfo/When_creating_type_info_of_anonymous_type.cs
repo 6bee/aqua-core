@@ -3,9 +3,9 @@
 namespace Aqua.Tests.TypeSystem.TypeInfo
 {
     using Aqua.TypeSystem;
+    using Shouldly;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_creating_type_info_of_anonymous_type
     {
@@ -13,7 +13,7 @@ namespace Aqua.Tests.TypeSystem.TypeInfo
 
         public When_creating_type_info_of_anonymous_type()
         {
-            var instance = new { Int32Value = 0, StringValue = "" };
+            var instance = new { Int32Value = 0, StringValue = string.Empty };
             var type = instance.GetType();
             typeInfo = new TypeInfo(type);
         }

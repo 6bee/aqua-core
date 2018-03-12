@@ -19,7 +19,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
 
         public When_resolving_unknown_anonymous_type()
         {
-            var instance = new { Int32Value = 0, StringValue = "" };
+            var instance = new { Int32Value = 0, StringValue = string.Empty };
 
             actualType = instance.GetType();
 

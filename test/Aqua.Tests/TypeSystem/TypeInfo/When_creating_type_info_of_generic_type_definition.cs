@@ -10,13 +10,12 @@ namespace Aqua.Tests.TypeSystem.TypeInfo
 
     public class When_creating_type_info_of_generic_type_definition
     {
-        class A<T>
+        private class A<T>
         {
             public T Value { get; set; }
         }
 
         private readonly TypeInfo typeInfo;
-
 
         public When_creating_type_info_of_generic_type_definition()
         {

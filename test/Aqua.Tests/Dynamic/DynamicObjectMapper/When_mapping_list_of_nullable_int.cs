@@ -10,7 +10,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
     public class When_mapping_list_of_nullable_int
     {
-        DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
         public When_mapping_list_of_nullable_int()
         {
@@ -21,7 +21,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_should_have_one_property_with_empty_name()
         {
-            dynamicObject.Properties.Single().Name.ShouldBe("");
+            dynamicObject.Properties.Single().Name.ShouldBe(string.Empty);
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             items[1].ShouldBe(1);
             items[2].ShouldBe(11);
         }
-        
+
         [Fact]
         public void Dynamic_object_should_result_in_string_array_when_mapped_back()
         {

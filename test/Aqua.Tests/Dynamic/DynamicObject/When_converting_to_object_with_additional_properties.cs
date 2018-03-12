@@ -3,24 +3,27 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public class When_converting_to_object_with_additional_properties
     {
-        class CustomType
+        private class CustomType
         {
             public int Int32Value { get; set; }
+
             public double DoubleValue { get; set; }
+
             public DateTime? NullableDateTime { get; set; }
+
             public string StringValue { get; set; }
         }
 
-        const int Int32Value = 11;
-        const string StringValue = "eleven";
+        private const int Int32Value = 11;
+        private const string StringValue = "eleven";
 
-        CustomType obj;
+        private readonly CustomType obj;
 
         public When_converting_to_object_with_additional_properties()
         {
@@ -30,7 +33,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 {
                     { "Int32Value", Int32Value },
                     { "StringValue", StringValue },
-                }
+                },
             };
 
             obj = dynamicObject.CreateObject<CustomType>();

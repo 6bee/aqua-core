@@ -58,8 +58,6 @@ namespace Aqua.TypeSystem
         }
 
         public static explicit operator System.Reflection.FieldInfo(FieldInfo f)
-        {
-            return f.Field;
-        }
+            => f.Field;
     }
 }

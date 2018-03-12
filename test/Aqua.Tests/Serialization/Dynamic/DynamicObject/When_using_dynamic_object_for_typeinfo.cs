@@ -10,6 +10,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_using_dynamic_object_for_typeinfo
     {
+#pragma warning disable SA1128 // Put constructor initializers on their own line
+#pragma warning disable SA1502 // Element should not be on a single line
+
         public class DataContractSerializer : When_using_dynamic_object_for_typeinfo
         {
             public DataContractSerializer() : base(DataContractSerializationHelper.Serialize) { }
@@ -39,7 +42,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 #endif
 
-        Func<DynamicObject, DynamicObject> _serialize;
+#pragma warning restore SA1502 // Element should not be on a single line
+#pragma warning restore SA1128 // Put constructor initializers on their own line
+
+        private readonly Func<DynamicObject, DynamicObject> _serialize;
 
         protected When_using_dynamic_object_for_typeinfo(Func<DynamicObject, DynamicObject> serialize)
         {

@@ -7,7 +7,7 @@ namespace Aqua.Tests.TestObjects2
 
     public static class Helper
     {
-        public static Type GetAnonymousType0<T1,T2>()
+        public static Type GetAnonymousType0<T1, T2>()
         {
             return new { P1 = default(T1), P2 = default(T2) }.GetType();
         }
@@ -31,18 +31,5 @@ namespace Aqua.Tests.TestObjects2
         {
             return typeof(CustomType1);
         }
-    }
-}
-
-namespace Aqua.Tests.TestObjects
-{
-    internal class CustomType0
-    {
-        public int Foo { get; set; }
-    }
-
-    internal class CustomType1
-    {
-        public int Bar { get; set; }
     }
 }

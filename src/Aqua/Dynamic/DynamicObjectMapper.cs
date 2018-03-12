@@ -44,7 +44,7 @@ namespace Aqua.Dynamic
                     catch
                     {
                         // detected cyclic reference
-                        // can happen for non-serializable types without parameterless constructor, which have cyclic references 
+                        // can happen for non-serializable types without parameterless constructor, which have cyclic references
                         return _referenceMap[from];
                     }
 
@@ -76,7 +76,7 @@ namespace Aqua.Dynamic
                     catch
                     {
                         // detected cyclic reference
-                        // can happen for non-serializable types without parameterless constructor, which have cyclic references 
+                        // can happen for non-serializable types without parameterless constructor, which have cyclic references
                         return _referenceMap[from];
                     }
 
@@ -118,7 +118,7 @@ namespace Aqua.Dynamic
                 typeof(DateTime),
                 typeof(TimeSpan),
                 typeof(DateTimeOffset),
-#if NET || NETSTANDARD 
+#if NET || NETSTANDARD
                 typeof(System.Numerics.BigInteger),
                 typeof(System.Numerics.Complex),
 #endif
@@ -126,7 +126,7 @@ namespace Aqua.Dynamic
             .SelectMany(x => x.IsValueType() ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
             .ToDictionary(x => x, x => (object)null).ContainsKey;
 
-        private readonly static Dictionary<Type, Dictionary<Type, object>> _implicitNumericConversionsTable = new Dictionary<Type, Dictionary<Type, object>>()
+        private static readonly Dictionary<Type, Dictionary<Type, object>> _implicitNumericConversionsTable = new Dictionary<Type, Dictionary<Type, object>>()
         {
             // source: http://msdn.microsoft.com/en-us/library/y5b434w4.aspx
             { typeof(sbyte), new[] { typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal) }.ToDictionary(x => x, x => default(object)) },
@@ -141,169 +141,215 @@ namespace Aqua.Dynamic
             { typeof(ulong), new[] { typeof(float), typeof(double), typeof(decimal) }.ToDictionary(x => x, x => default(object)) },
         };
 
-        private readonly static Dictionary<Type, Dictionary<Type, Func<object, object>>> _explicitConversionsTable = new Dictionary<Type, Dictionary<Type, Func<object, object>>>()
+        private static readonly Dictionary<Type, Dictionary<Type, Func<object, object>>> _explicitConversionsTable = new Dictionary<Type, Dictionary<Type, Func<object, object>>>()
         {
             // source: https://msdn.microsoft.com/en-us/library/yht2cx7b.aspx
-            { typeof(sbyte), new Dictionary<Type, Func<object, object>> {
-                { typeof(byte), x => checked((byte)(sbyte)x) },
-                { typeof(ushort), x => checked((ushort)(sbyte)x) },
-                { typeof(uint), x => checked((uint)(sbyte)x) },
-                { typeof(ulong), x => checked((ulong)(sbyte)x) },
-                { typeof(char), x => checked((char)(sbyte)x) },
+            {
+                typeof(sbyte), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(byte), x => checked((byte)(sbyte)x) },
+                    { typeof(ushort), x => checked((ushort)(sbyte)x) },
+                    { typeof(uint), x => checked((uint)(sbyte)x) },
+                    { typeof(ulong), x => checked((ulong)(sbyte)x) },
+                    { typeof(char), x => checked((char)(sbyte)x) },
 #if NET || NETSTANDARD
-                { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(sbyte)x) },
+                    { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(sbyte)x) },
 #endif
-            } },
-            { typeof(byte), new Dictionary<Type, Func<object, object>> {
-                { typeof(sbyte), x => checked((sbyte)(byte)x) },
-                { typeof(char), x => checked((char)(byte)x) },
+                }
+            },
+            {
+                typeof(byte), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), x => checked((sbyte)(byte)x) },
+                    { typeof(char), x => checked((char)(byte)x) },
 #if NET || NETSTANDARD
-                { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(byte)x) },
+                    { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(byte)x) },
 #endif
-            } },
-            { typeof(short), new Dictionary<Type, Func<object, object>> {
-                { typeof(sbyte), x => checked((sbyte)(short)x) },
-                { typeof(byte), x => checked((byte)(short)x) },
-                { typeof(ushort), x => checked((ushort)(short)x) },
-                { typeof(uint), x => checked((uint)(short)x) },
-                { typeof(ulong), x => checked((ulong)(short)x) },
-                { typeof(char), x => checked((char)(short)x) },
+                }
+            },
+            {
+                typeof(short), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), x => checked((sbyte)(short)x) },
+                    { typeof(byte), x => checked((byte)(short)x) },
+                    { typeof(ushort), x => checked((ushort)(short)x) },
+                    { typeof(uint), x => checked((uint)(short)x) },
+                    { typeof(ulong), x => checked((ulong)(short)x) },
+                    { typeof(char), x => checked((char)(short)x) },
 #if NET || NETSTANDARD
-                { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(short)x) },
+                    { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(short)x) },
 #endif
-            } },
-            { typeof(ushort), new Dictionary<Type, Func<object, object>> {
-                { typeof(sbyte), x => checked((sbyte)(ushort)x) },
-                { typeof(byte), x => checked((byte)(ushort)x) },
-                { typeof(short), x => checked((short)(ushort)x) },
-                { typeof(char), x => checked((char)(ushort)x) },
+                }
+            },
+            {
+                typeof(ushort), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), x => checked((sbyte)(ushort)x) },
+                    { typeof(byte), x => checked((byte)(ushort)x) },
+                    { typeof(short), x => checked((short)(ushort)x) },
+                    { typeof(char), x => checked((char)(ushort)x) },
 #if NET || NETSTANDARD
-                { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(ushort)x) },
+                    { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(ushort)x) },
 #endif
-            } },
-            { typeof(int), new Dictionary<Type, Func<object, object>> {
-                { typeof(sbyte), x => checked((sbyte)(int)x) },
-                { typeof(byte), x => checked((byte)(int)x) },
-                { typeof(short), x => checked((short)(int)x) },
-                { typeof(ushort), x => checked((ushort)(int)x) },
-                { typeof(uint), x => checked((uint)(int)x) },
-                { typeof(ulong), x => checked((ulong)(int)x) },
-                { typeof(char), x => checked((char)(int)x) },
+                }
+            },
+            {
+                typeof(int), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), x => checked((sbyte)(int)x) },
+                    { typeof(byte), x => checked((byte)(int)x) },
+                    { typeof(short), x => checked((short)(int)x) },
+                    { typeof(ushort), x => checked((ushort)(int)x) },
+                    { typeof(uint), x => checked((uint)(int)x) },
+                    { typeof(ulong), x => checked((ulong)(int)x) },
+                    { typeof(char), x => checked((char)(int)x) },
 #if NET || NETSTANDARD
-                { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(int)x) },
+                    { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(int)x) },
 #endif
-            } },
-            { typeof(uint), new Dictionary<Type, Func<object, object>> {
-                { typeof(sbyte), x => checked((sbyte)(uint)x) },
-                { typeof(byte), x => checked((byte)(uint)x) },
-                { typeof(short), x => checked((short)(uint)x) },
-                { typeof(ushort), x => checked((ushort)(uint)x) },
-                { typeof(int), x => checked((int)(uint)x) },
-                { typeof(char), x => checked((char)(uint)x) },
-            } },
-            { typeof(long), new Dictionary<Type, Func<object, object>> {
-                { typeof(sbyte), x => checked((sbyte)(long)x) },
-                { typeof(byte), x => checked((byte)(long)x) },
-                { typeof(short), x => checked((short)(long)x) },
-                { typeof(ushort), x => checked((ushort)(long)x) },
-                { typeof(int), x => checked((int)(long)x) },
-                { typeof(uint), x => checked((uint)(long)x) },
-                { typeof(ulong), x => checked((ulong)(long)x) },
-                { typeof(char), x => checked((char)(long)x) },
+                }
+            },
+            {
+                typeof(uint), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), x => checked((sbyte)(uint)x) },
+                    { typeof(byte), x => checked((byte)(uint)x) },
+                    { typeof(short), x => checked((short)(uint)x) },
+                    { typeof(ushort), x => checked((ushort)(uint)x) },
+                    { typeof(int), x => checked((int)(uint)x) },
+                    { typeof(char), x => checked((char)(uint)x) },
+                }
+            },
+            {
+                typeof(long), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), x => checked((sbyte)(long)x) },
+                    { typeof(byte), x => checked((byte)(long)x) },
+                    { typeof(short), x => checked((short)(long)x) },
+                    { typeof(ushort), x => checked((ushort)(long)x) },
+                    { typeof(int), x => checked((int)(long)x) },
+                    { typeof(uint), x => checked((uint)(long)x) },
+                    { typeof(ulong), x => checked((ulong)(long)x) },
+                    { typeof(char), x => checked((char)(long)x) },
 #if NET || NETSTANDARD
-                { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(long)x) },
+                    { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(long)x) },
 #endif
-            } },
-            { typeof(ulong), new Dictionary<Type, Func<object, object>> {
-                { typeof(sbyte), x => checked((sbyte)(ulong)x) },
-                { typeof(byte), x => checked((byte)(ulong)x) },
-                { typeof(short), x => checked((short)(ulong)x) },
-                { typeof(ushort), x => checked((ushort)(ulong)x) },
-                { typeof(int), x => checked((int)(ulong)x) },
-                { typeof(uint), x => checked((uint)(ulong)x) },
-                { typeof(long), x => checked((long)(ulong)x) },
-                { typeof(char), x => checked((char)(ulong)x) },
+                }
+            },
+            {
+                typeof(ulong), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), x => checked((sbyte)(ulong)x) },
+                    { typeof(byte), x => checked((byte)(ulong)x) },
+                    { typeof(short), x => checked((short)(ulong)x) },
+                    { typeof(ushort), x => checked((ushort)(ulong)x) },
+                    { typeof(int), x => checked((int)(ulong)x) },
+                    { typeof(uint), x => checked((uint)(ulong)x) },
+                    { typeof(long), x => checked((long)(ulong)x) },
+                    { typeof(char), x => checked((char)(ulong)x) },
 #if NET || NETSTANDARD
-                { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(ulong)x) },
+                    { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(ulong)x) },
 #endif
-            } },
-            { typeof(char), new Dictionary<Type, Func<object, object>> {
-                { typeof(sbyte), x => checked((sbyte)(char)x) },
-                { typeof(byte), x => checked((byte)(char)x) },
-                { typeof(short), x => checked((short)(char)x) },
+                }
+            },
+            {
+                typeof(char), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), x => checked((sbyte)(char)x) },
+                    { typeof(byte), x => checked((byte)(char)x) },
+                    { typeof(short), x => checked((short)(char)x) },
 #if NET || NETSTANDARD
-                { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(char)x) },
+                    { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(char)x) },
 #endif
-            } },
-            { typeof(float), new Dictionary<Type, Func<object, object>> {
-                { typeof(sbyte), x => checked((sbyte)(float)x) },
-                { typeof(byte), x => checked((byte)(float)x) },
-                { typeof(short), x => checked((short)(float)x) },
-                { typeof(ushort), x => checked((ushort)(float)x) },
-                { typeof(int), x => checked((int)(float)x) },
-                { typeof(uint), x => checked((uint)(float)x) },
-                { typeof(long), x => checked((long)(float)x) },
-                { typeof(ulong), x => checked((ulong)(float)x) },
-                { typeof(char), x => checked((char)(float)x) },
-                { typeof(decimal), x => checked((decimal)(float)x) },
+                }
+            },
+            {
+                typeof(float), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), x => checked((sbyte)(float)x) },
+                    { typeof(byte), x => checked((byte)(float)x) },
+                    { typeof(short), x => checked((short)(float)x) },
+                    { typeof(ushort), x => checked((ushort)(float)x) },
+                    { typeof(int), x => checked((int)(float)x) },
+                    { typeof(uint), x => checked((uint)(float)x) },
+                    { typeof(long), x => checked((long)(float)x) },
+                    { typeof(ulong), x => checked((ulong)(float)x) },
+                    { typeof(char), x => checked((char)(float)x) },
+                    { typeof(decimal), x => checked((decimal)(float)x) },
 #if NET || NETSTANDARD
-                { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(float)x) },
+                    { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(float)x) },
 #endif
-            } },
-            { typeof(double), new Dictionary<Type, Func<object, object>> {
-                { typeof(sbyte), x => checked((sbyte)(double)x) },
-                { typeof(byte), x => checked((byte)(double)x) },
-                { typeof(short), x => checked((short)(double)x) },
-                { typeof(ushort), x => checked((ushort)(double)x) },
-                { typeof(int), x => checked((int)(double)x) },
-                { typeof(uint), x => checked((uint)(double)x) },
-                { typeof(long), x => checked((long)(double)x) },
-                { typeof(ulong), x => checked((ulong)(double)x) },
-                { typeof(char), x => checked((char)(double)x) },
-                { typeof(float), x => checked((float)(double)x) },
-                { typeof(decimal), x => checked((decimal)(double)x) },
+                }
+            },
+            {
+                typeof(double), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), x => checked((sbyte)(double)x) },
+                    { typeof(byte), x => checked((byte)(double)x) },
+                    { typeof(short), x => checked((short)(double)x) },
+                    { typeof(ushort), x => checked((ushort)(double)x) },
+                    { typeof(int), x => checked((int)(double)x) },
+                    { typeof(uint), x => checked((uint)(double)x) },
+                    { typeof(long), x => checked((long)(double)x) },
+                    { typeof(ulong), x => checked((ulong)(double)x) },
+                    { typeof(char), x => checked((char)(double)x) },
+                    { typeof(float), x => checked((float)(double)x) },
+                    { typeof(decimal), x => checked((decimal)(double)x) },
 #if NET || NETSTANDARD
-                { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(double)x) },
+                    { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(double)x) },
 #endif
-            } },
-            { typeof(decimal), new Dictionary<Type, Func<object, object>> {
-                { typeof(sbyte), x => checked((sbyte)(decimal)x) },
-                { typeof(byte), x => checked((byte)(decimal)x) },
-                { typeof(short), x => checked((short)(decimal)x) },
-                { typeof(ushort), x => checked((ushort)(decimal)x) },
-                { typeof(int), x => checked((int)(decimal)x) },
-                { typeof(uint), x => checked((uint)(decimal)x) },
-                { typeof(long), x => checked((long)(decimal)x) },
-                { typeof(ulong), x => checked((ulong)(decimal)x) },
-                { typeof(char), x => checked((char)(decimal)x) },
-                { typeof(float), x => checked((float)(decimal)x) },
-                { typeof(double), x => checked((double)(decimal)x) },
+                }
+            },
+            {
+                typeof(decimal), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), x => checked((sbyte)(decimal)x) },
+                    { typeof(byte), x => checked((byte)(decimal)x) },
+                    { typeof(short), x => checked((short)(decimal)x) },
+                    { typeof(ushort), x => checked((ushort)(decimal)x) },
+                    { typeof(int), x => checked((int)(decimal)x) },
+                    { typeof(uint), x => checked((uint)(decimal)x) },
+                    { typeof(long), x => checked((long)(decimal)x) },
+                    { typeof(ulong), x => checked((ulong)(decimal)x) },
+                    { typeof(char), x => checked((char)(decimal)x) },
+                    { typeof(float), x => checked((float)(decimal)x) },
+                    { typeof(double), x => checked((double)(decimal)x) },
 #if NET || NETSTANDARD
-                { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(decimal)x) },
+                    { typeof(System.Numerics.BigInteger), x => checked((System.Numerics.BigInteger)(decimal)x) },
 #endif
-            } },
+                }
+            },
 #if NET || NETSTANDARD
-            { typeof(System.Numerics.BigInteger), new Dictionary<Type, Func<object, object>> {
-                { typeof(sbyte), x => checked((sbyte)(System.Numerics.BigInteger)x) },
-                { typeof(byte), x => checked((byte)(System.Numerics.BigInteger)x) },
-                { typeof(short), x => checked((short)(System.Numerics.BigInteger)x) },
-                { typeof(ushort), x => checked((ushort)(System.Numerics.BigInteger)x) },
-                { typeof(int), x => checked((int)(System.Numerics.BigInteger)x) },
-                { typeof(uint), x => checked((uint)(System.Numerics.BigInteger)x) },
-                { typeof(long), x => checked((long)(System.Numerics.BigInteger)x) },
-                { typeof(ulong), x => checked((ulong)(System.Numerics.BigInteger)x) },
-                { typeof(char), x => checked((char)(System.Numerics.BigInteger)x) },
-                { typeof(float), x => checked((float)(System.Numerics.BigInteger)x) },
-                { typeof(double), x => checked((double)(System.Numerics.BigInteger)x) },
-                { typeof(decimal), x => checked((decimal)(System.Numerics.BigInteger)x) },
-            } },
+            {
+                typeof(System.Numerics.BigInteger), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), x => checked((sbyte)(System.Numerics.BigInteger)x) },
+                    { typeof(byte), x => checked((byte)(System.Numerics.BigInteger)x) },
+                    { typeof(short), x => checked((short)(System.Numerics.BigInteger)x) },
+                    { typeof(ushort), x => checked((ushort)(System.Numerics.BigInteger)x) },
+                    { typeof(int), x => checked((int)(System.Numerics.BigInteger)x) },
+                    { typeof(uint), x => checked((uint)(System.Numerics.BigInteger)x) },
+                    { typeof(long), x => checked((long)(System.Numerics.BigInteger)x) },
+                    { typeof(ulong), x => checked((ulong)(System.Numerics.BigInteger)x) },
+                    { typeof(char), x => checked((char)(System.Numerics.BigInteger)x) },
+                    { typeof(float), x => checked((float)(System.Numerics.BigInteger)x) },
+                    { typeof(double), x => checked((double)(System.Numerics.BigInteger)x) },
+                    { typeof(decimal), x => checked((decimal)(System.Numerics.BigInteger)x) },
+                }
+            },
 #endif
-            { typeof(DateTime), new Dictionary<Type, Func<object, object>> {
-                { typeof(DateTimeOffset), x => {
-                    var d = (DateTime)x;
-                    return new DateTimeOffset(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Millisecond, default(TimeSpan));
-                }},
-            } },
+            {
+                typeof(DateTime), new Dictionary<Type, Func<object, object>>
+                {
+                    {
+                        typeof(DateTimeOffset),
+                        x =>
+                        {
+                            var d = (DateTime)x;
+                            return new DateTimeOffset(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Millisecond, default(TimeSpan));
+                        }
+                    },
+                }
+            },
         };
 
         private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper)
@@ -318,7 +364,7 @@ namespace Aqua.Dynamic
         private readonly bool _formatPrimitiveTypesAsString;
 
         /// <summary>
-        /// Creates a new instance of <see cref="DynamicObjectMapper"/>
+        /// Initializes a new instance of the <see cref="DynamicObjectMapper"/> class.
         /// </summary>
         /// <param name="settings">Optional settings for dynamic object mapping</param>
         /// <param name="typeResolver">Optional instance to be used to resolve types</param>
@@ -375,7 +421,7 @@ namespace Aqua.Dynamic
         /// Maps a <see cref="DynamicObject"/> into a collection of objects
         /// </summary>
         /// <param name="obj"><see cref="DynamicObject"/> to be mapped</param>
-        /// <param name="targetType">Target type for mapping, set this parameter to null if type information included within <see cref="DynamicObject"/> should be used.</param>
+        /// <param name="type">Target type for mapping, set this parameter to null if type information included within <see cref="DynamicObject"/> should be used.</param>
         /// <returns>The object created based on the <see cref="DynamicObject"/> specified</returns>
         public object Map(DynamicObject obj, Type type)
         {
@@ -423,7 +469,7 @@ namespace Aqua.Dynamic
         /// <summary>
         /// Maps a collection of objects into a collection of <see cref="DynamicObject"/>
         /// </summary>
-        /// <param name="objects">The objects to be mapped</param>
+        /// <param name="obj">The object to be mapped</param>
         /// <param name="setTypeInformation">Set this parameter to true if type information should be included within the <see cref="DynamicObject"/>s, set it to false otherwise.</param>
         /// <returns>A collection of <see cref="DynamicObject"/> representing the objects specified</returns>
         public IEnumerable<DynamicObject> MapCollection(object obj, Func<Type, bool> setTypeInformation = null)
@@ -471,16 +517,13 @@ namespace Aqua.Dynamic
         /// Maps an item of an object graph of <see cref="DynamicObject"/> back into its normal representation.
         /// May be overridden in a derived class to implement a customized mapping strategy.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="targetType"></param>
-        /// <returns></returns>
         protected virtual object MapFromDynamicObjectGraph(object obj, Type targetType)
         {
             return MapFromDynamicObjectIfRequired(obj, targetType);
         }
 
         /// <summary>
-        /// Maps an item of an object graph into a <see cref="DynamicObject"/>. 
+        /// Maps an item of an object graph into a <see cref="DynamicObject"/>.
         /// May be overridden in a derived class to implement a customized mapping strategy.
         /// </summary>
         protected virtual DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
@@ -490,7 +533,7 @@ namespace Aqua.Dynamic
 
         /// <summary>
         /// When overridden in a derived class, determines whether a collection should be mapped into a single <see cref="DynamicObject"/>,
-        /// rather than into a collection of <see cref="DynamicObject"/>s. Default is false. 
+        /// rather than into a collection of <see cref="DynamicObject"/>s. Default is false.
         /// </summary>
         /// <returns>True if the collection should be mapped into a single <see cref="DynamicObject"/>, false if each element should be mapped separately. Default is false.</returns>
         protected virtual bool ShouldMapToDynamicObject(System.Collections.IEnumerable collection) => false;
@@ -721,7 +764,7 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Extrancts member values from source object and populates to dynamic object 
+        /// Extrancts member values from source object and populates to dynamic object
         /// </summary>
         private void PopulateObjectMembers(Type type, object from, DynamicObject to, Func<Type, bool> setTypeInformation)
         {
@@ -853,7 +896,7 @@ namespace Aqua.Dynamic
                     {
                         var value = MapFromDynamicObjectGraph(rawValue, property.PropertyType);
 
-                        if (_suppressMemberAssignabilityValidation || 
+                        if (_suppressMemberAssignabilityValidation ||
                             IsAssignable(property.PropertyType, value) ||
                             TryExplicitConversions(property.PropertyType, ref value))
                         {
@@ -863,7 +906,7 @@ namespace Aqua.Dynamic
                 }
 
                 var fields = GetFieldsForMapping(type) ?? type.GetFields();
-                foreach(var field in fields.Where(f => f.GetCustomAttribute<UnmappedAttribute>() == null))
+                foreach (var field in fields.Where(f => f.GetCustomAttribute<UnmappedAttribute>() == null))
                 {
                     object rawValue;
                     if (item.TryGet(field.Name, out rawValue))
@@ -1015,7 +1058,7 @@ namespace Aqua.Dynamic
 
         private static bool IsSingleValueWrapper(DynamicObject item)
         {
-            return (item.PropertyCount == 1 && string.IsNullOrEmpty(item.PropertyNames.Single()));
+            return item.PropertyCount == 1 && string.IsNullOrEmpty(item.PropertyNames.Single());
         }
 
         private static bool IsMatchingDictionary(Type targetType, Type elementType)
@@ -1092,7 +1135,7 @@ namespace Aqua.Dynamic
             Dictionary<Type, Func<object, object>> converterMap;
             if (_explicitConversionsTable.TryGetValue(type, out converterMap))
             {
-                Func <object, object> converter;
+                Func<object, object> converter;
                 if (converterMap.TryGetValue(targetType, out converter))
                 {
                     value = converter(value);
@@ -1117,7 +1160,7 @@ namespace Aqua.Dynamic
 
             return false;
         }
-        
+
         private static object FormatNativeTypeAsString(object obj, Type type)
         {
             if (type == typeof(DateTime) || type == typeof(DateTime?))

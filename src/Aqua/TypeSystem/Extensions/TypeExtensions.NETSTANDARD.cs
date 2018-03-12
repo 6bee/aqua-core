@@ -51,11 +51,18 @@ namespace Aqua.TypeSystem.Extensions
         {
             return type.GetTypeInfo().BaseType;
         }
-        
+
         internal static ConstructorInfo GetConstructor(this Type type, BindingFlags bindingAttr, /*Binder*/object binder, Type[] types, /*ParameterModifier[]*/object modifiers)
         {
-            if (!ReferenceEquals(null, binder)) throw new NotSupportedException("Binder not supported by WinRT");
-            if (!ReferenceEquals(null, modifiers)) throw new NotSupportedException("ParameterModifier not supported by WinRT");
+            if (!ReferenceEquals(null, binder))
+            {
+                throw new NotSupportedException("Binder not supported by WinRT");
+            }
+
+            if (!ReferenceEquals(null, modifiers))
+            {
+                throw new NotSupportedException("ParameterModifier not supported by WinRT");
+            }
 
             var constructors = type.GetTypeInfo()
 #if NETSTANDARD && !NETSTANDARD1_3

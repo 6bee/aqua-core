@@ -40,8 +40,8 @@ namespace Aqua.TypeSystem
         // TODO: replace binding flags by bool flags
         protected MethodBaseInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, Dictionary<Type, TypeInfo> referenceTracker)
             : this(
-            name, 
-            TypeInfo.Create(referenceTracker, declaringType, includePropertyInfos: false, setMemberDeclaringTypes: false), 
+            name,
+            TypeInfo.Create(referenceTracker, declaringType, includePropertyInfos: false, setMemberDeclaringTypes: false),
             bindingFlags,
             ReferenceEquals(null, genericArguments) ? null : genericArguments.Select(x => TypeInfo.Create(referenceTracker, x, false, false)),
             ReferenceEquals(null, parameterTypes) ? null : parameterTypes.Select(x => TypeInfo.Create(referenceTracker, x, false, false)))
@@ -85,7 +85,8 @@ namespace Aqua.TypeSystem
         public override string ToString()
         {
             var hasGenericArguments = !ReferenceEquals(null, GenericArgumentTypes) && GenericArgumentTypes.Any();
-            return string.Format("{0}.{1}{3}{4}{5}({2})",
+            return string.Format(
+                "{0}.{1}{3}{4}{5}({2})",
                 DeclaringType,
                 Name,
                 ReferenceEquals(null, ParameterTypes) ? null : string.Join(", ", ParameterTypes.Select(x => x.ToString()).ToArray()),

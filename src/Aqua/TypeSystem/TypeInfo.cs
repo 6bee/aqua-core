@@ -112,38 +112,6 @@ namespace Aqua.TypeSystem
             _type = typeInfo._type;
         }
 
-        internal static Dictionary<T, TypeInfo> CreateReferenceTracker<T>()
-        {
-            return new Dictionary<T, TypeInfo>(ReferenceEqualityComparer<T>.Default);
-        }
-
-        internal static TypeInfo Create(Dictionary<Type, TypeInfo> referenceTracker, Type type, bool includePropertyInfos, bool setMemberDeclaringTypes)
-        {
-            TypeInfo typeInfo;
-            if (!referenceTracker.TryGetValue(type, out typeInfo))
-            {
-                typeInfo = new TypeInfo(type, includePropertyInfos, setMemberDeclaringTypes, referenceTracker);
-            }
-
-            return typeInfo;
-        }
-
-        internal static TypeInfo Create(Dictionary<TypeInfo, TypeInfo> referenceTracker, TypeInfo type)
-        {
-            if (ReferenceEquals(null, type))
-            {
-                return null;
-            }
-
-            TypeInfo typeInfo;
-            if (!referenceTracker.TryGetValue(type, out typeInfo))
-            {
-                typeInfo = new TypeInfo(type, referenceTracker);
-            }
-
-            return typeInfo;
-        }
-
         [DataMember(Order = 1, EmitDefaultValue = false)]
         public string Name { get; set; }
 
@@ -165,9 +133,9 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
         public List<PropertyInfo> Properties { get; set; }
 
-        public bool IsNested { get { return !ReferenceEquals(null, DeclaringType); } }
+        public bool IsNested => !ReferenceEquals(null, DeclaringType);
 
-        public bool IsGenericTypeDefinition { get { return !GenericArguments?.Any() ?? true; } }
+        public bool IsGenericTypeDefinition => !GenericArguments?.Any() ?? true;
 
         public bool IsArray
         {
@@ -180,22 +148,12 @@ namespace Aqua.TypeSystem
 
         [Dynamic.Unmapped]
         public string FullName
-        {
-            get
-            {
-                if (IsNested)
-                {
-                    return $"{DeclaringType.FullName}+{Name}";
-                }
-                else
-                {
-                    return $"{Namespace}{(string.IsNullOrEmpty(Namespace) ? null : ".")}{Name}";
-                }
-            }
-        }
+            => IsNested
+                ? $"{DeclaringType.FullName}+{Name}"
+                : $"{Namespace}{(string.IsNullOrEmpty(Namespace) ? null : ".")}{Name}";
 
         /// <summary>
-        /// Resolves this type info instance to it's type using the default type resolver instance.
+        /// Gets <see cref="Type"/> by resolving this <see cref="TypeInfo"/> instance using the default <see cref="TypeResolver"/>.
         /// </summary>
         [Dynamic.Unmapped]
         public Type Type
@@ -211,6 +169,9 @@ namespace Aqua.TypeSystem
             }
         }
 
+        public static explicit operator Type(TypeInfo t)
+            => t.Type;
+
         public override string ToString()
             => $"{FullName}{GetGenericArgumentsString()}";
 
@@ -223,9 +184,24 @@ namespace Aqua.TypeSystem
             return genericArgumentsString;
         }
 
-        public static explicit operator Type(TypeInfo t)
+        internal static Dictionary<T, TypeInfo> CreateReferenceTracker<T>()
+            => new Dictionary<T, TypeInfo>(ReferenceEqualityComparer<T>.Default);
+
+        internal static TypeInfo Create(Dictionary<Type, TypeInfo> referenceTracker, Type type, bool includePropertyInfos, bool setMemberDeclaringTypes)
+            => referenceTracker.TryGetValue(type, out TypeInfo typeInfo)
+                ? typeInfo
+                : new TypeInfo(type, includePropertyInfos, setMemberDeclaringTypes, referenceTracker);
+
+        internal static TypeInfo Create(Dictionary<TypeInfo, TypeInfo> referenceTracker, TypeInfo type)
         {
-            return t.Type;
+            if (ReferenceEquals(null, type))
+            {
+                return null;
+            }
+
+            return referenceTracker.TryGetValue(type, out TypeInfo typeInfo)
+                ? typeInfo
+                : new TypeInfo(type, referenceTracker);
         }
     }
 }

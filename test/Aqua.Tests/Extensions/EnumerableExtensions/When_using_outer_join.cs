@@ -16,7 +16,7 @@ namespace Aqua.Tests.Extensions.EnumerableExtensions
             var list2 = new int?[] { 3, 4, 5 };
 
             var jointList = list1.FullOuterJoin(list2, x => x);
-            
+
             jointList.Count().ShouldBe(5);
 
             jointList.ElementAt(0).Left.ShouldBe(1);

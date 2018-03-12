@@ -3,13 +3,13 @@
 namespace Aqua.Tests.TypeSystem.TypeResolver
 {
     using Aqua.TypeSystem;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public class When_resolving_a_types_with_a_property_of_its_own_type
     {
-        class A
+        private class A
         {
             public A P { get; set; }
         }

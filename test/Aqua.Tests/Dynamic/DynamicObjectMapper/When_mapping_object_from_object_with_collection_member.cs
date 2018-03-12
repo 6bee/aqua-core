@@ -10,22 +10,22 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
     public class When_mapping_object_from_object_with_collection_member
     {
-        class CustomClass
+        private class CustomClass
         {
             public IEnumerable<object> Items { get; set; }
         }
 
-        class CustomReferenceType
+        private class CustomReferenceType
         {
             public string StringProperty { get; set; }
         }
 
-        struct CustomValueType
+        private struct CustomValueType
         {
             public long Int64Property { get; set; }
         }
 
-        DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
         public When_mapping_object_from_object_with_collection_member()
         {

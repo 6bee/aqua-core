@@ -4,12 +4,14 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
-    using Xunit;
     using Shouldly;
+    using Xunit;
 
     public class When_creating_dynamic_object_with_typeinfo
     {
-        class CustomClass { }
+        private class CustomClass
+        {
+        }
 
         [Fact]
         public void ShouldSetTypePropertyWhenPassingTypeInfoToConstructor()

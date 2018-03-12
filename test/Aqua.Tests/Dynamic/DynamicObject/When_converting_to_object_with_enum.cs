@@ -3,14 +3,14 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_converting_to_object_with_enum
     {
-        enum CustomEnum
+        private enum CustomEnum
         {
             Value0 = 0,
             Value1 = 1,
@@ -18,13 +18,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             Value3 = 3,
         }
 
-        class ClassWithEnum
+        private class ClassWithEnum
         {
             public CustomEnum? EnumProperty { get; set; }
         }
 
-        DynamicObject[] dynamicObjects;
-        IEnumerable<ClassWithEnum> objects;
+        private readonly DynamicObject[] dynamicObjects;
+        private readonly IEnumerable<ClassWithEnum> objects;
 
         public When_converting_to_object_with_enum()
         {
@@ -34,29 +34,29 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 {
                     Properties = new PropertySet
                     {
-                        { "EnumProperty", CustomEnum.Value1 }
-                    }
+                        { "EnumProperty", CustomEnum.Value1 },
+                    },
                 },
                 new DynamicObject(typeof(ClassWithEnum))
                 {
                     Properties = new PropertySet
                     {
-                        { "EnumProperty", CustomEnum.Value2.ToString().ToUpper() }
-                    }
+                        { "EnumProperty", CustomEnum.Value2.ToString().ToUpper() },
+                    },
                 },
                 new DynamicObject(typeof(ClassWithEnum))
                 {
                     Properties = new PropertySet
                     {
-                        { "EnumProperty", (int)CustomEnum.Value3 }
-                    }
+                        { "EnumProperty", (int)CustomEnum.Value3 },
+                    },
                 },
                 new DynamicObject(typeof(ClassWithEnum))
                 {
                     Properties = new PropertySet
                     {
-                        { "EnumProperty", null }
-                    }
+                        { "EnumProperty", null },
+                    },
                 },
             };
 

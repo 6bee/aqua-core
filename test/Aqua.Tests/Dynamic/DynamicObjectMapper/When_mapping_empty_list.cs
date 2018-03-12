@@ -10,7 +10,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
     public class When_mapping_empty_list
     {
-        DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
         public When_mapping_empty_list()
         {
@@ -20,7 +20,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_should_have_one_property_with_empty_name()
         {
-            dynamicObject.Properties.Single().Name.ShouldBe("");
+            dynamicObject.Properties.Single().Name.ShouldBe(string.Empty);
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
                 .ShouldBeOfType<object[]>()
                 .Length.ShouldBe(0);
         }
-        
+
         [Fact]
         public void Dynamic_object_should_result_in_empty_list_when_mapped_back()
         {

@@ -68,7 +68,7 @@ namespace Aqua.TypeSystem
         }
 
         public static Type ResolveType(this TypeInfo typeInfo, ITypeResolver typeResolver)
-            => ReferenceEquals(null, typeInfo) ? null: typeResolver.ResolveType(typeInfo);
+            => ReferenceEquals(null, typeInfo) ? null : typeResolver.ResolveType(typeInfo);
 
         public static System.Reflection.MemberInfo ResolveMemberInfo(this MemberInfo memberInfo, ITypeResolver typeResolver)
         {
@@ -205,7 +205,6 @@ namespace Aqua.TypeSystem
                     }
                 })
                 .ToArray();
-
 
             var result = declaringType.GetMethods(methodInfo.BindingFlags)
                 .Where(m => m.Name == methodInfo.Name)

@@ -11,7 +11,6 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
     {
         private readonly Type type;
 
-
         public When_resolving_a_system_type()
         {
             var typeInfo = new TypeInfo(typeof(System.Linq.IQueryable<>));

@@ -3,14 +3,14 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_converting_to_object_with_indexer
     {
-        class ClassWithIndexerAndItemProperty
+        private class ClassWithIndexerAndItemProperty
         {
             private readonly Dictionary<string, object> _data = new Dictionary<string, object>();
 
@@ -21,6 +21,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 {
                     return _data[key];
                 }
+
                 set
                 {
                     _data[key] = value;
@@ -34,6 +35,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 {
                     return _data.Values.ElementAt(index);
                 }
+
                 set
                 {
                     var key = _data.Keys.ElementAt(index);
@@ -51,8 +53,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 Properties = new PropertySet
                 {
-                    { "Item", "ItemValue1" }
-                }
+                    { "Item", "ItemValue1" },
+                },
             };
 
             var obj = dynamicObject.CreateObject<ClassWithIndexerAndItemProperty>();

@@ -18,7 +18,6 @@ namespace Aqua.Tests
             Bar,
         }
 
-
         public static IEnumerable<object[]> Types => new Type[]
             {
                 typeof(byte),
@@ -27,7 +26,7 @@ namespace Aqua.Tests
                 typeof(string),
                 typeof(DateTime),
                 typeof(TestEnum),
-                new { Text = "", Timestamp = default(DateTime?)}.GetType()
+                new { Text = string.Empty, Timestamp = default(DateTime?) }.GetType(),
             }
             .SelectMany(x => new[]
             {
@@ -75,24 +74,21 @@ namespace Aqua.Tests
                 'à',
                 true,
                 false,
-                new Guid(),
                 default(Guid),
                 Guid.NewGuid(),
                 DateTime.Now,
-                new DateTime(),
-                new TimeSpan(),
+                default(DateTime),
                 default(TimeSpan),
-                new TimeSpan(),
                 new TimeSpan(long.MaxValue),
                 default(DateTimeOffset),
                 DateTimeOffset.MinValue,
                 DateTimeOffset.MaxValue,
                 new DateTimeOffset(new DateTime(2012, 12, 12), new TimeSpan(12, 12, 0)),
-                new BigInteger(),
+                default(BigInteger),
                 default(BigInteger),
                 new BigInteger(ulong.MinValue) - 1,
                 new BigInteger(ulong.MaxValue) + 1,
-                new Complex(),
+                default(Complex),
                 default(Complex),
                 new Complex(32, -87654),
                 new Complex(-87654, 234),
@@ -115,7 +111,7 @@ namespace Aqua.Tests
             .Select(x => new[]
             {
                 ((Type)x[0]).MakeArrayType(),
-                CreateArray((Type)x[0], x[1])
+                CreateArray((Type)x[0], x[1]),
             });
 
         // NOTE: PrimitiveValueLists don't work with json.net since list element types don't get corrected by PrimitiveValueInspector
@@ -123,7 +119,7 @@ namespace Aqua.Tests
             .Select(x => new[]
             {
                 typeof(List<>).MakeGenericType((Type)x[0]),
-                CreateList((Type)x[0], x[1])
+                CreateList((Type)x[0], x[1]),
             });
 
         private static object CreateArray(Type type, object item)

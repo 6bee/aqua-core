@@ -3,13 +3,13 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using Xunit;
-    using Shouldly;
 
     public class When_setting_property
     {
-        class DynamicObjectTest : DynamicObject
+        private class DynamicObjectTest : DynamicObject
         {
             public DynamicObjectTest()
             {
@@ -18,8 +18,11 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             }
 
             public int PropertyChangingCount { get; private set; } = 0;
+
             public int PropertyChangedCount { get; private set; } = 0;
+
             public int OnPropertyChangingCount { get; private set; } = 0;
+
             public int OnPropertyChangedCount { get; private set; } = 0;
 
             protected override void OnPropertyChanged(string name, object oldValue, object newValue)
@@ -53,11 +56,11 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             }
         }
 
-        const string OldValue = "OldValue";
-        const string NewValue = "NewValue";
-        const string StringProperty = "StringProperty";
+        private const string OldValue = "OldValue";
+        private const string NewValue = "NewValue";
+        private const string StringProperty = "StringProperty";
 
-        DynamicObjectTest dynamicObject;
+        private DynamicObjectTest dynamicObject;
 
         public When_setting_property()
         {
@@ -65,8 +68,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 Properties = new PropertySet
                 {
-                    { StringProperty, OldValue }
-                }
+                    { StringProperty, OldValue },
+                },
             };
 
             dynamicObject.PropertyChangingCount.ShouldBe(0);

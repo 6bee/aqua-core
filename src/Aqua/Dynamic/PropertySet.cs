@@ -46,6 +46,8 @@ namespace Aqua.Dynamic
             _properties = new HashSet<Property>(properties, PropertyComparer.Instance);
         }
 
+        public int Count => _properties.Count;
+
         public void Add(string name, object value) => _properties.Add(new Property(name, value));
 
         public void Add(Property property) => _properties.Add(property);
@@ -53,8 +55,6 @@ namespace Aqua.Dynamic
         public bool Remove(Property property) => _properties.Remove(property);
 
         public bool Contains(Property property) => _properties.Contains(property);
-
-        public int Count => _properties.Count;
 
         public IEnumerator<Property> GetEnumerator() => _properties.GetEnumerator();
 

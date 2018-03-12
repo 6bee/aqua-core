@@ -40,8 +40,16 @@ namespace Aqua.Extensions
 
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+
                 return obj is Tuple<TLeft, TRight> && Equals((Tuple<TLeft, TRight>)obj);
             }
 
@@ -79,7 +87,6 @@ namespace Aqua.Extensions
             }
         }
 
-
         public static IEnumerable<Tuple<T, T>> FullOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey> keyEqualityComparer = null, IEqualityComparer<Tuple<T, T>> comparer = null)
         {
             return FullOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, Tuple.Create, keyEqualityComparer, comparer);
@@ -89,7 +96,6 @@ namespace Aqua.Extensions
         {
             return FullOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, resultSelector, keyEqualityComparer, comparer);
         }
-
 
         public static IEnumerable<Tuple<TLeft, TRight>> FullOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey> keyEqualityComparer = null, IEqualityComparer<Tuple<TLeft, TRight>> comparer = null)
         {
@@ -103,7 +109,6 @@ namespace Aqua.Extensions
             return leftOuterJoin.Union(rightOuterJoin, comparer);
         }
 
-
         public static IEnumerable<Tuple<T, T>> LeftOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey> keyEqualityComparer = null)
         {
             return LeftOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, Tuple.Create, keyEqualityComparer);
@@ -113,7 +118,6 @@ namespace Aqua.Extensions
         {
             return LeftOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, resultSelector, keyEqualityComparer);
         }
-
 
         public static IEnumerable<Tuple<TLeft, TRight>> LeftOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey> keyEqualityComparer = null)
         {
@@ -134,7 +138,6 @@ namespace Aqua.Extensions
                     (x, y) => resultSelector(x.Key, y));
         }
 
-
         public static IEnumerable<Tuple<T, T>> RightOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey> keyEqualityComparer = null)
         {
             return RightOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, Tuple.Create, keyEqualityComparer);
@@ -144,7 +147,6 @@ namespace Aqua.Extensions
         {
             return RightOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, resultSelector, keyEqualityComparer);
         }
-
 
         public static IEnumerable<Tuple<TLeft, TRight>> RightOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey> keyEqualityComparer = null)
         {
@@ -239,7 +241,7 @@ namespace Aqua.Extensions
                 {
                     foreach (var item in collection)
                     {
-                        hashCode ^= (ReferenceEquals(null, item) ? -1 : comparer.GetHashCode(item));
+                        hashCode ^= ReferenceEquals(null, item) ? -1 : comparer.GetHashCode(item);
                     }
                 }
 

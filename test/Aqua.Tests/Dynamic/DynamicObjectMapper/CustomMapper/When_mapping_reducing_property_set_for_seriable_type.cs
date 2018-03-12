@@ -3,24 +3,24 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using Xunit;
-    using Shouldly;
 
     public class When_mapping_reducing_property_set_for_seriable_type
     {
         [Serializable]
-        class DataObject
+        private class DataObject
         {
             public string PropertyOne { get; set; }
 
             public string PropertyTwo { get; set; }
         }
 
-        class CustomMapper : DynamicObjectMapper
+        private class CustomMapper : DynamicObjectMapper
         {
             protected override IEnumerable<PropertyInfo> GetPropertiesForMapping(Type type)
             {
@@ -33,7 +33,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
             }
         }
 
-        DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
         public When_mapping_reducing_property_set_for_seriable_type()
         {
@@ -42,7 +42,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
             dynamicObject = dynamicObjectMapper.MapObject(new DataObject
             {
                 PropertyOne = "one",
-                PropertyTwo = "two"
+                PropertyTwo = "two",
             });
         }
 

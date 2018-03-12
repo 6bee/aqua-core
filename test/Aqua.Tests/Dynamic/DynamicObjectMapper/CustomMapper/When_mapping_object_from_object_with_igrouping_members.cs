@@ -13,12 +13,12 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
 
     public class When_mapping_object_from_object_with_igrouping_members
     {
-        class CustomClass
+        private class CustomClass
         {
             public IGrouping<string, int> Grouping { get; set; }
         }
 
-        class CustomDynamicObjectMapper : DynamicObjectMapper
+        private class CustomDynamicObjectMapper : DynamicObjectMapper
         {
             protected override DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
             {
@@ -48,15 +48,15 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
             }
         }
 
-        DynamicObject dynamicGrouping;
-        DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicGrouping;
+        private readonly DynamicObject dynamicObject;
 
         public When_mapping_object_from_object_with_igrouping_members()
         {
             IGrouping<string, int> grouping = Enumerable.Range(1, 5).GroupBy(x => "Hello", x => x).Single();
             var source = new CustomClass
             {
-                Grouping = grouping
+                Grouping = grouping,
             };
             dynamicGrouping = new CustomDynamicObjectMapper().MapObject(grouping);
             dynamicObject = new CustomDynamicObjectMapper().MapObject(source);

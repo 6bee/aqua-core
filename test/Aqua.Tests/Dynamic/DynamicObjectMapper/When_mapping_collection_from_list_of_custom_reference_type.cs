@@ -3,28 +3,29 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_mapping_collection_from_list_of_custom_reference_type
     {
-        class CustomReferenceType
+        private class CustomReferenceType
         {
             public int Int32Property { get; set; }
+
             public string StringProperty { get; set; }
         }
 
-        List<CustomReferenceType> source;
-        IEnumerable<DynamicObject> dynamicObjects;
+        private readonly List<CustomReferenceType> source;
+        private readonly IEnumerable<DynamicObject> dynamicObjects;
 
         public When_mapping_collection_from_list_of_custom_reference_type()
         {
-            source = new List<CustomReferenceType> 
-            { 
-                new CustomReferenceType { Int32Property = 1, StringProperty="One" },
-                new CustomReferenceType { Int32Property = 2, StringProperty="Two" },
+            source = new List<CustomReferenceType>
+            {
+                new CustomReferenceType { Int32Property = 1, StringProperty = "One" },
+                new CustomReferenceType { Int32Property = 2, StringProperty = "Two" },
             };
             dynamicObjects = new DynamicObjectMapper().MapCollection(source);
         }

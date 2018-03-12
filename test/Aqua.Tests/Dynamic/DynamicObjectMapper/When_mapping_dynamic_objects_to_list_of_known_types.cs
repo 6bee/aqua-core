@@ -11,37 +11,38 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
     public class When_mapping_dynamic_objects_to_list_of_known_types
     {
-        class IsKnownTypeProvider : IIsKnownTypeProvider
+        private class IsKnownTypeProvider : IIsKnownTypeProvider
         {
             public bool IsKnownType(Type type) => type == typeof(CustomReferenceType);
         }
 
-        class CustomReferenceType
+        private class CustomReferenceType
         {
             public int Int32Property { get; set; }
+
             public string StringProperty { get; set; }
         }
 
-        DynamicObject[] dynamicObjects;
-        IEnumerable<CustomReferenceType> recreatedObjectLists;
+        private readonly DynamicObject[] dynamicObjects;
+        private readonly IEnumerable<CustomReferenceType> recreatedObjectLists;
 
         public When_mapping_dynamic_objects_to_list_of_known_types()
         {
             dynamicObjects = new[]
-            { 
+            {
                 new DynamicObject(typeof(CustomReferenceType))
                 {
                     Properties = new PropertySet
                     {
-                        { "", new CustomReferenceType { Int32Property = 1, StringProperty="One" } }
-                    }
+                        { string.Empty, new CustomReferenceType { Int32Property = 1, StringProperty = "One" } },
+                    },
                 },
                 new DynamicObject(typeof(CustomReferenceType))
                 {
                     Properties = new PropertySet
                     {
-                        { "", new CustomReferenceType { Int32Property = 2, StringProperty="Two" } }
-                    }
+                        { string.Empty, new CustomReferenceType { Int32Property = 2, StringProperty = "Two" } },
+                    },
                 },
             };
 

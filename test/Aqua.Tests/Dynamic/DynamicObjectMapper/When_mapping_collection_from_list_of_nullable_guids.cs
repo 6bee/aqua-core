@@ -3,16 +3,16 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
-    using Shouldly;
 
     public class When_mapping_collection_from_list_of_nullable_guids
     {
-        List<Guid?> source;
-        IEnumerable<DynamicObject> dynamicObjects;
+        private readonly List<Guid?> source;
+        private readonly IEnumerable<DynamicObject> dynamicObjects;
 
         public When_mapping_collection_from_list_of_nullable_guids()
         {
