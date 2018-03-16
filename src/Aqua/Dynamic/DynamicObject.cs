@@ -46,6 +46,7 @@ namespace Aqua.Dynamic
         /// setting the specified <see cref="TypeInfo"/> and <see cref="PropertySet"/>
         /// </summary>
         /// <param name="type">The type to be set</param>
+        /// <param name="propertySet">The property set</param>
         public DynamicObject(TypeInfo type, PropertySet propertySet)
         {
             Type = type;

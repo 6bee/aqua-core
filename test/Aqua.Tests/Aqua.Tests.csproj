@@ -2,9 +2,7 @@
 
   <PropertyGroup>
     <Description>Tests for aqua-core</Description>
-    <Copyright>Copyright Christof Senn 2013-2017</Copyright>
     <TargetFrameworks>net462;netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
