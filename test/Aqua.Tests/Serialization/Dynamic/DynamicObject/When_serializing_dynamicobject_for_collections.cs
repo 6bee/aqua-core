@@ -32,7 +32,7 @@ namespace Aqua.Tests.Serialization.DynamicObject
             public XmlSerializer() : base(XmlSerializationHelper.Serialize) { }
         }
 
-#if NET
+#if !NETCOREAPP1_0
         public class BinaryFormatter : When_serializing_dynamicobject_for_collections
         {
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }

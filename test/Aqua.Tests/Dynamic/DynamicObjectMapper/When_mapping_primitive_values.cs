@@ -28,7 +28,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_map_primitive_value(Type type, object value)
         {
-            SkipOnCoreClr.If(type.Is<Complex>(), "Complex fails on CORE CLR 1.0.1 on Ubuntu (travis-ci)");
+            SkipOnNetCoreApp1_0.If(type.Is<Complex>(), "Complex fails on CORE CLR 1.0.1 on Ubuntu (travis-ci)");
 
             var result = MapAsValueMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
 
@@ -54,7 +54,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
         public void Should_map_primitive_value_property(Type type, object value)
         {
-            SkipOnCoreClr.If(type.Is<Complex>(), "Complex fails on CORE CLR 1.0.1 on Ubuntu (travis-ci)");
+            SkipOnNetCoreApp1_0.If(type.Is<Complex>(), "Complex fails on CORE CLR 1.0.1 on Ubuntu (travis-ci)");
 
             var result = MapAsPropertyMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
 

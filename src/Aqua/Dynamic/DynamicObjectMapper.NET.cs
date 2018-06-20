@@ -35,7 +35,7 @@ namespace Aqua.Dynamic
 
             var members = FormatterServices.GetSerializableMembers(type);
             var membersByCleanName = members.ToDictionary(GetCleanMemberName);
-            var memberValueMap = new Dictionary<System.Reflection.MemberInfo, object>();
+            var memberValueMap = new Dictionary<MemberInfo, object>();
 
             foreach (var dynamicProperty in from.Properties)
             {
@@ -44,18 +44,18 @@ namespace Aqua.Dynamic
                     continue;
                 }
 
-                System.Reflection.MemberInfo member;
+                MemberInfo member;
                 if (membersByCleanName.TryGetValue(dynamicProperty.Name, out member))
                 {
                     Type memberType;
                     switch (member.MemberType)
                     {
-                        case System.Reflection.MemberTypes.Field:
-                            memberType = ((System.Reflection.FieldInfo)member).FieldType;
+                        case MemberTypes.Field:
+                            memberType = ((FieldInfo)member).FieldType;
                             break;
 
-                        case System.Reflection.MemberTypes.Property:
-                            memberType = ((System.Reflection.PropertyInfo)member).PropertyType;
+                        case MemberTypes.Property:
+                            memberType = ((PropertyInfo)member).PropertyType;
                             break;
 
                         default:
@@ -101,7 +101,7 @@ namespace Aqua.Dynamic
             }
         }
 
-        private static string GetCleanMemberName(System.Reflection.MemberInfo member)
+        private static string GetCleanMemberName(MemberInfo member)
         {
             var memberName = member.Name;
 
@@ -111,9 +111,9 @@ namespace Aqua.Dynamic
                 memberName = match.Groups["name"].Value;
             }
 
-            if (member.MemberType != System.Reflection.MemberTypes.Property)
+            if (member.MemberType != MemberTypes.Property)
             {
-                var property = member.DeclaringType.GetProperty(memberName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.IgnoreCase);
+                var property = member.DeclaringType.GetProperty(memberName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
                 if (!ReferenceEquals(null, property))
                 {
                     memberName = property.Name;

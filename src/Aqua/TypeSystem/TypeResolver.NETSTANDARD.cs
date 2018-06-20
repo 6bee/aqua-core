@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if NETSTANDARD && !NETSTANDARD1_3
+#if NETSTANDARD1_6
 
 namespace Aqua.TypeSystem
 {

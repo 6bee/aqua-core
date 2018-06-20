@@ -33,7 +33,7 @@ namespace Aqua.TypeSystem.Extensions
         internal static bool IsDefined<T>(this Type type) where T : Attribute
         {
             return type
-#if NETSTANDARD
+#if NETSTANDARD1_X
                 .GetTypeInfo()
 #endif
                 .IsDefined(typeof(T));

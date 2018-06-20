@@ -6,36 +6,81 @@ namespace Aqua.Dynamic
     using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
+    using ConstructorInfo = System.Reflection.ConstructorInfo;
     using FieldInfo = System.Reflection.FieldInfo;
     using MethodInfo = System.Reflection.MethodInfo;
     using PropertyInfo = System.Reflection.PropertyInfo;
+    using TypeInfo = System.Reflection.TypeInfo;
 
     public partial class DynamicObjectMapper : IDynamicObjectMapper
     {
-        private sealed class ObjectFormatterContext<TFrom, TTo>
+        [DebuggerDisplay("{Type} {Value}")]
+        private sealed class ReferenceMapKey
+        {
+            public ReferenceMapKey(Type type, DynamicObject value)
+            {
+                Type = type;
+                Value = value;
+            }
+
+            public Type Type { get; }
+
+            public DynamicObject Value { get; }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+
+                var other = obj as ReferenceMapKey;
+
+                if (ReferenceEquals(null, other))
+                {
+                    return false;
+                }
+
+                return EqualityComparer<Type>.Default.Equals(Type, other.Type)
+                    && ReferenceEqualityComparer<DynamicObject>.Default.Equals(Value, other.Value);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((Type?.GetHashCode() ?? 0) * 397) ^ (Value?.GetHashCode() ?? 0);
+                }
+            }
+        }
+
+        private sealed class ToContext
         {
             private readonly Func<Type, Type> _dynamicObjectTypeInfoMapper;
 
-            private readonly Dictionary<TFrom, TTo> _referenceMap;
+            private readonly Dictionary<object, DynamicObject> _referenceMap;
 
-            public ObjectFormatterContext(Func<Type, Type> dynamicObjectTypeMapper = null)
+            public ToContext(Func<Type, Type> dynamicObjectTypeMapper = null)
             {
                 _dynamicObjectTypeInfoMapper = dynamicObjectTypeMapper ?? (t => t);
-                _referenceMap = new Dictionary<TFrom, TTo>(ReferenceEqualityComparer<TFrom>.Default);
+                _referenceMap = new Dictionary<object, DynamicObject>(ReferenceEqualityComparer<object>.Default);
             }
 
             /// <summary>
             /// Returns an existing instance if found in the reference map, creates a new instance otherwise
             /// </summary>
-            internal TTo TryGetOrCreateNew(Type objectType, TFrom from, Func<Type, TFrom, TTo> factory, Action<Type, TFrom, TTo> initializer)
+            internal DynamicObject TryGetOrCreateNew(Type sourceType, object from, Func<Type, object, Func<Type, bool>, DynamicObject> factory, Action<Type, object, DynamicObject, Func<Type, bool>> initializer, Func<Type, bool> setTypeInformation)
             {
-                TTo to;
+                DynamicObject to;
                 if (!_referenceMap.TryGetValue(from, out to))
                 {
-                    to = factory(objectType, from);
+                    var setTypeInformationValue = ReferenceEquals(null, setTypeInformation) ? true : setTypeInformation(sourceType);
+
+                    to = factory(setTypeInformationValue ? _dynamicObjectTypeInfoMapper(sourceType) : null, from, setTypeInformation);
 
                     try
                     {
@@ -50,39 +95,48 @@ namespace Aqua.Dynamic
 
                     if (!ReferenceEquals(null, initializer))
                     {
-                        initializer(objectType, from, to);
+                        initializer(sourceType, from, to, setTypeInformation);
                     }
                 }
 
                 return to;
             }
+        }
+
+        private sealed class FromContext
+        {
+            private readonly Dictionary<ReferenceMapKey, object> _referenceMap;
+
+            public FromContext()
+            {
+                _referenceMap = new Dictionary<ReferenceMapKey, object>();
+            }
 
             /// <summary>
             /// Returns an existing instance if found in the reference map, creates a new instance otherwise
             /// </summary>
-            internal TTo TryGetOrCreateNew(Type objectType, TFrom from, Func<Type, TFrom, Func<Type, bool>, TTo> factory, Action<Type, TFrom, TTo, Func<Type, bool>> initializer, Func<Type, bool> setTypeInformation)
+            internal object TryGetOrCreateNew(Type targetType, DynamicObject from, Func<Type, DynamicObject, object> factory, Action<Type, DynamicObject, object> initializer)
             {
-                TTo to;
-                if (!_referenceMap.TryGetValue(from, out to))
+                object to;
+                var key = new ReferenceMapKey(targetType, from);
+                if (!_referenceMap.TryGetValue(key, out to))
                 {
-                    var setTypeInformationValue = ReferenceEquals(null, setTypeInformation) ? true : setTypeInformation(objectType);
-
-                    to = factory(setTypeInformationValue ? _dynamicObjectTypeInfoMapper(objectType) : null, from, setTypeInformation);
+                    to = factory(targetType, from);
 
                     try
                     {
-                        _referenceMap.Add(from, to);
+                        _referenceMap.Add(key, to);
                     }
                     catch
                     {
                         // detected cyclic reference
                         // can happen for non-serializable types without parameterless constructor, which have cyclic references
-                        return _referenceMap[from];
+                        return _referenceMap[key];
                     }
 
                     if (!ReferenceEquals(null, initializer))
                     {
-                        initializer(objectType, from, to, setTypeInformation);
+                        initializer(targetType, from, to);
                     }
                 }
 
@@ -355,9 +409,9 @@ namespace Aqua.Dynamic
         private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper)
             .GetMethod(nameof(ToDictionary), BindingFlags.Static | BindingFlags.NonPublic);
 
-        private readonly ObjectFormatterContext<DynamicObject, object> _fromContext;
-        private readonly ObjectFormatterContext<object, DynamicObject> _toContext;
-        private readonly Func<TypeSystem.TypeInfo, Type> _resolveType;
+        private readonly FromContext _fromContext;
+        private readonly ToContext _toContext;
+        private readonly ITypeResolver _typeResolver;
         private readonly Func<Type, bool> _isKnownType;
         private readonly Func<Type, object, DynamicObject> _createDynamicObject;
         private readonly bool _suppressMemberAssignabilityValidation;
@@ -389,11 +443,11 @@ namespace Aqua.Dynamic
             _utilizeFormatterServices = settings.UtilizeFormatterServices;
 #endif
 
-            _fromContext = new ObjectFormatterContext<DynamicObject, object>();
+            _fromContext = new FromContext();
 
-            _toContext = new ObjectFormatterContext<object, DynamicObject>(ReferenceEquals(null, typeMapper) ? default(Func<Type, Type>) : typeMapper.MapType);
+            _toContext = new ToContext(ReferenceEquals(null, typeMapper) ? default(Func<Type, Type>) : typeMapper.MapType);
 
-            _resolveType = (typeResolver ?? TypeResolver.Instance).ResolveType;
+            _typeResolver = typeResolver ?? TypeResolver.Instance;
 
             _isKnownType = ReferenceEquals(null, isKnownTypeProvider)
                 ? (t => false)
@@ -447,7 +501,7 @@ namespace Aqua.Dynamic
                 throw new InvalidOperationException("Type property must not be null");
             }
 
-            var type = _resolveType(obj.Type);
+            var type = obj.Type.ResolveType(_typeResolver);
             return Map(obj, type);
         }
 
@@ -555,19 +609,46 @@ namespace Aqua.Dynamic
             var dynamicObj = obj as DynamicObject;
             if (!ReferenceEquals(null, dynamicObj))
             {
-                // subsequent mapping of nested dynamic object
-                if (!ReferenceEquals(null, dynamicObj.Type))
+                var sourceType = dynamicObj.Type.ResolveType(_typeResolver);
+
+                if (!ReferenceEquals(null, sourceType))
                 {
-                    var type = _resolveType(dynamicObj.Type);
-                    if (targetType == typeof(Type) && (type == typeof(Type) || type == typeof(TypeSystem.TypeInfo)))
+                    if ((targetType == typeof(Type) || targetType == typeof(TypeInfo)) &&
+                        (sourceType == typeof(TypeSystem.TypeInfo) || sourceType == typeof(Type) || sourceType == typeof(TypeInfo)))
                     {
                         var typeInfo = (TypeSystem.TypeInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.TypeInfo));
-                        return _resolveType(typeInfo);
+                        var t = typeInfo.ResolveType(_typeResolver);
+                        return targetType == typeof(TypeInfo) ? (object)t.GetTypeInfo() : t;
                     }
-                    else if (ReferenceEquals(null, targetType) || targetType.IsAssignableFrom(type))
+                    else if (targetType == typeof(MethodInfo) && (sourceType == typeof(TypeSystem.MethodInfo) || sourceType == typeof(MethodInfo)))
                     {
-                        targetType = type;
+                        var methodInfo = (TypeSystem.MethodInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.MethodInfo));
+                        return methodInfo.ResolveMemberInfo(_typeResolver);
                     }
+                    else if (targetType == typeof(PropertyInfo) && (sourceType == typeof(TypeSystem.PropertyInfo) || sourceType == typeof(PropertyInfo)))
+                    {
+                        var propertyInfo = (TypeSystem.PropertyInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.PropertyInfo));
+                        return propertyInfo.ResolveMemberInfo(_typeResolver);
+                    }
+                    else if (targetType == typeof(FieldInfo) && (sourceType == typeof(TypeSystem.FieldInfo) || sourceType == typeof(FieldInfo)))
+                    {
+                        var fieldInfo = (TypeSystem.FieldInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.FieldInfo));
+                        return fieldInfo.ResolveMemberInfo(_typeResolver);
+                    }
+                    else if (targetType == typeof(ConstructorInfo) && (sourceType == typeof(TypeSystem.ConstructorInfo) || sourceType == typeof(ConstructorInfo)))
+                    {
+                        var constructorInfo = (TypeSystem.ConstructorInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.ConstructorInfo));
+                        return constructorInfo.ResolveConstructor(_typeResolver);
+                    }
+                    else if (ReferenceEquals(null, targetType) || targetType.IsAssignableFrom(sourceType))
+                    {
+                        targetType = sourceType;
+                    }
+                }
+
+                if (targetType.IsAssignableFrom(typeof(DynamicObject)) && targetType != typeof(object))
+                {
+                    return dynamicObj;
                 }
 
                 if (IsSingleValueWrapper(dynamicObj))
@@ -575,7 +656,7 @@ namespace Aqua.Dynamic
                     return MapFromDynamicObjectIfRequired(dynamicObj.Values.Single(), targetType);
                 }
 
-                var mappedValue = MapInternal(dynamicObj, targetType);
+                var mappedValue = MapInternal(dynamicObj, sourceType, targetType);
                 return mappedValue;
             }
 
@@ -685,8 +766,8 @@ namespace Aqua.Dynamic
             Func<Type, object, Func<Type, bool>, DynamicObject> facotry;
             Action<Type, object, DynamicObject, Func<Type, bool>> initializer = null;
 
-            var type = obj.GetType();
-            if (_isNativeType(type) || _isKnownType(type) || type.IsEnum())
+            var sourceType = obj.GetType();
+            if (_isNativeType(sourceType) || _isKnownType(sourceType) || sourceType.IsEnum())
             {
                 facotry = (t, o, f) =>
                 {
@@ -711,9 +792,49 @@ namespace Aqua.Dynamic
             }
             else if (obj is Type)
             {
-                var typeInfo = new TypeSystem.TypeInfo((Type)obj, false, false);
-                facotry = (t, o, f) => _createDynamicObject(typeof(Type), typeInfo);
-                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo, to, f);
+                var typeInfo = new Lazy<TypeSystem.TypeInfo>(() => new TypeSystem.TypeInfo((Type)obj, false, false));
+                facotry = (t, o, f) => _createDynamicObject(typeof(Type), typeInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo.Value, to, f);
+            }
+            else if (obj is TypeInfo)
+            {
+                var typeInfo = new Lazy<TypeSystem.TypeInfo>(() => new TypeSystem.TypeInfo(((TypeInfo)obj).AsType(), false, false));
+                facotry = (t, o, f) => _createDynamicObject(typeof(TypeInfo), typeInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo.Value, to, f);
+            }
+            else if (obj is MethodInfo)
+            {
+                var methodInfo = new Lazy<TypeSystem.MethodInfo>(() => new TypeSystem.MethodInfo((MethodInfo)obj));
+                facotry = (t, o, f) => _createDynamicObject(typeof(MethodInfo), methodInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.MethodInfo), methodInfo.Value, to, f);
+            }
+            else if (obj is PropertyInfo)
+            {
+                var propertyInfo = new Lazy<TypeSystem.PropertyInfo>(() => new TypeSystem.PropertyInfo((PropertyInfo)obj));
+                facotry = (t, o, f) => _createDynamicObject(typeof(PropertyInfo), propertyInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.PropertyInfo), propertyInfo.Value, to, f);
+            }
+            else if (obj is FieldInfo)
+            {
+                var fieldInfo = new Lazy<TypeSystem.FieldInfo>(() => new TypeSystem.FieldInfo((FieldInfo)obj));
+                facotry = (t, o, f) => _createDynamicObject(typeof(FieldInfo), fieldInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.FieldInfo), fieldInfo.Value, to, f);
+            }
+            else if (obj is ConstructorInfo)
+            {
+                var constructorInfo = new Lazy<TypeSystem.ConstructorInfo>(() => new TypeSystem.ConstructorInfo((ConstructorInfo)obj));
+                facotry = (t, o, f) => _createDynamicObject(typeof(ConstructorInfo), constructorInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.ConstructorInfo), constructorInfo.Value, to, f);
+            }
+            else if (obj is Delegate)
+            {
+#if NETSTANDARD1_X
+                throw new NotSupportedException("Cannot create DynamicObject for delegate since System.Delegate does not expose MethodInfo member on targetet framework");
+#else
+                var methodInfo = new Lazy<TypeSystem.MethodInfo>(() => new TypeSystem.MethodInfo(((Delegate)obj).Method));
+                facotry = (t, o, f) => _createDynamicObject(typeof(MethodInfo), methodInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.MethodInfo), methodInfo.Value, to, f);
+#endif
             }
             else
             {
@@ -721,7 +842,7 @@ namespace Aqua.Dynamic
                 initializer = PopulateObjectMembers;
             }
 
-            return _toContext.TryGetOrCreateNew(type, obj, facotry, initializer, setTypeInformation);
+            return _toContext.TryGetOrCreateNew(sourceType, obj, facotry, initializer, setTypeInformation);
         }
 
         /// <summary>
@@ -814,34 +935,40 @@ namespace Aqua.Dynamic
         /// <returns>If overriden in a derived class, returns a list of <see cref="FieldInfo"/> for a given type or null if defaul behaviour should be applied</returns>
         protected virtual IEnumerable<FieldInfo> GetFieldsForMapping(Type type) => null;
 
-        private object MapInternal(DynamicObject obj, Type type)
+        private object MapInternal(DynamicObject obj, Type sourceType, Type targetType)
         {
-            if (type.IsAssignableFrom(typeof(DynamicObject)) && type != typeof(object))
-            {
-                return obj;
-            }
-
-            if (IsSingleValueWrapper(obj))
-            {
-                // project single property
-                var propertyValue = obj.Values.Single();
-                return MapFromDynamicObjectGraph(propertyValue, type);
-            }
-
             // project data record
             Func<Type, DynamicObject, object> factory;
             Action<Type, DynamicObject, object> initializer = null;
+
+            if (typeof(Delegate).IsAssignableFrom(targetType) && (sourceType == typeof(MethodInfo) || sourceType == typeof(TypeSystem.MethodInfo)))
+            {
+                factory = (t, o) =>
+                {
+                    var method = (MethodInfo)MapFromDynamicObjectIfRequired(o, typeof(MethodInfo));
+
+                    if (method.IsStatic)
+                    {
+                        return method.CreateDelegate(t);
+                    }
+                    else
+                    {
+                        var instance = Activator.CreateInstance(method.DeclaringType);
+                        return method.CreateDelegate(t, instance);
+                    }
+                };
+            }
 #if NET
-            if (_utilizeFormatterServices && type.IsSerializable())
+            else if (_utilizeFormatterServices && targetType.IsSerializable())
             {
                 factory = (t, item) => GetUninitializedObject(t);
                 initializer = PopulateObjectMembers;
             }
-            else
 #endif
+            else
             {
                 var dynamicProperties = obj.Properties.ToList();
-                var constructor = type.GetConstructors()
+                var constructor = targetType.GetConstructors()
                     .Select(i =>
                     {
                         var paramterList = i.GetParameters();
@@ -876,18 +1003,18 @@ namespace Aqua.Dynamic
                     };
                     initializer = CreatePropertyInitializer();
                 }
-                else if (type.IsValueType())
+                else if (targetType.IsValueType())
                 {
                     factory = (t, item) => Activator.CreateInstance(t);
                     initializer = CreatePropertyInitializer();
                 }
                 else
                 {
-                    throw new Exception($"Failed to pick matching constructor for type {type.FullName}");
+                    throw new Exception($"Failed to pick matching constructor for type {targetType.FullName}");
                 }
             }
 
-            return _fromContext.TryGetOrCreateNew(type, obj, factory, initializer);
+            return _fromContext.TryGetOrCreateNew(targetType, obj, factory, initializer);
         }
 
         private Action<Type, DynamicObject, object> CreatePropertyInitializer()

@@ -32,14 +32,15 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         // {
         //     public XmlSerializer() : base(XmlSerializationHelper.Serialize) { }
         // }
-#if NET
+
+#if !NETCOREAPP1_0
         public class BinaryFormatter : When_serializing_dynamic_object
         {
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
 #endif
 
-#if NET && !NETCOREAPP2
+#if NET && !NETCOREAPP2_0
         public class NetDataContractSerializer : When_serializing_dynamic_object
         {
             public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
@@ -77,10 +78,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<DateTimeOffset>(), "DateTimeOffset not supported by JsonSerializer");
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<Complex>(), "Complex not supported by JsonSerializer");
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<decimal>(), "Decimal not supported by JsonSerializer");
-            SkipOnCoreClr.If(this.TestIs<JsonSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by JsonSerializer on CORE CLR");
-            SkipOnCoreClr.If(this.TestIs<JsonSerializer>() && type.Is<ulong>(), "UInt64 not supported by JsonSerializer on CORE CLR");
-            SkipOnCoreClr.If(this.TestIs<DataContractSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by DataContractSerializer on CORE CLR");
-            SkipOnCoreClr.If(this.TestIs<DataContractSerializer>() && type.Is<Complex>(), "Complex not supported by DataContractSerializer on CORE CLR");
+            SkipOnNetCoreApp1_0.If(this.TestIs<JsonSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by JsonSerializer on CORE CLR");
+            SkipOnNetCoreApp1_0.If(this.TestIs<JsonSerializer>() && type.Is<ulong>(), "UInt64 not supported by JsonSerializer on CORE CLR");
+            SkipOnNetCoreApp1_0.If(this.TestIs<DataContractSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by DataContractSerializer on CORE CLR");
+            SkipOnNetCoreApp1_0.If(this.TestIs<DataContractSerializer>() && type.Is<Complex>(), "Complex not supported by DataContractSerializer on CORE CLR");
 
             var result = SerializeMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true });
             result.ShouldBe(value, $"type: {type.FullName}");
@@ -94,10 +95,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<DateTimeOffset>(), "DateTimeOffset not supported by JsonSerializer");
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<Complex>(), "Complex not supported by JsonSerializer");
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<decimal>(), "Decimal not supported by JsonSerializer");
-            SkipOnCoreClr.If(this.TestIs<JsonSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by JsonSerializer on CORE CLR");
-            SkipOnCoreClr.If(this.TestIs<JsonSerializer>() && type.Is<ulong>(), "UInt64 not supported by JsonSerializer on CORE CLR");
-            SkipOnCoreClr.If(this.TestIs<DataContractSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by DataContractSerializer on CORE CLR");
-            SkipOnCoreClr.If(this.TestIs<DataContractSerializer>() && type.Is<Complex>(), "Complex not supported by DataContractSerializer on CORE CLR");
+            SkipOnNetCoreApp1_0.If(this.TestIs<JsonSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by JsonSerializer on CORE CLR");
+            SkipOnNetCoreApp1_0.If(this.TestIs<JsonSerializer>() && type.Is<ulong>(), "UInt64 not supported by JsonSerializer on CORE CLR");
+            SkipOnNetCoreApp1_0.If(this.TestIs<DataContractSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by DataContractSerializer on CORE CLR");
+            SkipOnNetCoreApp1_0.If(this.TestIs<DataContractSerializer>() && type.Is<Complex>(), "Complex not supported by DataContractSerializer on CORE CLR");
 
             var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, false });
             result.ShouldBe(value, $"type: {type.FullName}");
@@ -111,10 +112,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<DateTimeOffset>(), "DateTimeOffset not supported by JsonSerializer");
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<Complex>(), "Complex not supported by JsonSerializer");
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<decimal>(), "Decimal not supported by JsonSerializer");
-            SkipOnCoreClr.If(this.TestIs<JsonSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by JsonSerializer on CORE CLR");
-            SkipOnCoreClr.If(this.TestIs<JsonSerializer>() && type.Is<ulong>(), "UInt64 not supported by JsonSerializer on CORE CLR");
-            SkipOnCoreClr.If(this.TestIs<DataContractSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by DataContractSerializer on CORE CLR");
-            SkipOnCoreClr.If(this.TestIs<DataContractSerializer>() && type.Is<Complex>(), "Complex not supported by DataContractSerializer on CORE CLR");
+            SkipOnNetCoreApp1_0.If(this.TestIs<JsonSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by JsonSerializer on CORE CLR");
+            SkipOnNetCoreApp1_0.If(this.TestIs<JsonSerializer>() && type.Is<ulong>(), "UInt64 not supported by JsonSerializer on CORE CLR");
+            SkipOnNetCoreApp1_0.If(this.TestIs<DataContractSerializer>() && type.Is<BigInteger>(), "BigInteger not supported by DataContractSerializer on CORE CLR");
+            SkipOnNetCoreApp1_0.If(this.TestIs<DataContractSerializer>() && type.Is<Complex>(), "Complex not supported by DataContractSerializer on CORE CLR");
 
             var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, true });
             result.ShouldBe(value, $"type: {type.FullName}");

@@ -27,7 +27,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             public XmlSerializer() : base(XmlSerializationHelper.Serialize) { }
         }
 
-#if NET
+#if !NETCOREAPP1_0
         public class BinaryFormatter : When_using_dynamic_object_for_complex_object_tree
         {
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }

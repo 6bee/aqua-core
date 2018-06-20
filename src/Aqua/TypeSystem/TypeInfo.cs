@@ -27,12 +27,12 @@ namespace Aqua.TypeSystem
         }
 
         public TypeInfo(Type type, bool includePropertyInfos = true)
-            : this(type, includePropertyInfos, true, TypeInfo.CreateReferenceTracker<Type>())
+            : this(type, includePropertyInfos, true, CreateReferenceTracker<Type>())
         {
         }
 
         public TypeInfo(Type type, bool includePropertyInfos, bool setMemberDeclaringTypes)
-            : this(type, includePropertyInfos, setMemberDeclaringTypes, TypeInfo.CreateReferenceTracker<Type>())
+            : this(type, includePropertyInfos, setMemberDeclaringTypes, CreateReferenceTracker<Type>())
         {
         }
 

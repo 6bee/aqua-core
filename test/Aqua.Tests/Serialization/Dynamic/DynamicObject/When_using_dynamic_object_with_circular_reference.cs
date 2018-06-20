@@ -23,7 +23,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         // XML serialization doesn't support circular references
-#if NET
+#if !NETCOREAPP1_0
         public class BinaryFormatter : When_using_dynamic_object_with_circular_reference
         {
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
