@@ -362,6 +362,9 @@ namespace Aqua.Dynamic
         private readonly Func<Type, object, DynamicObject> _createDynamicObject;
         private readonly bool _suppressMemberAssignabilityValidation;
         private readonly bool _formatPrimitiveTypesAsString;
+#if NET
+        private readonly bool _utilizeFormatterServices;
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObjectMapper"/> class.
@@ -381,6 +384,10 @@ namespace Aqua.Dynamic
             _suppressMemberAssignabilityValidation = !settings.SilentlySkipUnassignableMembers;
 
             _formatPrimitiveTypesAsString = settings.FormatPrimitiveTypesAsString;
+
+#if NET
+            _utilizeFormatterServices = settings.UtilizeFormatterServices;
+#endif
 
             _fromContext = new ObjectFormatterContext<DynamicObject, object>();
 
@@ -769,7 +776,7 @@ namespace Aqua.Dynamic
         private void PopulateObjectMembers(Type type, object from, DynamicObject to, Func<Type, bool> setTypeInformation)
         {
 #if NET
-            if (type.IsSerializable())
+            if (_utilizeFormatterServices && type.IsSerializable())
             {
                 MapObjectMembers(type, from, to, setTypeInformation);
             }
@@ -825,7 +832,7 @@ namespace Aqua.Dynamic
             Func<Type, DynamicObject, object> factory;
             Action<Type, DynamicObject, object> initializer = null;
 #if NET
-            if (type.IsSerializable())
+            if (_utilizeFormatterServices && type.IsSerializable())
             {
                 factory = (t, item) => GetUninitializedObject(t);
                 initializer = PopulateObjectMembers;

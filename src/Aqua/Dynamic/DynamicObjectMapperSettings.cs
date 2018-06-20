@@ -18,5 +18,13 @@ namespace Aqua.Dynamic
         /// The default value is <code>false</code>.
         /// </summary>
         public bool FormatPrimitiveTypesAsString { get; set; } = false;
+
+#if NET
+        /// <summary>
+        /// Gets or sets a value indicating whether serializable types should be formatted using <see cref="System.Runtime.Serialization.FormatterServices"/>.
+        /// The default value is <code>true</code>.
+        /// </summary>
+        public bool UtilizeFormatterServices { get; set; } = true;
+#endif
     }
 }
