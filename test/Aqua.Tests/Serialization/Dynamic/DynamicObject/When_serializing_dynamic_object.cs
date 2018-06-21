@@ -40,7 +40,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 #endif
 
-#if NET && !NETCOREAPP2_0
+#if NET
         public class NetDataContractSerializer : When_serializing_dynamic_object
         {
             public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }

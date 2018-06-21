@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\src\Aqua\SerializableAttribute.NETSTANDARD.cs;..\..\src\Aqua\NonSerializedAttribute.NETSTANDARD.cs" Exclude="bin\**;obj\**;**\*.xproj;packages\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\Aqua\Aqua.csproj" />
     <ProjectReference Include="..\..\src\Aqua.Newtonsoft.Json\Aqua.Newtonsoft.Json.csproj" />
     <ProjectReference Include="..\Aqua.Tests.TestObjects1\Aqua.Tests.TestObjects1.csproj" />

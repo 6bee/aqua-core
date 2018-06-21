@@ -66,12 +66,10 @@ namespace Aqua.TypeSystem
                 }
             }
 
-#if NET || NETSTANDARD
             if (ReferenceEquals(null, type))
             {
                 type = _typeEmitter(typeInfo);
             }
-#endif
 
             if (ReferenceEquals(null, type))
             {

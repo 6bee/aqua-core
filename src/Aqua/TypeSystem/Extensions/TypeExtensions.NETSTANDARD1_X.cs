@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if NETSTANDARD1_X || UAP
+#if NETSTANDARD1_X
 
 namespace Aqua.TypeSystem.Extensions
 {
