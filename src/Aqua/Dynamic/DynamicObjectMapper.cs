@@ -879,7 +879,7 @@ namespace Aqua.Dynamic
 #endif
             {
                 var properties = GetPropertiesForMapping(type) ??
-                    type.GetProperties().Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
+                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
                 foreach (var property in properties.Where(p => p.GetCustomAttribute<UnmappedAttribute>() == null))
                 {
                     var value = property.GetValue(from);
@@ -887,7 +887,7 @@ namespace Aqua.Dynamic
                     to.Add(property.Name, value);
                 }
 
-                var fields = GetFieldsForMapping(type) ?? type.GetFields();
+                var fields = GetFieldsForMapping(type) ?? type.GetFields(BindingFlags.Instance | BindingFlags.Public);
                 foreach (var field in fields.Where(f => f.GetCustomAttribute<UnmappedAttribute>() == null))
                 {
                     var value = field.GetValue(from);
@@ -956,7 +956,7 @@ namespace Aqua.Dynamic
                                     Info = parameter,
                                     Property = dynamicProperties
                                         .Where(dynamicProperty => string.Equals(dynamicProperty.Name, parameter.Name, StringComparison.OrdinalIgnoreCase))
-                                        .Select(dynamicProperty => new { Name = dynamicProperty.Name, Value = MapFromDynamicObjectGraph(dynamicProperty.Value, parameter.ParameterType) })
+                                        .Select(dynamicProperty => new { dynamicProperty.Name, Value = MapFromDynamicObjectGraph(dynamicProperty.Value, parameter.ParameterType) })
                                         .SingleOrDefault(dynamicProperty => IsAssignable(parameter.ParameterType, dynamicProperty.Value)),
                                 })
                                 .ToArray(),
@@ -996,7 +996,7 @@ namespace Aqua.Dynamic
             return (type, item, obj) =>
             {
                 var properties = GetPropertiesForMapping(type) ??
-                    type.GetProperties().Where(p => p.CanWrite && p.GetIndexParameters().Length == 0);
+                    type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite && p.GetIndexParameters().Length == 0);
                 foreach (var property in properties.Where(p => p.GetCustomAttribute<UnmappedAttribute>() == null))
                 {
                     object rawValue;
@@ -1013,8 +1013,8 @@ namespace Aqua.Dynamic
                     }
                 }
 
-                var fields = GetFieldsForMapping(type) ?? type.GetFields();
-                foreach (var field in fields.Where(f => f.GetCustomAttribute<UnmappedAttribute>() == null))
+                var fields = GetFieldsForMapping(type) ?? type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+                foreach (var field in fields.Where(f => !f.IsInitOnly && f.GetCustomAttribute<UnmappedAttribute>() == null))
                 {
                     object rawValue;
                     if (item.TryGet(field.Name, out rawValue))

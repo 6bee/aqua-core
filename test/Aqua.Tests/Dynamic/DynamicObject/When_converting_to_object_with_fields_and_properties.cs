@@ -13,7 +13,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         private class CustomType
         {
 #pragma warning disable
-            public readonly string StringValue;
+            public readonly string StringValue = "Default";
             private string PrivateStringValue;
             public DateTime Date;
 #pragma warning enable
@@ -69,7 +69,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_the_readonly_string_field_not_set()
         {
-            obj.StringValue.ShouldBe(StringValue1);
+            obj.StringValue.ShouldBe("Default");
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_the_readonly_string_property_not_set()
         {
-            obj.RedundantValue.ShouldBe(StringValue1);
+            obj.RedundantValue.ShouldBe("Default");
         }
 
         [Fact]
