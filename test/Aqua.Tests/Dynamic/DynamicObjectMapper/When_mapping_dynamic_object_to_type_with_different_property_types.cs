@@ -10,7 +10,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using Xunit;
 
     /// <summary>
-    /// Covers mapping type mismatches for unassignable types without validation, i.e. exeption upon assignment
+    /// Covers mapping type mismatches for unassignable types without validation, i.e. exeption upon assignment.
     /// </summary>
     public class When_mapping_dynamic_object_to_type_with_different_property_types
     {

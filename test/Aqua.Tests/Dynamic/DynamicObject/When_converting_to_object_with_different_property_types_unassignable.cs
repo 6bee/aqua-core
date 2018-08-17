@@ -7,7 +7,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using Xunit;
 
     /// <summary>
-    /// Covers mapping type missmatches for types which allow exlicit conversion only
+    /// Covers mapping type missmatches for types which allow exlicit conversion only.
     /// </summary>
     public class When_converting_to_object_with_different_property_types_unassignable
     {

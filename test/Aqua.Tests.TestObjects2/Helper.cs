@@ -2,8 +2,8 @@
 
 namespace Aqua.Tests.TestObjects2
 {
+    using Aqua.Tests.TestObjects;
     using System;
-    using TestObjects;
 
     public static class Helper
     {

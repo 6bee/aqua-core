@@ -16,7 +16,7 @@ namespace Aqua.Dynamic
         private const string BackingFieldRegexPattern = @"^(.+\+)?\<(?<name>.+)\>k__BackingField$";
 
         /// <summary>
-        /// Gets an uninitialized instance of the specified type by using <see cref="FormatterServices" />
+        /// Gets an uninitialized instance of the specified type by using <see cref="FormatterServices" />.
         /// </summary>
         private static object GetUninitializedObject(Type type)
         {
@@ -24,7 +24,7 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Populate object members type by using <see cref="FormatterServices" />
+        /// Populate object members type by using <see cref="FormatterServices" />.
         /// </summary>
         private void PopulateObjectMembers(Type type, DynamicObject from, object to)
         {
@@ -77,7 +77,7 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Retrieves object members type by using <see cref="FormatterServices" /> and populates dynamic object
+        /// Retrieves object members type by using <see cref="FormatterServices" /> and populates dynamic object.
         /// </summary>
         private void MapObjectMembers(Type type, object from, DynamicObject to, Func<Type, bool> setTypeInformation)
         {

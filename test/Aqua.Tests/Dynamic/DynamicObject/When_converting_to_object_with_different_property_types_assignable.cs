@@ -8,7 +8,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using Xunit;
 
     /// <summary>
-    /// Covers mapping type missmatches for assignable types, i.e. no casting required
+    /// Covers mapping type missmatches for assignable types, i.e. no casting required.
     /// </summary>
     public class When_converting_to_object_with_different_property_types_assignable
     {

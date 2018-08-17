@@ -8,7 +8,7 @@ namespace Aqua
 
     /// <summary>
     /// A weak-reference cache that can be hooked-in method calls to serve cached instances
-    /// or transparently create the requested value if not contained in cache
+    /// or transparently create the requested value if not contained in cache.
     /// </summary>
     public class TransparentCache<TKey, TValue>
     {
@@ -20,7 +20,7 @@ namespace Aqua
         /// Initializes a new instance of the <see cref="TransparentCache{TKey, TValue}"/> class.
         /// </summary>
         /// <param name="cleanupDelay">Number of milliseconds to delay the task to clean-up stale references. Set to -1 to suppress clean-up or 0 to run clean-up synchronously.</param>
-        /// <param name="comparer">Optional comparer for cache keys</param>
+        /// <param name="comparer">Optional comparer for cache keys.</param>
         public TransparentCache(int cleanupDelay = 2000, IEqualityComparer<TKey> comparer = null)
         {
             if (cleanupDelay < -1)

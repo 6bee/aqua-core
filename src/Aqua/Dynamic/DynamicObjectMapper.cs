@@ -71,7 +71,7 @@ namespace Aqua.Dynamic
             }
 
             /// <summary>
-            /// Returns an existing instance if found in the reference map, creates a new instance otherwise
+            /// Returns an existing instance if found in the reference map, creates a new instance otherwise.
             /// </summary>
             internal DynamicObject TryGetOrCreateNew(Type sourceType, object from, Func<Type, object, Func<Type, bool>, DynamicObject> factory, Action<Type, object, DynamicObject, Func<Type, bool>> initializer, Func<Type, bool> setTypeInformation)
             {
@@ -113,7 +113,7 @@ namespace Aqua.Dynamic
             }
 
             /// <summary>
-            /// Returns an existing instance if found in the reference map, creates a new instance otherwise
+            /// Returns an existing instance if found in the reference map, creates a new instance otherwise.
             /// </summary>
             internal object TryGetOrCreateNew(Type targetType, DynamicObject from, Func<Type, DynamicObject, object> factory, Action<Type, DynamicObject, object> initializer)
             {
@@ -397,11 +397,11 @@ namespace Aqua.Dynamic
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObjectMapper"/> class.
         /// </summary>
-        /// <param name="settings">Optional settings for dynamic object mapping</param>
-        /// <param name="typeResolver">Optional instance to be used to resolve types</param>
+        /// <param name="settings">Optional settings for dynamic object mapping.</param>
+        /// <param name="typeResolver">Optional instance to be used to resolve types.</param>
         /// <param name="typeMapper">This optional parameter allows mapping type information which get set into the <see cref="DynamicObject"/>s upon their creation.</param>
         /// <param name="dynamicObjectFactory">This optional parameter allows injection of a custom factory for <see cref="DynamicObject"/>.</param>
-        /// <param name="isKnownTypeProvider">Optional instance to decide whether a type requires to be mapped into a <see cref="DynamicObject"/>, know types do not get mapped</param>
+        /// <param name="isKnownTypeProvider">Optional instance to decide whether a type requires to be mapped into a <see cref="DynamicObject"/>, know types do not get mapped.</param>
         public DynamicObjectMapper(DynamicObjectMapperSettings settings = null, ITypeResolver typeResolver = null, ITypeMapper typeMapper = null, IDynamicObjectFactory dynamicObjectFactory = null, IIsKnownTypeProvider isKnownTypeProvider = null)
         {
             if (ReferenceEquals(null, settings))
@@ -453,11 +453,11 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Maps a <see cref="DynamicObject"/> into a collection of objects
+        /// Maps a <see cref="DynamicObject"/> into a collection of objects.
         /// </summary>
-        /// <param name="obj"><see cref="DynamicObject"/> to be mapped</param>
+        /// <param name="obj"><see cref="DynamicObject"/> to be mapped.</param>
         /// <param name="type">Target type for mapping, set this parameter to null if type information included within <see cref="DynamicObject"/> should be used.</param>
-        /// <returns>The object created based on the <see cref="DynamicObject"/> specified</returns>
+        /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
         public object Map(DynamicObject obj, Type type)
         {
             return MapFromDynamicObjectGraph(obj, type);
@@ -480,33 +480,33 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Maps a <see cref="DynamicObject"/> into an instance of <typeparamref name="T"/>
+        /// Maps a <see cref="DynamicObject"/> into an instance of <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T">The target type in which the <see cref="DynamicObject"/> have to be mapped to</typeparam>
-        /// <param name="obj"><see cref="DynamicObject"/> to be mapped</param>
-        /// <returns>The object created based on the <see cref="DynamicObject"/> specified</returns>
+        /// <typeparam name="T">The target type in which the <see cref="DynamicObject"/> have to be mapped to.</typeparam>
+        /// <param name="obj"><see cref="DynamicObject"/> to be mapped.</param>
+        /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
         public T Map<T>(DynamicObject obj)
         {
             return (T)MapFromDynamicObjectGraph(obj, typeof(T));
         }
 
         /// <summary>
-        /// Maps a collection of <see cref="DynamicObject"/>s into a collection of <typeparamref name="T"/>
+        /// Maps a collection of <see cref="DynamicObject"/>s into a collection of <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T">The target type in which the <see cref="DynamicObject"/> have to be mapped to</typeparam>
-        /// <param name="objects">Collection of <see cref="DynamicObject"/>s to be mapped</param>
-        /// <returns>Collection of <typeparamref name="T"/> created based on the <see cref="DynamicObject"/>s specified</returns>
+        /// <typeparam name="T">The target type in which the <see cref="DynamicObject"/> have to be mapped to.</typeparam>
+        /// <param name="objects">Collection of <see cref="DynamicObject"/>s to be mapped.</param>
+        /// <returns>Collection of <typeparamref name="T"/> created based on the <see cref="DynamicObject"/>s specified.</returns>
         public IEnumerable<T> Map<T>(IEnumerable<DynamicObject> objects)
         {
             return objects.Select(x => Map<T>(x)).ToList();
         }
 
         /// <summary>
-        /// Maps a collection of objects into a collection of <see cref="DynamicObject"/>
+        /// Maps a collection of objects into a collection of <see cref="DynamicObject"/>.
         /// </summary>
-        /// <param name="obj">The object to be mapped</param>
+        /// <param name="obj">The object to be mapped.</param>
         /// <param name="setTypeInformation">Set this parameter to true if type information should be included within the <see cref="DynamicObject"/>s, set it to false otherwise.</param>
-        /// <returns>A collection of <see cref="DynamicObject"/> representing the objects specified</returns>
+        /// <returns>A collection of <see cref="DynamicObject"/> representing the objects specified.</returns>
         public IEnumerable<DynamicObject> MapCollection(object obj, Func<Type, bool> setTypeInformation = null)
         {
             IEnumerable<DynamicObject> enumerable;
@@ -537,12 +537,12 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Mapps the specified instance into a <see cref="DynamicObject"/>
+        /// Mapps the specified instance into a <see cref="DynamicObject"/>.
         /// </summary>
         /// <remarks>Null references and <see cref="DynamicObject"/> are not mapped.</remarks>
-        /// <param name="obj">The instance to be mapped</param>
+        /// <param name="obj">The instance to be mapped.</param>
         /// <param name="setTypeInformation">Set this parameter to true if type information should be included within the <see cref="DynamicObject"/>, set it to false otherwise.</param>
-        /// <returns>An instance of <see cref="DynamicObject"/> representing the mapped instance</returns>
+        /// <returns>An instance of <see cref="DynamicObject"/> representing the mapped instance.</returns>
         public DynamicObject MapObject(object obj, Func<Type, bool> setTypeInformation = null)
         {
             return MapToDynamicObjectGraph(obj, setTypeInformation);
@@ -722,7 +722,7 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Maps an object to a dynamic object
+        /// Maps an object to a dynamic object.
         /// </summary>
         /// <remarks>Null references and dynamic objects are not mapped.</remarks>
         private DynamicObject MapInternal(object obj, Func<Type, bool> setTypeInformation)
@@ -866,7 +866,7 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Extrancts member values from source object and populates to dynamic object
+        /// Extrancts member values from source object and populates to dynamic object.
         /// </summary>
         private void PopulateObjectMembers(Type type, object from, DynamicObject to, Func<Type, bool> setTypeInformation)
         {
@@ -898,15 +898,15 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Can be overriden in a derived class to return a list of <see cref="PropertyInfo"/> for a given type or null if defaul behaviour should be applied
+        /// Can be overriden in a derived class to return a list of <see cref="PropertyInfo"/> for a given type or null if defaul behaviour should be applied.
         /// </summary>
-        /// <returns>If overriden in a derived class, returns a list of <see cref="PropertyInfo"/> for a given type or null if defaul behaviour should be applied</returns>
+        /// <returns>If overriden in a derived class, returns a list of <see cref="PropertyInfo"/> for a given type or null if defaul behaviour should be applied.</returns>
         protected virtual IEnumerable<PropertyInfo> GetPropertiesForMapping(Type type) => null;
 
         /// <summary>
-        /// Can be overriden in a derived class to return a list of <see cref="FieldInfo"/> for a given type or null if defaul behaviour should be applied
+        /// Can be overriden in a derived class to return a list of <see cref="FieldInfo"/> for a given type or null if defaul behaviour should be applied.
         /// </summary>
-        /// <returns>If overriden in a derived class, returns a list of <see cref="FieldInfo"/> for a given type or null if defaul behaviour should be applied</returns>
+        /// <returns>If overriden in a derived class, returns a list of <see cref="FieldInfo"/> for a given type or null if defaul behaviour should be applied.</returns>
         protected virtual IEnumerable<FieldInfo> GetFieldsForMapping(Type type) => null;
 
         private object MapInternal(DynamicObject obj, Type sourceType, Type targetType)
