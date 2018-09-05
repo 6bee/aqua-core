@@ -4,7 +4,6 @@ namespace Aqua.TypeSystem
 {
     using Aqua.TypeSystem.Extensions;
     using System;
-    using System.Collections.Generic;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
@@ -20,12 +19,12 @@ namespace Aqua.TypeSystem
         {
         }
 
-        protected MemberInfo(System.Reflection.MemberInfo memberInfo, Dictionary<Type, TypeInfo> referenceTracker)
+        internal MemberInfo(System.Reflection.MemberInfo memberInfo, TypeInfoProvider typeInfoProvider)
         {
             if (!ReferenceEquals(null, memberInfo))
             {
                 Name = memberInfo.Name;
-                DeclaringType = TypeInfo.Create(referenceTracker, memberInfo.DeclaringType, false, false);
+                DeclaringType = typeInfoProvider.Get(memberInfo.DeclaringType, false, false);
             }
         }
 
@@ -35,12 +34,12 @@ namespace Aqua.TypeSystem
             DeclaringType = declaringType;
         }
 
-        protected MemberInfo(MemberInfo memberInfo, Dictionary<TypeInfo, TypeInfo> referenceTracker)
+        internal MemberInfo(MemberInfo memberInfo, TypeInfoProvider typeInfoProvider)
         {
             if (!ReferenceEquals(null, memberInfo))
             {
                 Name = memberInfo.Name;
-                DeclaringType = TypeInfo.Create(referenceTracker, memberInfo.DeclaringType);
+                DeclaringType = typeInfoProvider.Get(memberInfo.DeclaringType);
             }
         }
 
@@ -60,20 +59,23 @@ namespace Aqua.TypeSystem
             => $"{DeclaringType}.{Name}";
 
         public static MemberInfo Create(System.Reflection.MemberInfo memberInfo)
+            => Create(memberInfo, new TypeInfoProvider());
+
+        internal static MemberInfo Create(System.Reflection.MemberInfo memberInfo, TypeInfoProvider typeInfoProvider)
         {
             switch (memberInfo.GetMemberType())
             {
                 case MemberTypes.Field:
-                    return new FieldInfo((System.Reflection.FieldInfo)memberInfo);
+                    return new FieldInfo((System.Reflection.FieldInfo)memberInfo, typeInfoProvider);
 
                 case MemberTypes.Constructor:
-                    return new ConstructorInfo((System.Reflection.ConstructorInfo)memberInfo);
+                    return new ConstructorInfo((System.Reflection.ConstructorInfo)memberInfo, typeInfoProvider);
 
                 case MemberTypes.Property:
-                    return new PropertyInfo((System.Reflection.PropertyInfo)memberInfo);
+                    return new PropertyInfo((System.Reflection.PropertyInfo)memberInfo, typeInfoProvider);
 
                 case MemberTypes.Method:
-                    return new MethodInfo((System.Reflection.MethodInfo)memberInfo);
+                    return new MethodInfo((System.Reflection.MethodInfo)memberInfo, typeInfoProvider);
 
                 default:
                     throw new Exception($"Not supported member type: {memberInfo.GetMemberType()}");

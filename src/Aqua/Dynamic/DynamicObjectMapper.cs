@@ -18,6 +18,22 @@ namespace Aqua.Dynamic
 
     public partial class DynamicObjectMapper : IDynamicObjectMapper
     {
+        private sealed class InternalDynamicObjectFactory : IDynamicObjectFactory
+        {
+            private readonly ITypeInfoProvider _typeInfoProvider;
+
+            public InternalDynamicObjectFactory(ITypeInfoProvider typeInfoProvider)
+            {
+                _typeInfoProvider = typeInfoProvider ?? new TypeInfoProvider();
+            }
+
+            public DynamicObject CreateDynamicObject(Type type, object instance)
+            {
+                var typeInfo = _typeInfoProvider.Get(type);
+                return new DynamicObject(typeInfo);
+            }
+        }
+
         [DebuggerDisplay("{Type} {Value}")]
         private sealed class ReferenceMapKey
         {
@@ -397,6 +413,18 @@ namespace Aqua.Dynamic
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObjectMapper"/> class.
         /// </summary>
+        /// <param name="typeResolver">Provides a hook for custom logic for type resolution when mapping from <see cref="DynamicObject"/>.</param>
+        /// <param name="typeInfoProvider">Provides a hook for mapping type information when mapping to <see cref="DynamicObject"/>.</param>
+        /// <param name="settings">Optional settings for dynamic object mapping.</param>
+        /// <param name="isKnownTypeProvider">Optional instance to decide whether a type requires to be mapped into a <see cref="DynamicObject"/>, know types do not get mapped.</param>
+        public DynamicObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, DynamicObjectMapperSettings settings = null, IIsKnownTypeProvider isKnownTypeProvider = null)
+            : this(settings, typeResolver, null, new InternalDynamicObjectFactory(typeInfoProvider), isKnownTypeProvider)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DynamicObjectMapper"/> class.
+        /// </summary>
         /// <param name="settings">Optional settings for dynamic object mapping.</param>
         /// <param name="typeResolver">Optional instance to be used to resolve types.</param>
         /// <param name="typeMapper">This optional parameter allows mapping type information which get set into the <see cref="DynamicObject"/>s upon their creation.</param>
@@ -427,8 +455,9 @@ namespace Aqua.Dynamic
                 ? (t => false)
                 : new Func<Type, bool>(isKnownTypeProvider.IsKnownType);
 
+            var typeInfoProvider = new TypeInfoProvider();
             _createDynamicObject = ReferenceEquals(null, dynamicObjectFactory)
-                ? (t, o) => new DynamicObject(t)
+                ? (t, o) => new DynamicObject(typeInfoProvider.Get(t))
                 : new Func<Type, object, DynamicObject>(dynamicObjectFactory.CreateDynamicObject);
         }
 

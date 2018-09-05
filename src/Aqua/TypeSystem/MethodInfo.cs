@@ -2,12 +2,9 @@
 
 namespace Aqua.TypeSystem
 {
-    using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
-    using System.Reflection;
     using System.Runtime.Serialization;
     using BindingFlags = System.Reflection.BindingFlags;
 
@@ -25,14 +22,19 @@ namespace Aqua.TypeSystem
         }
 
         public MethodInfo(System.Reflection.MethodInfo methodInfo)
-            : base(methodInfo, TypeInfo.CreateReferenceTracker<Type>())
+            : this(methodInfo, new TypeInfoProvider())
+        {
+        }
+
+        internal MethodInfo(System.Reflection.MethodInfo methodInfo, TypeInfoProvider typeInfoProvider)
+            : base(methodInfo, typeInfoProvider)
         {
             _method = methodInfo;
         }
 
         // TODO: replace binding flags by bool flags
         public MethodInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes)
-            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes, TypeInfo.CreateReferenceTracker<Type>())
+            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes, new TypeInfoProvider())
         {
         }
 
@@ -42,7 +44,7 @@ namespace Aqua.TypeSystem
         }
 
         protected MethodInfo(MethodInfo methodInfo)
-            : base(methodInfo, TypeInfo.CreateReferenceTracker<TypeInfo>())
+            : base(methodInfo, new TypeInfoProvider())
         {
         }
 
@@ -67,7 +69,7 @@ namespace Aqua.TypeSystem
             string returnType;
             try
             {
-                returnType = new TypeInfo(Method.ReturnType, includePropertyInfos: false).ToString();
+                returnType = new TypeInfo(Method.ReturnType, false, false).ToString();
             }
             catch
             {

@@ -27,20 +27,20 @@ namespace Aqua.TypeSystem
         }
 
         public TypeInfo(Type type, bool includePropertyInfos = true)
-            : this(type, includePropertyInfos, true, CreateReferenceTracker<Type>())
+            : this(type, includePropertyInfos, true)
         {
         }
 
         public TypeInfo(Type type, bool includePropertyInfos, bool setMemberDeclaringTypes)
-            : this(type, includePropertyInfos, setMemberDeclaringTypes, CreateReferenceTracker<Type>())
+            : this(type, new TypeInfoProvider(includePropertyInfos, setMemberDeclaringTypes))
         {
         }
 
-        private TypeInfo(Type type, bool includePropertyInfos, bool setMemberDeclaringTypes, Dictionary<Type, TypeInfo> referenceTracker)
+        internal TypeInfo(Type type, TypeInfoProvider typeInfoProvider)
         {
             if (!ReferenceEquals(null, type))
             {
-                referenceTracker.Add(type, this);
+                typeInfoProvider.RegisterReference(type, this);
 
                 _type = type;
 
@@ -60,7 +60,7 @@ namespace Aqua.TypeSystem
 
                 if (type.IsNested && !type.IsGenericParameter)
                 {
-                    DeclaringType = TypeInfo.Create(referenceTracker, type.DeclaringType, false, false);
+                    DeclaringType = typeInfoProvider.Get(type.DeclaringType, false, false);
                 }
 
                 IsGenericType = type.IsGenericType();
@@ -69,46 +69,46 @@ namespace Aqua.TypeSystem
                 {
                     GenericArguments = type
                         .GetGenericArguments()
-                        .Select(x => TypeInfo.Create(referenceTracker, x, includePropertyInfos, setMemberDeclaringTypes))
+                        .Select(x => typeInfoProvider.Get(x))
                         .ToList();
                 }
 
                 IsAnonymousType = type.IsAnonymousType();
 
-                if (IsAnonymousType || includePropertyInfos)
+                if (IsAnonymousType || typeInfoProvider.IncludePropertyInfos)
                 {
                     Properties = type
                         .GetProperties()
 #if !NETSTANDARD1_3
                         .OrderBy(x => x.MetadataToken)
 #endif
-                        .Select(x => new PropertyInfo(x.Name, TypeInfo.Create(referenceTracker, x.PropertyType, includePropertyInfos, setMemberDeclaringTypes), setMemberDeclaringTypes ? this : null))
+                        .Select(x => new PropertyInfo(x.Name, typeInfoProvider.Get(x.PropertyType), typeInfoProvider.SetMemberDeclaringTypes ? this : null))
                         .ToList();
                 }
             }
         }
 
         public TypeInfo(TypeInfo typeInfo)
-            : this(typeInfo, TypeInfo.CreateReferenceTracker<TypeInfo>())
+            : this(typeInfo, new TypeInfoProvider())
         {
         }
 
-        private TypeInfo(TypeInfo typeInfo, Dictionary<TypeInfo, TypeInfo> referenceTracker)
+        internal TypeInfo(TypeInfo typeInfo, TypeInfoProvider typeInfoProvider)
         {
             if (ReferenceEquals(null, typeInfo))
             {
                 throw new ArgumentNullException(nameof(typeInfo));
             }
 
-            referenceTracker.Add(typeInfo, this);
+            typeInfoProvider.RegisterReference(typeInfo, this);
 
             Name = typeInfo.Name;
             Namespace = typeInfo.Namespace;
-            DeclaringType = ReferenceEquals(null, typeInfo.DeclaringType) ? null : Create(referenceTracker, typeInfo.DeclaringType);
-            GenericArguments = typeInfo.GenericArguments?.Select(x => Create(referenceTracker, x)).ToList();
+            DeclaringType = ReferenceEquals(null, typeInfo.DeclaringType) ? null : typeInfoProvider.Get(typeInfo.DeclaringType);
+            GenericArguments = typeInfo.GenericArguments?.Select(typeInfoProvider.Get).ToList();
             IsGenericType = typeInfo.IsGenericType;
             IsAnonymousType = typeInfo.IsAnonymousType;
-            Properties = typeInfo.Properties?.Select(x => new PropertyInfo(x, referenceTracker)).ToList();
+            Properties = typeInfo.Properties?.Select(x => new PropertyInfo(x, typeInfoProvider)).ToList();
             _type = typeInfo._type;
         }
 
@@ -182,26 +182,6 @@ namespace Aqua.TypeSystem
                 ? string.Format("[{0}]", string.Join(",", genericArguments.Select(x => x.ToString()).ToArray()))
                 : null;
             return genericArgumentsString;
-        }
-
-        internal static Dictionary<T, TypeInfo> CreateReferenceTracker<T>()
-            => new Dictionary<T, TypeInfo>(ReferenceEqualityComparer<T>.Default);
-
-        internal static TypeInfo Create(Dictionary<Type, TypeInfo> referenceTracker, Type type, bool includePropertyInfos, bool setMemberDeclaringTypes)
-            => referenceTracker.TryGetValue(type, out TypeInfo typeInfo)
-                ? typeInfo
-                : new TypeInfo(type, includePropertyInfos, setMemberDeclaringTypes, referenceTracker);
-
-        internal static TypeInfo Create(Dictionary<TypeInfo, TypeInfo> referenceTracker, TypeInfo type)
-        {
-            if (ReferenceEquals(null, type))
-            {
-                return null;
-            }
-
-            return referenceTracker.TryGetValue(type, out TypeInfo typeInfo)
-                ? typeInfo
-                : new TypeInfo(type, referenceTracker);
         }
     }
 }

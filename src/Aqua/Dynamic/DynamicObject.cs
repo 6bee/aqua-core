@@ -28,7 +28,7 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <param name="type">The type to be set.</param>
         public DynamicObject(Type type)
-            : this(ReferenceEquals(null, type) ? null : new TypeInfo(type, includePropertyInfos: false), default(PropertySet))
+            : this(ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false), default(PropertySet))
         {
         }
 

@@ -3,7 +3,6 @@
 namespace Aqua.TypeSystem
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Runtime.Serialization;
 
@@ -21,12 +20,12 @@ namespace Aqua.TypeSystem
         }
 
         public PropertyInfo(System.Reflection.PropertyInfo propertyInfo)
-            : this(propertyInfo, TypeInfo.CreateReferenceTracker<Type>())
+            : this(propertyInfo, new TypeInfoProvider())
         {
         }
 
         public PropertyInfo(string propertyName, Type propertyType, Type declaringType)
-            : this(propertyName, propertyType, declaringType, TypeInfo.CreateReferenceTracker<Type>())
+            : this(propertyName, propertyType, declaringType, new TypeInfoProvider())
         {
         }
 
@@ -37,31 +36,31 @@ namespace Aqua.TypeSystem
         }
 
         protected PropertyInfo(PropertyInfo propertyInfo)
-            : base(propertyInfo, TypeInfo.CreateReferenceTracker<TypeInfo>())
+            : base(propertyInfo, new TypeInfoProvider())
         {
         }
 
-        internal PropertyInfo(PropertyInfo propertyInfo, Dictionary<TypeInfo, TypeInfo> referenceTracker)
-            : base(propertyInfo, referenceTracker)
+        internal PropertyInfo(PropertyInfo propertyInfo, TypeInfoProvider typeInfoProvider)
+            : base(propertyInfo, typeInfoProvider)
         {
             if (ReferenceEquals(null, propertyInfo))
             {
                 throw new ArgumentNullException(nameof(propertyInfo));
             }
 
-            PropertyType = TypeInfo.Create(referenceTracker, propertyInfo.PropertyType);
+            PropertyType = typeInfoProvider.Get(propertyInfo.PropertyType);
             _property = propertyInfo._property;
         }
 
-        private PropertyInfo(System.Reflection.PropertyInfo propertyInfo, Dictionary<Type, TypeInfo> referenceTracker)
-            : base(propertyInfo, referenceTracker)
+        internal PropertyInfo(System.Reflection.PropertyInfo propertyInfo, TypeInfoProvider typeInfoProvider)
+            : base(propertyInfo, typeInfoProvider)
         {
             _property = propertyInfo;
-            PropertyType = TypeInfo.Create(referenceTracker, propertyInfo.PropertyType, false, false);
+            PropertyType = typeInfoProvider.Get(propertyInfo.PropertyType, false, false);
         }
 
-        private PropertyInfo(string propertyName, Type propertyType, Type declaringType, Dictionary<Type, TypeInfo> referenceTracker)
-            : this(propertyName, TypeInfo.Create(referenceTracker, propertyType, false, false), TypeInfo.Create(referenceTracker, declaringType, false, false))
+        private PropertyInfo(string propertyName, Type propertyType, Type declaringType, TypeInfoProvider typeInfoProvider)
+            : this(propertyName, typeInfoProvider.Get(propertyType, false, false), typeInfoProvider.Get(declaringType, false, false))
         {
         }
 

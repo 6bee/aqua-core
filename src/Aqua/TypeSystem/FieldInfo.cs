@@ -4,7 +4,6 @@ namespace Aqua.TypeSystem
 {
     using System;
     using System.Diagnostics;
-    using System.Reflection;
     using System.Runtime.Serialization;
 
     [Serializable]
@@ -21,13 +20,18 @@ namespace Aqua.TypeSystem
         }
 
         public FieldInfo(System.Reflection.FieldInfo fieldInfo)
-            : base(fieldInfo, TypeInfo.CreateReferenceTracker<Type>())
+            : this(fieldInfo, new TypeInfoProvider())
+        {
+        }
+
+        internal FieldInfo(System.Reflection.FieldInfo fieldInfo, TypeInfoProvider typeInfoProvider)
+            : base(fieldInfo, typeInfoProvider)
         {
             _field = fieldInfo;
         }
 
         public FieldInfo(string fieldName, Type declaringType)
-            : this(fieldName, TypeInfo.Create(TypeInfo.CreateReferenceTracker<Type>(), declaringType, false, false))
+            : this(fieldName, new TypeInfoProvider().Get(declaringType, false, false))
         {
         }
 
@@ -37,7 +41,7 @@ namespace Aqua.TypeSystem
         }
 
         protected FieldInfo(FieldInfo fieldInfo)
-            : base(fieldInfo, TypeInfo.CreateReferenceTracker<TypeInfo>())
+            : base(fieldInfo, new TypeInfoProvider())
         {
         }
 

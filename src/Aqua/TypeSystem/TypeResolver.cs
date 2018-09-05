@@ -2,7 +2,6 @@
 
 namespace Aqua.TypeSystem
 {
-    using Aqua.Extensions;
     using System;
     using System.Linq;
     using System.Reflection;

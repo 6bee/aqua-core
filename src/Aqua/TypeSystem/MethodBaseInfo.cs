@@ -19,8 +19,8 @@ namespace Aqua.TypeSystem
         {
         }
 
-        protected MethodBaseInfo(System.Reflection.MethodBase methodInfo, Dictionary<Type, TypeInfo> referenceTracker)
-            : base(methodInfo, referenceTracker)
+        internal MethodBaseInfo(System.Reflection.MethodBase methodInfo, TypeInfoProvider typeInfoProvider)
+            : base(methodInfo, typeInfoProvider)
         {
             var bindingFlags = methodInfo.IsStatic ? BindingFlags.Static : BindingFlags.Instance;
             bindingFlags |= methodInfo.IsPublic ? BindingFlags.Public : BindingFlags.NonPublic;
@@ -29,22 +29,22 @@ namespace Aqua.TypeSystem
             var genericArguments = methodInfo.IsGenericMethod ? methodInfo.GetGenericArguments() : null;
             GenericArgumentTypes = ReferenceEquals(null, genericArguments) || genericArguments.Length == 0
                 ? null
-                : genericArguments.Select(x => TypeInfo.Create(referenceTracker, x, false, false)).ToList();
+                : genericArguments.Select(x => typeInfoProvider.Get(x, false, false)).ToList();
 
             var parameters = methodInfo.GetParameters();
             ParameterTypes = parameters.Length == 0
                 ? null
-                : parameters.Select(x => TypeInfo.Create(referenceTracker, x.ParameterType, false, false)).ToList();
+                : parameters.Select(x => typeInfoProvider.Get(x.ParameterType, false, false)).ToList();
         }
 
         // TODO: replace binding flags by bool flags
-        protected MethodBaseInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, Dictionary<Type, TypeInfo> referenceTracker)
+        internal MethodBaseInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, TypeInfoProvider typeInfoProvider)
             : this(
             name,
-            TypeInfo.Create(referenceTracker, declaringType, includePropertyInfos: false, setMemberDeclaringTypes: false),
+            typeInfoProvider.Get(declaringType, includePropertyInfosOverride: false, setMemberDeclaringTypesOverride: false),
             bindingFlags,
-            ReferenceEquals(null, genericArguments) ? null : genericArguments.Select(x => TypeInfo.Create(referenceTracker, x, false, false)),
-            ReferenceEquals(null, parameterTypes) ? null : parameterTypes.Select(x => TypeInfo.Create(referenceTracker, x, false, false)))
+            ReferenceEquals(null, genericArguments) ? null : genericArguments.Select(x => typeInfoProvider.Get(x, false, false)),
+            ReferenceEquals(null, parameterTypes) ? null : parameterTypes.Select(x => typeInfoProvider.Get(x, false, false)))
         {
         }
 
@@ -62,12 +62,12 @@ namespace Aqua.TypeSystem
                 : parameterTypes.ToList();
         }
 
-        protected MethodBaseInfo(MethodBaseInfo methodBaseInfo, Dictionary<TypeInfo, TypeInfo> referenceTracker)
-            : base(methodBaseInfo, referenceTracker)
+        internal MethodBaseInfo(MethodBaseInfo methodBaseInfo, TypeInfoProvider typeInfoProvider)
+            : base(methodBaseInfo, typeInfoProvider)
         {
             BindingFlags = methodBaseInfo.BindingFlags;
-            GenericArgumentTypes = ReferenceEquals(null, methodBaseInfo.GenericArgumentTypes) ? null : methodBaseInfo.GenericArgumentTypes.Select(x => TypeInfo.Create(referenceTracker, x)).ToList();
-            ParameterTypes = ReferenceEquals(null, methodBaseInfo.ParameterTypes) ? null : methodBaseInfo.ParameterTypes.Select(x => TypeInfo.Create(referenceTracker, x)).ToList();
+            GenericArgumentTypes = ReferenceEquals(null, methodBaseInfo.GenericArgumentTypes) ? null : methodBaseInfo.GenericArgumentTypes.Select(typeInfoProvider.Get).ToList();
+            ParameterTypes = ReferenceEquals(null, methodBaseInfo.ParameterTypes) ? null : methodBaseInfo.ParameterTypes.Select(typeInfoProvider.Get).ToList();
         }
 
         // TODO: replace binding flags by bool flags
