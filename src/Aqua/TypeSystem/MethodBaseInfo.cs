@@ -27,7 +27,7 @@ namespace Aqua.TypeSystem
             BindingFlags = bindingFlags;
 
             var genericArguments = methodInfo.IsGenericMethod ? methodInfo.GetGenericArguments() : null;
-            GenericArgumentTypes = ReferenceEquals(null, genericArguments) || genericArguments.Length == 0
+            GenericArgumentTypes = genericArguments is null || genericArguments.Length == 0
                 ? null
                 : genericArguments.Select(x => typeInfoProvider.Get(x, false, false)).ToList();
 
@@ -43,8 +43,8 @@ namespace Aqua.TypeSystem
             name,
             typeInfoProvider.Get(declaringType, includePropertyInfosOverride: false, setMemberDeclaringTypesOverride: false),
             bindingFlags,
-            ReferenceEquals(null, genericArguments) ? null : genericArguments.Select(x => typeInfoProvider.Get(x, false, false)),
-            ReferenceEquals(null, parameterTypes) ? null : parameterTypes.Select(x => typeInfoProvider.Get(x, false, false)))
+            genericArguments?.Select(x => typeInfoProvider.Get(x, false, false)),
+            parameterTypes?.Select(x => typeInfoProvider.Get(x, false, false)))
         {
         }
 
@@ -53,11 +53,11 @@ namespace Aqua.TypeSystem
         {
             BindingFlags = bindingFlags;
 
-            GenericArgumentTypes = ReferenceEquals(null, genericArguments) || !genericArguments.Any()
+            GenericArgumentTypes = genericArguments is null || !genericArguments.Any()
                 ? null
                 : genericArguments.ToList();
 
-            ParameterTypes = ReferenceEquals(null, parameterTypes) || !parameterTypes.Any()
+            ParameterTypes = parameterTypes is null || !parameterTypes.Any()
                 ? null
                 : parameterTypes.ToList();
         }
@@ -66,8 +66,8 @@ namespace Aqua.TypeSystem
             : base(methodBaseInfo, typeInfoProvider)
         {
             BindingFlags = methodBaseInfo.BindingFlags;
-            GenericArgumentTypes = ReferenceEquals(null, methodBaseInfo.GenericArgumentTypes) ? null : methodBaseInfo.GenericArgumentTypes.Select(typeInfoProvider.Get).ToList();
-            ParameterTypes = ReferenceEquals(null, methodBaseInfo.ParameterTypes) ? null : methodBaseInfo.ParameterTypes.Select(typeInfoProvider.Get).ToList();
+            GenericArgumentTypes = methodBaseInfo.GenericArgumentTypes?.Select(typeInfoProvider.Get).ToList();
+            ParameterTypes = methodBaseInfo.ParameterTypes?.Select(typeInfoProvider.Get).ToList();
         }
 
         // TODO: replace binding flags by bool flags
@@ -80,16 +80,16 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
         public List<TypeInfo> ParameterTypes { get; set; }
 
-        public bool IsGenericMethod => !ReferenceEquals(null, GenericArgumentTypes) && GenericArgumentTypes.Any();
+        public bool IsGenericMethod => !(GenericArgumentTypes is null) && GenericArgumentTypes.Any();
 
         public override string ToString()
         {
-            var hasGenericArguments = !ReferenceEquals(null, GenericArgumentTypes) && GenericArgumentTypes.Any();
+            var hasGenericArguments = !(GenericArgumentTypes is null) && GenericArgumentTypes.Any();
             return string.Format(
                 "{0}.{1}{3}{4}{5}({2})",
                 DeclaringType,
                 Name,
-                ReferenceEquals(null, ParameterTypes) ? null : string.Join(", ", ParameterTypes.Select(x => x.ToString()).ToArray()),
+                ParameterTypes is null ? null : string.Join(", ", ParameterTypes.Select(x => x.ToString()).ToArray()),
                 hasGenericArguments ? "<" : null,
                 hasGenericArguments ? string.Join(", ", GenericArgumentTypes.Select(x => x.ToString()).ToArray()) : null,
                 hasGenericArguments ? ">" : null);

@@ -54,12 +54,12 @@ namespace Aqua.TypeSystem.Extensions
 
         internal static ConstructorInfo GetConstructor(this Type type, BindingFlags bindingAttr, /*Binder*/object binder, Type[] types, /*ParameterModifier[]*/object modifiers)
         {
-            if (!ReferenceEquals(null, binder))
+            if (!(binder is null))
             {
                 throw new NotSupportedException("Binder not supported by WinRT");
             }
 
-            if (!ReferenceEquals(null, modifiers))
+            if (!(modifiers is null))
             {
                 throw new NotSupportedException("ParameterModifier not supported by WinRT");
             }

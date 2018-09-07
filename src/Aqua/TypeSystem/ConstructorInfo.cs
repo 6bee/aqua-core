@@ -44,17 +44,7 @@ namespace Aqua.TypeSystem
         public override MemberTypes MemberType => MemberTypes.Constructor;
 
         internal System.Reflection.ConstructorInfo Constructor
-        {
-            get
-            {
-                if (ReferenceEquals(null, _constructor))
-                {
-                    _constructor = this.ResolveConstructor(TypeResolver.Instance);
-                }
-
-                return _constructor;
-            }
-        }
+            => _constructor ?? (_constructor = this.ResolveConstructor(TypeResolver.Instance));
 
         public static explicit operator System.Reflection.ConstructorInfo(ConstructorInfo c)
             => c.Constructor;

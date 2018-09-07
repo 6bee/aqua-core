@@ -26,7 +26,7 @@ namespace Aqua.TypeSystem.Emit
 
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj))
+                if (obj is null)
                 {
                     return false;
                 }
@@ -73,7 +73,7 @@ namespace Aqua.TypeSystem.Emit
                 _typeFullName = typeInfo.FullName;
 
                 var properties = typeInfo.Properties;
-                _properties = ReferenceEquals(null, properties)
+                _properties = properties is null
                     ? new List<Tuple<string, Type>>().AsReadOnly()
                     : properties.Select(CreatePropertyInfo).ToList().AsReadOnly();
 
@@ -86,7 +86,7 @@ namespace Aqua.TypeSystem.Emit
 
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj))
+                if (obj is null)
                 {
                     return false;
                 }
@@ -118,7 +118,7 @@ namespace Aqua.TypeSystem.Emit
 
             private static Tuple<string, Type> CreatePropertyInfo(PropertyInfo propertyInfo)
             {
-                if (ReferenceEquals(null, propertyInfo))
+                if (propertyInfo is null)
                 {
                     return null;
                 }
@@ -130,7 +130,7 @@ namespace Aqua.TypeSystem.Emit
                 }
 
                 var propertyTypeInfo = propertyInfo.PropertyType;
-                if (ReferenceEquals(null, propertyInfo))
+                if (propertyInfo is null)
                 {
                     throw new Exception($"Property type missing for property '{propertyInfo.Name}'");
                 }

@@ -49,17 +49,7 @@ namespace Aqua.TypeSystem
 
         [Dynamic.Unmapped]
         internal System.Reflection.FieldInfo Field
-        {
-            get
-            {
-                if (ReferenceEquals(null, _field))
-                {
-                    _field = this.ResolveField(TypeResolver.Instance);
-                }
-
-                return _field;
-            }
-        }
+            => _field ?? (_field = this.ResolveField(TypeResolver.Instance));
 
         public static explicit operator System.Reflection.FieldInfo(FieldInfo f)
             => f.Field;

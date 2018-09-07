@@ -44,16 +44,16 @@ namespace Aqua
         internal static void DynamicObjectSerializationCallback(object o, StreamingContext context)
         {
             var dynamicObject = o as DynamicObject;
-            if (!ReferenceEquals(null, dynamicObject))
+            if (!(dynamicObject is null))
             {
                 var type = dynamicObject.Type;
-                if (!ReferenceEquals(null, type))
+                if (!(type is null))
                 {
                     if (dynamicObject.Values?.Count() == 1)
                     {
                         var value = dynamicObject.Values.Single();
                         var enumerable = value as IEnumerable;
-                        if (!ReferenceEquals(null, enumerable) && !(value is string))
+                        if (!(enumerable is null) && !(value is string))
                         {
                             TypeInfo elementType = null;
                             var array = _arrayNameRegex.Match(type.Name);
@@ -76,10 +76,10 @@ namespace Aqua
                                 // else (elementType.Implements(typeof(IEnumerable<>))) { ... }
                             }
 
-                            if (!ReferenceEquals(null, elementType))
+                            if (!(elementType is null))
                             {
                                 var converter = GetConverter(elementType);
-                                if (!ReferenceEquals(null, converter))
+                                if (!(converter is null))
                                 {
                                     var convertedValues = enumerable
                                         .Cast<object>()
@@ -92,7 +92,7 @@ namespace Aqua
                         else
                         {
                             var converter = GetConverter(type);
-                            if (!ReferenceEquals(null, converter))
+                            if (!(converter is null))
                             {
                                 dynamicObject.Properties.Single().Value = converter(value);
                             }
@@ -100,16 +100,16 @@ namespace Aqua
                     }
 
                     var properties = type.Properties;
-                    if (!ReferenceEquals(null, properties))
+                    if (!(properties is null))
                     {
                         foreach (var property in properties)
                         {
                             var converter = GetConverter(property.PropertyType);
-                            if (!ReferenceEquals(null, converter))
+                            if (!(converter is null))
                             {
                                 var dynamicProperty = dynamicObject.Properties
                                     .SingleOrDefault(x => string.Equals(x.Name, property.Name));
-                                if (!ReferenceEquals(null, dynamicProperty))
+                                if (!(dynamicProperty is null))
                                 {
                                     dynamicProperty.Value = converter(dynamicProperty.Value);
                                 }
@@ -122,7 +122,7 @@ namespace Aqua
 
         public static Func<object, object> GetConverter(TypeInfo typeInfo)
         {
-            if (ReferenceEquals(null, typeInfo))
+            if (typeInfo is null)
             {
                 return null;
             }
@@ -136,9 +136,9 @@ namespace Aqua
             if (string.Equals(typeInfo.FullName, typeof(Nullable<>).FullName) && typeInfo.GenericArguments?.Count == 1)
             {
                 converter = GetConverter(typeInfo.GenericArguments.Single());
-                if (!ReferenceEquals(null, converter))
+                if (!(converter is null))
                 {
-                    return x => ReferenceEquals(null, x) ? null : converter(x);
+                    return x => x is null ? null : converter(x);
                 }
             }
 

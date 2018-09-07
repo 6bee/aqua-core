@@ -21,7 +21,7 @@ namespace Aqua.TypeSystem
 
         internal MemberInfo(System.Reflection.MemberInfo memberInfo, TypeInfoProvider typeInfoProvider)
         {
-            if (!ReferenceEquals(null, memberInfo))
+            if (!(memberInfo is null))
             {
                 Name = memberInfo.Name;
                 DeclaringType = typeInfoProvider.Get(memberInfo.DeclaringType, false, false);
@@ -36,7 +36,7 @@ namespace Aqua.TypeSystem
 
         internal MemberInfo(MemberInfo memberInfo, TypeInfoProvider typeInfoProvider)
         {
-            if (!ReferenceEquals(null, memberInfo))
+            if (!(memberInfo is null))
             {
                 Name = memberInfo.Name;
                 DeclaringType = typeInfoProvider.Get(memberInfo.DeclaringType);

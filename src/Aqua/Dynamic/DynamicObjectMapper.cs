@@ -55,8 +55,7 @@ namespace Aqua.Dynamic
                 }
 
                 var other = obj as ReferenceMapKey;
-
-                if (ReferenceEquals(null, other))
+                if (other is null)
                 {
                     return false;
                 }
@@ -94,7 +93,7 @@ namespace Aqua.Dynamic
                 DynamicObject to;
                 if (!_referenceMap.TryGetValue(from, out to))
                 {
-                    var setTypeInformationValue = ReferenceEquals(null, setTypeInformation) ? true : setTypeInformation(sourceType);
+                    var setTypeInformationValue = setTypeInformation is null ? true : setTypeInformation(sourceType);
 
                     to = factory(setTypeInformationValue ? _dynamicObjectTypeInfoMapper(sourceType) : null, from, setTypeInformation);
 
@@ -109,7 +108,7 @@ namespace Aqua.Dynamic
                         return _referenceMap[from];
                     }
 
-                    if (!ReferenceEquals(null, initializer))
+                    if (!(initializer is null))
                     {
                         initializer(sourceType, from, to, setTypeInformation);
                     }
@@ -150,7 +149,7 @@ namespace Aqua.Dynamic
                         return _referenceMap[key];
                     }
 
-                    if (!ReferenceEquals(null, initializer))
+                    if (!(initializer is null))
                     {
                         initializer(targetType, from, to);
                     }
@@ -432,7 +431,7 @@ namespace Aqua.Dynamic
         /// <param name="isKnownTypeProvider">Optional instance to decide whether a type requires to be mapped into a <see cref="DynamicObject"/>, know types do not get mapped.</param>
         public DynamicObjectMapper(DynamicObjectMapperSettings settings = null, ITypeResolver typeResolver = null, ITypeMapper typeMapper = null, IDynamicObjectFactory dynamicObjectFactory = null, IIsKnownTypeProvider isKnownTypeProvider = null)
         {
-            if (ReferenceEquals(null, settings))
+            if (settings is null)
             {
                 settings = new DynamicObjectMapperSettings();
             }
@@ -447,30 +446,30 @@ namespace Aqua.Dynamic
 
             _fromContext = new FromContext();
 
-            _toContext = new ToContext(ReferenceEquals(null, typeMapper) ? default(Func<Type, Type>) : typeMapper.MapType);
+            _toContext = new ToContext(typeMapper is null ? default(Func<Type, Type>) : typeMapper.MapType);
 
             _typeResolver = typeResolver ?? TypeResolver.Instance;
 
-            _isKnownType = ReferenceEquals(null, isKnownTypeProvider)
+            _isKnownType = isKnownTypeProvider is null
                 ? (t => false)
                 : new Func<Type, bool>(isKnownTypeProvider.IsKnownType);
 
             var typeInfoProvider = new TypeInfoProvider();
-            _createDynamicObject = ReferenceEquals(null, dynamicObjectFactory)
+            _createDynamicObject = dynamicObjectFactory is null
                 ? (t, o) => new DynamicObject(typeInfoProvider.Get(t))
                 : new Func<Type, object, DynamicObject>(dynamicObjectFactory.CreateDynamicObject);
         }
 
         public System.Collections.IEnumerable Map(IEnumerable<DynamicObject> objects, Type type = null)
         {
-            if (ReferenceEquals(null, objects))
+            if (objects is null)
             {
                 throw new ArgumentNullException(nameof(objects));
             }
 
             var items = objects.Select(x => Map(x, type));
 
-            if (ReferenceEquals(null, type))
+            if (type is null)
             {
                 return items.ToArray();
             }
@@ -494,12 +493,12 @@ namespace Aqua.Dynamic
 
         public object Map(DynamicObject obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return null;
             }
 
-            if (ReferenceEquals(null, obj.Type))
+            if (obj.Type is null)
             {
                 throw new InvalidOperationException("Type property must not be null");
             }
@@ -539,7 +538,7 @@ namespace Aqua.Dynamic
         public IEnumerable<DynamicObject> MapCollection(object obj, Func<Type, bool> setTypeInformation = null)
         {
             IEnumerable<DynamicObject> enumerable;
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 enumerable = null;
             }
@@ -561,8 +560,7 @@ namespace Aqua.Dynamic
                 enumerable = new[] { value };
             }
 
-            var list = ReferenceEquals(null, enumerable) ? null : enumerable.ToList();
-            return list;
+            return enumerable?.ToList();
         }
 
         /// <summary>
@@ -604,17 +602,17 @@ namespace Aqua.Dynamic
 
         private object MapFromDynamicObjectIfRequired(object obj, Type targetType)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return null;
             }
 
             var dynamicObj = obj as DynamicObject;
-            if (!ReferenceEquals(null, dynamicObj))
+            if (!(dynamicObj is null))
             {
                 var sourceType = dynamicObj.Type.ResolveType(_typeResolver);
 
-                if (!ReferenceEquals(null, sourceType))
+                if (!(sourceType is null))
                 {
                     if ((targetType == typeof(Type) || targetType == typeof(TypeInfo)) &&
                         (sourceType == typeof(TypeSystem.TypeInfo) || sourceType == typeof(Type) || sourceType == typeof(TypeInfo)))
@@ -643,7 +641,7 @@ namespace Aqua.Dynamic
                         var constructorInfo = (TypeSystem.ConstructorInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.ConstructorInfo));
                         return constructorInfo.ResolveConstructor(_typeResolver);
                     }
-                    else if (ReferenceEquals(null, targetType) || targetType.IsAssignableFrom(sourceType))
+                    else if (targetType is null || targetType.IsAssignableFrom(sourceType))
                     {
                         targetType = sourceType;
                     }
@@ -659,8 +657,7 @@ namespace Aqua.Dynamic
                     return MapFromDynamicObjectIfRequired(dynamicObj.Values.Single(), targetType);
                 }
 
-                var mappedValue = MapInternal(dynamicObj, sourceType, targetType);
-                return mappedValue;
+                return MapInternal(dynamicObj, sourceType, targetType);
             }
 
             var objectType = obj.GetType();
@@ -691,22 +688,19 @@ namespace Aqua.Dynamic
 
                 if (targetType.IsArray)
                 {
-                    var r2 = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
-                    return r2;
+                    return MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
                 }
 
                 if (IsMatchingDictionary(targetType, elementType))
                 {
                     var targetTypeGenericArguments = targetType.GetGenericArguments();
                     var method = ToDictionaryMethodInfo.MakeGenericMethod(targetTypeGenericArguments.ToArray());
-                    var r2 = method.Invoke(null, new[] { r1 });
-                    return r2;
+                    return method.Invoke(null, new[] { r1 });
                 }
 
                 if (targetType.IsAssignableFrom(typeof(List<>).MakeGenericType(elementType)))
                 {
-                    var r2 = MethodInfos.Enumerable.ToList.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
-                    return r2;
+                    return MethodInfos.Enumerable.ToList.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
                 }
 
                 var enumerableType = typeof(IEnumerable<>).MakeGenericType(elementType);
@@ -717,7 +711,7 @@ namespace Aqua.Dynamic
                         && parameters[0].ParameterType.IsAssignableFrom(enumerableType);
                 });
 
-                if (!ReferenceEquals(null, ctor))
+                if (!(ctor is null))
                 {
                     return ctor.Invoke(new[] { r1 });
                 }
@@ -756,7 +750,7 @@ namespace Aqua.Dynamic
         /// <remarks>Null references and dynamic objects are not mapped.</remarks>
         private DynamicObject MapInternal(object obj, Func<Type, bool> setTypeInformation)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return null;
             }
@@ -854,7 +848,7 @@ namespace Aqua.Dynamic
         /// <remarks>Null references, strings, value types, and dynamic objects are no mapped.</remarks>
         private object MapToDynamicObjectIfRequired(object obj, Func<Type, bool> setTypeInformation)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return null;
             }
@@ -882,7 +876,7 @@ namespace Aqua.Dynamic
             }
 
             var collection = obj as System.Collections.IEnumerable;
-            if (!ReferenceEquals(null, collection) && !ShouldMapToDynamicObject(collection))
+            if (!(collection is null) && !ShouldMapToDynamicObject(collection))
             {
                 var items = collection
                     .Cast<object>()
@@ -992,9 +986,9 @@ namespace Aqua.Dynamic
                         };
                     })
                     .OrderByDescending(i => i.ParametersCount == 0 ? int.MaxValue : i.ParametersCount)
-                    .FirstOrDefault(i => i.Parameters.All(p => !ReferenceEquals(null, p.Property)));
+                    .FirstOrDefault(i => i.Parameters.All(p => !(p.Property is null)));
 
-                if (!ReferenceEquals(null, constructor))
+                if (!(constructor is null))
                 {
                     factory = (t, item) =>
                     {
@@ -1237,7 +1231,7 @@ namespace Aqua.Dynamic
         {
             if (targetType.IsValueType())
             {
-                if (ReferenceEquals(null, value))
+                if (value is null)
                 {
                     return targetType.IsGenericType()
                         && targetType.GetGenericTypeDefinition() == typeof(Nullable<>);
@@ -1248,7 +1242,7 @@ namespace Aqua.Dynamic
             }
             else
             {
-                return ReferenceEquals(null, value) || targetType.IsAssignableFrom(value.GetType());
+                return value is null || targetType.IsAssignableFrom(value.GetType());
             }
         }
 
@@ -1260,7 +1254,7 @@ namespace Aqua.Dynamic
 
         private static bool TryExplicitConversions(Type targetType, ref object value)
         {
-            if (ReferenceEquals(null, value))
+            if (value is null)
             {
                 return false;
             }

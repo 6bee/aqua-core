@@ -39,7 +39,7 @@ namespace Aqua.Dynamic
 
             foreach (var dynamicProperty in from.Properties)
             {
-                if (!ReferenceEquals(null, customPropertyNames) && !customPropertyNames.ContainsKey(dynamicProperty.Name))
+                if (!(customPropertyNames is null) && !customPropertyNames.ContainsKey(dynamicProperty.Name))
                 {
                     continue;
                 }
@@ -91,7 +91,7 @@ namespace Aqua.Dynamic
             for (int i = 0; i < members.Length; i++)
             {
                 var memberName = GetCleanMemberName(members[i]);
-                if (!ReferenceEquals(null, customPropertyNames) && !customPropertyNames.ContainsKey(memberName))
+                if (!(customPropertyNames is null) && !customPropertyNames.ContainsKey(memberName))
                 {
                     continue;
                 }
@@ -114,7 +114,7 @@ namespace Aqua.Dynamic
             if (member.MemberType != MemberTypes.Property)
             {
                 var property = member.DeclaringType.GetProperty(memberName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                if (!ReferenceEquals(null, property))
+                if (!(property is null))
                 {
                     memberName = property.Name;
                 }

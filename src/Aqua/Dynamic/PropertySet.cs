@@ -18,12 +18,12 @@ namespace Aqua.Dynamic
 
             public bool Equals(Property p1, Property p2)
             {
-                if (ReferenceEquals(p1, null) || ReferenceEquals(p2, null))
+                if (p1 is null || p2 is null)
                 {
                     return false;
                 }
 
-                if (ReferenceEquals(p1.Name, null) || ReferenceEquals(p2.Name, null))
+                if (p1.Name is null || p2.Name is null)
                 {
                     return false;
                 }

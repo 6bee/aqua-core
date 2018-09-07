@@ -43,7 +43,7 @@ namespace Aqua.TypeSystem
         internal PropertyInfo(PropertyInfo propertyInfo, TypeInfoProvider typeInfoProvider)
             : base(propertyInfo, typeInfoProvider)
         {
-            if (ReferenceEquals(null, propertyInfo))
+            if (propertyInfo is null)
             {
                 throw new ArgumentNullException(nameof(propertyInfo));
             }
@@ -74,7 +74,7 @@ namespace Aqua.TypeSystem
         {
             get
             {
-                if (ReferenceEquals(null, _property))
+                if (_property is null)
                 {
                     _property = this.ResolveProperty(TypeResolver.Instance);
                 }

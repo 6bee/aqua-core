@@ -55,7 +55,7 @@ namespace Aqua.TypeSystem
         {
             get
             {
-                if (ReferenceEquals(null, _method))
+                if (_method is null)
                 {
                     _method = this.ResolveMethod(TypeResolver.Instance);
                 }

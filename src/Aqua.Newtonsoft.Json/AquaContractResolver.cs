@@ -19,7 +19,7 @@ namespace Aqua
 
         public override JsonContract ResolveContract(Type type)
         {
-            if (ReferenceEquals(null, _decorated) || typeof(DynamicObject).IsAssignableFrom(type))
+            if (_decorated is null || typeof(DynamicObject).IsAssignableFrom(type))
             {
                 return base.ResolveContract(type);
             }

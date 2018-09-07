@@ -40,7 +40,7 @@ namespace Aqua.Extensions
 
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj))
+                if (obj is null)
                 {
                     return false;
                 }
@@ -63,17 +63,17 @@ namespace Aqua.Extensions
 
             public static bool operator ==(Tuple<TLeft, TRight> a, Tuple<TLeft, TRight> b)
             {
-                if (ReferenceEquals(null, a) && ReferenceEquals(null, b))
+                if (a is null && b is null)
                 {
                     return true;
                 }
 
-                if (ReferenceEquals(null, a))
+                if (a is null)
                 {
                     return false;
                 }
 
-                if (ReferenceEquals(null, b))
+                if (b is null)
                 {
                     return false;
                 }
@@ -171,17 +171,17 @@ namespace Aqua.Extensions
 
         public static bool CollectionEquals<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> comparer)
         {
-            if (ReferenceEquals(null, collection1) && ReferenceEquals(null, collection2))
+            if (collection1 is null && collection2 is null)
             {
                 return true;
             }
 
-            if (ReferenceEquals(null, collection1))
+            if (collection1 is null)
             {
                 return !collection2.Any();
             }
 
-            if (ReferenceEquals(null, collection2))
+            if (collection2 is null)
             {
                 return !collection1.Any();
             }
@@ -191,7 +191,7 @@ namespace Aqua.Extensions
 
             foreach (T s in collection1)
             {
-                if (ReferenceEquals(null, s))
+                if (s == null)
                 {
                     nullCounter++;
                 }
@@ -207,7 +207,7 @@ namespace Aqua.Extensions
 
             foreach (T s in collection2)
             {
-                if (ReferenceEquals(null, s))
+                if (s == null)
                 {
                     nullCounter--;
                 }
@@ -228,7 +228,7 @@ namespace Aqua.Extensions
 
         public static int GetCollectionHashCode<T>(this IEnumerable<T> collection, IEqualityComparer<T> comparer)
         {
-            if (ReferenceEquals(null, comparer))
+            if (comparer is null)
             {
                 comparer = EqualityComparer<T>.Default;
             }
@@ -237,11 +237,11 @@ namespace Aqua.Extensions
             {
                 var hashCode = 0;
 
-                if (!ReferenceEquals(null, collection))
+                if (!(collection is null))
                 {
                     foreach (var item in collection)
                     {
-                        hashCode ^= ReferenceEquals(null, item) ? -1 : comparer.GetHashCode(item);
+                        hashCode ^= item == null ? -1 : comparer.GetHashCode(item);
                     }
                 }
 

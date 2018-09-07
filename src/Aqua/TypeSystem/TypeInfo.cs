@@ -38,7 +38,7 @@ namespace Aqua.TypeSystem
 
         internal TypeInfo(Type type, TypeInfoProvider typeInfoProvider)
         {
-            if (!ReferenceEquals(null, type))
+            if (!(type is null))
             {
                 typeInfoProvider.RegisterReference(type, this);
 
@@ -95,7 +95,7 @@ namespace Aqua.TypeSystem
 
         internal TypeInfo(TypeInfo typeInfo, TypeInfoProvider typeInfoProvider)
         {
-            if (ReferenceEquals(null, typeInfo))
+            if (typeInfo is null)
             {
                 throw new ArgumentNullException(nameof(typeInfo));
             }
@@ -104,7 +104,7 @@ namespace Aqua.TypeSystem
 
             Name = typeInfo.Name;
             Namespace = typeInfo.Namespace;
-            DeclaringType = ReferenceEquals(null, typeInfo.DeclaringType) ? null : typeInfoProvider.Get(typeInfo.DeclaringType);
+            DeclaringType = typeInfo.DeclaringType is null ? null : typeInfoProvider.Get(typeInfo.DeclaringType);
             GenericArguments = typeInfo.GenericArguments?.Select(typeInfoProvider.Get).ToList();
             IsGenericType = typeInfo.IsGenericType;
             IsAnonymousType = typeInfo.IsAnonymousType;
@@ -133,7 +133,7 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
         public List<PropertyInfo> Properties { get; set; }
 
-        public bool IsNested => !ReferenceEquals(null, DeclaringType);
+        public bool IsNested => !(DeclaringType is null);
 
         public bool IsGenericTypeDefinition => !GenericArguments?.Any() ?? true;
 
@@ -142,7 +142,7 @@ namespace Aqua.TypeSystem
             get
             {
                 var name = Name;
-                return !ReferenceEquals(null, name) && _arrayNameRegex.IsMatch(name);
+                return !(name is null) && _arrayNameRegex.IsMatch(name);
             }
         }
 
@@ -160,7 +160,7 @@ namespace Aqua.TypeSystem
         {
             get
             {
-                if (ReferenceEquals(null, _type))
+                if (_type is null)
                 {
                     _type = TypeResolver.Instance.ResolveType(this);
                 }

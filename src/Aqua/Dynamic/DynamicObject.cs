@@ -28,7 +28,7 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <param name="type">The type to be set.</param>
         public DynamicObject(Type type)
-            : this(ReferenceEquals(null, type) ? null : new TypeInfo(type, false, false), default(PropertySet))
+            : this(type is null ? null : new TypeInfo(type, false, false), default(PropertySet))
         {
         }
 
@@ -60,7 +60,7 @@ namespace Aqua.Dynamic
         /// <exception cref="ArgumentNullException">The specified members collection is null.</exception>
         public DynamicObject(IEnumerable<KeyValuePair<string, object>> properties)
         {
-            if (ReferenceEquals(null, properties))
+            if (properties is null)
             {
                 throw new ArgumentNullException(nameof(properties));
             }
@@ -75,7 +75,7 @@ namespace Aqua.Dynamic
         /// <exception cref="ArgumentNullException">The specified members collection is null.</exception>
         public DynamicObject(IEnumerable<Property> properties)
         {
-            if (ReferenceEquals(null, properties))
+            if (properties is null)
             {
                 throw new ArgumentNullException(nameof(properties));
             }
@@ -92,7 +92,7 @@ namespace Aqua.Dynamic
         /// <exception cref="ArgumentNullException">The specified object is null.</exception>
         public DynamicObject(object obj, IDynamicObjectMapper mapper = null)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 throw new ArgumentNullException(nameof(obj));
             }
@@ -110,14 +110,14 @@ namespace Aqua.Dynamic
         /// <exception cref="ArgumentNullException">The specified members collection is null.</exception>
         internal protected DynamicObject(DynamicObject dynamicObject, bool deepCopy = true)
         {
-            if (ReferenceEquals(null, dynamicObject))
+            if (dynamicObject is null)
             {
                 throw new ArgumentNullException(nameof(dynamicObject));
             }
 
-            Type = ReferenceEquals(null, dynamicObject.Type) ? null : new TypeInfo(dynamicObject.Type);
+            Type = dynamicObject.Type is null ? null : new TypeInfo(dynamicObject.Type);
 
-            if (ReferenceEquals(null, dynamicObject.Properties))
+            if (dynamicObject.Properties is null)
             {
                 Properties = null;
             }
@@ -185,7 +185,7 @@ namespace Aqua.Dynamic
             var oldValue = property?.Value;
             OnPropertyChanging(name, oldValue, value);
 
-            if (ReferenceEquals(null, property))
+            if (property is null)
             {
                 property = new Property(name, value);
                 Properties.Add(property);
@@ -237,7 +237,7 @@ namespace Aqua.Dynamic
         {
             var property = Properties.SingleOrDefault(x => string.Equals(x.Name, name));
 
-            if (ReferenceEquals(null, property))
+            if (property is null)
             {
                 return false;
             }
@@ -257,7 +257,7 @@ namespace Aqua.Dynamic
         {
             var property = Properties.SingleOrDefault(x => string.Equals(x.Name, name));
 
-            if (ReferenceEquals(null, property))
+            if (property is null)
             {
                 value = null;
                 return false;

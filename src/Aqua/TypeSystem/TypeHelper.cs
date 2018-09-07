@@ -68,11 +68,11 @@ namespace Aqua.TypeSystem
         }
 
         public static Type ResolveType(this TypeInfo typeInfo, ITypeResolver typeResolver)
-            => ReferenceEquals(null, typeInfo) ? null : typeResolver.ResolveType(typeInfo);
+            => typeInfo is null ? null : typeResolver.ResolveType(typeInfo);
 
         public static System.Reflection.MemberInfo ResolveMemberInfo(this MemberInfo memberInfo, ITypeResolver typeResolver)
         {
-            if (ReferenceEquals(null, memberInfo))
+            if (memberInfo is null)
             {
                 return null;
             }
@@ -98,14 +98,14 @@ namespace Aqua.TypeSystem
 
         public static System.Reflection.ConstructorInfo ResolveConstructor(this ConstructorInfo constructorInfo, ITypeResolver typeResolver)
         {
-            if (ReferenceEquals(null, constructorInfo))
+            if (constructorInfo is null)
             {
                 return null;
             }
 
             var declaringType = constructorInfo.ResolveDeclaringType(typeResolver);
 
-            var genericArguments = ReferenceEquals(null, constructorInfo.GenericArgumentTypes) ? new Type[0] : constructorInfo.GenericArgumentTypes
+            var genericArguments = constructorInfo.GenericArgumentTypes is null ? Array.Empty<Type>() : constructorInfo.GenericArgumentTypes
                 .Select(typeInfo =>
                 {
                     try
@@ -120,7 +120,7 @@ namespace Aqua.TypeSystem
                 })
                 .ToArray();
 
-            var parameterTypes = ReferenceEquals(null, constructorInfo.ParameterTypes) ? new Type[0] : constructorInfo.ParameterTypes
+            var parameterTypes = constructorInfo.ParameterTypes is null ? Array.Empty<Type>() : constructorInfo.ParameterTypes
                 .Select(typeInfo =>
                 {
                     try
@@ -136,7 +136,7 @@ namespace Aqua.TypeSystem
                 .ToArray();
 
             var result = declaringType.GetConstructor(constructorInfo.BindingFlags, null, parameterTypes, null);
-            if (ReferenceEquals(null, result))
+            if (result is null)
             {
                 result = declaringType.GetConstructors(constructorInfo.BindingFlags)
                     .Where(m => m.Name == constructorInfo.Name)
@@ -169,14 +169,14 @@ namespace Aqua.TypeSystem
 
         public static System.Reflection.MethodInfo ResolveMethod(this MethodInfo methodInfo, ITypeResolver typeResolver)
         {
-            if (ReferenceEquals(null, methodInfo))
+            if (methodInfo is null)
             {
                 return null;
             }
 
             var declaringType = methodInfo.ResolveDeclaringType(typeResolver);
 
-            var genericArguments = ReferenceEquals(null, methodInfo.GenericArgumentTypes) ? new Type[0] : methodInfo.GenericArgumentTypes
+            var genericArguments = methodInfo.GenericArgumentTypes is null ? Array.Empty<Type>() : methodInfo.GenericArgumentTypes
                 .Select(typeInfo =>
                 {
                     try
@@ -191,7 +191,7 @@ namespace Aqua.TypeSystem
                 })
                 .ToArray();
 
-            var parameterTypes = ReferenceEquals(null, methodInfo.ParameterTypes) ? new Type[0] : methodInfo.ParameterTypes
+            var parameterTypes = methodInfo.ParameterTypes is null ? Array.Empty<Type>() : methodInfo.ParameterTypes
                 .Select(typeInfo =>
                 {
                     try
@@ -246,5 +246,13 @@ namespace Aqua.TypeSystem
                 throw new Exception($"Declaring type '{memberInfo.DeclaringType}' could not be reconstructed", ex);
             }
         }
+
+#if NET
+        private static class Array
+        {
+            public static T[] Empty<T>()
+                => new T[0];
+        }
+#endif
     }
 }
