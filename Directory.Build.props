@@ -8,6 +8,7 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>..\..\key.snk</AssemblyOriginatorKeyFile>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
   </PropertyGroup>
   <PropertyGroup>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)StyleNoDoc.ruleset</CodeAnalysisRuleSet>
