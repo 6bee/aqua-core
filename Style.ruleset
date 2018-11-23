@@ -3,6 +3,7 @@
   <Include Path="MinimumRecommendedRules.ruleset" Action="Default" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CS1701" Action="Info" />
+    <Rule Id="CS1702" Action="Info" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
   </Rules>
