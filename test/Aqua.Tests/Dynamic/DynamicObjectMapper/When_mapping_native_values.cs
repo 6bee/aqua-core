@@ -10,7 +10,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using System.Reflection;
     using Xunit;
 
-    public class When_mapping_primitive_values
+    public class When_mapping_native_values
     {
         private class A<T>
         {
@@ -18,15 +18,15 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         }
 
         private static readonly MethodInfo MapAsValueMethod =
-            typeof(When_mapping_primitive_values).GetMethod(nameof(MapAsValue), BindingFlags.Static | BindingFlags.NonPublic);
+            typeof(When_mapping_native_values).GetMethod(nameof(MapAsValue), BindingFlags.Static | BindingFlags.NonPublic);
 
         private static readonly MethodInfo MapAsPropertyMethod =
-            typeof(When_mapping_primitive_values).GetMethod(nameof(MapAsProperty), BindingFlags.Static | BindingFlags.NonPublic);
+            typeof(When_mapping_native_values).GetMethod(nameof(MapAsProperty), BindingFlags.Static | BindingFlags.NonPublic);
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
-        public void Should_map_primitive_value(Type type, object value)
+        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
+        public void Should_map_native_value(Type type, object value)
         {
             SkipOnNetCoreApp1_0.If(type.Is<Complex>(), "Complex fails on CORE CLR 1.0.1 on Ubuntu (travis-ci)");
 
@@ -50,9 +50,9 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
-        public void Should_map_primitive_value_property(Type type, object value)
+        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
+        public void Should_map_native_value_property(Type type, object value)
         {
             SkipOnNetCoreApp1_0.If(type.Is<Complex>(), "Complex fails on CORE CLR 1.0.1 on Ubuntu (travis-ci)");
 

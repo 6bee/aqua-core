@@ -71,8 +71,8 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
         public void Should_serialize_value(Type type, object value)
         {
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<DateTimeOffset>(), "DateTimeOffset not supported by JsonSerializer");
@@ -88,8 +88,8 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property(Type type, object value)
         {
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<DateTimeOffset>(), "DateTimeOffset not supported by JsonSerializer");
@@ -105,8 +105,8 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.PrimitiveValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.PrimitiveValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property_when_using_string_formatting(Type type, object value)
         {
             Skip.If(this.TestIs<JsonSerializer>() && type.Is<DateTimeOffset>(), "DateTimeOffset not supported by JsonSerializer");
@@ -146,7 +146,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             Skip.If(this.TestIs<JsonSerializer>(), "DateTimeOffset not supported by JsonSerializer");
 
-            var mapperSettings = new DynamicObjectMapperSettings { FormatPrimitiveTypesAsString = true };
+            var mapperSettings = new DynamicObjectMapperSettings { FormatNativeTypesAsString = true };
             var mapper = new DynamicObjectMapper(mapperSettings);
 
             var dto1 = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
@@ -219,7 +219,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
         private TResult Serialize<TResult, TSource>(TSource value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
         {
-            var settings = new DynamicObjectMapperSettings { FormatPrimitiveTypesAsString = formatValuesAsStrings };
+            var settings = new DynamicObjectMapperSettings { FormatNativeTypesAsString = formatValuesAsStrings };
             var dynamicObject = new DynamicObjectMapper(settings).MapObject(value);
             if (dynamicObject != null && setTypeFromGenericArgument)
             {

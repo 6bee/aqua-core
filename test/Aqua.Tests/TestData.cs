@@ -42,7 +42,7 @@ namespace Aqua.Tests
             .Distinct()
             .Select(x => new Type[] { x });
 
-        public static IEnumerable<object[]> PrimitiveValues => new object[]
+        public static IEnumerable<object[]> NativeValues => new object[]
             {
                 $"Test values treated as native types in {nameof(DynamicObjectMapper)}",
                 byte.MinValue,
@@ -107,15 +107,15 @@ namespace Aqua.Tests
             .Distinct()
             .Select(x => new object[] { x.Item1, x.Item2 });
 
-        public static IEnumerable<object[]> PrimitiveValueArrays => PrimitiveValues
+        public static IEnumerable<object[]> NativeValueArrays => NativeValues
             .Select(x => new[]
             {
                 ((Type)x[0]).MakeArrayType(),
                 CreateArray((Type)x[0], x[1]),
             });
 
-        // NOTE: PrimitiveValueLists don't work with json.net since list element types don't get corrected by PrimitiveValueInspector
-        public static IEnumerable<object[]> PrimitiveValueLists => PrimitiveValues
+        // NOTE: NativeValueLists don't work with json.net since list element types don't get corrected by NativeValueInspector
+        public static IEnumerable<object[]> NativeValueLists => NativeValues
             .Select(x => new[]
             {
                 typeof(List<>).MakeGenericType((Type)x[0]),

@@ -405,7 +405,7 @@ namespace Aqua.Dynamic
         private readonly Func<Type, bool> _isKnownType;
         private readonly Func<Type, object, DynamicObject> _createDynamicObject;
         private readonly bool _suppressMemberAssignabilityValidation;
-        private readonly bool _formatPrimitiveTypesAsString;
+        private readonly bool _formatNativeTypesAsString;
 #if !NETSTANDARD1_X
         private readonly bool _utilizeFormatterServices;
 #endif
@@ -439,7 +439,7 @@ namespace Aqua.Dynamic
 
             _suppressMemberAssignabilityValidation = !settings.SilentlySkipUnassignableMembers;
 
-            _formatPrimitiveTypesAsString = settings.FormatPrimitiveTypesAsString;
+            _formatNativeTypesAsString = settings.FormatNativeTypesAsString;
 
 #if !NETSTANDARD1_X
             _utilizeFormatterServices = settings.UtilizeFormatterServices;
@@ -868,7 +868,7 @@ namespace Aqua.Dynamic
 
             if (_isNativeType(type))
             {
-                return _formatPrimitiveTypesAsString ? FormatNativeTypeAsString(obj, type) : obj;
+                return _formatNativeTypesAsString ? FormatNativeTypeAsString(obj, type) : obj;
             }
 
             if (type.IsEnum())

@@ -43,7 +43,7 @@ namespace Aqua
 
             if (typeof(DynamicObject).IsAssignableFrom(objectType))
             {
-                contract.OnDeserializedCallbacks.Add(PrimitiveValueInspector.DynamicObjectSerializationCallback);
+                contract.OnDeserializedCallbacks.Add(NativeValueInspector.DynamicObjectSerializationCallback);
                 contract.IsReference = true;
                 foreach (var property in contract.Properties.Where(x => !x.Writable || !x.Readable))
                 {

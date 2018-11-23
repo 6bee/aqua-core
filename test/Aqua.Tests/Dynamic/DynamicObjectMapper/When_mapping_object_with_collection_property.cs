@@ -71,7 +71,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             var obj = CreateObject(new sbyte?[] { 1, null, -128 });
 
-            var mapperSettings = new DynamicObjectMapperSettings { FormatPrimitiveTypesAsString = true };
+            var mapperSettings = new DynamicObjectMapperSettings { FormatNativeTypesAsString = true };
 
             var dynamicObject = new DynamicObjectMapper(mapperSettings).MapObject(obj);
 
