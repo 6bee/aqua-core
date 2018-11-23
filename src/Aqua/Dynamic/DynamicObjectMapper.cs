@@ -189,6 +189,7 @@ namespace Aqua.Dynamic
                 typeof(DateTimeOffset),
                 typeof(System.Numerics.BigInteger),
                 typeof(System.Numerics.Complex),
+                typeof(byte[]),
             }
             .SelectMany(x => x.IsValueType() ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
             .ToDictionary(x => x, x => (object)null).ContainsKey;
@@ -662,7 +663,7 @@ namespace Aqua.Dynamic
 
             var objectType = obj.GetType();
 
-            if (objectType == targetType && (!IsCollection(obj) || (obj is byte[])))
+            if (objectType == targetType && !IsCollection(obj))
             {
                 return obj;
             }
@@ -853,7 +854,7 @@ namespace Aqua.Dynamic
                 return null;
             }
 
-            if (obj is DynamicObject || obj is string || obj is byte[])
+            if (obj is DynamicObject || obj is string)
             {
                 return obj;
             }
@@ -1184,6 +1185,11 @@ namespace Aqua.Dynamic
                 }
             }
 
+            if (targetType == typeof(byte[]))
+            {
+                return Convert.FromBase64String(value);
+            }
+
             throw new NotImplementedException($"string parser for type {targetType} is not implemented");
         }
 
@@ -1323,6 +1329,11 @@ namespace Aqua.Dynamic
             {
                 var c = (System.Numerics.Complex)obj;
                 return $"{c.Real:R}{Math.Sign(c.Imaginary):+;-}i{Math.Abs(c.Imaginary):R}";
+            }
+
+            if (type == typeof(byte[]))
+            {
+                return Convert.ToBase64String((byte[])obj);
             }
 
             return obj.ToString();

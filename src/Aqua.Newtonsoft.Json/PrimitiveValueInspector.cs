@@ -14,7 +14,7 @@ namespace Aqua
 
     public static class PrimitiveValueInspector
     {
-        private static readonly Regex _arrayNameRegex = new Regex(@"^(.*)\[\,*\]$");
+        private static readonly Regex _arrayNameRegex = new Regex(@"^(.+)\[\,*\]$");
 
         private static readonly Dictionary<string, Func<object, object>> _converterMap =
             new Dictionary<Type, Func<object, object>>
@@ -55,6 +55,11 @@ namespace Aqua
                         var enumerable = value as IEnumerable;
                         if (!(enumerable is null) && !(value is string))
                         {
+                            if (value is byte[])
+                            {
+                                return;
+                            }
+
                             TypeInfo elementType = null;
                             var array = _arrayNameRegex.Match(type.Name);
                             if (array.Success)

@@ -74,7 +74,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             value3.PropertyCount.ShouldBe(0);
             value3.Type.Type.ShouldBe(typeof(object));
 
-            var bytes = dynamicObject["Value4"].ShouldBeOfType<object[]>();
+            var bytes = dynamicObject["Value4"].ShouldBeOfType<byte[]>();
             bytes.Length.ShouldBe(4);
             bytes[0].ShouldBe((byte)1);
             bytes[1].ShouldBe((byte)22);
