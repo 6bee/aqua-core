@@ -662,7 +662,7 @@ namespace Aqua.Dynamic
 
             var objectType = obj.GetType();
 
-            if (objectType == targetType && !IsCollection(obj))
+            if (objectType == targetType && (!IsCollection(obj) || (obj is byte[])))
             {
                 return obj;
             }
@@ -853,7 +853,7 @@ namespace Aqua.Dynamic
                 return null;
             }
 
-            if (obj is DynamicObject || obj is string)
+            if (obj is DynamicObject || obj is string || obj is byte[])
             {
                 return obj;
             }
