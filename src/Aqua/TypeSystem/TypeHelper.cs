@@ -206,6 +206,11 @@ namespace Aqua.TypeSystem
                 })
                 .ToArray();
 
+            int CountDeclarationDepth(System.Reflection.TypeInfo type, System.Reflection.TypeInfo methodDeclaringType, int i)
+                => type == methodDeclaringType
+                ? i
+                : CountDeclarationDepth(type.BaseType.GetTypeInfo(), methodDeclaringType, i + 1);
+
             var result = declaringType.GetMethods(methodInfo.BindingFlags)
                 .Where(m => m.Name == methodInfo.Name)
                 .Where(m => !m.IsGenericMethod || m.GetGenericArguments().Length == genericArguments.Length)
@@ -224,13 +229,14 @@ namespace Aqua.TypeSystem
 
                     return true;
                 })
-                .Single();
+                .OrderBy(m => CountDeclarationDepth(declaringType.GetTypeInfo(), m.DeclaringType.GetTypeInfo(), 0))
+                .First();
 
             return result;
         }
 
         public static System.Reflection.PropertyInfo ResolveProperty(this PropertyInfo propertyInfo, ITypeResolver typeResolver)
-            => propertyInfo?.ResolveDeclaringType(typeResolver).GetProperty(propertyInfo.Name);
+            => propertyInfo?.ResolveDeclaringType(typeResolver).GetTypeInfo().GetDeclaredProperty(propertyInfo.Name);
 
         public static System.Reflection.PropertyInfo ResolveProperty(this PropertyInfo propertyInfo, ITypeResolver typeResolver, BindingFlags bindingAttr)
             => propertyInfo?.ResolveDeclaringType(typeResolver).GetProperty(propertyInfo.Name, bindingAttr);
