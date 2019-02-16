@@ -78,7 +78,7 @@ namespace Aqua
                                 }
 
                                 // would be nice to be able to detect collection types... to retrieve the element type.
-                                // else (elementType.Implements(typeof(IEnumerable<>))) { ... }
+                                // i.e. else (elementType.Implements(typeof(IEnumerable<>))) { ... }
                             }
 
                             if (!(elementType is null))
