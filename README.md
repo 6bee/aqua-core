@@ -15,12 +15,12 @@ Transform any object-graph into a dynamic, composed dictionaries like structure,
 
 
 Aqua-core provides a bunch of serializable classes:
-  * `DynamicObject`
-  * `TypeInfo`
-  * `FieldInfo`
-  * `PropertyInfo`
-  * `MethodInfo`
-  * `ConstructorInfo`
+*   `DynamicObject`
+*   `TypeInfo`
+*   `FieldInfo`
+*   `PropertyInfo`
+*   `MethodInfo`
+*   `ConstructorInfo`
 
 Any object graph may be translated into a `DynamicObject` structure and back to it's original type using `DynamicObjectMapper`.
 
