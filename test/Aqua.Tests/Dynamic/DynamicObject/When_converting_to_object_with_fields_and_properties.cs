@@ -17,8 +17,11 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             private string PrivateStringValue;
             public DateTime Date;
 #pragma warning enable
+
             private double DoubleValue { get; set; }
+
             public int Int32Value { get; set; }
+
             public string RedundantValue => StringValue;
         }
 
