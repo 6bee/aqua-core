@@ -22,11 +22,11 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             public string RedundantValue => StringValue;
         }
 
-        private static readonly DateTime Date = new DateTime(2002, 2, 13);
         private const int Int32Value = 11;
         private const double DoubleValue = 12.3456789;
         private const string StringValue1 = "Foo";
         private const string StringValue2 = "Bar";
+        private static readonly DateTime Date = new DateTime(2002, 2, 13);
 
         private readonly CustomType obj;
 
@@ -42,7 +42,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                     { "RedundantValue", StringValue2 },
                     { "Date", Date },
                     { "PrivateStringValue", StringValue2 },
-                }
+                },
             };
 
             obj = dynamicObject.CreateObject<CustomType>();
