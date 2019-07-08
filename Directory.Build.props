@@ -1,7 +1,7 @@
 ﻿<Project>
   <PropertyGroup>
     <Copyright>Copyright © Christof Senn 2013-2019</Copyright>
-    <VersionPrefix>4.5.2</VersionPrefix>
+    <VersionPrefix>4.5.3</VersionPrefix>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <Authors>Christof Senn</Authors>
     <PackageIconUrl>https://raw.githubusercontent.com/6bee/aqua-core/master/aqua-small.png</PackageIconUrl>
