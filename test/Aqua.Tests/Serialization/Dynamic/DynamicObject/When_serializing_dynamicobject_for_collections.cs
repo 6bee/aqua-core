@@ -3,7 +3,6 @@
 namespace Aqua.Tests.Serialization.DynamicObject
 {
     using Aqua.Dynamic;
-    using Aqua.TypeSystem;
     using Shouldly;
     using System;
     using System.Collections;
@@ -32,12 +31,10 @@ namespace Aqua.Tests.Serialization.DynamicObject
             public XmlSerializer() : base(XmlSerializationHelper.Serialize) { }
         }
 
-#if !NETCOREAPP1_0
         public class BinaryFormatter : When_serializing_dynamicobject_for_collections
         {
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
-#endif
 
 #if NET
         public class NetDataContractSerializer : When_serializing_dynamicobject_for_collections

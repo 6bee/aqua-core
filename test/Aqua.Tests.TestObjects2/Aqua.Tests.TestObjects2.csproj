@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.2;net451</TargetFrameworks>
+    <TargetFrameworks>netstandard1.2</TargetFrameworks>
     <AssemblyName>Aqua.Tests.TestObjects2</AssemblyName>
     <PackageId>Aqua.Tests.TestObjects2</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

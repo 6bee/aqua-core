@@ -252,13 +252,5 @@ namespace Aqua.TypeSystem
                 throw new Exception($"Declaring type '{memberInfo.DeclaringType}' could not be reconstructed", ex);
             }
         }
-
-#if NET
-        private static class Array
-        {
-            public static T[] Empty<T>()
-                => new T[0];
-        }
-#endif
     }
 }

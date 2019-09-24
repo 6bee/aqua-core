@@ -12,21 +12,11 @@ namespace Aqua.TypeSystem.Extensions
 
     partial class TypeExtensions
     {
-        public static Type GetUnderlyingSystemType(this Type type)
-        {
-            // UnderlyingSystemType is not supported by WinRT
-            return type;
-        }
+        public static Type GetUnderlyingSystemType(this Type type) => type; // UnderlyingSystemType is not supported by WinRT
 
-        public static bool IsGenericType(this Type type)
-        {
-            return type.GetTypeInfo().IsGenericType;
-        }
+        public static bool IsGenericType(this Type type) => type.GetTypeInfo().IsGenericType;
 
-        public static bool IsGenericTypeDefinition(this Type type)
-        {
-            return type.GetTypeInfo().IsGenericTypeDefinition;
-        }
+        public static bool IsGenericTypeDefinition(this Type type) => type.GetTypeInfo().IsGenericTypeDefinition;
 
         public static bool IsEnum(this Type type)
         {
@@ -37,20 +27,11 @@ namespace Aqua.TypeSystem.Extensions
                 && type.GetGenericArguments()[0].IsEnum());
         }
 
-        public static bool IsValueType(this Type type)
-        {
-            return type.GetTypeInfo().IsValueType;
-        }
+        public static bool IsValueType(this Type type) => type.GetTypeInfo().IsValueType;
 
-        public static bool IsSerializable(this Type type)
-        {
-            return type.GetTypeInfo().IsSerializable;
-        }
+        public static bool IsSerializable(this Type type) => type.GetTypeInfo().IsSerializable;
 
-        public static Type GetBaseType(this Type type)
-        {
-            return type.GetTypeInfo().BaseType;
-        }
+        public static Type GetBaseType(this Type type) => type.GetTypeInfo().BaseType;
 
         internal static ConstructorInfo GetConstructor(this Type type, BindingFlags bindingAttr, /*Binder*/object binder, Type[] types, /*ParameterModifier[]*/object modifiers)
         {
@@ -133,11 +114,9 @@ namespace Aqua.TypeSystem.Extensions
         }
 
         private static IEnumerable<T> Filter<T>(this IEnumerable<T> methodInfos, BindingFlags bindingAttr) where T : MethodBase
-        {
-            return methodInfos
+            => methodInfos
                 .Where(c => c.IsStatic == ((bindingAttr & BindingFlags.Static) == BindingFlags.Static))
                 .Where(c => c.IsPublic == ((bindingAttr & BindingFlags.Public) == BindingFlags.Public));
-        }
     }
 }
 

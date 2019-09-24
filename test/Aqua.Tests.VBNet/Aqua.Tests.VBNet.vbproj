@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>VB.Net Tests for aqua-core</Description>
     <RootNamespace>Aqua.Test</RootNamespace>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net46</TargetFramework>
     <ProjectType>VB_NET</ProjectType>
   </PropertyGroup>
 
@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <Reference Include="Aqua">
-      <HintPath>..\..\src\Aqua\bin\Debug\net451\Aqua.dll</HintPath>
+      <HintPath>..\..\src\Aqua\bin\Debug\netstandard2.0\Aqua.dll</HintPath>
     </Reference>
   </ItemGroup>
 

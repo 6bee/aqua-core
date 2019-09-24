@@ -3,7 +3,6 @@
 namespace Aqua.TypeSystem.Extensions
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
@@ -12,32 +11,22 @@ namespace Aqua.TypeSystem.Extensions
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static partial class TypeExtensions
     {
-        public static bool IsClass(this Type type)
-        {
-            return type.GetTypeInfo().IsClass;
-        }
+        public static bool IsClass(this Type type) => type.GetTypeInfo().IsClass;
 
         public static bool IsAnonymousType(this Type type)
-        {
-            return (type.Name.Contains("AnonymousType")
+            => (type.Name.Contains("AnonymousType")
                 && type.IsDefined<CompilerGeneratedAttribute>())
                 || type.IsEmittedType();
-        }
 
-        public static bool IsEmittedType(this Type type)
-        {
-            return type.IsDefined<Emit.EmittedTypeAttribute>();
-        }
+        public static bool IsEmittedType(this Type type) => type.IsDefined<Emit.EmittedTypeAttribute>();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool IsDefined<T>(this Type type) where T : Attribute
-        {
-            return type
+            => type
 #if NETSTANDARD1_X
                 .GetTypeInfo()
 #endif
                 .IsDefined(typeof(T));
-        }
 
         internal static Type AsNonNullableType(this Type type)
         {
@@ -45,10 +34,7 @@ namespace Aqua.TypeSystem.Extensions
             return isNullable ? type.GetGenericArguments()[0] : type;
         }
 
-        public static bool Implements(this Type type, Type interfaceType)
-        {
-            return type.Implements(interfaceType, new Type[1][]);
-        }
+        public static bool Implements(this Type type, Type interfaceType) => type.Implements(interfaceType, new Type[1][]);
 
         public static bool Implements(this Type type, Type interfaceType, out Type[] genericTypeArguments)
         {
