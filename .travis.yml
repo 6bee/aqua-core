@@ -4,6 +4,9 @@ branches:
   except:
   - experimental
 
+variables:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
 addons:  
   apt:
     packages:

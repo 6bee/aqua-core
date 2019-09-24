@@ -4,6 +4,9 @@ branches:
   except:
   - experimental
 
+variables:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
 init:
   - git config --global core.autocrlf true
 
