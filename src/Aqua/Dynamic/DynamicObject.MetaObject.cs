@@ -13,9 +13,7 @@ namespace Aqua.Dynamic
     partial class DynamicObject : IDynamicMetaObjectProvider
     {
         DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression expression)
-        {
-            return new MetaObject(expression, BindingRestrictions.GetInstanceRestriction(expression, this), this);
-        }
+            => new MetaObject(expression, BindingRestrictions.GetInstanceRestriction(expression, this), this);
 
         private sealed class MetaObject : DynamicMetaObject
         {
@@ -38,7 +36,6 @@ namespace Aqua.Dynamic
             public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
             {
                 var self = Expression;
-                var dynObj = (DynamicObject)Value;
                 var keyExpr = Expression.Constant(binder.Name);
                 var target = Expression.Call(Expression.Convert(self, _dynamicObjectType), _getMethod, keyExpr);
                 return new DynamicMetaObject(target, BindingRestrictions.GetTypeRestriction(self, _dynamicObjectType));

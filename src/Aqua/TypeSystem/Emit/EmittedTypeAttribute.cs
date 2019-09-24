@@ -4,7 +4,7 @@ namespace Aqua.TypeSystem.Emit
 {
     using System;
 
-    [AttributeUsageAttribute(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class EmittedTypeAttribute : Attribute
     {
     }
