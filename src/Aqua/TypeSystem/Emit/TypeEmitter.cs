@@ -8,6 +8,7 @@ namespace Aqua.TypeSystem.Emit
     using System.Reflection;
     using System.Reflection.Emit;
     using System.Runtime.CompilerServices;
+    using System.Security;
     using System.Threading;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
@@ -19,10 +20,20 @@ namespace Aqua.TypeSystem.Emit
         private readonly ModuleBuilder _module;
         private int _classIndex = -1;
 
+        [SecuritySafeCritical]
         public TypeEmitter()
         {
             var assemblyName = new AssemblyName("Aqua.TypeSystem.Emit.Types");
-            _assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
+            try
+            {
+                _assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
+            }
+            catch (SecurityException)
+            {
+                // Note: creation of collectible assemblies requires full-trust.
+                _assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+            }
+
             _module = _assemblyBuilder.DefineDynamicModule(assemblyName.Name);
         }
 
