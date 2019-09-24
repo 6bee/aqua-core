@@ -6,7 +6,7 @@
     <AssemblyName>Aqua</AssemblyName>
     <PackageId>aqua-core</PackageId>
     <PackageTags>type-info;dynamic-object;expando-object;object-mapping;object-mapper</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">

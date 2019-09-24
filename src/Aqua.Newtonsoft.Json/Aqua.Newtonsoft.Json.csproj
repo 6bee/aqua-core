@@ -6,7 +6,7 @@
     <AssemblyName>Aqua.Newtonsoft.Json</AssemblyName>
     <PackageId>aqua-core-newtonsoft-json</PackageId>
     <PackageTags>aqua-core;json-net;newtonsoft-json</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
