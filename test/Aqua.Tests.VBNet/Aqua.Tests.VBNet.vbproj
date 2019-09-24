@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>VB.Net Tests for aqua-core</Description>
     <RootNamespace>Aqua.Test</RootNamespace>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <ProjectType>VB_NET</ProjectType>
   </PropertyGroup>
 

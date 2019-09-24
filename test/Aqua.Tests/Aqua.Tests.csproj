@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Tests for aqua-core</Description>
-    <TargetFrameworks>net472;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net48;netcoreapp3.0</TargetFrameworks>
 	  <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
@@ -24,7 +24,7 @@
     <PackageReference Include="Shouldly" Version="3.0.2" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net472' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net48' ">
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
   </PropertyGroup>
 
