@@ -29,7 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup>
-    <SignAssembly Condition=" '$(SignAssembly)' != 'false' ">true</SignAssembly>
+    <SignAssembly Condition=" '$(SignAssembly)' == '' ">true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)key.snk</AssemblyOriginatorKeyFile>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>

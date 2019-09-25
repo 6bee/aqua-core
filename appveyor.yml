@@ -18,18 +18,16 @@ before_build:
   - dotnet restore
 
 build_script:
-  - dotnet build src\Aqua
-  - dotnet build src\Aqua.Newtonsoft.Json
-  - dotnet build test\Aqua.Tests.TestObjects1
-  - dotnet build test\Aqua.Tests.TestObjects2
-  - dotnet build test\Aqua.Tests
+  - dotnet build src\Aqua -c RELEASE
+  - dotnet build src\Aqua.Newtonsoft.Json -c RELEASE
 
 test_script:
-  - dotnet test test\Aqua.Tests -f netcoreapp3.0
-  - dotnet test test\Aqua.Tests -f net48 /p:CollectCoverage=true /p:CoverletOutputFormat=OpenCover /p:SignAssembly=false
+  - dotnet test test\Aqua.Tests
   - dotnet test test\Aqua.Tests.VBNet
 
 after_test:
+  - dotnet add test\Aqua.Tests package coverlet.msbuild
+  - dotnet test test\Aqua.Tests -f net48 /p:CollectCoverage=true /p:CoverletOutputFormat=OpenCover /p:SignAssembly=false
   - dotnet tool install --global codecov.tool
   - codecov -f test\Aqua.Tests\coverage.opencover.xml
 
