@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Copyright>Copyright © Christof Senn 2013-2019</Copyright>
     <VersionPrefix>4.6.0</VersionPrefix>
-    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <AssemblyVersion>4.6.0.0</AssemblyVersion>
     <Authors>Christof Senn</Authors>
     <PackageIcon>aqua-small.png</PackageIcon>
     <PackageProjectUrl>https://github.com/6bee/aqua-core</PackageProjectUrl>
@@ -29,7 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly Condition=" '$(SignAssembly)' != 'false' ">true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)key.snk</AssemblyOriginatorKeyFile>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
