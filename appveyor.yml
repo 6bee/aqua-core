@@ -26,6 +26,7 @@ test_script:
   - dotnet test test\Aqua.Tests.VBNet
 
 after_test:
+  - dotnet clean
   - dotnet add test\Aqua.Tests package coverlet.msbuild
   - dotnet test test\Aqua.Tests -f net48 /p:CollectCoverage=true /p:CoverletOutputFormat=OpenCover /p:SignAssembly=false
   - dotnet tool install --global codecov.tool
