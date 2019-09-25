@@ -24,7 +24,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         public When_converting_to_serializable_object()
         {
-            var dynamicObject = new DynamicObject()
+            var dynamicObject = new DynamicObject
             {
                 Properties = new PropertySet
                 {

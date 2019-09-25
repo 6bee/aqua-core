@@ -5,8 +5,6 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using Aqua.Dynamic;
     using Shouldly;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Xunit;
 
     public class When_converting_to_object_with_guid_properties

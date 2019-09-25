@@ -35,7 +35,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         public When_converting_to_object_with_abstract_properties()
         {
-            dynamicObject = new DynamicObject()
+            dynamicObject = new DynamicObject
             {
                 Properties = new PropertySet
                 {

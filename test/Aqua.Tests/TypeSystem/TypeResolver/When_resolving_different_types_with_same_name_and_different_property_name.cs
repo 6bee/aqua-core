@@ -5,7 +5,6 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
     using Aqua.TypeSystem;
     using Shouldly;
     using System;
-    using System.Linq;
     using Xunit;
 
     public class When_resolving_different_types_with_same_name_and_different_property_name

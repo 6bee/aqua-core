@@ -17,7 +17,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         public When_converting_to_anonymous_type()
         {
-            dynamicObject = new DynamicObject()
+            dynamicObject = new DynamicObject
             {
                 Properties = new PropertySet
                 {

@@ -11,6 +11,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         private class CustomType
         {
 #pragma warning disable CS0414 // Private filed is assigned but never used
+#pragma warning disable SA1401 // Fields should be private
+#pragma warning disable IDE0051 // Remove unused private members
 
             private const string PrivateConstString = "PrivateConstStringValue";
 
@@ -19,8 +21,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             private static readonly string PrivateStaticReadonlyField = "PrivateStaticReadonlyFieldValue";
 
             public static readonly string StaticReadonlyField = "StaticReadonlyFieldValue";
-
-#pragma warning disable SA1401 // Fields should be private
 
             private static string PrivateStaticField = "PrivateStaticFieldValue";
 
@@ -34,9 +34,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             public string Field = "FieldValue";
 
-#pragma warning restore SA1401 // Fields should be private
-#pragma warning restore CS0414 // Private filed is assigned but never used
-
             private static string PrivateStaticProperty { get; set; } = "PrivateStaticPropertyValue";
 
             public static string StaticProperty { get; set; } = "StaticPropertyValue";
@@ -46,6 +43,10 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             public string Property { get; set; } = "PropertyValue";
 
             public string ReadonlyProperty { get; } = "ReadonlyPropertyValue";
+
+#pragma warning restore IDE0051 // Remove unused private members
+#pragma warning restore SA1401 // Fields should be private
+#pragma warning restore CS0414 // Private filed is assigned but never used
         }
 
         private readonly DynamicObject dynamicObject;

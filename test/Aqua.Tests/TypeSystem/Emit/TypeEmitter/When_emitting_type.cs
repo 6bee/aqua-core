@@ -7,7 +7,6 @@ namespace Aqua.Tests.TypeSystem.Emit.TypeEmitter
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using Xunit;
     using PropertyInfo = Aqua.TypeSystem.PropertyInfo;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;

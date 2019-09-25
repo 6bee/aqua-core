@@ -6,7 +6,6 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
     using Shouldly;
     using System;
     using System.Collections.Generic;
-    using System.Reflection;
     using Xunit;
     using ConstructorInfo = Aqua.TypeSystem.ConstructorInfo;
 

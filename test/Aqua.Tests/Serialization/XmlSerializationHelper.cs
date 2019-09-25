@@ -4,7 +4,6 @@ namespace Aqua.Tests.Serialization
 {
     using System;
     using System.IO;
-    using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
     public static class XmlSerializationHelper

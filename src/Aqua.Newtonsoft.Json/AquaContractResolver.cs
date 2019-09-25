@@ -6,7 +6,6 @@ namespace Aqua
     using global::Newtonsoft.Json.Serialization;
     using System;
     using System.Linq;
-    using System.Reflection;
 
     public class AquaContractResolver : DefaultContractResolver
     {

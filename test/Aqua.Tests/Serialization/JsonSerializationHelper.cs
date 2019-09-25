@@ -3,8 +3,6 @@
 namespace Aqua.Tests.Serialization
 {
     using Newtonsoft.Json;
-    using System;
-    using System.IO;
 
     public static class JsonSerializationHelper
     {

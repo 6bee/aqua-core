@@ -8,7 +8,6 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
     using Shouldly;
     using System;
     using System.Linq;
-    using System.Reflection;
     using Xunit;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
 

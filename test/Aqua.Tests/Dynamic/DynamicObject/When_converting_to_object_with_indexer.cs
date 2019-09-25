@@ -17,25 +17,14 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             [System.Runtime.CompilerServices.IndexerName("MyIndexer")]
             public object this[string key]
             {
-                get
-                {
-                    return _data[key];
-                }
-
-                set
-                {
-                    _data[key] = value;
-                }
+                get => _data[key];
+                set => _data[key] = value;
             }
 
             [System.Runtime.CompilerServices.IndexerName("MyIndexer")]
             public object this[int index]
             {
-                get
-                {
-                    return _data.Values.ElementAt(index);
-                }
-
+                get => _data.Values.ElementAt(index);
                 set
                 {
                     var key = _data.Keys.ElementAt(index);

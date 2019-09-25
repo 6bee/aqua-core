@@ -4,7 +4,6 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
     using Shouldly;
-    using System;
     using System.Reflection;
     using Xunit;
 

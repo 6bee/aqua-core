@@ -32,7 +32,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         public When_converting_to_type_requiring_ctor_and_property_setter()
         {
-            var dynamicObject = new DynamicObject()
+            var dynamicObject = new DynamicObject
             {
                 Properties = new PropertySet
                 {

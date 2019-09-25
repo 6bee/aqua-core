@@ -4,7 +4,6 @@ namespace Aqua.Tests.TypeSystem.TypeInfo
 {
     using Shouldly;
     using System.Linq;
-    using System.Reflection;
     using Xunit;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
