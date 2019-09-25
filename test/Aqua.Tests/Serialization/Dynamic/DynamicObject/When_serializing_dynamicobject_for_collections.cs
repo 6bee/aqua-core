@@ -11,7 +11,7 @@ namespace Aqua.Tests.Serialization.DynamicObject
     using System.Linq.Expressions;
     using Xunit;
 
-    public abstract class When_serializing_dynamicobject_for_collections
+    public class When_serializing_dynamicobject_for_collections
     {
 #pragma warning disable SA1128 // Put constructor initializers on their own line
 #pragma warning disable SA1502 // Element should not be on a single line

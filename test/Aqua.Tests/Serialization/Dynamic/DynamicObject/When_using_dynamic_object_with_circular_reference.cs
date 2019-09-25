@@ -7,7 +7,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     using System;
     using Xunit;
 
-    public abstract class When_using_dynamic_object_with_circular_reference
+    public class When_using_dynamic_object_with_circular_reference
     {
 #pragma warning disable SA1128 // Put constructor initializers on their own line
 #pragma warning disable SA1502 // Element should not be on a single line
@@ -23,12 +23,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         // XML serialization doesn't support circular references
-#if !NETCOREAPP1_0
         public class BinaryFormatter : When_using_dynamic_object_with_circular_reference
         {
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
-#endif
 
 #if NET
         public class NetDataContractSerializer : When_using_dynamic_object_with_circular_reference

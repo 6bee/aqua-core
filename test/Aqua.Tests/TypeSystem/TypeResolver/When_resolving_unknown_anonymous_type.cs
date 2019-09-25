@@ -48,13 +48,11 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
             emitedType.IsGenericType().ShouldBeTrue();
         }
 
-#if !NETCOREAPP1_0
         [Fact]
         public void Emited_type_should_closed_generic_type()
         {
             emitedType.IsGenericTypeDefinition.ShouldBeFalse();
         }
-#endif
 
         [Fact]
         public void Emited_type_should_have_two_generic_arguments()

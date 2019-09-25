@@ -14,12 +14,5 @@ namespace Aqua.Tests
             || type == typeof(T?)
             || type == typeof(T[])
             || type == typeof(T?[]);
-
-        public static bool NetCoreApp1_0
-#if NETCOREAPP1_0
-            => true;
-#else
-            => false;
-#endif
     }
 }

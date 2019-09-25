@@ -16,13 +16,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 PropertyChanged += (sender, args) => PropertyChangedCount++;
             }
 
-            public int PropertyChangingCount { get; private set; } = 0;
+            public int PropertyChangingCount { get; private set; }
 
-            public int PropertyChangedCount { get; private set; } = 0;
+            public int PropertyChangedCount { get; private set; }
 
-            public int OnPropertyChangingCount { get; private set; } = 0;
+            public int OnPropertyChangingCount { get; private set; }
 
-            public int OnPropertyChangedCount { get; private set; } = 0;
+            public int OnPropertyChangedCount { get; private set; }
 
             protected override void OnPropertyChanged(string name, object oldValue, object newValue)
             {

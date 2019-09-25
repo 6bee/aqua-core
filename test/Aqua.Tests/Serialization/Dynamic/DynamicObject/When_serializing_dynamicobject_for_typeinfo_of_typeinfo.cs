@@ -8,7 +8,7 @@ namespace Aqua.Tests.Serialization.DynamicObject
     using System;
     using Xunit;
 
-    public abstract class When_serializing_dynamicobject_for_typeinfo_of_typeinfo
+    public class When_serializing_dynamicobject_for_typeinfo_of_typeinfo
     {
 #pragma warning disable SA1128 // Put constructor initializers on their own line
 #pragma warning disable SA1502 // Element should not be on a single line

@@ -3,6 +3,7 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using System.Reflection;
     using Xunit;
@@ -19,6 +20,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             var m = GetType().GetMethod(nameof(Should_map_method_info));
             var o = new DynamicObject(m);
             var r = new DynamicObjectMapper().Map<MethodInfo>(o);
+            r.ShouldBeSameAs(m);
         }
 
         [Fact]
@@ -27,6 +29,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             var property = GetType().GetProperty(nameof(Property));
             var o = new DynamicObject(property);
             var r = new DynamicObjectMapper().Map<PropertyInfo>(o);
+            r.ShouldBeSameAs(property);
         }
 
         [Fact]
@@ -35,6 +38,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             var field = GetType().GetField(nameof(_field), BindingFlags.NonPublic | BindingFlags.Instance);
             var o = new DynamicObject(field);
             var r = new DynamicObjectMapper().Map<FieldInfo>(o);
+            r.ShouldBeSameAs(field);
         }
 
         [Fact]
@@ -43,6 +47,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             var ctor = GetType().GetConstructor(new Type[0]);
             var o = new DynamicObject(ctor);
             var r = new DynamicObjectMapper().Map<ConstructorInfo>(o);
+            r.ShouldBeSameAs(ctor);
         }
 
         [Fact]
@@ -52,6 +57,9 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             var o = new DynamicObjectMapper().MapObject(type);
             var r1 = new DynamicObjectMapper().Map<TypeInfo>(o);
             var r2 = new DynamicObjectMapper().Map<Type>(o);
+
+            r1.ShouldBeSameAs(type);
+            r2.ShouldBeSameAs(type.AsType());
         }
     }
 }

@@ -35,10 +35,9 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Should_throw_when_preventing_type_validation()
         {
-#if !NETCOREAPP1_0
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-#endif
+
             var mapper = new DynamicObjectMapper(new DynamicObjectMapperSettings { SilentlySkipUnassignableMembers = false });
 
             var ex = Assert.Throws<ArgumentException>(() => mapper.Map<CustomType>(dynamicObject));

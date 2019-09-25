@@ -53,7 +53,6 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             obj.Int32Value.ShouldBe(Int32Value);
         }
 
-#if !NETCOREAPP1_0
         [Fact]
         public void Should_have_the_private_double_property_set()
         {
@@ -65,7 +64,6 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             GetPropertyValue("StringValue").ShouldBe(StringValue);
         }
-#endif
 
         private object GetPropertyValue(string propertyName)
         {

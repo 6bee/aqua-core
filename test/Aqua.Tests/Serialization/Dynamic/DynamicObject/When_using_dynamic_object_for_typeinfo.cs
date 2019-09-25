@@ -8,7 +8,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     using System;
     using Xunit;
 
-    public abstract class When_using_dynamic_object_for_typeinfo
+    public class When_using_dynamic_object_for_typeinfo
     {
 #pragma warning disable SA1128 // Put constructor initializers on their own line
 #pragma warning disable SA1502 // Element should not be on a single line
@@ -28,12 +28,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             public XmlSerializer() : base(XmlSerializationHelper.Serialize) { }
         }
 
-#if !NETCOREAPP1_0
         public class BinaryFormatter : When_using_dynamic_object_for_typeinfo
         {
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
-#endif
 
 #if NET
         public class NetDataContractSerializer : When_using_dynamic_object_for_typeinfo

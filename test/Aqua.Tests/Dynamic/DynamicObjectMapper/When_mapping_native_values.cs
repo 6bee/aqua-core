@@ -28,8 +28,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
         public void Should_map_native_value(Type type, object value)
         {
-            SkipOnNetCoreApp1_0.If(type.Is<Complex>(), "Complex fails on CORE CLR 1.0.1 on Ubuntu (travis-ci)");
-
             var result = MapAsValueMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
 
             if (result == null)
@@ -54,8 +52,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
         public void Should_map_native_value_property(Type type, object value)
         {
-            SkipOnNetCoreApp1_0.If(type.Is<Complex>(), "Complex fails on CORE CLR 1.0.1 on Ubuntu (travis-ci)");
-
             var result = MapAsPropertyMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
 
             if (result == null)

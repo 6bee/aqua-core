@@ -1115,17 +1115,7 @@ namespace Aqua.Dynamic
 
             if (targetType == typeof(char))
             {
-#if UAP
-                char character;
-                if (!char.TryParse(value, out character))
-                {
-                    throw new FormatException($"Value '{value}' cannot be parsed into character.");
-                }
-
-                return character;
-#else
                 return char.Parse(value);
-#endif
             }
 
             if (targetType == typeof(bool))

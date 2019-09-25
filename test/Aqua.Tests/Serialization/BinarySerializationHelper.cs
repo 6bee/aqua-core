@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if !NETCOREAPP1_0
-
 namespace Aqua.Tests.Serialization
 {
     using System.IO;
@@ -26,5 +24,3 @@ namespace Aqua.Tests.Serialization
         }
     }
 }
-
-#endif
