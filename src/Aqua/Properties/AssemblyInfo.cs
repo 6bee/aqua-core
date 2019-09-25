@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+using System;
 using System.Runtime.CompilerServices;
+using System.Security;
 
 [assembly: InternalsVisibleTo("Aqua.Test, PublicKey=" +
 "0024000004800000940000000602000000240000525341310004000001000100953fd5a46105ee" +
@@ -9,4 +11,6 @@ using System.Runtime.CompilerServices;
 "a7af3a678e96c00aacca6d460cbb7c9d2bdbed375a40cf89430a404314bec9b7f4498b24017548" +
 "f3dd92ed")]
 
-[assembly: System.Security.AllowPartiallyTrustedCallers]
+[assembly: CLSCompliant(true)]
+
+[assembly: AllowPartiallyTrustedCallers]
