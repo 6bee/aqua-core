@@ -8,7 +8,7 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
     using System.Linq;
     using Xunit;
 
-    public partial class When_using_typeinfo_with_circular_reference
+    public abstract partial class When_using_typeinfo_with_circular_reference
     {
         private class A
         {

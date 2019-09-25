@@ -13,7 +13,7 @@ namespace Aqua.Tests.TypeSystem.Emit.TypeEmitter
 
     public class When_emitting_type
     {
-        private Type emittedType;
+        private readonly Type emittedType;
 
         public When_emitting_type()
         {

@@ -7,7 +7,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     using System;
     using Xunit;
 
-    public class When_using_dynamic_object_with_circular_reference
+    public abstract class When_using_dynamic_object_with_circular_reference
     {
 #pragma warning disable SA1128 // Put constructor initializers on their own line
 #pragma warning disable SA1502 // Element should not be on a single line
