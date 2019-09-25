@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Provides Json.NET serialization settings for Aqua types.</Description>
-    <TargetFrameworks>netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>Aqua.Newtonsoft.Json</AssemblyName>
     <PackageId>aqua-core-newtonsoft-json</PackageId>
     <PackageTags>aqua-core;json-net;newtonsoft-json</PackageTags>
@@ -16,13 +16,5 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_X</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_X</DefineConstants>
-  </PropertyGroup>
 
 </Project>

@@ -3,10 +3,11 @@
 namespace Aqua.TypeSystem
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
-    public partial class TypeResolver : ITypeResolver
+    public class TypeResolver : ITypeResolver
     {
         private static readonly ITypeResolver _defaultTypeResolver = new TypeResolver();
 
@@ -115,9 +116,7 @@ namespace Aqua.TypeSystem
 
                     var resolvedProperties = type
                         .GetProperties()
-#if !NETSTANDARD1_3
                         .OrderBy(x => x.MetadataToken)
-#endif
                         .Select(x => x.Name);
 
                     if (!typeInfo.Properties.Select(x => x.Name).SequenceEqual(resolvedProperties))
@@ -131,5 +130,7 @@ namespace Aqua.TypeSystem
 
             return false;
         }
+
+        protected virtual IEnumerable<Assembly> GetAssemblies() => AppDomain.CurrentDomain.GetAssemblies();
     }
 }

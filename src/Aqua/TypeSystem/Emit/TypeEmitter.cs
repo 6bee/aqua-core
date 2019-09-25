@@ -128,11 +128,11 @@ namespace Aqua.TypeSystem.Emit
 
             // define fields
             var fields = propertyNames
-                .Select((x, i) => type.DefineField($"_{x}", genericTypeParameters[i].AsType(), FieldAttributes.Private | FieldAttributes.InitOnly))
+                .Select((x, i) => type.DefineField($"_{x}", genericTypeParameters[i], FieldAttributes.Private | FieldAttributes.InitOnly))
                 .ToArray();
 
             // define constructor
-            var constructor = type.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, genericTypeParameters.Select(_ => _.AsType()).ToArray());
+            var constructor = type.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, genericTypeParameters);
             var objectCtor = typeof(object).GetConstructor(Type.EmptyTypes);
             var il = constructor.GetILGenerator();
             il.Emit(OpCodes.Ldarg_0);
@@ -150,9 +150,9 @@ namespace Aqua.TypeSystem.Emit
             var properties = propertyNames
                 .Select((x, i) =>
                 {
-                    var property = type.DefineProperty(x, PropertyAttributes.HasDefault, genericTypeParameters[i].AsType(), null);
+                    var property = type.DefineProperty(x, PropertyAttributes.HasDefault, genericTypeParameters[i], null);
 
-                    var propertyGetter = type.DefineMethod($"get_{x}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, genericTypeParameters[i].AsType(), null);
+                    var propertyGetter = type.DefineMethod($"get_{x}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, genericTypeParameters[i], null);
                     var pil = propertyGetter.GetILGenerator();
                     pil.Emit(OpCodes.Ldarg_0);
                     pil.Emit(OpCodes.Ldfld, fields[i]);

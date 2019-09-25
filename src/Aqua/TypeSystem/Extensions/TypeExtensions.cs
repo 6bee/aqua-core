@@ -3,6 +3,7 @@
 namespace Aqua.TypeSystem.Extensions
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
@@ -22,11 +23,7 @@ namespace Aqua.TypeSystem.Extensions
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool IsDefined<T>(this Type type) where T : Attribute
-            => type
-#if NETSTANDARD1_X
-                .GetTypeInfo()
-#endif
-                .IsDefined(typeof(T));
+            => type.IsDefined(typeof(T));
 
         internal static Type AsNonNullableType(this Type type)
         {
@@ -100,5 +97,26 @@ namespace Aqua.TypeSystem.Extensions
                 return false;
             };
         }
+
+        public static Type GetUnderlyingSystemType(this Type type) => type.UnderlyingSystemType;
+
+        public static bool IsGenericType(this Type type) => type.IsGenericType;
+
+        public static bool IsGenericTypeDefinition(this Type type) => type.IsGenericTypeDefinition;
+
+        public static bool IsEnum(this Type type)
+            => type.IsEnum ||
+                (type.IsGenericType
+                && type.GetGenericTypeDefinition() == typeof(Nullable<>)
+                && type.GetGenericArguments()[0].IsEnum());
+
+        public static bool IsValueType(this Type type) => type.IsValueType;
+
+        public static bool IsSerializable(this Type type) => type.IsSerializable;
+
+        public static Type GetBaseType(this Type type) => type.BaseType;
+
+        public static IEnumerable<MemberInfo> GetMember(this Type type, string name, Aqua.TypeSystem.MemberTypes memberType, BindingFlags bindingFlags)
+            => type.GetMember(name, (MemberTypes)memberType, bindingFlags);
     }
 }

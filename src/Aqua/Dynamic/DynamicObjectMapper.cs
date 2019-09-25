@@ -406,9 +406,7 @@ namespace Aqua.Dynamic
         private readonly Func<Type, object, DynamicObject> _createDynamicObject;
         private readonly bool _suppressMemberAssignabilityValidation;
         private readonly bool _formatNativeTypesAsString;
-#if !NETSTANDARD1_X
         private readonly bool _utilizeFormatterServices;
-#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObjectMapper"/> class.
@@ -441,9 +439,7 @@ namespace Aqua.Dynamic
 
             _formatNativeTypesAsString = settings.FormatNativeTypesAsString;
 
-#if !NETSTANDARD1_X
             _utilizeFormatterServices = settings.UtilizeFormatterServices;
-#endif
 
             _fromContext = new FromContext();
 
@@ -826,13 +822,9 @@ namespace Aqua.Dynamic
             }
             else if (obj is Delegate)
             {
-#if NETSTANDARD1_X
-                throw new NotSupportedException("Cannot create DynamicObject for delegate since System.Delegate does not expose MethodInfo member on targetet framework");
-#else
                 var methodInfo = new Lazy<TypeSystem.MethodInfo>(() => new TypeSystem.MethodInfo(((Delegate)obj).Method));
                 facotry = (t, o, f) => _createDynamicObject(typeof(MethodInfo), methodInfo.Value);
                 initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.MethodInfo), methodInfo.Value, to, f);
-#endif
             }
             else
             {
@@ -894,13 +886,11 @@ namespace Aqua.Dynamic
         /// </summary>
         private void PopulateObjectMembers(Type type, object from, DynamicObject to, Func<Type, bool> setTypeInformation)
         {
-#if !NETSTANDARD1_X
             if (_utilizeFormatterServices && type.IsSerializable())
             {
                 MapObjectMembers(type, from, to, setTypeInformation);
             }
             else
-#endif
             {
                 var properties = GetPropertiesForMapping(type) ??
                     type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
@@ -956,13 +946,11 @@ namespace Aqua.Dynamic
                     }
                 };
             }
-#if !NETSTANDARD1_X
             else if (_utilizeFormatterServices && targetType.IsSerializable())
             {
                 factory = (t, item) => GetUninitializedObject(t);
                 initializer = PopulateObjectMembers;
             }
-#endif
             else
             {
                 var dynamicProperties = obj.Properties.ToList();
