@@ -18,8 +18,8 @@ before_build:
   - dotnet restore
 
 build_script:
-  - dotnet build src\Aqua -c RELEASE
-  - dotnet build src\Aqua.Newtonsoft.Json -c RELEASE
+  - dotnet build src\Aqua -c Release
+  - dotnet build src\Aqua.Newtonsoft.Json -c Release
 
 test_script:
   - dotnet test test\Aqua.Tests

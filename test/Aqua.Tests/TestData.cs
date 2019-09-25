@@ -136,9 +136,9 @@ namespace Aqua.Tests
 
         private static object CreateEnumerable(Type type, object item)
         {
-            var array = new[] { item, item };
+            var array = new[] { item, item }.AsEnumerable();
             var castMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
-            return castMethod.Invoke(null, new[] { array });
+            return castMethod.Invoke(null, new object[] { array });
         }
     }
 }

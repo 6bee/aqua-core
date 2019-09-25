@@ -16,22 +16,22 @@ namespace Aqua.Dynamic
         {
             public static readonly PropertyComparer Instance = new PropertyComparer();
 
-            public bool Equals(Property p1, Property p2)
+            public bool Equals(Property x, Property y)
             {
-                if (p1 is null || p2 is null)
+                if (x is null || y is null)
                 {
                     return false;
                 }
 
-                if (p1.Name is null || p2.Name is null)
+                if (x.Name is null || y.Name is null)
                 {
                     return false;
                 }
 
-                return p1.Name.Equals(p2.Name);
+                return x.Name.Equals(y.Name);
             }
 
-            public int GetHashCode(Property p) => p?.Name?.GetHashCode() ?? 0;
+            public int GetHashCode(Property obj) => obj?.Name?.GetHashCode() ?? 0;
         }
 
         private readonly ISet<Property> _properties;

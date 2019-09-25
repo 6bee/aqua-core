@@ -56,29 +56,6 @@ namespace Aqua.Extensions
                     return ((Left?.GetHashCode() ?? 0) * 397) ^ (Right?.GetHashCode() ?? 0);
                 }
             }
-
-            public static bool operator ==(Tuple<TLeft, TRight> a, Tuple<TLeft, TRight> b)
-            {
-                if (a is null && b is null)
-                {
-                    return true;
-                }
-
-                if (a is null)
-                {
-                    return false;
-                }
-
-                if (b is null)
-                {
-                    return false;
-                }
-
-                return a.Equals(b);
-            }
-
-            public static bool operator !=(Tuple<TLeft, TRight> a, Tuple<TLeft, TRight> b)
-                => !(a == b);
         }
 
         public static IEnumerable<Tuple<T, T>> FullOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey> keyEqualityComparer = null, IEqualityComparer<Tuple<T, T>> comparer = null)
