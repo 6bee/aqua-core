@@ -616,7 +616,7 @@ namespace Aqua.Dynamic
                     {
                         var typeInfo = (TypeSystem.TypeInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.TypeInfo));
                         var t = typeInfo.ResolveType(_typeResolver);
-                        return targetType == typeof(TypeInfo) ? (object)t.GetTypeInfo() : t;
+                        return targetType == typeof(TypeInfo) ? t.GetTypeInfo() : t;
                     }
                     else if (targetType == typeof(MethodInfo) && (sourceType == typeof(TypeSystem.MethodInfo) || sourceType == typeof(MethodInfo)))
                     {

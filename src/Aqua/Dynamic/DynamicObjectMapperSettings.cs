@@ -27,7 +27,7 @@ namespace Aqua.Dynamic
         /// If set to true all native type values are stored as strings, ohterwise native values get stored with no transformation.
         /// The default value is. <code>false</code>.
         /// </summary>
-        public bool FormatNativeTypesAsString { get; set; } = false;
+        public bool FormatNativeTypesAsString { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether serializable types should be formatted using <see cref="System.Runtime.Serialization.FormatterServices"/>.

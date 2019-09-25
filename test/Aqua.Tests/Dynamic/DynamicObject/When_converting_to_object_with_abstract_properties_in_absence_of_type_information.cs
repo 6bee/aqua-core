@@ -43,13 +43,11 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             public object Value4 { get; set; }
         }
 
-        private readonly DynamicObject dynamicObject;
-
         private readonly object obj;
 
         public When_converting_to_object_with_abstract_properties_in_absence_of_type_information()
         {
-            dynamicObject = new DynamicObject()
+            var dynamicObject = new DynamicObject
             {
                 Properties = new PropertySet
                 {

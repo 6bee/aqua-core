@@ -8,7 +8,7 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
     using System;
     using Xunit;
 
-    public abstract partial class When_serializing_typeinfo_of_dynamicobject
+    public partial class When_serializing_typeinfo_of_dynamicobject
     {
         private readonly TypeInfo typeInfo;
         private readonly TypeInfo serializedTypeInfo;

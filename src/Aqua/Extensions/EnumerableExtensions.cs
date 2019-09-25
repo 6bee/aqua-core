@@ -190,7 +190,7 @@ namespace Aqua.Extensions
                 {
                     foreach (var item in collection)
                     {
-                        hashCode ^= item == null ? -1 : comparer.GetHashCode(item);
+                        hashCode ^= item is null ? -1 : comparer.GetHashCode(item);
                     }
                 }
 

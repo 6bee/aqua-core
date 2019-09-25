@@ -17,16 +17,14 @@ namespace Aqua.Dynamic
 
         private sealed class MetaObject : DynamicMetaObject
         {
-            private static readonly Type _dynamicObjectType;
-            private static readonly MethodInfo _getMethod;
-            private static readonly MethodInfo _setMethod;
+            private static readonly Type _dynamicObjectType = typeof(DynamicObject);
 
-            static MetaObject()
-            {
-                _dynamicObjectType = typeof(DynamicObject);
-                _getMethod = _dynamicObjectType.GetMethods(BindingFlags.Public | BindingFlags.Instance).Single(m => m.Name == "Get" && !m.IsGenericMethodDefinition);
-                _setMethod = _dynamicObjectType.GetMethod(nameof(Set), BindingFlags.Public | BindingFlags.Instance);
-            }
+            private static readonly MethodInfo _getMethod = typeof(DynamicObject)
+                .GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .Single(m => m.Name == "Get" && !m.IsGenericMethodDefinition);
+
+            private static readonly MethodInfo _setMethod = typeof(DynamicObject)
+                .GetMethod(nameof(Set), BindingFlags.Public | BindingFlags.Instance);
 
             public MetaObject(Expression expression, BindingRestrictions restrictions, DynamicObject dynamicObject)
                 : base(expression, restrictions, dynamicObject)

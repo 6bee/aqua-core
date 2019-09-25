@@ -13,7 +13,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         private const double DoubleValue = 1.234567891;
         private const string StringValue = "eleven";
 
-        private DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
         public When_converting_to_anonymous_type()
         {

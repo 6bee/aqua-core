@@ -7,11 +7,11 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
     using System;
     using Xunit;
 
-    public abstract partial class When_using_typeinfo_with_circular_reference_with_anonymous_type
+    public partial class When_using_typeinfo_with_circular_reference_with_anonymous_type
     {
         private readonly TypeInfo serializedTypeInfo;
 
-        public When_using_typeinfo_with_circular_reference_with_anonymous_type(Func<TypeInfo, TypeInfo> serialize)
+        protected When_using_typeinfo_with_circular_reference_with_anonymous_type(Func<TypeInfo, TypeInfo> serialize)
         {
             var instance = new
             {

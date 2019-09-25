@@ -18,7 +18,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Map_should_be_null_for_null_dynamic_object()
         {
-            var result = new DynamicObjectMapper().Map((DynamicObject)null);
+            var result = new DynamicObjectMapper().Map(null);
             result.ShouldBeNull();
         }
 
@@ -89,14 +89,14 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Map_should_be_null_for_null_object()
         {
-            var result = new DynamicObjectMapper().MapObject((object)null);
+            var result = new DynamicObjectMapper().MapObject(null);
             result.ShouldBeNull();
         }
 
         [Fact]
         public void Map_single_should_be_null_for_null_object()
         {
-            var result = new DynamicObjectMapper().MapObject((object)null);
+            var result = new DynamicObjectMapper().MapObject(null);
             result.ShouldBeNull();
         }
 

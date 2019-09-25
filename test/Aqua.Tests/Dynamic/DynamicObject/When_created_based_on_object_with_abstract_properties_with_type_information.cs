@@ -36,7 +36,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         public When_created_based_on_object_with_abstract_properties_with_type_information()
         {
-            obj = new ClassWithAbstractProperties()
+            obj = new ClassWithAbstractProperties
             {
                 Ref = new A(),
                 Value1 = "the value's pay load",
