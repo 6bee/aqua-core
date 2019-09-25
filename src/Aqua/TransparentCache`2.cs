@@ -5,6 +5,7 @@ namespace Aqua
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// A weak-reference cache that can be hooked-in method calls to serve cached instances
@@ -70,9 +71,9 @@ namespace Aqua
                 else if (_cleanupDelay > 0 && !_isCleanupScheduled)
                 {
                     _isCleanupScheduled = true;
-                    System.Threading.Tasks.Task.Run(async () =>
+                    _ = Task.Run(async () =>
                     {
-                        await System.Threading.Tasks.Task.Delay(_cleanupDelay);
+                        await Task.Delay(_cleanupDelay).ConfigureAwait(false);
                         CleanUpStaleReferences();
                         _isCleanupScheduled = false;
                     });

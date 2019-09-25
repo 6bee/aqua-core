@@ -163,7 +163,7 @@ namespace Aqua.Extensions
 
             foreach (T s in collection1)
             {
-                if (s == null)
+                if (s is null)
                 {
                     nullCounter++;
                 }
@@ -179,7 +179,7 @@ namespace Aqua.Extensions
 
             foreach (T s in collection2)
             {
-                if (s == null)
+                if (s is null)
                 {
                     nullCounter--;
                 }

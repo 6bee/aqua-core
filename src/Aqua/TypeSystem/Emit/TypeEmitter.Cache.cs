@@ -126,13 +126,13 @@ namespace Aqua.TypeSystem.Emit
                 var propertyName = propertyInfo.Name;
                 if (string.IsNullOrEmpty(propertyName))
                 {
-                    throw new Exception("Property name missing");
+                    throw new ArgumentException("Property name missing");
                 }
 
                 var propertyTypeInfo = propertyInfo.PropertyType;
-                if (propertyInfo is null)
+                if (propertyTypeInfo is null)
                 {
-                    throw new Exception($"Property type missing for property '{propertyInfo.Name}'");
+                    throw new ArgumentException($"Property type missing for property '{propertyName}'");
                 }
 
                 var propertyType = propertyTypeInfo.Type;

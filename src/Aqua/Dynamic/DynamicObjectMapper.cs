@@ -539,10 +539,10 @@ namespace Aqua.Dynamic
             {
                 enumerable = null;
             }
-            else if (obj is IEnumerable<DynamicObject>)
+            else if (obj is IEnumerable<DynamicObject> x)
             {
                 // cast
-                enumerable = (IEnumerable<DynamicObject>)obj;
+                enumerable = x;
             }
             else if (IsCollection(obj))
             {
@@ -725,9 +725,9 @@ namespace Aqua.Dynamic
 
                 var targetEnumType = targetType.AsNonNullableType();
 
-                if (obj is string)
+                if (obj is string str)
                 {
-                    return Enum.Parse(targetEnumType, (string)obj, true);
+                    return Enum.Parse(targetEnumType, str, true);
                 }
 
                 return Enum.ToObject(targetEnumType, obj);
@@ -784,45 +784,45 @@ namespace Aqua.Dynamic
                     return dynamicObject;
                 };
             }
-            else if (obj is Type)
+            else if (obj is Type t)
             {
-                var typeInfo = new Lazy<TypeSystem.TypeInfo>(() => new TypeSystem.TypeInfo((Type)obj, false, false));
+                var typeInfo = new Lazy<TypeSystem.TypeInfo>(() => new TypeSystem.TypeInfo(t, false, false));
                 facotry = (t, o, f) => _createDynamicObject(typeof(Type), typeInfo.Value);
                 initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo.Value, to, f);
             }
-            else if (obj is TypeInfo)
+            else if (obj is TypeInfo ti)
             {
-                var typeInfo = new Lazy<TypeSystem.TypeInfo>(() => new TypeSystem.TypeInfo(((TypeInfo)obj).AsType(), false, false));
+                var typeInfo = new Lazy<TypeSystem.TypeInfo>(() => new TypeSystem.TypeInfo(ti.AsType(), false, false));
                 facotry = (t, o, f) => _createDynamicObject(typeof(TypeInfo), typeInfo.Value);
                 initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo.Value, to, f);
             }
-            else if (obj is MethodInfo)
+            else if (obj is MethodInfo mi)
             {
-                var methodInfo = new Lazy<TypeSystem.MethodInfo>(() => new TypeSystem.MethodInfo((MethodInfo)obj));
+                var methodInfo = new Lazy<TypeSystem.MethodInfo>(() => new TypeSystem.MethodInfo(mi));
                 facotry = (t, o, f) => _createDynamicObject(typeof(MethodInfo), methodInfo.Value);
                 initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.MethodInfo), methodInfo.Value, to, f);
             }
-            else if (obj is PropertyInfo)
+            else if (obj is PropertyInfo pi)
             {
-                var propertyInfo = new Lazy<TypeSystem.PropertyInfo>(() => new TypeSystem.PropertyInfo((PropertyInfo)obj));
+                var propertyInfo = new Lazy<TypeSystem.PropertyInfo>(() => new TypeSystem.PropertyInfo(pi));
                 facotry = (t, o, f) => _createDynamicObject(typeof(PropertyInfo), propertyInfo.Value);
                 initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.PropertyInfo), propertyInfo.Value, to, f);
             }
-            else if (obj is FieldInfo)
+            else if (obj is FieldInfo fi)
             {
-                var fieldInfo = new Lazy<TypeSystem.FieldInfo>(() => new TypeSystem.FieldInfo((FieldInfo)obj));
+                var fieldInfo = new Lazy<TypeSystem.FieldInfo>(() => new TypeSystem.FieldInfo(fi));
                 facotry = (t, o, f) => _createDynamicObject(typeof(FieldInfo), fieldInfo.Value);
                 initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.FieldInfo), fieldInfo.Value, to, f);
             }
-            else if (obj is ConstructorInfo)
+            else if (obj is ConstructorInfo ci)
             {
-                var constructorInfo = new Lazy<TypeSystem.ConstructorInfo>(() => new TypeSystem.ConstructorInfo((ConstructorInfo)obj));
+                var constructorInfo = new Lazy<TypeSystem.ConstructorInfo>(() => new TypeSystem.ConstructorInfo(ci));
                 facotry = (t, o, f) => _createDynamicObject(typeof(ConstructorInfo), constructorInfo.Value);
                 initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.ConstructorInfo), constructorInfo.Value, to, f);
             }
-            else if (obj is Delegate)
+            else if (obj is Delegate d)
             {
-                var methodInfo = new Lazy<TypeSystem.MethodInfo>(() => new TypeSystem.MethodInfo(((Delegate)obj).Method));
+                var methodInfo = new Lazy<TypeSystem.MethodInfo>(() => new TypeSystem.MethodInfo(d.Method));
                 facotry = (t, o, f) => _createDynamicObject(typeof(MethodInfo), methodInfo.Value);
                 initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.MethodInfo), methodInfo.Value, to, f);
             }

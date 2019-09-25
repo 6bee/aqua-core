@@ -52,7 +52,7 @@ namespace Aqua.TypeSystem
                 {
                     if (!IsArray)
                     {
-                        throw new Exception("Name is not in expected format for array type");
+                        throw new ArgumentException("Type name is not in expected format for array type");
                     }
 
                     type = type.GetElementType();
