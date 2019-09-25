@@ -132,7 +132,7 @@ namespace Aqua.TypeSystem.Emit
                 .ToArray();
 
             // define constructor
-            var constructor = type.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, genericTypeParameters);
+            var constructor = type.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, genericTypeParameters.Cast<Type>().ToArray());
             var objectCtor = typeof(object).GetConstructor(Type.EmptyTypes);
             var il = constructor.GetILGenerator();
             il.Emit(OpCodes.Ldarg_0);
