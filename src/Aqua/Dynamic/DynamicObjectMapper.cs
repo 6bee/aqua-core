@@ -604,61 +604,62 @@ namespace Aqua.Dynamic
                 return null;
             }
 
+            var resultType = targetType;
             if (obj is DynamicObject dynamicObj)
             {
                 var sourceType = dynamicObj.Type.ResolveType(_typeResolver);
 
                 if (!(sourceType is null))
                 {
-                    if ((targetType == typeof(Type) || targetType == typeof(TypeInfo)) &&
+                    if ((resultType == typeof(Type) || resultType == typeof(TypeInfo)) &&
                         (sourceType == typeof(TypeSystem.TypeInfo) || sourceType == typeof(Type) || sourceType == typeof(TypeInfo)))
                     {
                         var typeInfo = (TypeSystem.TypeInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.TypeInfo));
                         var t = typeInfo.ResolveType(_typeResolver);
-                        return targetType == typeof(TypeInfo) ? t.GetTypeInfo() : t;
+                        return resultType == typeof(TypeInfo) ? t.GetTypeInfo() : t;
                     }
-                    else if (targetType == typeof(MethodInfo) && (sourceType == typeof(TypeSystem.MethodInfo) || sourceType == typeof(MethodInfo)))
+                    else if (resultType == typeof(MethodInfo) && (sourceType == typeof(TypeSystem.MethodInfo) || sourceType == typeof(MethodInfo)))
                     {
                         var methodInfo = (TypeSystem.MethodInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.MethodInfo));
                         return methodInfo.ResolveMemberInfo(_typeResolver);
                     }
-                    else if (targetType == typeof(PropertyInfo) && (sourceType == typeof(TypeSystem.PropertyInfo) || sourceType == typeof(PropertyInfo)))
+                    else if (resultType == typeof(PropertyInfo) && (sourceType == typeof(TypeSystem.PropertyInfo) || sourceType == typeof(PropertyInfo)))
                     {
                         var propertyInfo = (TypeSystem.PropertyInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.PropertyInfo));
                         return propertyInfo.ResolveMemberInfo(_typeResolver);
                     }
-                    else if (targetType == typeof(FieldInfo) && (sourceType == typeof(TypeSystem.FieldInfo) || sourceType == typeof(FieldInfo)))
+                    else if (resultType == typeof(FieldInfo) && (sourceType == typeof(TypeSystem.FieldInfo) || sourceType == typeof(FieldInfo)))
                     {
                         var fieldInfo = (TypeSystem.FieldInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.FieldInfo));
                         return fieldInfo.ResolveMemberInfo(_typeResolver);
                     }
-                    else if (targetType == typeof(ConstructorInfo) && (sourceType == typeof(TypeSystem.ConstructorInfo) || sourceType == typeof(ConstructorInfo)))
+                    else if (resultType == typeof(ConstructorInfo) && (sourceType == typeof(TypeSystem.ConstructorInfo) || sourceType == typeof(ConstructorInfo)))
                     {
                         var constructorInfo = (TypeSystem.ConstructorInfo)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.ConstructorInfo));
                         return constructorInfo.ResolveConstructor(_typeResolver);
                     }
-                    else if (targetType is null || targetType.IsAssignableFrom(sourceType))
+                    else if (resultType is null || resultType.IsAssignableFrom(sourceType))
                     {
-                        targetType = sourceType;
+                        resultType = sourceType;
                     }
                 }
 
-                if (targetType.IsAssignableFrom(typeof(DynamicObject)) && targetType != typeof(object))
+                if (resultType.IsAssignableFrom(typeof(DynamicObject)) && resultType != typeof(object))
                 {
                     return dynamicObj;
                 }
 
                 if (IsSingleValueWrapper(dynamicObj))
                 {
-                    return MapFromDynamicObjectIfRequired(dynamicObj.Values.Single(), targetType);
+                    return MapFromDynamicObjectIfRequired(dynamicObj.Values.Single(), resultType);
                 }
 
-                return MapInternal(dynamicObj, sourceType, targetType);
+                return MapInternal(dynamicObj, sourceType, resultType);
             }
 
             var objectType = obj.GetType();
 
-            if (objectType == targetType && !IsCollection(obj))
+            if (objectType == resultType && !IsCollection(obj))
             {
                 return obj;
             }
@@ -668,39 +669,39 @@ namespace Aqua.Dynamic
                 return obj;
             }
 
-            if (_isNativeType(targetType))
+            if (_isNativeType(resultType))
             {
-                return obj is string ? ParseToNativeType(targetType.AsNonNullableType(), (string)obj) : obj;
+                return obj is string ? ParseToNativeType(resultType.AsNonNullableType(), (string)obj) : obj;
             }
 
             if (IsCollection(obj))
             {
-                var elementType = TypeHelper.GetElementType(targetType);
+                var elementType = TypeHelper.GetElementType(resultType);
                 var items = ((System.Collections.IEnumerable)obj)
                     .Cast<object>()
                     .Select(x => MapFromDynamicObjectGraph(x, elementType))
                     .ToList();
                 var r1 = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
 
-                if (targetType.IsArray)
+                if (resultType.IsArray)
                 {
                     return MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
                 }
 
-                if (IsMatchingDictionary(targetType, elementType))
+                if (IsMatchingDictionary(resultType, elementType))
                 {
-                    var targetTypeGenericArguments = targetType.GetGenericArguments();
+                    var targetTypeGenericArguments = resultType.GetGenericArguments();
                     var method = ToDictionaryMethodInfo.MakeGenericMethod(targetTypeGenericArguments.ToArray());
                     return method.Invoke(null, new[] { r1 });
                 }
 
-                if (targetType.IsAssignableFrom(typeof(List<>).MakeGenericType(elementType)))
+                if (resultType.IsAssignableFrom(typeof(List<>).MakeGenericType(elementType)))
                 {
                     return MethodInfos.Enumerable.ToList.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
                 }
 
                 var enumerableType = typeof(IEnumerable<>).MakeGenericType(elementType);
-                var ctor = targetType.GetConstructors().FirstOrDefault(c =>
+                var ctor = resultType.GetConstructors().FirstOrDefault(c =>
                 {
                     var parameters = c.GetParameters();
                     return parameters.Length == 1
@@ -712,17 +713,17 @@ namespace Aqua.Dynamic
                     return ctor.Invoke(new[] { r1 });
                 }
 
-                throw new Exception($"Failed to project collection of {elementType} into type {targetType}");
+                throw new Exception($"Failed to project collection of {elementType} into type {resultType}");
             }
 
-            if (targetType.IsEnum())
+            if (resultType.IsEnum())
             {
-                if (targetType.IsAssignableFrom(objectType))
+                if (resultType.IsAssignableFrom(objectType))
                 {
                     return obj;
                 }
 
-                var targetEnumType = targetType.AsNonNullableType();
+                var targetEnumType = resultType.AsNonNullableType();
 
                 if (obj is string str)
                 {
