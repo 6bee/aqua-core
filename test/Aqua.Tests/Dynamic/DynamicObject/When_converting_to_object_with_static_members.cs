@@ -14,6 +14,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 #pragma warning disable CS0414 // Private filed is assigned but never used
 #pragma warning disable SA1401 // Fields should be private
 #pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable IDE0044 // Add readonly modifier
+#pragma warning disable SA1306 // Field names should begin with lower-case letter
 
             private const string PrivateConstString = "DefaultPrivateConstStringValue";
 
@@ -25,15 +27,15 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
             public string WriteonlyPropertyBackingField = "DefaultWriteonlyPropertyValue";
 
-            private static string _privateStaticField = "DefaultPrivateStaticFieldValue";
+            private static string PrivateStaticField = "DefaultPrivateStaticFieldValue";
 
             public static string StaticField = "DefaultStaticFieldValue";
 
-            private readonly string _privateReadonlyField = "DefaultPrivateReadonlyFieldValue";
+            private readonly string PrivateReadonlyField = "DefaultPrivateReadonlyFieldValue";
 
             public readonly string ReadonlyField = "DefaultReadonlyFieldValue";
 
-            private string _privateField = "DefaultPrivateFieldValue";
+            private string PrivateField = "DefaultPrivateFieldValue";
 
             public string Field = "DefaultFieldValue";
 
@@ -48,6 +50,9 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             public string ReadonlyProperty { get; } = "DefaultReadonlyPropertyValue";
 
             public string WriteonlyProperty { set => WriteonlyPropertyBackingField = value; }
+
+#pragma warning restore SA1306 // Field names should begin with lower-case letter
+#pragma warning restore IDE0044 // Add readonly modifier
 #pragma warning restore IDE0051 // Remove unused private members
 #pragma warning restore SA1401 // Fields should be private
 #pragma warning restore CS0414 // Private filed is assigned but never used
