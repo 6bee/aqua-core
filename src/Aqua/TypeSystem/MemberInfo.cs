@@ -4,6 +4,7 @@ namespace Aqua.TypeSystem
 {
     using Aqua.TypeSystem.Extensions;
     using System;
+    using System.Reflection;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
@@ -15,6 +16,12 @@ namespace Aqua.TypeSystem
     [KnownType(typeof(PropertyInfo)), XmlInclude(typeof(PropertyInfo))]
     public abstract class MemberInfo
     {
+        internal static class Scope
+        {
+            public const BindingFlags PublicInstance = BindingFlags.Public | BindingFlags.Instance;
+            public const BindingFlags Any = PublicInstance | BindingFlags.NonPublic | BindingFlags.Static;
+        }
+
         protected MemberInfo()
         {
         }

@@ -80,19 +80,19 @@ namespace Aqua.TypeSystem
             switch (memberInfo.MemberType)
             {
                 case MemberTypes.Field:
-                    return ((FieldInfo)memberInfo).ResolveField(typeResolver);
+                    return ((FieldInfo)memberInfo).ResolveField(typeResolver, MemberInfo.Scope.Any);
 
                 case MemberTypes.Constructor:
                     return ((ConstructorInfo)memberInfo).ResolveConstructor(typeResolver);
 
                 case MemberTypes.Property:
-                    return ((PropertyInfo)memberInfo).ResolveProperty(typeResolver);
+                    return ((PropertyInfo)memberInfo).ResolveProperty(typeResolver, MemberInfo.Scope.Any);
 
                 case MemberTypes.Method:
                     return ((MethodInfo)memberInfo).ResolveMethod(typeResolver);
 
                 default:
-                    throw new NotImplementedException($"Implementation missing for conversion of member type: {memberInfo.MemberType}");
+                    throw new ArgumentException($"Unknown member type: {memberInfo.MemberType}");
             }
         }
 

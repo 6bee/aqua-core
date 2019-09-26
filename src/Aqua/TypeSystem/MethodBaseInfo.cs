@@ -70,7 +70,6 @@ namespace Aqua.TypeSystem
             ParameterTypes = methodBaseInfo.ParameterTypes?.Select(typeInfoProvider.Get).ToList();
         }
 
-        // TODO: replace binding flags by bool flags
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
         public BindingFlags BindingFlags { get; set; }
 

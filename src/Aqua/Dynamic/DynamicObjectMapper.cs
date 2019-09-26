@@ -604,8 +604,7 @@ namespace Aqua.Dynamic
                 return null;
             }
 
-            var dynamicObj = obj as DynamicObject;
-            if (!(dynamicObj is null))
+            if (obj is DynamicObject dynamicObj)
             {
                 var sourceType = dynamicObj.Type.ResolveType(_typeResolver);
 
