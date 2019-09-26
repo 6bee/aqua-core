@@ -15,7 +15,7 @@ namespace Aqua
     {
         private readonly Dictionary<TKey, WeakReference> _cache;
         private readonly int _cleanupDelay;
-        private bool _isCleanupScheduled = false;
+        private bool _isCleanupScheduled;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TransparentCache{TKey, TValue}"/> class.

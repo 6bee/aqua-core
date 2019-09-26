@@ -3,6 +3,7 @@
 namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using Xunit;
 
@@ -19,7 +20,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         public int Method1(int i)
         {
-            return i * 2;
+            return i * i;
         }
 
         [Fact]
@@ -53,17 +54,19 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             var o = new DynamicObject(f);
             var r = new DynamicObjectMapper().Map<Func<int>>(o);
             var x = r();
+            x.ShouldBe(1);
         }
 
         [Fact]
         public void Should_map_func2()
         {
 #pragma warning disable SA1130 // Use lambda syntax
-            Func<int, int> f = delegate(int i) { return 1; };
+            Func<int, int> f = delegate(int i) { return i * i; };
 #pragma warning restore SA1130 // Use lambda syntax
             var o = new DynamicObject(f);
             var r = new DynamicObjectMapper().Map<Func<int, int>>(o);
             var x = r(2);
+            x.ShouldBe(4);
         }
 
         [Fact]
@@ -75,24 +78,51 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             var o = new DynamicObject(f);
             var r = new DynamicObjectMapper().Map<F0>(o);
             var x = r();
+            x.ShouldBe(1);
         }
 
         [Fact]
         public void Should_map_delegate2()
         {
-            F0 f = Method0;
-            var o = new DynamicObject(f);
+            int F() => 1;
+            var o = new DynamicObject((Func<int>)F);
             var r = new DynamicObjectMapper().Map<F0>(o);
             var x = r();
+            x.ShouldBe(1);
         }
 
         [Fact]
         public void Should_map_delegate3()
         {
+            int F(int i)
+            {
+                return i * i;
+            }
+
+            var o = new DynamicObject((Func<int, int>)F);
+            var r = new DynamicObjectMapper().Map<F1>(o);
+            var x = r(2);
+            x.ShouldBe(4);
+        }
+
+        [Fact]
+        public void Should_map_delegate4()
+        {
+            F0 f = Method0;
+            var o = new DynamicObject(f);
+            var r = new DynamicObjectMapper().Map<F0>(o);
+            var x = r();
+            x.ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_map_delegate5()
+        {
             F1 f = Method1;
             var o = new DynamicObject(f);
             var r = new DynamicObjectMapper().Map<F1>(o);
-            var x = r(5);
+            var x = r(2);
+            x.ShouldBe(4);
         }
     }
 }
