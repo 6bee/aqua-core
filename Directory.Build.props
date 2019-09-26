@@ -1,4 +1,12 @@
 ﻿<Project>
+
+  <PropertyGroup>
+    <MajorVersion>4</MajorVersion>
+    <MinorVersion>6</MinorVersion>
+    <PatchVersion>0</PatchVersion>
+    <PreReleaseLabel></PreReleaseLabel>
+  </PropertyGroup>
+
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -18,4 +26,5 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+
 </Project>
