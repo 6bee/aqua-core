@@ -25,15 +25,15 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
             public string WriteonlyPropertyBackingField = "DefaultWriteonlyPropertyValue";
 
-            private static string PrivateStaticField = "DefaultPrivateStaticFieldValue";
+            private static string _privateStaticField = "DefaultPrivateStaticFieldValue";
 
             public static string StaticField = "DefaultStaticFieldValue";
 
-            private readonly string PrivateReadonlyField = "DefaultPrivateReadonlyFieldValue";
+            private readonly string _privateReadonlyField = "DefaultPrivateReadonlyFieldValue";
 
             public readonly string ReadonlyField = "DefaultReadonlyFieldValue";
 
-            private string PrivateField = "DefaultPrivateFieldValue";
+            private string _privateField = "DefaultPrivateFieldValue";
 
             public string Field = "DefaultFieldValue";
 

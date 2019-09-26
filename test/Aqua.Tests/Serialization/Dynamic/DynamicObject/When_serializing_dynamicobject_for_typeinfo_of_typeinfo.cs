@@ -23,7 +23,11 @@ namespace Aqua.Tests.Serialization.DynamicObject
             public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
         }
 
+#pragma warning disable SA1512 // Single-line comments should not be followed by blank line
+
         // XML serialization doesn't support circular references
+
+#pragma warning restore SA1512 // Single-line comments should not be followed by blank line
 
         public class BinaryFormatter : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {

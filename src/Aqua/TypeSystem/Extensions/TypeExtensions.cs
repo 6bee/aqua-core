@@ -22,7 +22,8 @@ namespace Aqua.TypeSystem.Extensions
         public static bool IsEmittedType(this Type type) => type.IsDefined<Emit.EmittedTypeAttribute>();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool IsDefined<T>(this Type type) where T : Attribute
+        internal static bool IsDefined<T>(this Type type)
+            where T : Attribute
             => type.IsDefined(typeof(T));
 
         internal static Type AsNonNullableType(this Type type)

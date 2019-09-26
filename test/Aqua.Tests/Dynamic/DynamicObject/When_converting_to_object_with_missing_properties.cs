@@ -19,7 +19,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         private const int Int32Value = 11;
         private const double DoubleValue = 12.3456789;
         private const string StringValue = "eleven";
-        private readonly DateTime? NullableDateTimeValue = DateTime.Now;
+        private readonly DateTime? _nullableDateTimeValue = DateTime.Now;
 
         private readonly CustomType obj;
 
@@ -31,7 +31,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 {
                     { "Int32Value", Int32Value },
                     { "DoubleValue", DoubleValue },
-                    { "NullableDateTimeValue", NullableDateTimeValue },
+                    { "NullableDateTimeValue", _nullableDateTimeValue },
                     { "StringValue", StringValue },
                 },
             };

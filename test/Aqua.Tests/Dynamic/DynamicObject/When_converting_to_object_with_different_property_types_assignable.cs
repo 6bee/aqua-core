@@ -25,7 +25,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         private const int Int32Value = 11;
         private const string StringValue = "eleven";
-        private readonly DateTime Timestamp = DateTime.Now;
+        private readonly DateTime _timestamp = DateTime.Now;
 
         private readonly CustomType obj;
 
@@ -37,7 +37,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 {
                     { "DoubleValue", Int32Value },
                     { "NullableIntValue", Int32Value },
-                    { "Timestamp", Timestamp },
+                    { "Timestamp", _timestamp },
                     { "StringValue", StringValue },
                 },
             };
@@ -66,7 +66,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_the_object_property_set()
         {
-            obj.Timestamp.ShouldBe(Timestamp);
+            obj.Timestamp.ShouldBe(_timestamp);
         }
 
         [Fact]

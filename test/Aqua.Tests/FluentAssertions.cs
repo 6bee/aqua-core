@@ -8,7 +8,8 @@ namespace Aqua.Tests
 
     public static class FluentAssertions
     {
-        public static void ShouldBeAnnotatedWith<T>(this Type type) where T : Attribute
+        public static void ShouldBeAnnotatedWith<T>(this Type type)
+            where T : Attribute
         {
             if (!type.GetTypeInfo().IsDefined(typeof(T)))
             {

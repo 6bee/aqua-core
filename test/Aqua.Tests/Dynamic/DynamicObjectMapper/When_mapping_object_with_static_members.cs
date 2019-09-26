@@ -22,15 +22,15 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             public static readonly string StaticReadonlyField = "StaticReadonlyFieldValue";
 
-            private static string PrivateStaticField = "PrivateStaticFieldValue";
+            private static string _privateStaticField = "PrivateStaticFieldValue";
 
             public static string StaticField = "StaticFieldValue";
 
-            private readonly string PrivateReadonlyField = "PrivateReadonlyFieldValue";
+            private readonly string _privateReadonlyField = "PrivateReadonlyFieldValue";
 
             public readonly string ReadonlyField = "ReadonlyFieldValue";
 
-            private string PrivateField = "PrivateFieldValue";
+            private string _privateField = "PrivateFieldValue";
 
             public string Field = "FieldValue";
 
