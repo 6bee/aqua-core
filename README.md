@@ -1,13 +1,36 @@
 # aqua-core
 
-| branch   | AppVeyor                                                                                                                                               | Travis CI                                                                                                                            | Codecov.io                                                                                                             | Codacy                                                                                                                                                                                                                                                 | CodeFactor                                                                                                                                    |
-| ---      | ---                                                                                                                                                    | ---                                                                                                                                  | ---                                                                                                                    | ---                                                                                                                                                                                                                                                    | ---                                                                                                                                           |
-| `master` | [![Build status](https://ci.appveyor.com/api/projects/status/98rc3yav530hlw1c/branch/master?svg=true)](https://ci.appveyor.com/project/6bee/aqua-core) | [![Travis build Status](https://travis-ci.org/6bee/aqua-core.svg?branch=master)](https://travis-ci.org/6bee/aqua-core?branch=master) | [![codecov](https://codecov.io/gh/6bee/aqua-core/branch/master/graph/badge.svg)](https://codecov.io/gh/6bee/aqua-core) | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/92ef3842d8274d148b0af85aa5ec6acc)](https://www.codacy.com/manual/6bee/aqua-core?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=6bee/aqua-core&amp;utm_campaign=Badge_Grade) | [![CodeFactor](https://www.codefactor.io/repository/github/6bee/aqua-core/badge)](https://www.codefactor.io/repository/github/6bee/aqua-core) |
+| branch   | AppVeyor                | Travis CI                     | Codecov.io        | Codacy                  | CodeFactor             | License                   |
+| ---      | ---                     | ---                           | ---               | ---                     | ---                    | ---                       |
+| `master` | [![Build status][1]][2] | [![Travis build Status[3]][4] | [![codecov[5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][7]][8] |
 
-| package                     | nuget                                                                                                                                                      | myget                                                                                                                                                                                              |
-| ---                         | ---                                                                                                                                                        | ---                                                                                                                                                                                                |
-| `aqua-core`                 | [![NuGet Badge](https://buildstats.info/nuget/aqua-core?includePreReleases=true)](http://www.nuget.org/packages/aqua-core)                                 | [![MyGet Pre Release](http://img.shields.io/myget/aqua/vpre/aqua-core.svg?style=flat-square&label=myget)](https://www.myget.org/feed/aqua/package/nuget/aqua-core)                                 |
-| `aqua-core-newtonsoft-json` | [![NuGet Badge](https://buildstats.info/nuget/aqua-core-newtonsoft-json?includePreReleases=true)](http://www.nuget.org/packages/aqua-core-newtonsoft-json) | [![MyGet Pre Release](http://img.shields.io/myget/aqua/vpre/aqua-core-newtonsoft-json.svg?style=flat-square&label=myget)](https://www.myget.org/feed/aqua/package/nuget/aqua-core-newtonsoft-json) |
+| package                     | nuget                    | myget                          |
+| ---                         | ---                      | ---                            |
+| `aqua-core`                 | [![NuGet Badge][13]][14] | [![MyGet Pre Release][17]][18] |
+| `aqua-core-newtonsoft-json` | [![NuGet Badge][15]][16] | [![MyGet Pre Release][19]][20] |
+
+[1]: https://ci.appveyor.com/api/projects/status/98rc3yav530hlw1c/branch/master?svg=true
+[2]: https://ci.appveyor.com/project/6bee/aqua-core
+[3]: https://travis-ci.org/6bee/aqua-core.svg?branch=master
+[4]: https://travis-ci.org/6bee/aqua-core?branch=master
+[5]: https://codecov.io/gh/6bee/aqua-core/branch/master/graph/badge.svg
+[6]: https://codecov.io/gh/6bee/aqua-core
+[7]: https://api.codacy.com/project/badge/Grade/92ef3842d8274d148b0af85aa5ec6acc
+[8]: https://www.codacy.com/manual/6bee/aqua-core?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=6bee/aqua-core&amp;utm_campaign=Badge_Grade
+[9]: https://www.codefactor.io/repository/github/6bee/aqua-core/badge
+[10]: https://www.codefactor.io/repository/github/6bee/aqua-core
+[11]: https://img.shields.io/github/license/6bee/aqua-core.svg
+[12]: https://github.com/6bee/aqua-core/blob/master/license.txt
+
+[13]: https://buildstats.info/nuget/aqua-core?includePreReleases=true
+[14]: http://www.nuget.org/packages/aqua-core
+[15]: https://buildstats.info/nuget/aqua-core-newtonsoft-json?includePreReleases=true
+[16]: http://www.nuget.org/packages/aqua-core-newtonsoft-json
+[17]: http://img.shields.io/myget/aqua/vpre/aqua-core.svg?style=flat-square&label=myget
+[18]: https://www.myget.org/feed/aqua/package/nuget/aqua-core
+[19]: http://img.shields.io/myget/aqua/vpre/aqua-core-newtonsoft-json.svg?style=flat-square&label=myget
+[20]: https://www.myget.org/feed/aqua/package/nuget/aqua-core-newtonsoft-json
+
 
 Transform any object-graph into a dynamic, composed dictionaries like structure, holding serializable values and type information.
 
