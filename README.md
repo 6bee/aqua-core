@@ -1,8 +1,8 @@
 # aqua-core
 
-| branch   | AppVeyor                | Travis CI                     | Codecov.io        | Codacy                  | CodeFactor             | License                   |
-| ---      | ---                     | ---                           | ---               | ---                     | ---                    | ---                       |
-| `master` | [![Build status][1]][2] | [![Travis build Status[3]][4] | [![codecov[5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][7]][8] |
+| branch   | AppVeyor                | Travis CI                      | Codecov.io        | Codacy                  | CodeFactor             | License                   |
+| ---      | ---                     | ---                            | ---               | ---                     | ---                    | ---                       |
+| `master` | [![Build status][1]][2] | [![Travis build Status][3]][4] | [![codecov[5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][7]][8] |
 
 | package                     | nuget                    | myget                          |
 | ---                         | ---                      | ---                            |
