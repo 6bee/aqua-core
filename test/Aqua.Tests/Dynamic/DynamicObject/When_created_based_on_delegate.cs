@@ -15,7 +15,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         public int Method0()
         {
-            return 2;
+            return 1;
         }
 
         public int Method1(int i)
