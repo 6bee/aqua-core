@@ -27,14 +27,14 @@ test_script:
 
 after_test:
   - dotnet clean
-  - ::dotnet add test\Aqua.Tests package coverlet.msbuild
-  - ::dotnet test test\Aqua.Tests -f net48 /p:CollectCoverage=true /p:CoverletOutputFormat=OpenCover /p:SignAssembly=false
+  - REM dotnet add test\Aqua.Tests package coverlet.msbuild
+  - REM dotnet test test\Aqua.Tests -f net48 /p:CollectCoverage=true /p:CoverletOutputFormat=OpenCover /p:SignAssembly=false
   - dotnet build .\test\Aqua.Tests\ -f net48 /p:SignAssembly=false
   - dotnet tool install --global coverlet.console
   - coverlet .\test\Aqua.Tests\bin\Debug\net48\Aqua.Tests.dll --target "dotnet" --targetargs "test .\test\Aqua.Tests\ -f net48 --no-build"
   - dotnet tool install --global codecov.tool
   - codecov -f test\Aqua.Tests\coverage.opencover.xml
-  - ::codecov -f test\Aqua.Tests\coverage.opencover.xml
+  - REM codecov -f test\Aqua.Tests\coverage.opencover.xml
   - codecov -f coverage.opencover.xml
 
 build:
