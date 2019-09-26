@@ -43,8 +43,7 @@ namespace Aqua
 
         internal static void DynamicObjectSerializationCallback(object o, StreamingContext context)
         {
-            var dynamicObject = o as DynamicObject;
-            if (!(dynamicObject is null))
+            if (o is DynamicObject dynamicObject)
             {
                 var type = dynamicObject.Type;
                 if (!(type is null))
@@ -52,76 +51,34 @@ namespace Aqua
                     if (dynamicObject.Values?.Count() == 1)
                     {
                         var value = dynamicObject.Values.Single();
-                        var enumerable = value as IEnumerable;
-                        if (!(enumerable is null) && !(value is string))
+                        if (value is IEnumerable enumerable && !(value is string))
                         {
                             if (value is byte[])
                             {
                                 return;
                             }
 
-                            TypeInfo elementType = null;
-                            var array = _arrayNameRegex.Match(type.Name);
-                            if (array.Success)
-                            {
-                                elementType = new TypeInfo(type);
-                                elementType.Name = array.Groups[1].Value;
-                            }
-                            else if (type.GenericArguments?.Count == 1)
-                            {
-                                elementType = type.GenericArguments.Single();
-
-                                array = _arrayNameRegex.Match(elementType.Name);
-                                if (array.Success)
-                                {
-                                    elementType.Name = array.Groups[1].Value;
-                                }
-
-                                // would be nice to be able to detect collection types... to retrieve the element type.
-                                // i.e. else (elementType.Implements(typeof(IEnumerable<>))) { ... }
-                            }
-
-                            if (!(elementType is null))
-                            {
-                                var converter = GetConverter(elementType);
-                                if (!(converter is null))
-                                {
-                                    var convertedValues = enumerable
-                                        .Cast<object>()
-                                        .Select(converter)
-                                        .ToArray();
-                                    dynamicObject.Properties.Single().Value = convertedValues;
-                                }
-                            }
+                            ConvertArrayProperty(dynamicObject, type, enumerable);
                         }
                         else
                         {
-                            var converter = GetConverter(type);
-                            if (!(converter is null))
-                            {
-                                dynamicObject.Properties.Single().Value = converter(value);
-                            }
+                            ConvertProperty(dynamicObject, type, value);
                         }
                     }
-
-                    var properties = type.Properties;
-                    if (!(properties is null))
+                    else
                     {
-                        foreach (var property in properties)
-                        {
-                            var converter = GetConverter(property.PropertyType);
-                            if (!(converter is null))
-                            {
-                                var dynamicProperty = dynamicObject.Properties
-                                    .SingleOrDefault(x => string.Equals(x.Name, property.Name));
-                                if (!(dynamicProperty is null))
-                                {
-                                    dynamicProperty.Value = converter(dynamicProperty.Value);
-                                }
-                            }
-                        }
+                        ConvertProperties(dynamicObject, type);
                     }
                 }
+            }
+        }
+
+        private static void ConvertProperty(DynamicObject dynamicObject, TypeInfo type, object value)
+        {
+            var converter = GetConverter(type);
+            if (!(converter is null))
+            {
+                dynamicObject.Properties.Single().Value = converter(value);
             }
         }
 
@@ -148,6 +105,71 @@ namespace Aqua
             }
 
             return null;
+        }
+
+        private static TypeInfo GetArrayElementType(TypeInfo type)
+        {
+            TypeInfo elementType;
+            var array = _arrayNameRegex.Match(type.Name);
+            if (array.Success)
+            {
+                elementType = new TypeInfo(type) { Name = array.Groups[1].Value };
+            }
+            else if (type.GenericArguments?.Count == 1)
+            {
+                elementType = type.GenericArguments.Single();
+                array = _arrayNameRegex.Match(elementType.Name);
+                if (array.Success)
+                {
+                    elementType.Name = array.Groups[1].Value;
+                }
+
+                // would be nice to be able to detect collection types... to retrieve the element type.
+                // i.e. else (elementType.Implements(typeof(IEnumerable<>))) { ... }
+            }
+            else
+            {
+                elementType = null;
+            }
+
+            return elementType;
+        }
+
+        private static void ConvertProperties(DynamicObject dynamicObject, TypeInfo type)
+        {
+            var properties = type.Properties;
+            if (!(properties is null))
+            {
+                foreach (var property in properties)
+                {
+                    var converter = GetConverter(property.PropertyType);
+                    if (!(converter is null))
+                    {
+                        var dynamicProperty = dynamicObject.Properties.SingleOrDefault(x => string.Equals(x.Name, property.Name));
+                        if (!(dynamicProperty is null))
+                        {
+                            dynamicProperty.Value = converter(dynamicProperty.Value);
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void ConvertArrayProperty(DynamicObject dynamicObject, TypeInfo type, IEnumerable enumerable)
+        {
+            var elementType = GetArrayElementType(type);
+            if (!(elementType is null))
+            {
+                var converter = GetConverter(elementType);
+                if (!(converter is null))
+                {
+                    var convertedValues = enumerable
+                        .Cast<object>()
+                        .Select(converter)
+                        .ToArray();
+                    dynamicObject.Properties.Single().Value = convertedValues;
+                }
+            }
         }
     }
 }
