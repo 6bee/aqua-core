@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Tests for aqua-core</Description>
     <TargetFrameworks>net48;netcoreapp3.0</TargetFrameworks>
-	  <IsTestProject>true</IsTestProject>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
