@@ -10,8 +10,8 @@
     <Rule Id="SA1133" Action="None" />
     <Rule Id="SA1201" Action="None" />
     <Rule Id="SA1202" Action="None" />
+    <Rule Id="SA1204" Action="None" />
     <Rule Id="SA1205" Action="None" />
     <Rule Id="SA1309" Action="None" />
-    <Rule Id="SA1204" Action="None" />
   </Rules>
 </RuleSet>
