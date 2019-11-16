@@ -1280,33 +1280,48 @@ namespace Aqua.Dynamic
         {
             if (type == typeof(DateTime) || type == typeof(DateTime?))
             {
-                return ((DateTime)obj).ToString("o");
+                return ((DateTime)obj).ToString("o", CultureInfo.InvariantCulture);
             }
 
             if (type == typeof(DateTimeOffset) || type == typeof(DateTimeOffset?))
             {
-                return ((DateTimeOffset)obj).ToString("o");
+                return ((DateTimeOffset)obj).ToString("o", CultureInfo.InvariantCulture);
+            }
+
+            if (type == typeof(TimeSpan) || type == typeof(TimeSpan?))
+            {
+                return ((TimeSpan)obj).ToString("c", CultureInfo.InvariantCulture);
+            }
+
+            if (type == typeof(Guid) || type == typeof(Guid?))
+            {
+                return ((Guid)obj).ToString("D", CultureInfo.InvariantCulture);
             }
 
             if (type == typeof(float) || type == typeof(float?))
             {
-                return ((float)obj).ToString("R");
+                return ((float)obj).ToString("G9", CultureInfo.InvariantCulture);
             }
 
             if (type == typeof(double) || type == typeof(double?))
             {
-                return ((double)obj).ToString("R");
+                return ((double)obj).ToString("G17", CultureInfo.InvariantCulture);
+            }
+
+            if (type == typeof(decimal) || type == typeof(decimal?))
+            {
+                return ((decimal)obj).ToString(CultureInfo.InvariantCulture);
             }
 
             if (type == typeof(System.Numerics.BigInteger) || type == typeof(System.Numerics.BigInteger?))
             {
-                return ((System.Numerics.BigInteger)obj).ToString("R");
+                return ((System.Numerics.BigInteger)obj).ToString("R", CultureInfo.InvariantCulture);
             }
 
             if (type == typeof(System.Numerics.Complex) || type == typeof(System.Numerics.Complex?))
             {
                 var c = (System.Numerics.Complex)obj;
-                return $"{c.Real:R}{Math.Sign(c.Imaginary):+;-}i{Math.Abs(c.Imaginary):R}";
+                return $"{c.Real:R}{Math.Sign(c.Imaginary):+;-}i{Math.Abs(c.Imaginary):R}".ToString(CultureInfo.InvariantCulture);
             }
 
             if (type == typeof(byte[]))
