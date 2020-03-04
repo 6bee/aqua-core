@@ -6,7 +6,7 @@ namespace Aqua.Tests.Serialization
 
     public static class JsonSerializationHelper
     {
-        private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings().ConfigureAqua();
+        private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings { Formatting = Formatting.Indented }.ConfigureAqua();
 
         public static T Serialize<T>(this T graph)
         {

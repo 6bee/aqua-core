@@ -90,8 +90,7 @@ namespace Aqua.Dynamic
             /// </summary>
             internal DynamicObject TryGetOrCreateNew(Type sourceType, object from, Func<Type, object, Func<Type, bool>, DynamicObject> factory, Action<Type, object, DynamicObject, Func<Type, bool>> initializer, Func<Type, bool> setTypeInformation)
             {
-                DynamicObject to;
-                if (!_referenceMap.TryGetValue(from, out to))
+                if (!_referenceMap.TryGetValue(from, out DynamicObject to))
                 {
                     var setTypeInformationValue = setTypeInformation is null ? true : setTypeInformation(sourceType);
 
@@ -132,9 +131,8 @@ namespace Aqua.Dynamic
             /// </summary>
             internal object TryGetOrCreateNew(Type targetType, DynamicObject from, Func<Type, DynamicObject, object> factory, Action<Type, DynamicObject, object> initializer)
             {
-                object to;
                 var key = new ReferenceMapKey(targetType, from);
-                if (!_referenceMap.TryGetValue(key, out to))
+                if (!_referenceMap.TryGetValue(key, out object to))
                 {
                     to = factory(targetType, from);
 
@@ -448,13 +446,12 @@ namespace Aqua.Dynamic
             _typeResolver = typeResolver ?? TypeResolver.Instance;
 
             _isKnownType = isKnownTypeProvider is null
-                ? (t => false)
-                : new Func<Type, bool>(isKnownTypeProvider.IsKnownType);
+                ? (Func<Type, bool>)(t => false)
+                : isKnownTypeProvider.IsKnownType;
 
-            var typeInfoProvider = new TypeInfoProvider();
             _createDynamicObject = dynamicObjectFactory is null
-                ? (t, o) => new DynamicObject(typeInfoProvider.Get(t))
-                : new Func<Type, object, DynamicObject>(dynamicObjectFactory.CreateDynamicObject);
+                ? (Func<Type, object, DynamicObject>)new InternalDynamicObjectFactory(null).CreateDynamicObject
+                : dynamicObjectFactory.CreateDynamicObject;
         }
 
         public System.Collections.IEnumerable Map(IEnumerable<DynamicObject> objects, Type type = null)
@@ -700,6 +697,11 @@ namespace Aqua.Dynamic
                     return MethodInfos.Enumerable.ToList.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
                 }
 
+                if (resultType.IsAssignableFrom(typeof(IQueryable<>).MakeGenericType(elementType)))
+                {
+                    return MethodInfos.Queryable.AsQueryable.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
+                }
+
                 var enumerableType = typeof(IEnumerable<>).MakeGenericType(elementType);
                 var ctor = resultType.GetConstructors().FirstOrDefault(c =>
                 {
@@ -713,7 +715,7 @@ namespace Aqua.Dynamic
                     return ctor.Invoke(new[] { r1 });
                 }
 
-                throw new Exception($"Failed to project collection of {elementType} into type {resultType}");
+                throw new ArgumentException($"Failed to project collection with element type {elementType} into type {resultType}");
             }
 
             if (resultType.IsEnum())
@@ -1011,8 +1013,7 @@ namespace Aqua.Dynamic
                     type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite && p.GetIndexParameters().Length == 0);
                 foreach (var property in properties.Where(p => p.GetCustomAttribute<UnmappedAttribute>() == null))
                 {
-                    object rawValue;
-                    if (item.TryGet(property.Name, out rawValue))
+                    if (item.TryGet(property.Name, out object rawValue))
                     {
                         var value = MapFromDynamicObjectGraph(rawValue, property.PropertyType);
 
@@ -1028,8 +1029,7 @@ namespace Aqua.Dynamic
                 var fields = GetFieldsForMapping(type) ?? type.GetFields(BindingFlags.Public | BindingFlags.Instance);
                 foreach (var field in fields.Where(f => !f.IsInitOnly && f.GetCustomAttribute<UnmappedAttribute>() == null))
                 {
-                    object rawValue;
-                    if (item.TryGet(field.Name, out rawValue))
+                    if (item.TryGet(field.Name, out object rawValue))
                     {
                         var value = MapFromDynamicObjectGraph(rawValue, field.FieldType);
 
@@ -1231,10 +1231,7 @@ namespace Aqua.Dynamic
         }
 
         private static bool HasImplicitNumericConversions(Type from, Type to)
-        {
-            Dictionary<Type, object> toList;
-            return _implicitNumericConversionsTable.TryGetValue(from, out toList) && toList.ContainsKey(to);
-        }
+            => _implicitNumericConversionsTable.TryGetValue(from, out Dictionary<Type, object> toList) && toList.ContainsKey(to);
 
         private static bool TryExplicitConversions(Type targetType, ref object value)
         {
@@ -1247,11 +1244,9 @@ namespace Aqua.Dynamic
             type = type.AsNonNullableType();
             targetType = targetType.AsNonNullableType();
 
-            Dictionary<Type, Func<object, object>> converterMap;
-            if (_explicitConversionsTable.TryGetValue(type, out converterMap))
+            if (_explicitConversionsTable.TryGetValue(type, out Dictionary<Type, Func<object, object>> converterMap))
             {
-                Func<object, object> converter;
-                if (converterMap.TryGetValue(targetType, out converter))
+                if (converterMap.TryGetValue(targetType, out Func<object, object> converter))
                 {
                     value = converter(value);
                     return true;

@@ -66,6 +66,13 @@ namespace Aqua
 
         internal static class Queryable
         {
+            internal static readonly MethodInfo AsQueryable = typeof(System.Linq.Queryable)
+                .GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .Single(m =>
+                    m.Name == nameof(System.Linq.Queryable.AsQueryable) &&
+                    m.IsGenericMethod &&
+                    m.GetParameters().Length == 1);
+
             internal static readonly MethodInfo OrderBy = typeof(System.Linq.Queryable)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Single(m =>

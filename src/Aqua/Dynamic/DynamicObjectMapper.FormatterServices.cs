@@ -45,8 +45,7 @@ namespace Aqua.Dynamic
                     continue;
                 }
 
-                MemberInfo member;
-                if (membersByCleanName.TryGetValue(dynamicProperty.Name, out member))
+                if (membersByCleanName.TryGetValue(dynamicProperty.Name, out MemberInfo member))
                 {
                     Type memberType;
                     switch (member.MemberType)

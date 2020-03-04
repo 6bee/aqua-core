@@ -49,8 +49,7 @@ namespace Aqua
                 var isReferenceAlive = false;
 
                 // probe cache
-                WeakReference weakref;
-                if (_cache.TryGetValue(key, out weakref))
+                if (_cache.TryGetValue(key, out WeakReference weakref))
                 {
                     value = (TValue)weakref.Target;
                     isReferenceAlive = weakref.IsAlive;
