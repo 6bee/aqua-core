@@ -6,6 +6,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using Aqua.TypeSystem.Extensions;
     using Shouldly;
     using System;
+    using System.Globalization;
     using System.Numerics;
     using System.Reflection;
     using Xunit;
@@ -26,8 +27,10 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [SkippableTheory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        public void Should_map_native_value(Type type, object value)
+        public void Should_map_native_value(Type type, object value, CultureInfo cultureInfo)
         {
+            CultureInfo.CurrentCulture = cultureInfo;
+
             var result = MapAsValueMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
 
             if (result == null)
@@ -50,8 +53,10 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [SkippableTheory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        public void Should_map_native_value_property(Type type, object value)
+        public void Should_map_native_value_property(Type type, object value, CultureInfo cultureInfo)
         {
+            CultureInfo.CurrentCulture = cultureInfo;
+
             var result = MapAsPropertyMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
 
             if (result == null)

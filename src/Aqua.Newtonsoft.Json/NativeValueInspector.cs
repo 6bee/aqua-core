@@ -7,6 +7,7 @@ namespace Aqua
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Numerics;
     using System.Runtime.Serialization;
@@ -19,24 +20,24 @@ namespace Aqua
         private static readonly Dictionary<string, Func<object, object>> _converterMap =
             new Dictionary<Type, Func<object, object>>
             {
-                { typeof(int), x => Convert.ToInt32(x) },
-                { typeof(uint), x => Convert.ToUInt32(x) },
-                { typeof(byte), x => Convert.ToByte(x) },
-                { typeof(sbyte), x => Convert.ToSByte(x) },
-                { typeof(short), x => Convert.ToInt16(x) },
-                { typeof(ushort), x => Convert.ToUInt16(x) },
-                { typeof(long), x => Convert.ToInt64(x) },
-                { typeof(ulong), x => x is BigInteger ? (ulong)(BigInteger)x : Convert.ToUInt64(x) },
-                { typeof(float), x => Convert.ToSingle(x) },
-                { typeof(decimal), x => Convert.ToDecimal(x) },
+                { typeof(int), x => Convert.ToInt32(x, CultureInfo.InvariantCulture) },
+                { typeof(uint), x => Convert.ToUInt32(x, CultureInfo.InvariantCulture) },
+                { typeof(byte), x => Convert.ToByte(x, CultureInfo.InvariantCulture) },
+                { typeof(sbyte), x => Convert.ToSByte(x, CultureInfo.InvariantCulture) },
+                { typeof(short), x => Convert.ToInt16(x, CultureInfo.InvariantCulture) },
+                { typeof(ushort), x => Convert.ToUInt16(x, CultureInfo.InvariantCulture) },
+                { typeof(long), x => Convert.ToInt64(x, CultureInfo.InvariantCulture) },
+                { typeof(ulong), x => x is BigInteger ? (ulong)(BigInteger)x : Convert.ToUInt64(x, CultureInfo.InvariantCulture) },
+                { typeof(float), x => Convert.ToSingle(x, CultureInfo.InvariantCulture) },
+                { typeof(decimal), x => Convert.ToDecimal(x, CultureInfo.InvariantCulture) },
                 { typeof(char), x => Convert.ToChar(x) },
                 { typeof(Guid), x => x is string ? Guid.Parse((string)x) : x },
-                { typeof(TimeSpan), x => x is string ? TimeSpan.Parse((string)x) : x },
+                { typeof(TimeSpan), x => x is string ? TimeSpan.Parse((string)x, CultureInfo.InvariantCulture) : x },
                 { typeof(DateTimeOffset), x => x is DateTime ? new DateTimeOffset(((DateTime)x).ToLocalTime()) : x },
                 { typeof(BigInteger), x => x is long ? new BigInteger((long)x) : x },
 
-                // { typeof(double), x => Convert.ToDouble(x) },
-                // { typeof(bool), x => Convert.ToBoolean(x) },
+                // { typeof(double), x => Convert.ToDouble(x, CultureInfo.InvariantCulture) },
+                // { typeof(bool), x => Convert.ToBoolean(x, CultureInfo.InvariantCulture) },
                 // { typeof(Complex), x => x },
             }
             .ToDictionary(k => k.Key.FullName, v => v.Value);

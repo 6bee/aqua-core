@@ -6,6 +6,7 @@ namespace Aqua.Tests
     using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Numerics;
     using System.Reflection;
@@ -40,35 +41,48 @@ namespace Aqua.Tests
                 x.MakeArrayType(),
             })
             .Distinct()
-            .Select(x => new Type[] { x });
+            .Select(x => new[] { x });
 
-        public static IEnumerable<object[]> NativeValues => new object[]
+        private static IEnumerable<(Type Type, object Value, CultureInfo CultureInfo)> GenerateTestValueSet() => new object[]
             {
                 $"Test values treated as native types in {nameof(DynamicObjectMapper)}",
                 byte.MinValue,
                 byte.MaxValue,
                 sbyte.MinValue,
                 sbyte.MaxValue,
+                (sbyte)0,
                 short.MinValue,
                 short.MaxValue,
+                (short)0,
                 ushort.MinValue,
                 ushort.MaxValue,
+                (ushort)0,
                 int.MinValue,
                 int.MaxValue,
+                0,
                 uint.MinValue,
                 uint.MaxValue,
+                0u,
                 long.MinValue,
                 long.MaxValue,
+                0L,
                 ulong.MinValue,
                 ulong.MaxValue,
+                0ul,
                 float.MinValue,
                 float.MaxValue,
+                0f,
+                .1f,
                 double.MinValue,
                 double.MaxValue,
+                0d,
+                .1d,
                 decimal.MinValue,
                 decimal.MaxValue,
                 new decimal(Math.E),
                 new decimal(Math.PI),
+                0m,
+                .1m,
                 char.MinValue,
                 char.MaxValue,
                 'à',
@@ -98,28 +112,42 @@ namespace Aqua.Tests
                 TestEnum.Foo,
                 TestEnum.Bar,
             }
-            .SelectMany(x => new Tuple<Type, object>[]
+            .SelectMany(x => new (Type Type, object Value)[]
             {
-                Tuple.Create(x.GetType(), x),
-                Tuple.Create(x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
-                Tuple.Create(x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), default(object)),
+                (x.GetType(), x),
+                (x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
+                (x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), null),
             })
             .Distinct()
-            .Select(x => new object[] { x.Item1, x.Item2 });
+            .SelectMany(
+                _ => new[]
+                {
+                    CultureInfo.InvariantCulture,
+                    CultureInfo.GetCultureInfo("de"),
+                },
+                (x, c) => (x.Type, x.Value, c));
 
-        public static IEnumerable<object[]> NativeValueArrays => NativeValues
+        public static IEnumerable<object[]> NativeValues
+            => GenerateTestValueSet()
+            .Select(x => new object[] { x.Type, x.Value, x.CultureInfo });
+
+        public static IEnumerable<object[]> NativeValueArrays
+            => GenerateTestValueSet()
             .Select(x => new[]
             {
-                ((Type)x[0]).MakeArrayType(),
-                CreateArray((Type)x[0], x[1]),
+                x.Type.MakeArrayType(),
+                CreateArray(x.Type, x.Value),
+                x.CultureInfo,
             });
 
         // NOTE: NativeValueLists don't work with json.net since list element types don't get corrected by NativeValueInspector
-        public static IEnumerable<object[]> NativeValueLists => NativeValues
+        public static IEnumerable<object[]> NativeValueLists
+            => GenerateTestValueSet()
             .Select(x => new[]
             {
-                typeof(List<>).MakeGenericType((Type)x[0]),
-                CreateList((Type)x[0], x[1]),
+                typeof(List<>).MakeGenericType(x.Type),
+                CreateList(x.Type, x.Value),
+                x.CultureInfo,
             });
 
         private static object CreateArray(Type type, object item)

@@ -1060,57 +1060,57 @@ namespace Aqua.Dynamic
 
             if (targetType == typeof(int))
             {
-                return int.Parse(value);
+                return int.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(uint))
             {
-                return uint.Parse(value);
+                return uint.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(byte))
             {
-                return byte.Parse(value);
+                return byte.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(sbyte))
             {
-                return sbyte.Parse(value);
+                return sbyte.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(short))
             {
-                return short.Parse(value);
+                return short.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(ushort))
             {
-                return ushort.Parse(value);
+                return ushort.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(long))
             {
-                return long.Parse(value);
+                return long.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(ulong))
             {
-                return ulong.Parse(value);
+                return ulong.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(float))
             {
-                return float.Parse(value);
+                return float.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(double))
             {
-                return double.Parse(value);
+                return double.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(decimal))
             {
-                return decimal.Parse(value);
+                return decimal.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(char))
@@ -1130,22 +1130,22 @@ namespace Aqua.Dynamic
 
             if (targetType == typeof(DateTime))
             {
-                return DateTime.Parse(value, null, DateTimeStyles.RoundtripKind);
+                return DateTime.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
             }
 
             if (targetType == typeof(DateTimeOffset))
             {
-                return DateTimeOffset.Parse(value);
+                return DateTimeOffset.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(TimeSpan))
             {
-                return TimeSpan.Parse(value);
+                return TimeSpan.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(System.Numerics.BigInteger))
             {
-                return System.Numerics.BigInteger.Parse(value);
+                return System.Numerics.BigInteger.Parse(value, CultureInfo.InvariantCulture);
             }
 
             if (targetType == typeof(System.Numerics.Complex))
@@ -1153,8 +1153,8 @@ namespace Aqua.Dynamic
                 var m = System.Text.RegularExpressions.Regex.Match(value, ComplexNumberParserRegexPattern);
                 if (m.Success)
                 {
-                    var re = double.Parse(m.Groups["Re"].Value);
-                    var im = double.Parse(m.Groups["Sign"].Value + m.Groups["Im"].Value);
+                    var re = double.Parse(m.Groups["Re"].Value, CultureInfo.InvariantCulture);
+                    var im = double.Parse(m.Groups["Sign"].Value + m.Groups["Im"].Value, CultureInfo.InvariantCulture);
                     return new System.Numerics.Complex(re, im);
                 }
                 else
