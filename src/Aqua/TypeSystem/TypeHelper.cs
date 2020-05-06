@@ -206,6 +206,16 @@ namespace Aqua.TypeSystem
                 })
                 .ToArray();
 
+            Type returnType;
+            try
+            {
+                returnType = typeResolver.ResolveType(methodInfo.ReturnType);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Return type '{methodInfo.ReturnType}' could not be reconstructed", ex);
+            }
+
             int CountDeclarationDepth(System.Reflection.TypeInfo type, System.Reflection.TypeInfo methodDeclaringType, int i)
                 => type == methodDeclaringType
                 ? i
@@ -229,6 +239,7 @@ namespace Aqua.TypeSystem
 
                     return true;
                 })
+                .Where(m => m.ReturnType is null || m.ReturnType == returnType)
                 .OrderBy(m => CountDeclarationDepth(declaringType.GetTypeInfo(), m.DeclaringType.GetTypeInfo(), 0))
                 .First();
 
