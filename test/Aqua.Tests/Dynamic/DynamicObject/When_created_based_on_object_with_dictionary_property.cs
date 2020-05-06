@@ -54,7 +54,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Dictionary_property_should_be_object_array()
         {
-            dynamicObject["Dictionary"].ShouldBeOfType<object[]>();
+            dynamicObject["Dictionary"].ShouldBeOfType<DynamicObject[]>();
         }
 
         [Fact]

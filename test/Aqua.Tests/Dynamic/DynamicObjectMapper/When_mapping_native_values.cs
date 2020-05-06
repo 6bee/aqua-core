@@ -24,12 +24,13 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         private static readonly MethodInfo MapAsPropertyMethod =
             typeof(When_mapping_native_values).GetMethod(nameof(MapAsProperty), BindingFlags.Static | BindingFlags.NonPublic);
 
-        [SkippableTheory]
+        [Theory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        public void Should_map_native_value(Type type, object value, CultureInfo cultureInfo)
+        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        public void Should_map_native_value(Type type, object value, CultureInfo culture)
         {
-            CultureInfo.CurrentCulture = cultureInfo;
+            using var cultureContext = culture.CreateContext();
 
             var result = MapAsValueMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
 
@@ -50,12 +51,13 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             result.ShouldBe(value);
         }
 
-        [SkippableTheory]
+        [Theory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        public void Should_map_native_value_property(Type type, object value, CultureInfo cultureInfo)
+        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        public void Should_map_native_value_property(Type type, object value, CultureInfo culture)
         {
-            CultureInfo.CurrentCulture = cultureInfo;
+            using var cultureContext = culture.CreateContext();
 
             var result = MapAsPropertyMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
 

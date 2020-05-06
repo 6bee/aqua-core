@@ -9,10 +9,12 @@ namespace Aqua.Dynamic
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     [Serializable]
     [DataContract(IsReference = true)]
     [DebuggerDisplay("Count = {PropertyCount}")]
+    [KnownType(typeof(DynamicObject[])), XmlInclude(typeof(DynamicObject[]))]
     public partial class DynamicObject : INotifyPropertyChanging, INotifyPropertyChanged
     {
         /// <summary>
@@ -272,10 +274,6 @@ namespace Aqua.Dynamic
 
         protected virtual void OnPropertyChanged(string name, object oldValue, object newValue)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-        [Obsolete("Method renamed to Create. This method is beeing removed in a future version.", true)]
-        public static DynamicObject CreateDynamicObject(object obj, IDynamicObjectMapper mapper = null)
-            => Create(obj, mapper);
 
         /// <summary>
         /// Creates a dynamic objects representing the object structure defined by the specified object.

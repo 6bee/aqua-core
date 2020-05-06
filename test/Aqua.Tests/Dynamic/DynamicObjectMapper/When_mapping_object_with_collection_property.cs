@@ -31,7 +31,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             var items = dynamicObject["Items"];
 
-            var array = items.ShouldBeOfType<object[]>();
+            var array = items.ShouldBeOfType<int[]>();
             array[0].ShouldBe(1);
             array[1].ShouldBe(int.MinValue);
         }
@@ -45,7 +45,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             var items = dynamicObject["Items"];
 
-            var array = items.ShouldBeOfType<object[]>();
+            var array = items.ShouldBeOfType<sbyte?[]>();
             array[0].ShouldBe((sbyte)1);
             array[1].ShouldBeNull();
             array[2].ShouldBe((sbyte)-128);
@@ -60,7 +60,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             var items = dynamicObject["Items"];
 
-            var array = items.ShouldBeOfType<object[]>();
+            var array = items.ShouldBeOfType<sbyte?[]>();
             array[0].ShouldBe((sbyte)1);
             array[1].ShouldBeNull();
             array[2].ShouldBe((sbyte)-128);
@@ -77,7 +77,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             var items = dynamicObject["Items"];
 
-            var array = items.ShouldBeOfType<object[]>();
+            var array = items.ShouldBeOfType<string[]>();
             array[0].ShouldBe("1");
             array[1].ShouldBeNull();
             array[2].ShouldBe("-128");
@@ -91,7 +91,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             var dynamicObject = new DynamicObjectMapper().MapObject(obj);
 
             dynamicObject["Items"]
-                .ShouldBeOfType<object[]>()
+                .ShouldBeOfType<DynamicObject[]>()
                 .ShouldBeEmpty();
         }
 
@@ -104,7 +104,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             var items = dynamicObject["Items"];
 
-            var array = items.ShouldBeOfType<object[]>();
+            var array = items.ShouldBeOfType<DynamicObject[]>();
 
             array.Length.ShouldBe(1);
 
@@ -122,7 +122,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             var items = dynamicObject["Items"];
 
-            var array = items.ShouldBeOfType<object[]>();
+            var array = items.ShouldBeOfType<DynamicObject[]>();
 
             array.Length.ShouldBe(1);
 
@@ -145,19 +145,19 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             var items = dynamicObject["Items"];
 
-            var outerArray = items.ShouldBeOfType<object[]>();
+            var outerArray = items.ShouldBeOfType<int[][]>();
             outerArray.Length.ShouldBe(3);
 
-            var innerArray1 = outerArray[0].ShouldBeOfType<object[]>();
+            var innerArray1 = outerArray[0].ShouldBeOfType<int[]>();
             innerArray1.Length.ShouldBe(2);
             innerArray1[0].ShouldBe(1);
             innerArray1[1].ShouldBe(2);
 
-            var innerArray2 = outerArray[1].ShouldBeOfType<object[]>();
+            var innerArray2 = outerArray[1].ShouldBeOfType<int[]>();
             innerArray2.Length.ShouldBe(1);
             innerArray2[0].ShouldBe(3);
 
-            var innerArray3 = outerArray[2].ShouldBeOfType<object[]>();
+            var innerArray3 = outerArray[2].ShouldBeOfType<int[]>();
             innerArray3.Length.ShouldBe(3);
             innerArray3[0].ShouldBe(4);
             innerArray3[1].ShouldBe(5);
@@ -192,8 +192,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             var items = dynamicObject["Items"];
 
-            var array = items.ShouldBeOfType<object[]>();
-            array.SequenceEqual(Enumerable.Range(1, 18).Select(x => (object)x)).ShouldBeTrue();
+            var array = items.ShouldBeOfType<int[]>();
+            array.SequenceEqual(Enumerable.Range(1, 18)).ShouldBeTrue();
         }
     }
 }

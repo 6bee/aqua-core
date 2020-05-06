@@ -43,7 +43,7 @@ namespace Aqua.Tests
             .Distinct()
             .Select(x => new[] { x });
 
-        private static IEnumerable<(Type Type, object Value, CultureInfo CultureInfo)> GenerateTestValueSet() => new object[]
+        private static IEnumerable<(Type Type, object Value, CultureInfo Culture)> GenerateTestValueSet() => new object[]
             {
                 $"Test values treated as native types in {nameof(DynamicObjectMapper)}",
                 byte.MinValue,
@@ -103,7 +103,6 @@ namespace Aqua.Tests
                 new BigInteger(ulong.MinValue) - 1,
                 new BigInteger(ulong.MaxValue) + 1,
                 default(Complex),
-                default(Complex),
                 new Complex(32, -87654),
                 new Complex(-87654, 234),
                 new Complex(double.MinValue, double.MinValue),
@@ -129,7 +128,7 @@ namespace Aqua.Tests
 
         public static IEnumerable<object[]> NativeValues
             => GenerateTestValueSet()
-            .Select(x => new object[] { x.Type, x.Value, x.CultureInfo });
+            .Select(x => new object[] { x.Type, x.Value, x.Culture });
 
         public static IEnumerable<object[]> NativeValueArrays
             => GenerateTestValueSet()
@@ -137,7 +136,7 @@ namespace Aqua.Tests
             {
                 x.Type.MakeArrayType(),
                 CreateArray(x.Type, x.Value),
-                x.CultureInfo,
+                x.Culture,
             });
 
         // NOTE: NativeValueLists don't work with json.net since list element types don't get corrected by NativeValueInspector
@@ -147,7 +146,7 @@ namespace Aqua.Tests
             {
                 typeof(List<>).MakeGenericType(x.Type),
                 CreateList(x.Type, x.Value),
-                x.CultureInfo,
+                x.Culture,
             });
 
         private static object CreateArray(Type type, object item)

@@ -3,6 +3,7 @@
 namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using global::Newtonsoft.Json;
     using Shouldly;
     using System;
     using System.Collections.Generic;
@@ -73,76 +74,73 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             _serialize = serialize;
         }
 
-        [SkippableTheory]
+        [Theory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        public void Should_serialize_value(Type type, object value, CultureInfo cultureInfo)
+        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        public void Should_serialize_value(Type type, object value, CultureInfo culture)
         {
-            Skip.If(this.TestIs<JsonSerializer>() && type.Is<DateTimeOffset>(), "DateTimeOffset not supported by JsonSerializer");
-            Skip.If(this.TestIs<JsonSerializer>() && type.Is<Complex>(), "Complex not supported by JsonSerializer");
-            Skip.If(this.TestIs<JsonSerializer>() && type.Is<decimal>(), "Decimal not supported by JsonSerializer");
+            using var cultureContext = culture.CreateContext();
 
-            CultureInfo.CurrentCulture = cultureInfo;
-
-            var result = SerializeMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true });
+            var result = SerializeMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, false });
             result.ShouldBe(value, $"type: {type.FullName}");
         }
 
-        [SkippableTheory]
+        [Theory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        public void Should_serialize_value_as_property(Type type, object value, CultureInfo cultureInfo)
+        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        public void Should_serialize_value_when_using_string_formatting(Type type, object value, CultureInfo culture)
         {
-            Skip.If(this.TestIs<JsonSerializer>() && type.Is<DateTimeOffset>(), "DateTimeOffset not supported by JsonSerializer");
-            Skip.If(this.TestIs<JsonSerializer>() && type.Is<Complex>(), "Complex not supported by JsonSerializer");
-            Skip.If(this.TestIs<JsonSerializer>() && type.Is<decimal>(), "Decimal not supported by JsonSerializer");
+            using var cultureContext = culture.CreateContext();
 
-            CultureInfo.CurrentCulture = cultureInfo;
+            var result = SerializeMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, true });
+            result.ShouldBe(value, $"type: {type.FullName}");
+        }
+
+        [Theory]
+        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        public void Should_serialize_value_as_property(Type type, object value, CultureInfo culture)
+        {
+            using var cultureContext = culture.CreateContext();
 
             var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, false });
             result.ShouldBe(value, $"type: {type.FullName}");
         }
 
-        [SkippableTheory]
+        [Theory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        public void Should_serialize_value_as_property_when_using_string_formatting(Type type, object value, CultureInfo cultureInfo)
+        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        public void Should_serialize_value_as_property_when_using_string_formatting(Type type, object value, CultureInfo culture)
         {
-            Skip.If(this.TestIs<JsonSerializer>() && type.Is<DateTimeOffset>(), "DateTimeOffset not supported by JsonSerializer");
-            Skip.If(this.TestIs<JsonSerializer>() && type.Is<Complex>(), "Complex not supported by JsonSerializer");
-            Skip.If(this.TestIs<JsonSerializer>() && type.Is<decimal>(), "Decimal not supported by JsonSerializer");
-
-            CultureInfo.CurrentCulture = cultureInfo;
+            using var cultureContext = culture.CreateContext();
 
             var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, true });
-            result.ShouldBe(value, $"type: {type.FullName}");
+            result.ShouldBe(value, $"type: {type.FullName}  ({value})");
         }
 
-        [SkippableFact]
+        [Fact]
         public void Should_serialize_DateTimeOffset_as_property()
         {
-            Skip.If(this.TestIs<JsonSerializer>(), "DateTimeOffset not supported by JsonSerializer");
-
             var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
             var result = SerializeAsPropertyMethod.MakeGenericMethod(value.GetType()).Invoke(this, new object[] { value, true, false });
             result.ShouldBe(value);
         }
 
-        [SkippableFact]
+        [Fact]
         public void Should_serialize_DateTimeOffset_as_property_when_using_string_formatting()
         {
-            Skip.If(this.TestIs<JsonSerializer>(), "DateTimeOffset not supported by JsonSerializer");
-
             var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
             var result = SerializeAsPropertyMethod.MakeGenericMethod(value.GetType()).Invoke(this, new object[] { value, true, true });
             result.ShouldBe(value);
         }
 
-        [SkippableFact]
+        [Fact]
         public void Should_serialize_DateTimeOffset_as_property_when_using_string_formatting2()
         {
-            Skip.If(this.TestIs<JsonSerializer>(), "DateTimeOffset not supported by JsonSerializer");
-
             var mapperSettings = new DynamicObjectMapperSettings { FormatNativeTypesAsString = true };
             var mapper = new DynamicObjectMapper(mapperSettings);
 
@@ -215,19 +213,11 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             result.ShouldBe(0.1F);
         }
 
-        [Fact]
-        public void Float_as_string_should_serialize_despite_local_culture()
-        {
-            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("de");
-            var result = Serialize<float, float>(0.1F, formatValuesAsStrings: true);
-            result.ShouldBe(0.1F);
-        }
-
-        private T Serialize<T>(T value, bool setTypeFromGenericArgument = true)
-            => Serialize<T, T>(value, setTypeFromGenericArgument);
+        private T Serialize<T>(T value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
+            => Serialize<T, T>(value, setTypeFromGenericArgument, formatValuesAsStrings);
 
         private T SerializeAsProperty<T>(T value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
-            => Serialize<A<T>, A<T>>(new A<T> { Value = value }, setTypeFromGenericArgument).Value;
+            => Serialize<A<T>, A<T>>(new A<T> { Value = value }, setTypeFromGenericArgument, formatValuesAsStrings).Value;
 
         private TResult Serialize<TResult, TSource>(TSource value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
         {
@@ -235,7 +225,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             var dynamicObject = new DynamicObjectMapper(settings).MapObject(value);
             if (dynamicObject != null && setTypeFromGenericArgument)
             {
-                dynamicObject.Type = new TypeInfo(typeof(TSource), false);
+                dynamicObject.Type = new TypeInfo(typeof(TSource), false, false);
             }
 
             var serializedDynamicObject = _serialize(dynamicObject);

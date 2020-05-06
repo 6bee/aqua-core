@@ -2,8 +2,6 @@
 
 namespace Aqua.Dynamic
 {
-    using System;
-
     public class DynamicObjectMapperSettings
     {
         /// <summary>
@@ -13,14 +11,6 @@ namespace Aqua.Dynamic
         /// The default value is. <code>true</code>.
         /// </summary>
         public bool SilentlySkipUnassignableMembers { get; set; } = true;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether native values should be formatted as strings.
-        /// If set to true all native type values are stored as strings, ohterwise primitive values get stored with no transformation.
-        /// The default value is. <code>false</code>.
-        /// </summary>
-        [Obsolete("This property was renamed to FormatNativeTypesAsString and will not be available in future versions", false)]
-        public bool FormatPrimitiveTypesAsString { get => FormatNativeTypesAsString; set => FormatNativeTypesAsString = value; }
 
         /// <summary>
         /// Gets or sets a value indicating whether native values (numeric, datetime, etc.) should be formatted as strings.

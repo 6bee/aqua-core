@@ -10,6 +10,7 @@ namespace Aqua.Dynamic
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
+    using System.Text.RegularExpressions;
     using ConstructorInfo = System.Reflection.ConstructorInfo;
     using FieldInfo = System.Reflection.FieldInfo;
     using MethodInfo = System.Reflection.MethodInfo;
@@ -107,10 +108,7 @@ namespace Aqua.Dynamic
                         return _referenceMap[from];
                     }
 
-                    if (!(initializer is null))
-                    {
-                        initializer(sourceType, from, to, setTypeInformation);
-                    }
+                    initializer?.Invoke(sourceType, from, to, setTypeInformation);
                 }
 
                 return to;
@@ -870,13 +868,28 @@ namespace Aqua.Dynamic
                 return obj.ToString();
             }
 
-            var collection = obj as System.Collections.IEnumerable;
-            if (!(collection is null) && !ShouldMapToDynamicObject(collection))
+            if (obj is System.Collections.IEnumerable collection && !ShouldMapToDynamicObject(collection))
             {
                 var items = collection
                     .Cast<object>()
                     .Select(x => MapToDynamicObjectIfRequired(x, setTypeInformation))
                     .ToArray();
+
+                var elementType = TypeHelper.GetElementType(type);
+                if (elementType != typeof(object))
+                {
+                    if (elementType.IsEnum() || (_formatNativeTypesAsString && _isNativeType(elementType)))
+                    {
+                        elementType = typeof(string);
+                    }
+                    else if (items.All(x => x is null || x is DynamicObject))
+                    {
+                        elementType = typeof(DynamicObject);
+                    }
+
+                    return CastCollectionToArrayOfType(elementType, items);
+                }
+
                 return items;
             }
 
@@ -1044,7 +1057,7 @@ namespace Aqua.Dynamic
             };
         }
 
-        private static object CastCollectionToArrayOfType(Type elementType, object items)
+        internal static object CastCollectionToArrayOfType(Type elementType, System.Collections.IEnumerable items)
         {
             var castedItems = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
             var array = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { castedItems });
@@ -1150,7 +1163,7 @@ namespace Aqua.Dynamic
 
             if (targetType == typeof(System.Numerics.Complex))
             {
-                var m = System.Text.RegularExpressions.Regex.Match(value, ComplexNumberParserRegexPattern);
+                var m = Regex.Match(value, ComplexNumberParserRegexPattern);
                 if (m.Success)
                 {
                     var re = double.Parse(m.Groups["Re"].Value, CultureInfo.InvariantCulture);
@@ -1316,7 +1329,7 @@ namespace Aqua.Dynamic
             if (type == typeof(System.Numerics.Complex) || type == typeof(System.Numerics.Complex?))
             {
                 var c = (System.Numerics.Complex)obj;
-                return $"{c.Real:R}{Math.Sign(c.Imaginary):+;-}i{Math.Abs(c.Imaginary):R}".ToString(CultureInfo.InvariantCulture);
+                return FormattableString.Invariant($"{c.Real:R}{Math.Sign(c.Imaginary):+;-}i{Math.Abs(c.Imaginary):R}");
             }
 
             if (type == typeof(byte[]))

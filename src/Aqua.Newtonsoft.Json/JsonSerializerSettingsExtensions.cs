@@ -2,10 +2,10 @@
 
 namespace Aqua
 {
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
+    using Aqua.Newtonsoft.Json.ContractResolvers;
+    using global::Newtonsoft.Json;
+    using global::Newtonsoft.Json.Serialization;
     using System.ComponentModel;
-    using System.Linq;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class JsonSerializerSettingsExtensions
@@ -16,11 +16,7 @@ namespace Aqua
         /// </summary>
         public static JsonSerializerSettings ConfigureAqua(this JsonSerializerSettings jsonSerializerSettings)
         {
-            var valid = new[] { TypeNameHandling.All, TypeNameHandling.Auto, TypeNameHandling.Objects };
-            if (!valid.Contains(jsonSerializerSettings.TypeNameHandling))
-            {
-                jsonSerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
-            }
+            jsonSerializerSettings.TypeNameHandling = TypeNameHandling.None;
 
             jsonSerializerSettings.ContractResolver = jsonSerializerSettings.ContractResolver?.GetType() == typeof(DefaultContractResolver)
                 ? new AquaContractResolver()

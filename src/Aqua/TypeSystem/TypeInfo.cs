@@ -10,10 +10,12 @@ namespace Aqua.TypeSystem
     using System.Reflection;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
+    using System.Xml.Serialization;
 
     [Serializable]
     [DataContract(Name = "Type", IsReference = true)]
     [DebuggerDisplay("{FullName}")]
+    [KnownType(typeof(TypeInfo[])), XmlInclude(typeof(TypeInfo[]))]
     public class TypeInfo
     {
         private static readonly Regex _arrayNameRegex = new Regex(@"^.*\[,*\]$");
