@@ -193,7 +193,8 @@ namespace Aqua.Newtonsoft.Json.Converters
                 throw new ArgumentException("Type name must not be emopty.", nameof(typeName));
             }
 
-            return AppDomain.CurrentDomain
+            return Type.GetType(typeName) ??
+                AppDomain.CurrentDomain
                 .GetAssemblies()
                 .Where(x => !x.IsDynamic)
                 .Select(x => x.GetType(typeName))

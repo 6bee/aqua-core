@@ -18,9 +18,10 @@ namespace Aqua
         {
             jsonSerializerSettings.TypeNameHandling = TypeNameHandling.None;
 
-            jsonSerializerSettings.ContractResolver = jsonSerializerSettings.ContractResolver?.GetType() == typeof(DefaultContractResolver)
-                ? new AquaContractResolver()
-                : new AquaContractResolver(jsonSerializerSettings.ContractResolver);
+            if (jsonSerializerSettings.ContractResolver?.GetType() != typeof(AquaContractResolver))
+            {
+                jsonSerializerSettings.ContractResolver = new AquaContractResolver(jsonSerializerSettings.ContractResolver);
+            }
 
             return jsonSerializerSettings;
         }

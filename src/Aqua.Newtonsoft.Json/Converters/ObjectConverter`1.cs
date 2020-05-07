@@ -109,13 +109,12 @@ namespace Aqua.Newtonsoft.Json.Converters
             }
 
             var result = CreateObject(type);
-            var properties = GetProperties(type);
-
             if (!string.IsNullOrWhiteSpace(reference))
             {
                 serializer.ReferenceResolver.AddReference(serializer, reference, result);
             }
 
+            var properties = GetProperties(type);
             ReadObjectProperties(reader, result, properties.ToDictionary(x => x.Name), serializer);
 
             reader.AssertEndObject(false);
@@ -138,7 +137,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 var type = value.GetType();
 
                 writer.WritePropertyName(TypeToke);
-                serializer.Serialize(writer, type.FullName);
+                serializer.Serialize(writer, $"{type.FullName}, {type.Assembly.GetName().Name}");
 
                 WriteObjectProperties(writer, value, GetProperties(type), serializer);
             }
@@ -150,7 +149,6 @@ namespace Aqua.Newtonsoft.Json.Converters
         {
             while (true)
             {
-                reader.Advance();
                 if (reader.TokenType == JsonToken.EndObject)
                 {
                     break;
@@ -169,6 +167,8 @@ namespace Aqua.Newtonsoft.Json.Converters
                         reader.Skip();
                     }
                 }
+
+                reader.Advance();
             }
         }
 

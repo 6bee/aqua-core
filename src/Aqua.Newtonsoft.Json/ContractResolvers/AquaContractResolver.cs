@@ -16,7 +16,12 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
 
         public AquaContractResolver(IContractResolver decorated = null)
         {
-            _decorated = decorated;
+            if (decorated is AquaContractResolver self)
+            {
+                decorated = self._decorated;
+            }
+
+            _decorated = decorated?.GetType() == typeof(DefaultContractResolver) ? null : decorated;
         }
 
         public override JsonContract ResolveContract(Type type)

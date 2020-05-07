@@ -54,7 +54,7 @@ namespace Aqua.TypeSystem.Emit
         {
             var fullName = CreateUniqueClassName();
 
-            var propertyInfos = typeInfo.Properties.ToArray();
+            var propertyInfos = typeInfo.Properties?.ToArray() ?? throw new Exception("Type generation failed due to mussing properies description.");
 
             // define type
             var type = _module.DefineType(fullName, TypeAttributes.Public | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.Sealed, typeof(object));
