@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <MajorVersion>4</MajorVersion>
-    <MinorVersion>6</MinorVersion>
-    <PatchVersion>1</PatchVersion>
-    <PreReleaseLabel></PreReleaseLabel>
+    <MinorVersion>7</MinorVersion>
+    <PatchVersion>0</PatchVersion>
+    <PreReleaseLabel>alpha-002</PreReleaseLabel>
   </PropertyGroup>
 
   <PropertyGroup>
