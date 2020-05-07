@@ -14,7 +14,7 @@ namespace Aqua.TypeSystem
 
     [Serializable]
     [DataContract(Name = "Type", IsReference = true)]
-    [DebuggerDisplay("{FullName}")]
+    [DebuggerDisplay("Type: {FullName,nq}")]
     [KnownType(typeof(TypeInfo[])), XmlInclude(typeof(TypeInfo[]))]
     public class TypeInfo
     {

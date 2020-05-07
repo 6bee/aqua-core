@@ -20,37 +20,30 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
         }
 
         public override JsonContract ResolveContract(Type type)
-        {
-            var contract = _decorated is null || typeof(DynamicObject).IsAssignableFrom(type)
-                ? base.ResolveContract(type)
-                : _decorated.ResolveContract(type);
-
-            var dataContractAttribute = type.GetCustomAttributes(typeof(DataContractAttribute), false);
-            if (dataContractAttribute?.Cast<DataContractAttribute>().SingleOrDefault()?.IsReference == true)
-            {
-                contract.IsReference = true;
-                if (contract is JsonObjectContract objectContract)
-                {
-                    objectContract.ItemIsReference = true;
-                    objectContract.ItemReferenceLoopHandling = ReferenceLoopHandling.Serialize;
-                }
-            }
-
-            return contract;
-        }
+            => _decorated is null || typeof(DynamicObject).IsAssignableFrom(type)
+            ? base.ResolveContract(type)
+            : _decorated.ResolveContract(type);
 
         protected override JsonContract CreateContract(Type objectType)
-            => typeof(DynamicObject).IsAssignableFrom(objectType)
+            => IsTypeHandled(objectType)
             ? CreateObjectContract(objectType)
             : base.CreateContract(objectType);
+
+        private static bool IsTypeHandled(Type type)
+            => Equals(type.Assembly, typeof(DynamicObject).Assembly)
+            && type.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0;
 
         protected override JsonObjectContract CreateObjectContract(Type objectType)
         {
             var contract = base.CreateObjectContract(objectType);
 
-            if (typeof(DynamicObject).IsAssignableFrom(objectType))
+            if (IsTypeHandled(objectType))
             {
-                contract.Converter = new DynamicObjectConverter();
+                contract.IsReference = true;
+                contract.ItemReferenceLoopHandling = ReferenceLoopHandling.Serialize;
+                contract.Converter = typeof(DynamicObject).IsAssignableFrom(objectType)
+                    ? new DynamicObjectConverter()
+                    : CreateObjectConverter(objectType);
                 foreach (var property in contract.Properties.Where(x => !x.Writable || !x.Readable))
                 {
                     property.Ignored = true;
@@ -59,5 +52,8 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
 
             return contract;
         }
+
+        private static JsonConverter CreateObjectConverter(Type type)
+            => (JsonConverter)Activator.CreateInstance(typeof(ObjectConverter<>).MakeGenericType(type));
     }
 }

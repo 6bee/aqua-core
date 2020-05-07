@@ -8,7 +8,7 @@ namespace Aqua.TypeSystem
 
     [Serializable]
     [DataContract(Name = "Property", IsReference = true)]
-    [DebuggerDisplay("{Name}")]
+    [DebuggerDisplay("Property: {Name,nq}")]
     public class PropertyInfo : MemberInfo
     {
         [NonSerialized]
