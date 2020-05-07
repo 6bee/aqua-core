@@ -13,9 +13,8 @@ namespace Aqua.Newtonsoft.Json.Converters
 
     public sealed class DynamicObjectConverter : ObjectConverter<DynamicObject>
     {
-        protected override void ReadObject(JsonReader reader, DynamicObject result, Dictionary<string, Property> properties, JsonSerializer serializer)
+        protected override void ReadObjectProperties(JsonReader reader, DynamicObject result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {
-            reader.AssertStartObject(false);
             reader.Advance();
 
             TypeInfo typeInfo = null;
@@ -133,10 +132,8 @@ namespace Aqua.Newtonsoft.Json.Converters
             throw new JsonSerializationException($"Unexpected token {reader.TokenType}");
         }
 
-        protected override void WriteObject(JsonWriter writer, DynamicObject instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
+        protected override void WriteObjectProperties(JsonWriter writer, DynamicObject instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
         {
-            writer.WriteStartObject();
-
             if (instance.Properties?.Count() == 1 &&
                 string.IsNullOrEmpty(instance.Properties.Single().Name) &&
                 instance.Properties.Single().Value != null)
@@ -189,8 +186,6 @@ namespace Aqua.Newtonsoft.Json.Converters
                     writer.WriteEndArray();
                 }
             }
-
-            writer.WriteEndObject();
         }
 
         private static TypeInfo CreateTypeInfo(DynamicProperty property)

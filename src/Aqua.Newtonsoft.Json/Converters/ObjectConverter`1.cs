@@ -12,7 +12,6 @@ namespace Aqua.Newtonsoft.Json.Converters
     public class ObjectConverter<T> : JsonConverter<T>
     {
         public const string TypeToke = "$type";
-        public const string ValueToke = "$value";
 
         protected sealed class Property
         {
@@ -98,15 +97,13 @@ namespace Aqua.Newtonsoft.Json.Converters
             var typeName = reader.ReadAsString();
             var type = ResolveType(typeName);
 
-            reader.AssertProperty(ValueToke);
             var properties = GetProperties(type);
-
             var result = CreateObject(type);
             serializer.ReferenceResolver.AddReference(serializer, reference, result);
 
-            reader.AssertStartObject();
-            ReadObject(reader, result, properties.ToDictionary(x => x.Name), serializer);
-            reader.AssertEndObject();
+            ReadObjectProperties(reader, result, properties.ToDictionary(x => x.Name), serializer);
+
+            reader.AssertEndObject(false);
 
             return result;
         }
@@ -128,16 +125,14 @@ namespace Aqua.Newtonsoft.Json.Converters
                 writer.WritePropertyName(TypeToke);
                 serializer.Serialize(writer, type.FullName);
 
-                writer.WritePropertyName(ValueToke);
-                WriteObject(writer, value, GetProperties(type), serializer);
+                WriteObjectProperties(writer, value, GetProperties(type), serializer);
             }
 
             writer.WriteEndObject();
         }
 
-        protected virtual void ReadObject(JsonReader reader, T result, Dictionary<string, Property> properties, JsonSerializer serializer)
+        protected virtual void ReadObjectProperties(JsonReader reader, T result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {
-            reader.AssertStartObject(false);
             while (true)
             {
                 reader.Advance();
@@ -160,14 +155,10 @@ namespace Aqua.Newtonsoft.Json.Converters
                     }
                 }
             }
-
-            reader.AssertEndObject(false);
         }
 
-        protected virtual void WriteObject(JsonWriter writer, T instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
+        protected virtual void WriteObjectProperties(JsonWriter writer, T instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
         {
-            writer.WriteStartObject();
-
             foreach (var property in properties)
             {
                 var value = property.GetValue(instance);
@@ -177,8 +168,6 @@ namespace Aqua.Newtonsoft.Json.Converters
                     serializer.Serialize(writer, value, value?.GetType() ?? property.Type);
                 }
             }
-
-            writer.WriteEndObject();
         }
 
         protected virtual Type ResolveType(string typeName) => (DefaultTypeResolver ?? JsonConverterHelper.ResolveTypeName)(typeName);
