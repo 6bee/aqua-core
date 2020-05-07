@@ -3,13 +3,11 @@
 namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
-    using global::Newtonsoft.Json;
     using Shouldly;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using System.Numerics;
     using System.Reflection;
     using Xunit;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;

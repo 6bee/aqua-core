@@ -1,8 +1,9 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.Tests.Serialization.DynamicObject
+namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Aqua.Tests.Serialization;
     using Shouldly;
     using System;
     using System.Collections;
