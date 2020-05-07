@@ -90,16 +90,31 @@ namespace Aqua.Newtonsoft.Json.Converters
                 return (T)serializer.ReferenceResolver.ResolveReference(serializer, referenceId);
             }
 
-            reader.AssertIdToken();
-            var reference = reader.ReadAsString();
+            var reference = default(string);
+            if (reader.IsIdToken())
+            {
+                reference = reader.ReadAsString();
+                reader.Advance();
+            }
 
-            reader.AssertProperty(TypeToke);
-            var typeName = reader.ReadAsString();
-            var type = ResolveType(typeName);
+            Type type;
+            if (reader.IsProperty(TypeToke))
+            {
+                var typeName = reader.ReadAsString();
+                type = ResolveType(typeName) ?? throw new JsonSerializationException($"Failed to resolve type '{typeName}'");
+            }
+            else
+            {
+                type = objectType;
+            }
 
-            var properties = GetProperties(type);
             var result = CreateObject(type);
-            serializer.ReferenceResolver.AddReference(serializer, reference, result);
+            var properties = GetProperties(type);
+
+            if (!string.IsNullOrWhiteSpace(reference))
+            {
+                serializer.ReferenceResolver.AddReference(serializer, reference, result);
+            }
 
             ReadObjectProperties(reader, result, properties.ToDictionary(x => x.Name), serializer);
 
