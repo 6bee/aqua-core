@@ -33,11 +33,16 @@ namespace Aqua.Newtonsoft.Json.Converters
             return false;
         }
 
+        public static JsonSerializationException CreateException(this JsonReader reader, string message)
+            => reader is IJsonLineInfo lineInfo && lineInfo.HasLineInfo()
+            ? new JsonSerializationException(message, reader.Path, lineInfo.LineNumber, lineInfo.LinePosition, null)
+            : new JsonSerializationException(message);
+
         public static void Advance(this JsonReader reader, string errorMessage = null)
         {
             if (!reader.Read())
             {
-                throw new JsonSerializationException(errorMessage ?? "Unexpected token structure.");
+                throw reader.CreateException(errorMessage ?? "Unexpected token structure.");
             }
         }
 
@@ -50,7 +55,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
             if (!IsProperty(reader, propertyName))
             {
-                throw new JsonSerializationException($"Expected token '{propertyName}'.");
+                throw reader.CreateException($"Expected token '{propertyName}'.");
             }
         }
 
@@ -80,12 +85,18 @@ namespace Aqua.Newtonsoft.Json.Converters
         public static T Read<T>(this JsonReader reader, JsonSerializer serializer)
             => reader.TryRead(serializer, out T result)
             ? result
-            : throw new JsonSerializationException("Unexpected token structure.");
+            : throw reader.CreateException("Unexpected token structure.");
+
+        public static object Read(this JsonReader reader, TypeInfo type, JsonSerializer serializer)
+            => reader.Read(type.MapTypeInfo(), serializer);
 
         public static object Read(this JsonReader reader, Type type, JsonSerializer serializer)
             => reader.TryRead(type, serializer, out object result)
             ? result
-            : throw new JsonSerializationException("Unexpected token structure.");
+            : throw reader.CreateException("Unexpected token structure.");
+
+        public static bool TryRead(this JsonReader reader, TypeInfo type, JsonSerializer serializer, out object result)
+            => reader.TryRead(type.MapTypeInfo(), serializer, out result);
 
         public static bool TryRead(this JsonReader reader, Type type, JsonSerializer serializer, out object result)
         {
@@ -125,12 +136,12 @@ namespace Aqua.Newtonsoft.Json.Converters
         {
             if (advance && !reader.Read())
             {
-                throw new JsonSerializationException($"Expected start object.");
+                throw reader.CreateException($"Expected start object.");
             }
 
             if (reader.TokenType != JsonToken.StartObject)
             {
-                throw new JsonSerializationException($"Unexpected token type '{reader.TokenType}', expected {nameof(JsonToken.StartObject)} instead.");
+                throw reader.CreateException($"Unexpected token type '{reader.TokenType}', expected {nameof(JsonToken.StartObject)} instead.");
             }
         }
 
@@ -143,7 +154,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
             if (reader.TokenType != JsonToken.EndObject)
             {
-                throw new JsonSerializationException($"Unexpected token type '{reader.TokenType}', expected {nameof(JsonToken.EndObject)} instead.");
+                throw reader.CreateException($"Unexpected token type '{reader.TokenType}', expected {nameof(JsonToken.EndObject)} instead.");
             }
         }
 
@@ -188,6 +199,12 @@ namespace Aqua.Newtonsoft.Json.Converters
                 .Select(x => x.GetType(typeName))
                 .Where(x => x != null)
                 .FirstOrDefault();
+        }
+
+        private static Type MapTypeInfo(this TypeInfo type)
+        {
+            var t = type?.Type;
+            return t == typeof(Type) ? typeof(TypeInfo) : t;
         }
     }
 }

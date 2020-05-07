@@ -101,7 +101,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             if (reader.IsProperty(TypeToke))
             {
                 var typeName = reader.ReadAsString();
-                type = ResolveType(typeName) ?? throw new JsonSerializationException($"Failed to resolve type '{typeName}'");
+                type = ResolveType(typeName) ?? throw reader.CreateException($"Failed to resolve type '{typeName}'");
             }
             else
             {

@@ -11,7 +11,7 @@ namespace Aqua.Newtonsoft.Json.Converters
     using static Aqua.Dynamic.DynamicObjectMapper;
     using DynamicProperty = Aqua.Dynamic.Property;
 
-    public sealed class DynamicObjectConverter : ObjectConverter<DynamicObject>
+    public class DynamicObjectConverter : ObjectConverter<DynamicObject>
     {
         protected override void ReadObjectProperties(JsonReader reader, DynamicObject result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {
@@ -37,7 +37,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
             if (reader.IsProperty("Value"))
             {
-                var value = reader.Read(typeInfo?.Type, serializer);
+                var value = reader.Read(typeInfo, serializer);
                 SetResult(new[] { new DynamicProperty(string.Empty, value) });
                 return;
             }
@@ -53,7 +53,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
                 if (reader.TokenType != JsonToken.StartArray)
                 {
-                    throw new JsonSerializationException($"Expected array");
+                    throw reader.CreateException($"Expected array");
                 }
 
                 var elementType = TypeHelper.GetElementType(typeInfo.Type);
@@ -68,7 +68,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                             break;
                         }
 
-                        throw new JsonSerializationException("Unexpected token structure.");
+                        throw reader.CreateException("Unexpected token structure.");
                     }
 
                     values.Add(value);
@@ -96,7 +96,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
                 if (reader.TokenType != JsonToken.StartArray)
                 {
-                    throw new JsonSerializationException($"Expected array");
+                    throw reader.CreateException($"Expected array");
                 }
 
                 var propertySet = new List<DynamicProperty>();
@@ -119,7 +119,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                     var type = reader.Read<TypeInfo>(serializer);
 
                     reader.AssertProperty(nameof(DynamicProperty.Value));
-                    var value = reader.Read(type?.Type, serializer);
+                    var value = reader.Read(type, serializer);
 
                     reader.AssertEndObject();
                     propertySet.Add(new DynamicProperty(name, value));
@@ -129,7 +129,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 return;
             }
 
-            throw new JsonSerializationException($"Unexpected token {reader.TokenType}");
+            throw reader.CreateException($"Unexpected token {reader.TokenType}");
         }
 
         protected override void WriteObjectProperties(JsonWriter writer, DynamicObject instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
