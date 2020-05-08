@@ -16,6 +16,8 @@ environment:
 before_build:
   - dotnet --info
   - dotnet restore
+  - dotnet tool install --global coverlet.console
+  - dotnet tool install --global codecov.tool
 
 build_script:
   - dotnet build src\Aqua -c Release
@@ -26,15 +28,13 @@ test_script:
   - dotnet test test\Aqua.Tests.VBNet
 
 after_test:
-  - dotnet clean
+  - REM dotnet clean
   - REM dotnet add test\Aqua.Tests package coverlet.msbuild
-  - REM dotnet test test\Aqua.Tests -f net48 /p:CollectCoverage=true /p:CoverletOutputFormat=OpenCover /p:SignAssembly=false
-  - dotnet build .\test\Aqua.Tests -f net48 /p:SignAssembly=true
-  - dotnet tool install --global coverlet.console
-  - coverlet .\test\Aqua.Tests\bin\Debug\net48\Aqua.Tests.dll --target "dotnet" --targetargs "test .\test\Aqua.Tests\ -f net48 --no-build"
-  - dotnet tool install --global codecov.tool
+  - REM dotnet test test\Aqua.Tests -f net48 /p:CollectCoverage=true /p:CoverletOutputFormat=OpenCover
+  - REM dotnet build .\test\Aqua.Tests -f net48
+  - coverlet .\test\Aqua.Tests\bin\Debug\net48\Aqua.Tests.dll --target "dotnet" --targetargs "test .\test\Aqua.Tests\ -f net48 -c Release --no-build --RunConfiguration.DisableAppDomain=true"
   - REM codecov -f test\Aqua.Tests\coverage.opencover.xml
-  - codecov -f coverage.opencover.xml
+  - REM codecov -f coverage.opencover.xml
 
 build:
   verbosity: normal
