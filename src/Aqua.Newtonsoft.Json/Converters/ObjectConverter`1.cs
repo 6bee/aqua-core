@@ -9,7 +9,7 @@ namespace Aqua.Newtonsoft.Json.Converters
     using System.Linq;
 
     public class ObjectConverter<T> : ObjectConverter
-        where T : notnull
+        where T : class
     {
         public static string TypeToke => "$type";
 
