@@ -12,6 +12,8 @@ namespace Aqua.Utils
     /// or transparently create the requested value if not contained in cache.
     /// </summary>
     public class TransparentCache<TKey, TValue>
+        where TKey : notnull
+        where TValue : notnull
     {
         private readonly Dictionary<TKey, WeakReference> _cache;
         private readonly int _cleanupDelay;
