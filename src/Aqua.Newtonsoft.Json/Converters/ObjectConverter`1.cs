@@ -20,13 +20,12 @@ namespace Aqua.Newtonsoft.Json.Converters
         public override bool CanConvert(Type objectType) => typeof(T).IsAssignableFrom(objectType);
 
         public override sealed object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-            => ReadJson(reader, objectType, existingValue is T t ? t : default, serializer);
+            => ReadJson(reader, objectType, existingValue as T, serializer);
 
         public override sealed void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-            => WriteJson(writer, value is T t ? t : default, serializer);
+            => WriteJson(writer, value as T, serializer);
 
-        [return: MaybeNull]
-        public virtual T ReadJson(JsonReader reader, Type objectType, [AllowNull] T existingValue, JsonSerializer serializer)
+        public virtual T? ReadJson(JsonReader reader, Type objectType, T? existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.Null)
             {
@@ -80,7 +79,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             return result;
         }
 
-        public virtual void WriteJson(JsonWriter writer, [AllowNull] T value, JsonSerializer serializer)
+        public virtual void WriteJson(JsonWriter writer, T? value, JsonSerializer serializer)
         {
             if (value is null)
             {
@@ -125,7 +124,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             }
         }
 
-        protected virtual void WriteObjectProperties(JsonWriter writer, [DisallowNull] T instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
+        protected virtual void WriteObjectProperties(JsonWriter writer, T instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
         {
             foreach (var property in properties)
             {
