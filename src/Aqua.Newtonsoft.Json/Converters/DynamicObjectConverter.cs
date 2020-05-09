@@ -23,7 +23,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 reader.AssertEndObject();
 
                 result.Type = typeInfo;
-                if (properties?.Any() ?? false)
+                if (properties?.Any() == true)
                 {
                     result.Properties = new PropertySet(properties);
                 }
@@ -139,33 +139,32 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         protected override void WriteObjectProperties(JsonWriter writer, DynamicObject instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
         {
-            if (instance.Properties?.Count() == 1 &&
-                string.IsNullOrEmpty(instance.Properties.Single().Name) &&
-                instance.Properties.Single().Value != null)
+            var instanceType = instance.Type;
+            var dynamicProperties = instance.Properties;
+            if (TryGetWrappedValue(dynamicProperties, out var value))
             {
-                var property = instance.Properties.Single();
-                var type = instance.Type ?? CreateTypeInfo(property);
+                var type = instanceType ?? CreateTypeInfo(value);
 
                 writer.WritePropertyName(nameof(DynamicObject.Type));
                 serializer.Serialize(writer, type);
 
                 writer.WritePropertyName(type.IsCollection() ? "Values" : "Value");
-                serializer.Serialize(writer, property.Value, type?.Type);
+                serializer.Serialize(writer, value, type?.Type);
             }
             else
             {
-                if (instance.Type != null)
+                if (instanceType != null)
                 {
                     writer.WritePropertyName(nameof(DynamicObject.Type));
-                    serializer.Serialize(writer, instance.Type);
+                    serializer.Serialize(writer, instanceType);
                 }
 
-                if (instance.Properties?.Any() ?? false)
+                if (dynamicProperties?.Any() == true)
                 {
                     writer.WritePropertyName(nameof(DynamicObject.Properties));
 
                     writer.WriteStartArray();
-                    foreach (var property in instance.Properties)
+                    foreach (var property in dynamicProperties)
                     {
                         writer.WriteStartObject();
 
@@ -173,7 +172,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                         writer.WriteValue(property.Name);
 
                         writer.WritePropertyName(nameof(Type));
-                        serializer.Serialize(writer, CreateTypeInfo(property));
+                        serializer.Serialize(writer, CreateTypeInfo(property.Value));
 
                         writer.WritePropertyName(nameof(DynamicProperty.Value));
                         if (property.Value is null)
@@ -193,9 +192,25 @@ namespace Aqua.Newtonsoft.Json.Converters
             }
         }
 
-        private static TypeInfo? CreateTypeInfo(DynamicProperty property)
-            => property.Value is null
+        private static bool TryGetWrappedValue(PropertySet? propertySet, out object? value)
+        {
+            if (propertySet?.Count() == 1)
+            {
+                var p = propertySet.First();
+                if (string.IsNullOrEmpty(p.Name) && p.Value != null)
+                {
+                    value = p.Value;
+                    return true;
+                }
+            }
+
+            value = null;
+            return false;
+        }
+
+        private static TypeInfo? CreateTypeInfo(object? value)
+            => value is null
             ? null
-            : new TypeInfo(property.Value.GetType(), false, false);
+            : new TypeInfo(value.GetType(), false, false);
     }
 }

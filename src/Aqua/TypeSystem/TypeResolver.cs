@@ -113,7 +113,7 @@ namespace Aqua.TypeSystem
             }
 
             // validate properties if set in typeinfo
-            if (typeInfo.Properties?.Any() ?? false)
+            if (typeInfo.Properties?.Any() == true)
             {
                 var type = resolvedType.IsArray
                     ? resolvedType.GetElementType()
