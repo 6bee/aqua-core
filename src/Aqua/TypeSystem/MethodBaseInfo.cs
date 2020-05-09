@@ -75,7 +75,7 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
         public List<TypeInfo>? ParameterTypes { get; set; }
 
-        public bool IsGenericMethod => GenericArgumentTypes?.Any() == true;
+        public bool IsGenericMethod => GenericArgumentTypes?.Any() ?? false;
 
         public override string ToString()
         {

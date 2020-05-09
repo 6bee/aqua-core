@@ -23,7 +23,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 reader.AssertEndObject();
 
                 result.Type = typeInfo;
-                if (properties?.Any() == true)
+                if (properties?.Any() ?? false)
                 {
                     result.Properties = new PropertySet(properties);
                 }
@@ -57,21 +57,26 @@ namespace Aqua.Newtonsoft.Json.Converters
                 }
 
                 var elementType = TypeHelper.GetElementType(typeInfo?.Type) ?? typeof(object);
-                var values = new List<object?>();
-                while (true)
+                bool TryReadNextItem(out object? value)
                 {
-                    if (!reader.TryRead(elementType, serializer, out var value))
+                    if (!reader.TryRead(elementType, serializer, out value))
                     {
                         // TODO: is max length quota required?
                         if (reader.TokenType == JsonToken.EndArray)
                         {
-                            break;
+                            return false;
                         }
 
                         throw reader.CreateException("Unexpected token structure.");
                     }
 
-                    values.Add(value);
+                    return true;
+                }
+
+                var values = new List<object?>();
+                while (TryReadNextItem(out var item))
+                {
+                    values.Add(item);
                 }
 
                 if (values.Any(x => x != null && (elementType == typeof(object) || !elementType.IsAssignableFrom(x.GetType()))) &&
@@ -100,16 +105,16 @@ namespace Aqua.Newtonsoft.Json.Converters
                 }
 
                 var propertySet = new List<DynamicProperty>();
-                while (true)
+
+                bool NextItem()
                 {
-                    reader.Advance();
-
                     // TODO: is max length quota required?
-                    if (reader.TokenType == JsonToken.EndArray)
-                    {
-                        break;
-                    }
+                    reader.Advance();
+                    return reader.TokenType != JsonToken.EndArray;
+                }
 
+                while (NextItem())
+                {
                     reader.AssertStartObject(false);
 
                     reader.AssertProperty(nameof(DynamicProperty.Name));
@@ -155,7 +160,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                     serializer.Serialize(writer, instance.Type);
                 }
 
-                if (instance.Properties?.Any() == true)
+                if (instance.Properties?.Any() ?? false)
                 {
                     writer.WritePropertyName(nameof(DynamicObject.Properties));
 

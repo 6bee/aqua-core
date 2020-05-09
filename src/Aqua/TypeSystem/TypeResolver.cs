@@ -62,17 +62,9 @@ namespace Aqua.TypeSystem
             Type? type = Type.GetType(typeInfo.FullName);
             if (!IsValid(typeInfo, type))
             {
-                var assemblies = GetAssemblies();
-                foreach (var assembly in assemblies)
-                {
-                    type = assembly.GetType(typeInfo.FullName);
-                    if (IsValid(typeInfo, type))
-                    {
-                        break;
-                    }
-
-                    type = null;
-                }
+                type = GetAssemblies()
+                    .Select(x => x.GetType(typeInfo.FullName))
+                    .FirstOrDefault(x => IsValid(typeInfo, x));
             }
 
             if (type is null)
@@ -115,30 +107,30 @@ namespace Aqua.TypeSystem
 
         private bool IsValid(TypeInfo typeInfo, Type? resolvedType)
         {
-            if (resolvedType != null)
+            if (resolvedType is null)
             {
-                // can only validate properties if set in typeinfo
-                if (typeInfo.Properties?.Any() ?? false)
-                {
-                    var type = resolvedType.IsArray
-                        ? resolvedType.GetElementType()
-                        : resolvedType;
-
-                    var resolvedProperties = type
-                        .GetProperties()
-                        .OrderBy(x => x.MetadataToken)
-                        .Select(x => x.Name);
-
-                    if (!typeInfo.Properties.Select(x => x.Name).SequenceEqual(resolvedProperties))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
+                return false;
             }
 
-            return false;
+            // validate properties if set in typeinfo
+            if (typeInfo.Properties?.Any() ?? false)
+            {
+                var type = resolvedType.IsArray
+                    ? resolvedType.GetElementType()
+                    : resolvedType;
+
+                var resolvedProperties = type
+                    .GetProperties()
+                    .OrderBy(x => x.MetadataToken)
+                    .Select(x => x.Name);
+
+                if (!typeInfo.Properties.Select(x => x.Name).SequenceEqual(resolvedProperties))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         protected virtual IEnumerable<Assembly> GetAssemblies() => AppDomain.CurrentDomain.GetAssemblies();

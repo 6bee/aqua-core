@@ -35,7 +35,8 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
             : base.CreateContract(objectType);
 
         private static bool IsTypeHandled(Type type)
-            => Equals(type.Assembly, typeof(DynamicObject).Assembly)
+            => type.IsClass
+            && Equals(type.Assembly, typeof(DynamicObject).Assembly)
             && type.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0;
 
         protected override JsonObjectContract CreateObjectContract(Type objectType)
