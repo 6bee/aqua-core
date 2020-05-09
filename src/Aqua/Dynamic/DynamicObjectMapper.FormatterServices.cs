@@ -36,37 +36,31 @@ namespace Aqua.Dynamic
 
             var members = FormatterServices.GetSerializableMembers(type);
             var membersByCleanName = members.ToDictionary(GetCleanMemberName);
-            var memberValueMap = new Dictionary<MemberInfo, object>();
+            var memberValueMap = new Dictionary<MemberInfo, object?>();
 
-            foreach (var dynamicProperty in from.Properties)
+            var properties = from.Properties ?? Enumerable.Empty<Property>();
+            foreach (var dynamicProperty in properties)
             {
-                if (!(customPropertyNames is null) && !customPropertyNames.ContainsKey(dynamicProperty.Name))
+                var name = dynamicProperty.Name;
+
+                if (name is null || customPropertyNames?.ContainsKey(name) == false)
                 {
                     continue;
                 }
 
-                if (membersByCleanName.TryGetValue(dynamicProperty.Name, out MemberInfo member))
+                if (membersByCleanName.TryGetValue(name, out var member))
                 {
-                    Type memberType;
-                    switch (member.MemberType)
+                    var memberType = member.MemberType switch
                     {
-                        case MemberTypes.Field:
-                            memberType = ((FieldInfo)member).FieldType;
-                            break;
-
-                        case MemberTypes.Property:
-                            memberType = ((PropertyInfo)member).PropertyType;
-                            break;
-
-                        default:
-                            throw new InvalidOperationException($"Unsupported member type {member.MemberType}.");
-                    }
+                        MemberTypes.Field => ((FieldInfo)member).FieldType,
+                        MemberTypes.Property => ((PropertyInfo)member).PropertyType,
+                        _ => throw new InvalidOperationException($"Unsupported member type {member.MemberType}."),
+                    };
 
                     var value = MapFromDynamicObjectGraph(dynamicProperty.Value, memberType);
-
-                    if (_suppressMemberAssignabilityValidation ||
-                        IsAssignable(memberType, value) ||
-                        TryExplicitConversions(memberType, ref value))
+                    if (IsAssignable(memberType, value) ||
+                        TryExplicitConversions(memberType, ref value) ||
+                        !_silentlySkipUnassignableMembers)
                     {
                         memberValueMap[member] = value;
                     }

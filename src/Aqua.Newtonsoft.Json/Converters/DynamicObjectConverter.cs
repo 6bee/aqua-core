@@ -17,8 +17,8 @@ namespace Aqua.Newtonsoft.Json.Converters
         {
             reader.Advance();
 
-            TypeInfo typeInfo = null;
-            void SetResult(IEnumerable<DynamicProperty> properties = null)
+            TypeInfo? typeInfo = null;
+            void SetResult(IEnumerable<DynamicProperty>? properties = null)
             {
                 reader.AssertEndObject();
 
@@ -31,7 +31,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
             if (reader.IsProperty(nameof(DynamicObject.Type)))
             {
-                typeInfo = reader.Read<TypeInfo>(serializer);
+                typeInfo = reader.Read<TypeInfo?>(serializer);
                 reader.Advance();
             }
 
@@ -56,11 +56,11 @@ namespace Aqua.Newtonsoft.Json.Converters
                     throw reader.CreateException($"Expected array");
                 }
 
-                var elementType = TypeHelper.GetElementType(typeInfo.Type);
-                var values = new List<object>();
+                var elementType = TypeHelper.GetElementType(typeInfo?.Type) ?? typeof(object);
+                var values = new List<object?>();
                 while (true)
                 {
-                    if (!reader.TryRead(elementType, serializer, out object value))
+                    if (!reader.TryRead(elementType, serializer, out var value))
                     {
                         // TODO: is max length quota required?
                         if (reader.TokenType == JsonToken.EndArray)
@@ -74,7 +74,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                     values.Add(value);
                 }
 
-                if (values.Any(x => x != null && !elementType.IsAssignableFrom(x.GetType())) &&
+                if (values.Any(x => x != null && (elementType == typeof(object) || !elementType.IsAssignableFrom(x.GetType()))) &&
                     values.All(x => x is null || x is string))
                 {
                     elementType = typeof(string);
@@ -96,7 +96,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
                 if (reader.TokenType != JsonToken.StartArray)
                 {
-                    throw reader.CreateException($"Expected array");
+                    throw reader.CreateException("Expected array");
                 }
 
                 var propertySet = new List<DynamicProperty>();
@@ -116,7 +116,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                     var name = reader.ReadAsString();
 
                     reader.AssertProperty(nameof(Type));
-                    var type = reader.Read<TypeInfo>(serializer);
+                    var type = reader.Read<TypeInfo?>(serializer);
 
                     reader.AssertProperty(nameof(DynamicProperty.Value));
                     var value = reader.Read(type, serializer);
@@ -188,7 +188,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             }
         }
 
-        private static TypeInfo CreateTypeInfo(DynamicProperty property)
+        private static TypeInfo? CreateTypeInfo(DynamicProperty property)
             => property.Value is null
             ? null
             : new TypeInfo(property.Value.GetType(), false, false);

@@ -3,9 +3,11 @@
 namespace Aqua.TypeSystem
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     public interface ITypeResolver
     {
-        Type ResolveType(TypeInfo typeInfo);
+        [return: NotNullIfNotNull("typeInfo")]
+        Type? ResolveType(TypeInfo? typeInfo);
     }
 }

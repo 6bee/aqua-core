@@ -22,7 +22,7 @@ namespace Aqua.Utils
         /// </summary>
         /// <param name="cleanupDelay">Number of milliseconds to delay the task to clean-up stale references. Set to -1 to suppress clean-up or 0 to run clean-up synchronously.</param>
         /// <param name="comparer">Optional comparer for cache keys.</param>
-        public TransparentCache(int cleanupDelay = 2000, IEqualityComparer<TKey> comparer = null)
+        public TransparentCache(int cleanupDelay = 2000, IEqualityComparer<TKey>? comparer = null)
         {
             if (cleanupDelay < -1)
             {
@@ -42,14 +42,13 @@ namespace Aqua.Utils
         /// </remarks>
         public TValue GetOrCreate(TKey key, Func<TKey, TValue> factory)
         {
-            var value = default(TValue);
-
             lock (_cache)
             {
+                var value = default(TValue);
                 var isReferenceAlive = false;
 
                 // probe cache
-                if (_cache.TryGetValue(key, out WeakReference weakref))
+                if (_cache.TryGetValue(key, out var weakref))
                 {
                     value = (TValue)weakref.Target;
                     isReferenceAlive = weakref.IsAlive;
@@ -58,7 +57,7 @@ namespace Aqua.Utils
                 // create value if not found in cache
                 if (!isReferenceAlive)
                 {
-                    value = factory(key);
+                    value = factory(key) ?? throw new Exception($"Value factory must not return null");
                     _cache[key] = new WeakReference(value);
                 }
 
@@ -77,9 +76,9 @@ namespace Aqua.Utils
                         _isCleanupScheduled = false;
                     });
                 }
-            }
 
-            return value;
+                return value!;
+            }
         }
 
         /// <summary>

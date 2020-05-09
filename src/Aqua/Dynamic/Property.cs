@@ -24,13 +24,13 @@ namespace Aqua.Dynamic
         {
         }
 
-        public Property(string name, object value)
+        public Property(string? name, object? value)
         {
-            Name = name;
+            Name = name ?? string.Empty;
             Value = value;
         }
 
-        public Property(KeyValuePair<string, object> property)
+        public Property(KeyValuePair<string, object?> property)
             : this(property.Key, property.Value)
         {
         }
@@ -41,9 +41,15 @@ namespace Aqua.Dynamic
         }
 
         [DataMember(Order = 1)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [DataMember(Order = 2)]
-        public object Value { get; set; }
+        public object? Value { get; set; }
+
+        public static implicit operator KeyValuePair<string, object?>(Property property)
+            => new KeyValuePair<string, object?>(property.Name ?? string.Empty, property.Value);
+
+        public static implicit operator Property(KeyValuePair<string, object?> keyValuePair)
+            => new Property(keyValuePair);
     }
 }

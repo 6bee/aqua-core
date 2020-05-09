@@ -13,7 +13,7 @@ namespace Aqua.TypeSystem
     {
         [NonSerialized]
         [Dynamic.Unmapped]
-        private System.Reflection.FieldInfo _field;
+        private System.Reflection.FieldInfo? _field;
 
         public FieldInfo()
         {
@@ -49,9 +49,9 @@ namespace Aqua.TypeSystem
 
         [Dynamic.Unmapped]
         internal System.Reflection.FieldInfo Field
-            => _field ?? (_field = this.ResolveField(TypeResolver.Instance));
+            => _field ?? (_field = this.ResolveField(TypeResolver.Instance))
+            ?? throw new TypeResolverException($"Failed to resolve field, consider using extension method to specify {nameof(ITypeResolver)}.");
 
-        public static explicit operator System.Reflection.FieldInfo(FieldInfo f)
-            => f.Field;
+        public static explicit operator System.Reflection.FieldInfo(FieldInfo f) => f.Field;
     }
 }

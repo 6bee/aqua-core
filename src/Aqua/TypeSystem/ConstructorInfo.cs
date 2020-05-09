@@ -13,7 +13,7 @@ namespace Aqua.TypeSystem
     public class ConstructorInfo : MethodBaseInfo
     {
         [NonSerialized]
-        private System.Reflection.ConstructorInfo _constructor;
+        private System.Reflection.ConstructorInfo? _constructor;
 
         public ConstructorInfo()
         {
@@ -44,12 +44,11 @@ namespace Aqua.TypeSystem
         public override MemberTypes MemberType => MemberTypes.Constructor;
 
         internal System.Reflection.ConstructorInfo Constructor
-            => _constructor ?? (_constructor = this.ResolveConstructor(TypeResolver.Instance));
+            => _constructor ?? (_constructor = this.ResolveConstructor(TypeResolver.Instance))
+            ?? throw new TypeResolverException($"Failed to resolve constructor, consider using extension method to specify {nameof(ITypeResolver)}.");
 
-        public static explicit operator System.Reflection.ConstructorInfo(ConstructorInfo c)
-            => c.Constructor;
+        public static explicit operator System.Reflection.ConstructorInfo(ConstructorInfo c) => c.Constructor;
 
-        public override string ToString()
-            => $".ctor {base.ToString()}";
+        public override string ToString() => $".ctor {base.ToString()}";
     }
 }

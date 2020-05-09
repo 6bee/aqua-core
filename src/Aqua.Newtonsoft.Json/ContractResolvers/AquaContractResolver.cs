@@ -12,9 +12,9 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
 
     public sealed class AquaContractResolver : DefaultContractResolver
     {
-        private readonly IContractResolver _decorated;
+        private readonly IContractResolver? _decorated;
 
-        public AquaContractResolver(IContractResolver decorated = null)
+        public AquaContractResolver(IContractResolver? decorated = null)
         {
             if (decorated is AquaContractResolver self)
             {

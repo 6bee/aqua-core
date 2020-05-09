@@ -4,10 +4,8 @@
     <Description>Provides Json.NET serialization settings for Aqua types.</Description>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>Aqua.Newtonsoft.Json</AssemblyName>
-    <RootNamespace>Aqua</RootNamespace>
     <PackageId>aqua-core-newtonsoft-json</PackageId>
     <PackageTags>aqua-core;json-net;newtonsoft-json</PackageTags>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

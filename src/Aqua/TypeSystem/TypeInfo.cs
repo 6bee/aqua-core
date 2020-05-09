@@ -22,7 +22,7 @@ namespace Aqua.TypeSystem
 
         [NonSerialized]
         [Dynamic.Unmapped]
-        private Type _type;
+        private Type? _type;
 
         public TypeInfo()
         {
@@ -105,7 +105,9 @@ namespace Aqua.TypeSystem
             Name = typeInfo.Name;
             Namespace = typeInfo.Namespace;
             DeclaringType = typeInfo.DeclaringType is null ? null : typeInfoProvider.Get(typeInfo.DeclaringType);
-            GenericArguments = typeInfo.GenericArguments?.Select(typeInfoProvider.Get).ToList();
+
+            // TODO: why is the dammit operator required!?
+            GenericArguments = typeInfo.GenericArguments?.Select(typeInfoProvider.Get).ToList() !;
             IsGenericType = typeInfo.IsGenericType;
             IsAnonymousType = typeInfo.IsAnonymousType;
             Properties = typeInfo.Properties?.Select(x => new PropertyInfo(x, typeInfoProvider)).ToList();
@@ -113,16 +115,16 @@ namespace Aqua.TypeSystem
         }
 
         [DataMember(Order = 1, EmitDefaultValue = false)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
-        public string Namespace { get; set; }
+        public string? Namespace { get; set; }
 
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
-        public TypeInfo DeclaringType { get; set; }
+        public TypeInfo? DeclaringType { get; set; }
 
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
-        public List<TypeInfo> GenericArguments { get; set; }
+        public List<TypeInfo>? GenericArguments { get; set; }
 
         [DataMember(Order = 5, IsRequired = false, EmitDefaultValue = false)]
         public bool IsAnonymousType { get; set; }
@@ -131,9 +133,9 @@ namespace Aqua.TypeSystem
         public bool IsGenericType { get; set; }
 
         [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
-        public List<PropertyInfo> Properties { get; set; }
+        public List<PropertyInfo>? Properties { get; set; }
 
-        public bool IsNested => !(DeclaringType is null);
+        public bool IsNested => DeclaringType != null;
 
         public bool IsGenericTypeDefinition => !GenericArguments?.Any() ?? true;
 
@@ -142,32 +144,21 @@ namespace Aqua.TypeSystem
             get
             {
                 var name = Name;
-                return !(name is null) && _arrayNameRegex.IsMatch(name);
+                return name != null && _arrayNameRegex.IsMatch(name);
             }
         }
 
         [Dynamic.Unmapped]
         public string FullName
             => IsNested
-                ? $"{DeclaringType.FullName}+{Name}"
+                ? $"{DeclaringType!.FullName}+{Name}"
                 : $"{Namespace}{(string.IsNullOrEmpty(Namespace) ? null : ".")}{Name}";
 
         /// <summary>
         /// Gets <see cref="Type"/> by resolving this <see cref="TypeInfo"/> instance using the default <see cref="TypeResolver"/>.
         /// </summary>
         [Dynamic.Unmapped]
-        public Type Type
-        {
-            get
-            {
-                if (_type is null)
-                {
-                    _type = TypeResolver.Instance.ResolveType(this);
-                }
-
-                return _type;
-            }
-        }
+        public Type Type => _type ?? (_type = TypeResolver.Instance.ResolveType(this));
 
         public static explicit operator Type(TypeInfo t)
             => t.Type;
@@ -175,11 +166,11 @@ namespace Aqua.TypeSystem
         public override string ToString()
             => $"{FullName}{GetGenericArgumentsString()}";
 
-        private string GetGenericArgumentsString()
+        private string? GetGenericArgumentsString()
         {
             var genericArguments = GenericArguments;
             var genericArgumentsString = IsGenericType && (genericArguments?.Any() ?? false)
-                ? string.Format("[{0}]", string.Join(",", genericArguments.Select(x => x.ToString()).ToArray()))
+                ? $"[{string.Join(",", genericArguments)}]"
                 : null;
             return genericArgumentsString;
         }

@@ -33,14 +33,16 @@ namespace Aqua.Tests
             {
                 get
                 {
-                    return $"Missing custom attribute annotation {Environment.NewLine}Type: {Type.Name} {Environment.NewLine}Expected: {AttributeType.Name} {Environment.NewLine}Found: {Environment.NewLine}{string.Join(Environment.NewLine, Type.GetTypeInfo().GetCustomAttributes().Select(_ => "- " + _.GetType().Name))}";
+                    var n = Environment.NewLine;
+                    return $"Missing custom attribute annotation {n}" +
+                        $"Type: {Type.Name} {n}" +
+                        $"Expected: {AttributeType.Name} {n}" +
+                        $"Found: {n}" +
+                        $"{string.Join(n, Type.GetTypeInfo().GetCustomAttributes().Select(_ => "- " + _.GetType().Name))}";
                 }
             }
 
-            public override string ToString()
-            {
-                return Message;
-            }
+            public override string ToString() => Message;
         }
 
         public static T With<T>(this T t, Action<T> assertion)

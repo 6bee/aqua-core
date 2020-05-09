@@ -37,18 +37,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         }
 
         [Fact]
-        public void Map_type_should_throw_for_null_dynamic_object_enumerable()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DynamicObjectMapper().Map((IEnumerable<DynamicObject>)null, typeof(object)));
-        }
-
-        [Fact]
-        public void Map_generic_type_should_throw_for_null_dynamic_object_enumerable()
-        {
-            var ex = Assert.Throws<ArgumentNullException>(() => new DynamicObjectMapper().Map<object>((IEnumerable<DynamicObject>)null));
-        }
-
-        [Fact]
         public void Map_generic_type_should_return_a_null_element_for_null_dynamic_object_enumerable_element()
         {
             var dynamicObjects = new DynamicObject[]
@@ -58,7 +46,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
                 new DynamicObject(new CustomClass()),
             };
 
-            var result = new DynamicObjectMapper().Map<CustomClass>(dynamicObjects);
+            var mapper = new DynamicObjectMapper();
+            var result = dynamicObjects.Select(mapper.Map<CustomClass>);
 
             result.ShouldNotBeNull();
             result.Count().ShouldBe(3);
@@ -77,13 +66,14 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
                 new DynamicObject(new CustomClass()),
             };
 
-            var result = new DynamicObjectMapper().Map(dynamicObjects, typeof(CustomClass)).Cast<object>();
+            var mapper = new DynamicObjectMapper();
+            var result = dynamicObjects.Select(x => mapper.Map(x, typeof(CustomClass))).Cast<object>();
 
             result.ShouldNotBeNull();
             result.Count().ShouldBe(3);
-            result.ElementAt(0).ShouldNotBeNull();
+            result.ElementAt(0).ShouldBeOfType<CustomClass>();
             result.ElementAt(1).ShouldBeNull();
-            result.ElementAt(2).ShouldNotBeNull();
+            result.ElementAt(2).ShouldBeOfType<CustomClass>();
         }
 
         [Fact]

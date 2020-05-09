@@ -6,14 +6,32 @@ namespace Aqua.Newtonsoft.Json.Converters
     using global::Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     public static class JsonConverterHelper
     {
-        public const string IdToken = "$id";
-        public const string RefToken = "$ref";
+        private static readonly Dictionary<Type, Func<JsonReader, object?>> _typeReaders = new (Type Type, Func<JsonReader, object?> Reader)[]
+            {
+                (typeof(bool), r => r.ReadAsBoolean()),
+                (typeof(byte[]), r => r.ReadAsBytes()),
+                (typeof(DateTime), r => r.ReadAsDateTime()),
+                (typeof(DateTimeOffset), r => r.ReadAsDateTimeOffset()),
+                (typeof(decimal), r => r.ReadAsDecimal()),
+                (typeof(double), r => r.ReadAsDouble()),
+                (typeof(int), r => r.ReadAsInt32()),
+                (typeof(string), r => r.ReadAsString()),
+            }
+            .SelectMany(x => x.Type.IsClass
+                ? new[] { x }
+                : new[] { x, (Type: typeof(Nullable<>).MakeGenericType(x.Type), x.Reader) })
+            .ToDictionary(x => x.Type, x => x.Reader);
 
-        public static bool IsCollection(this TypeInfo type)
+        public static string IdToken => "$id";
+
+        public static string RefToken => "$ref";
+
+        public static bool IsCollection(this TypeInfo? type)
         {
             if (type is null)
             {
@@ -38,7 +56,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             ? new JsonSerializationException(message, reader.Path, lineInfo.LineNumber, lineInfo.LinePosition, null)
             : new JsonSerializationException(message);
 
-        public static void Advance(this JsonReader reader, string errorMessage = null)
+        public static void Advance(this JsonReader reader, string? errorMessage = null)
         {
             if (!reader.Read())
             {
@@ -59,48 +77,33 @@ namespace Aqua.Newtonsoft.Json.Converters
             }
         }
 
-        public static bool TryRead<T>(this JsonReader reader, JsonSerializer serializer, out T value)
+        public static bool TryRead<T>(this JsonReader reader, JsonSerializer serializer, [MaybeNull] out T value)
         {
-            var result = TryRead(reader, typeof(T), serializer, out object v);
-            value = result ? (T)v : default;
+            var result = TryRead(reader, typeof(T), serializer, out var v);
+            value = result && v is T x ? x : default;
             return result;
         }
 
-        private static readonly Dictionary<Type, Func<JsonReader, object>> _typereaders = new (Type Type, Func<JsonReader, object> Reader)[]
-            {
-                (typeof(bool), r => r.ReadAsBoolean()),
-                (typeof(byte[]), r => r.ReadAsBytes()),
-                (typeof(DateTime), r => r.ReadAsDateTime()),
-                (typeof(DateTimeOffset), r => r.ReadAsDateTimeOffset()),
-                (typeof(decimal), r => r.ReadAsDecimal()),
-                (typeof(double), r => r.ReadAsDouble()),
-                (typeof(int), r => r.ReadAsInt32()),
-                (typeof(string), r => r.ReadAsString()),
-            }
-            .SelectMany(x => x.Type.IsClass
-                ? new[] { x }
-                : new[] { x, (Type: typeof(Nullable<>).MakeGenericType(x.Type), x.Reader) })
-            .ToDictionary(x => x.Type, x => x.Reader);
-
+        [return: MaybeNull]
         public static T Read<T>(this JsonReader reader, JsonSerializer serializer)
             => reader.TryRead(serializer, out T result)
             ? result
             : throw reader.CreateException("Unexpected token structure.");
 
-        public static object Read(this JsonReader reader, TypeInfo type, JsonSerializer serializer)
+        public static object? Read(this JsonReader reader, TypeInfo? type, JsonSerializer serializer)
             => reader.Read(type.MapTypeInfo(), serializer);
 
-        public static object Read(this JsonReader reader, Type type, JsonSerializer serializer)
-            => reader.TryRead(type, serializer, out object result)
+        public static object? Read(this JsonReader reader, Type? type, JsonSerializer serializer)
+            => reader.TryRead(type, serializer, out object? result)
             ? result
             : throw reader.CreateException("Unexpected token structure.");
 
-        public static bool TryRead(this JsonReader reader, TypeInfo type, JsonSerializer serializer, out object result)
+        public static bool TryRead(this JsonReader reader, TypeInfo type, JsonSerializer serializer, out object? result)
             => reader.TryRead(type.MapTypeInfo(), serializer, out result);
 
-        public static bool TryRead(this JsonReader reader, Type type, JsonSerializer serializer, out object result)
+        public static bool TryRead(this JsonReader reader, Type? type, JsonSerializer serializer, out object? result)
         {
-            if (type != null && _typereaders.TryGetValue(type, out Func<JsonReader, object> read))
+            if (type != null && _typeReaders.TryGetValue(type, out var read))
             {
                 result = read(reader);
                 return reader.TokenType != JsonToken.EndArray
@@ -112,7 +115,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             switch (reader.TokenType)
             {
                 case JsonToken.String:
-                    var text = (string)reader.Value;
+                    var text = reader.Value as string;
                     result = type == typeof(char) && text?.Length > 0
                         ? (object)text[0]
                         : text;
@@ -170,8 +173,14 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public static bool TryWriteReference(this JsonWriter writer, JsonSerializer serializer, object value)
         {
-            var exists = serializer.ReferenceResolver.IsReferenced(serializer, value);
-            var reference = serializer.ReferenceResolver.GetReference(serializer, value);
+            var referenceResolver = serializer.ReferenceResolver;
+            if (referenceResolver is null)
+            {
+                return false;
+            }
+
+            var exists = referenceResolver.IsReferenced(serializer, value);
+            var reference = referenceResolver.GetReference(serializer, value);
 
             if (exists)
             {
@@ -202,7 +211,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 .FirstOrDefault();
         }
 
-        private static Type MapTypeInfo(this TypeInfo type)
+        private static Type? MapTypeInfo(this TypeInfo? type)
         {
             var t = type?.Type;
             return t == typeof(Type) ? typeof(TypeInfo) : t;

@@ -3,9 +3,11 @@
 namespace Aqua.TypeSystem
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     public interface ITypeInfoProvider
     {
-        TypeInfo Get(Type type, bool? includePropertyInfos = null, bool? setMemberDeclaringTypes = null);
+        [return: NotNullIfNotNull("type")]
+        TypeInfo? Get(Type? type, bool? includePropertyInfos = null, bool? setMemberDeclaringTypes = null);
     }
 }

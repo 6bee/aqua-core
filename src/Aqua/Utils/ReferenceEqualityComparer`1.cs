@@ -7,9 +7,7 @@ namespace Aqua.Utils
 
     public sealed class ReferenceEqualityComparer<T> : IEqualityComparer<T>
     {
-        private static ReferenceEqualityComparer<T> _default;
-
-        public static ReferenceEqualityComparer<T> Default => _default ?? (_default = new ReferenceEqualityComparer<T>());
+        public static ReferenceEqualityComparer<T> Default { get; } = new ReferenceEqualityComparer<T>();
 
         public bool Equals(T x, T y) => ReferenceEquals(x, y);
 

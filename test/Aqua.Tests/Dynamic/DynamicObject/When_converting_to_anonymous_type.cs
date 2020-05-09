@@ -53,7 +53,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             var objType = new { Int32Value, DoubleValue, StringValue, DateTimeValue = DateTime.Now };
 
-            var ex = Assert.Throws<Exception>(() => dynamicObject.CreateObject(objType.GetType()));
+            var ex = Assert.Throws<DynamicObjectMapperException>(() => dynamicObject.CreateObject(objType.GetType()));
 
             ex.Message.ShouldStartWith("Failed to pick matching constructor for type");
         }

@@ -35,8 +35,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             var element = dynamicObjects.ElementAt(0);
             element.Type.Type.ShouldBe(typeof(int));
             element[string.Empty].ShouldBe(1);
-
-            var value = new DynamicObjectMapper().Map(dynamicObjects).Cast<object>().ElementAt(0);
+            var mapper = new DynamicObjectMapper();
+            var value = dynamicObjects.Select(mapper.Map).Cast<object>().ElementAt(0);
             value.ShouldBe(1);
         }
 
@@ -45,7 +45,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             dynamicObjects.ElementAt(1).ShouldBeNull();
 
-            var value = new DynamicObjectMapper().Map(dynamicObjects).Cast<object>().ElementAt(1);
+            var mapper = new DynamicObjectMapper();
+            var value = dynamicObjects.Select(mapper.Map).Cast<object>().ElementAt(1);
             value.ShouldBeNull();
         }
 
@@ -56,7 +57,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             element.Type.Type.ShouldBe(typeof(string));
             element[string.Empty].ShouldBe("test");
 
-            var value = new DynamicObjectMapper().Map(dynamicObjects).Cast<object>().ElementAt(2);
+            var mapper = new DynamicObjectMapper();
+            var value = dynamicObjects.Select(mapper.Map).Cast<object>().ElementAt(2);
             value.ShouldBe("test");
         }
 
@@ -67,7 +69,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             element.Type.Type.ShouldBe(typeof(CustomType));
             element["Int64Property"].ShouldBe(42L);
 
-            var value = new DynamicObjectMapper().Map(dynamicObjects).Cast<object>().ElementAt(3);
+            var mapper = new DynamicObjectMapper();
+            var value = dynamicObjects.Select(mapper.Map).Cast<object>().ElementAt(3);
             value.ShouldBeOfType<CustomType>();
             ((CustomType)value).Int64Property.ShouldBe(42L);
         }

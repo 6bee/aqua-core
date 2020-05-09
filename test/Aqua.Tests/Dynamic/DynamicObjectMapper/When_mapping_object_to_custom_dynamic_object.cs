@@ -23,9 +23,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         private class DynamicObjectFactory : IDynamicObjectFactory
         {
             public DynamicObject CreateDynamicObject(Type type, object instance)
-            {
-                return new DynamicObjectWithRefToSource(type, instance);
-            }
+                => new DynamicObjectWithRefToSource(type, instance);
         }
 
         private class A

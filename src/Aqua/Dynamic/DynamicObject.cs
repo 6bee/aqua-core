@@ -7,6 +7,7 @@ namespace Aqua.Dynamic
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
@@ -21,7 +22,7 @@ namespace Aqua.Dynamic
         /// Initializes a new instance of the <see cref="DynamicObject"/> class.
         /// </summary>
         public DynamicObject()
-            : this(default(TypeInfo), default(PropertySet))
+            : this(default(TypeInfo), default)
         {
         }
 
@@ -29,8 +30,8 @@ namespace Aqua.Dynamic
         /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified type.
         /// </summary>
         /// <param name="type">The type to be set.</param>
-        public DynamicObject(Type type)
-            : this(type is null ? null : new TypeInfo(type, false, false), default(PropertySet))
+        public DynamicObject(Type? type)
+            : this(type is null ? null : new TypeInfo(type, false, false), default)
         {
         }
 
@@ -38,8 +39,8 @@ namespace Aqua.Dynamic
         /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified type.
         /// </summary>
         /// <param name="type">The type to be set.</param>
-        public DynamicObject(TypeInfo type)
-            : this(type, default(PropertySet))
+        public DynamicObject(TypeInfo? type)
+            : this(type, default)
         {
         }
 
@@ -49,7 +50,7 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <param name="type">The type to be set.</param>
         /// <param name="propertySet">The property set.</param>
-        public DynamicObject(TypeInfo type, PropertySet propertySet)
+        public DynamicObject(TypeInfo? type, PropertySet? propertySet)
         {
             Type = type;
             Properties = propertySet ?? new PropertySet();
@@ -60,7 +61,7 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <param name="properties">Initial collection of properties and values.</param>
         /// <exception cref="ArgumentNullException">The specified members collection is null.</exception>
-        public DynamicObject(IEnumerable<KeyValuePair<string, object>> properties)
+        public DynamicObject(IEnumerable<KeyValuePair<string, object?>> properties)
         {
             if (properties is null)
             {
@@ -92,7 +93,7 @@ namespace Aqua.Dynamic
         /// <param name="obj">The object to be represented by the new dynamic object.</param>
         /// <param name="mapper">Optional instance of dynamic object mapper.</param>
         /// <exception cref="ArgumentNullException">The specified object is null.</exception>
-        public DynamicObject(object obj, IDynamicObjectMapper mapper = null)
+        public DynamicObject(object obj, IDynamicObjectMapper? mapper = null)
         {
             if (obj is null)
             {
@@ -100,8 +101,8 @@ namespace Aqua.Dynamic
             }
 
             var dynamicObject = (mapper ?? new DynamicObjectMapper()).MapObject(obj);
-            Type = dynamicObject.Type;
-            Properties = dynamicObject.Properties;
+            Type = dynamicObject?.Type;
+            Properties = dynamicObject?.Properties;
         }
 
         /// <summary>
@@ -112,63 +113,60 @@ namespace Aqua.Dynamic
         /// <exception cref="ArgumentNullException">The specified members collection is null.</exception>
         internal protected DynamicObject(DynamicObject dynamicObject, bool deepCopy = true)
         {
-            if (dynamicObject is null)
-            {
-                throw new ArgumentNullException(nameof(dynamicObject));
-            }
+            var type = dynamicObject.Type;
+            Type = type is null ? null : new TypeInfo(type);
 
-            Type = dynamicObject.Type is null ? null : new TypeInfo(dynamicObject.Type);
-
-            if (dynamicObject.Properties is null)
+            var properties = dynamicObject.Properties;
+            if (properties is null)
             {
                 Properties = null;
             }
             else if (deepCopy)
             {
-                Properties = new PropertySet(dynamicObject.Properties.Select(x => new Property(x)));
+                Properties = new PropertySet(properties.Select(x => new Property(x)));
             }
             else
             {
-                Properties = new PropertySet(dynamicObject.Properties);
+                Properties = new PropertySet(properties);
             }
         }
 
-        public event PropertyChangingEventHandler PropertyChanging;
+        public event PropertyChangingEventHandler? PropertyChanging;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Gets or sets the type of object represented by this dynamic object instance.
         /// </summary>
         [DataMember(Order = 1)]
-        public TypeInfo Type { get; set; }
+        public TypeInfo? Type { get; set; }
 
         [DataMember(Order = 2)]
-        public PropertySet Properties { get; set; }
+        public PropertySet? Properties { get; set; }
 
         /// <summary>
         /// Gets the count of members (dynamically added properties) hold by this dynamic object.
         /// </summary>
-        public int PropertyCount => Properties.Count;
+        public int PropertyCount => Properties?.Count ?? 0;
 
         /// <summary>
         /// Gets a collection of member names hold by this dynamic object.
         /// </summary>
-        public IEnumerable<string> PropertyNames => Properties.Select(x => x.Name).ToList();
+        public IEnumerable<string> PropertyNames => Properties?.Select(x => x.Name ?? string.Empty).ToArray() ?? Enumerable.Empty<string>();
 
         /// <summary>
         /// Gets a collection of member values hold by this dynamic object.
         /// </summary>
-        public IEnumerable<object> Values => Properties.Select(x => x.Value).ToList();
+        public IEnumerable<object?> Values => Properties?.Select(x => x.Value).ToArray() ?? Enumerable.Empty<object?>();
 
         /// <summary>
         /// Gets or sets a member value.
         /// </summary>
         /// <param name="name">Name of the member to set or get.</param>
         /// <returns>Value of the member specified.</returns>
-        public object this[string name]
+        public object? this[string name]
         {
-            get => TryGet(name, out object value)
+            get => TryGet(name, out var value)
                 ? value
                 : throw new Exception($"Member not found for name '{name}'");
             set => Set(name, value);
@@ -180,9 +178,10 @@ namespace Aqua.Dynamic
         /// <param name="name">Name of the member to be assigned.</param>
         /// <param name="value">The value to be set.</param>
         /// <returns>The value specified.</returns>
-        public object Set(string name, object value)
+        public object? Set(string name, object? value)
         {
-            var property = Properties.SingleOrDefault(x => string.Equals(x.Name, name));
+            var properties = GetOrCreatePropertSet();
+            var property = properties.SingleOrDefault(x => string.Equals(x.Name, name));
 
             var oldValue = property?.Value;
             OnPropertyChanging(name, oldValue, value);
@@ -190,7 +189,7 @@ namespace Aqua.Dynamic
             if (property is null)
             {
                 property = new Property(name, value);
-                Properties.Add(property);
+                properties.Add(property);
             }
             else
             {
@@ -206,8 +205,8 @@ namespace Aqua.Dynamic
         /// Gets a member's value or null if the specified member is unknown.
         /// </summary>
         /// <returns>The value assigned to the member specified, null if member is not set.</returns>
-        public object Get(string name = "")
-            => TryGet(name, out object value)
+        public object? Get(string name = "")
+            => TryGet(name, out var value)
                 ? value
                 : null;
 
@@ -215,21 +214,22 @@ namespace Aqua.Dynamic
         /// Gets a member's value or default(T) if the specified member is null or unknown.
         /// </summary>
         /// <returns>The value assigned to the member specified, default(T) if member is null or not set.</returns>
+        [return: MaybeNull]
         public T Get<T>(string name = "")
         {
             var value = Get(name);
-            return value is T ? (T)value : default;
+            return value is T t ? t : default;
         }
 
         /// <summary>
         /// Adds a property and it's value.
         /// </summary>
-        public void Add(string name, object value) => Properties.Add(name, value);
+        public void Add(string name, object? value) => GetOrCreatePropertSet().Add(name, value);
 
         /// <summary>
         /// Adds a property.
         /// </summary>
-        public void Add(Property property) => Properties.Add(property);
+        public void Add(Property property) => GetOrCreatePropertSet().Add(property);
 
         /// <summary>
         /// Removes a member and it's value.
@@ -237,14 +237,19 @@ namespace Aqua.Dynamic
         /// <returns>True if the member is successfully found and removed; otherwise, false.</returns>
         public bool Remove(string name)
         {
-            var property = Properties.SingleOrDefault(x => string.Equals(x.Name, name));
+            var properties = Properties;
+            if (properties is null)
+            {
+                return false;
+            }
 
+            var property = properties.SingleOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
             if (property is null)
             {
                 return false;
             }
 
-            Properties.Remove(property);
+            properties.Remove(property);
             return true;
         }
 
@@ -255,10 +260,16 @@ namespace Aqua.Dynamic
         /// <param name="value">When this method returns, contains the value assgned with the specified member,
         /// if the member is found; null if the member is not found.</param>
         /// <returns>True is the dynamic object contains a member with the specified name; otherwise false.</returns>
-        public bool TryGet(string name, out object value)
+        public bool TryGet(string name, out object? value)
         {
-            var property = Properties.SingleOrDefault(x => string.Equals(x.Name, name));
+            var properties = Properties;
+            if (properties is null)
+            {
+                value = null;
+                return false;
+            }
 
+            var property = Properties.SingleOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
             if (property is null)
             {
                 value = null;
@@ -269,18 +280,29 @@ namespace Aqua.Dynamic
             return true;
         }
 
-        protected virtual void OnPropertyChanging(string name, object oldValue, object newValue)
+        protected virtual void OnPropertyChanging(string name, object? oldValue, object? newValue)
             => PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(name));
 
-        protected virtual void OnPropertyChanged(string name, object oldValue, object newValue)
+        protected virtual void OnPropertyChanged(string name, object? oldValue, object? newValue)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        private PropertySet GetOrCreatePropertSet()
+        {
+            var properties = Properties;
+            if (properties is null)
+            {
+                Properties = properties = new PropertySet();
+            }
+
+            return properties;
+        }
 
         /// <summary>
         /// Creates a dynamic objects representing the object structure defined by the specified object.
         /// </summary>
         /// <param name="obj">The object to be represented by the new dynamic object.</param>
         /// <param name="mapper">Optional instance of dynamic object mapper.</param>
-        public static DynamicObject Create(object obj, IDynamicObjectMapper mapper = null)
+        public static DynamicObject Create(object obj, IDynamicObjectMapper? mapper = null)
             => (mapper ?? new DynamicObjectMapper()).MapObject(obj);
     }
 }

@@ -5,75 +5,28 @@ namespace Aqua.Newtonsoft.Json.Converters
     using global::Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Reflection;
-    using System.Runtime.Serialization;
 
-    public class ObjectConverter<T> : JsonConverter<T>
+    public class ObjectConverter<T> : ObjectConverter
+        where T : notnull
     {
-        public const string TypeToke = "$type";
+        public static string TypeToke => "$type";
 
-        protected sealed class Property
-        {
-            public Property(PropertyInfo propertyInfo)
-            {
-                PropertyInfo = propertyInfo ?? throw new ArgumentNullException(nameof(propertyInfo));
-                DataMemberAttribute = (DataMemberAttribute)propertyInfo.GetCustomAttributes(typeof(DataMemberAttribute), false)?.FirstOrDefault();
-                Name = string.IsNullOrWhiteSpace(DataMemberAttribute?.Name) ? propertyInfo.Name : DataMemberAttribute.Name;
-                EmitDefaultValue = DataMemberAttribute?.EmitDefaultValue == true;
-                if (!EmitDefaultValue && propertyInfo.PropertyType.IsValueType)
-                {
-                    DefaultValue = Activator.CreateInstance(propertyInfo.PropertyType);
-                }
-            }
+        public Func<string, Type?>? DefaultTypeResolver { get; set; }
 
-            private PropertyInfo PropertyInfo { get; }
+        public Func<Type, T>? DefaultObjectFactory { get; set; }
 
-            private DataMemberAttribute DataMemberAttribute { get; }
+        public override bool CanConvert(Type objectType) => typeof(T).IsAssignableFrom(objectType);
 
-            public string Name { get; }
+        public override sealed object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+            => ReadJson(reader, objectType, existingValue is T t ? t : default, serializer);
 
-            public Type Type => PropertyInfo.PropertyType;
+        public override sealed void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+            => WriteJson(writer, value is T t ? t : default, serializer);
 
-            public bool EmitDefaultValue { get; }
-
-            public object DefaultValue { get; }
-
-            public int SortOrder => DataMemberAttribute?.Order ?? 0;
-
-            public object GetValue(object obj) => PropertyInfo.GetValue(obj);
-
-            public void SetValue(object obj, object value) => PropertyInfo.SetValue(obj, value);
-        }
-
-        private static readonly Dictionary<Type, IReadOnlyCollection<Property>> _properties = new Dictionary<Type, IReadOnlyCollection<Property>>();
-
-        private static IReadOnlyCollection<Property> GetProperties(Type type)
-        {
-            lock (_properties)
-            {
-                if (!_properties.TryGetValue(type, out IReadOnlyCollection<Property> property))
-                {
-                    property = type
-                        .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                        .Where(x => x.CanRead && x.CanWrite)
-                        .Where(x => x.GetIndexParameters().Length == 0)
-                        .Select(x => new Property(x))
-                        .OrderBy(x => x.SortOrder)
-                        .ToList()
-                        .AsReadOnly();
-                    _properties.Add(type, property);
-                }
-
-                return property;
-            }
-        }
-
-        public Func<string, Type> DefaultTypeResolver { get; set; }
-
-        public Func<Type, T> DefaultObjectFactory { get; set; }
-
-        public override T ReadJson(JsonReader reader, Type objectType, T existingValue, bool hasExistingValue, JsonSerializer serializer)
+        [return: MaybeNull]
+        public virtual T ReadJson(JsonReader reader, Type objectType, [AllowNull] T existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.Null)
             {
@@ -83,11 +36,12 @@ namespace Aqua.Newtonsoft.Json.Converters
             reader.AssertStartObject(false);
 
             reader.Advance();
-            if (reader.IsRefToken())
+            var referenceResolver = serializer.ReferenceResolver;
+            if (reader.IsRefToken() && referenceResolver != null)
             {
-                var referenceId = reader.ReadAsString();
+                var referenceId = reader.ReadAsString() ?? throw reader.CreateException($"{JsonConverterHelper.RefToken} must not be null");
                 reader.AssertEndObject();
-                return (T)serializer.ReferenceResolver.ResolveReference(serializer, referenceId);
+                return (T)referenceResolver.ResolveReference(serializer, referenceId);
             }
 
             var reference = default(string);
@@ -97,21 +51,25 @@ namespace Aqua.Newtonsoft.Json.Converters
                 reader.Advance();
             }
 
-            Type type;
+            Type? type = null;
             if (reader.IsProperty(TypeToke))
             {
                 var typeName = reader.ReadAsString();
-                type = ResolveType(typeName) ?? throw reader.CreateException($"Failed to resolve type '{typeName}'");
+                if (!string.IsNullOrEmpty(typeName))
+                {
+                    type = ResolveType(typeName!) ?? throw reader.CreateException($"Failed to resolve type '{typeName}'");
+                }
             }
-            else
+
+            if (type is null)
             {
                 type = objectType;
             }
 
-            var result = CreateObject(type);
-            if (!string.IsNullOrWhiteSpace(reference))
+            var result = CreateObject(type) ?? throw reader.CreateException($"Failed create instance of type {type.FullName}");
+            if (!string.IsNullOrWhiteSpace(reference) && referenceResolver != null)
             {
-                serializer.ReferenceResolver.AddReference(serializer, reference, result);
+                referenceResolver.AddReference(serializer, reference!, result);
             }
 
             var properties = GetProperties(type);
@@ -122,7 +80,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             return result;
         }
 
-        public override void WriteJson(JsonWriter writer, T value, JsonSerializer serializer)
+        public virtual void WriteJson(JsonWriter writer, [AllowNull] T value, JsonSerializer serializer)
         {
             if (value is null)
             {
@@ -145,7 +103,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             writer.WriteEndObject();
         }
 
-        protected virtual void ReadObjectProperties(JsonReader reader, T result, Dictionary<string, Property> properties, JsonSerializer serializer)
+        protected virtual void ReadObjectProperties(JsonReader reader, [DisallowNull] T result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {
             while (true)
             {
@@ -156,8 +114,8 @@ namespace Aqua.Newtonsoft.Json.Converters
 
                 if (reader.TokenType == JsonToken.PropertyName)
                 {
-                    var name = (string)reader.Value;
-                    if (properties.TryGetValue(name, out Property property))
+                    var name = (reader.Value as string) ?? throw reader.CreateException("Property name must not be null");
+                    if (properties.TryGetValue(name, out var property))
                     {
                         var value = reader.Read(property.Type, serializer);
                         property.SetValue(result, value);
@@ -172,7 +130,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             }
         }
 
-        protected virtual void WriteObjectProperties(JsonWriter writer, T instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
+        protected virtual void WriteObjectProperties(JsonWriter writer, [DisallowNull] T instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
         {
             foreach (var property in properties)
             {
@@ -185,7 +143,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             }
         }
 
-        protected virtual Type ResolveType(string typeName) => (DefaultTypeResolver ?? JsonConverterHelper.ResolveTypeName)(typeName);
+        protected virtual Type? ResolveType(string typeName) => (DefaultTypeResolver ?? JsonConverterHelper.ResolveTypeName)(typeName);
 
         protected virtual T CreateObject(Type type) => (DefaultObjectFactory ?? FallbackObjectFactory)(type);
 

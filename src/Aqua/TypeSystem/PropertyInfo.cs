@@ -13,7 +13,7 @@ namespace Aqua.TypeSystem
     {
         [NonSerialized]
         [Dynamic.Unmapped]
-        private System.Reflection.PropertyInfo _property;
+        private System.Reflection.PropertyInfo? _property;
 
         public PropertyInfo()
         {
@@ -29,7 +29,7 @@ namespace Aqua.TypeSystem
         {
         }
 
-        public PropertyInfo(string propertyName, TypeInfo propertyType, TypeInfo declaringType)
+        public PropertyInfo(string propertyName, TypeInfo propertyType, TypeInfo? declaringType)
             : base(propertyName, declaringType)
         {
             PropertyType = propertyType;
@@ -43,11 +43,6 @@ namespace Aqua.TypeSystem
         internal PropertyInfo(PropertyInfo propertyInfo, TypeInfoProvider typeInfoProvider)
             : base(propertyInfo, typeInfoProvider)
         {
-            if (propertyInfo is null)
-            {
-                throw new ArgumentNullException(nameof(propertyInfo));
-            }
-
             PropertyType = typeInfoProvider.Get(propertyInfo.PropertyType);
             _property = propertyInfo._property;
         }
@@ -67,23 +62,13 @@ namespace Aqua.TypeSystem
         public override MemberTypes MemberType => MemberTypes.Property;
 
         [DataMember(IsRequired = false, EmitDefaultValue = false)]
-        public TypeInfo PropertyType { get; set; }
+        public TypeInfo? PropertyType { get; set; }
 
         [Dynamic.Unmapped]
         internal System.Reflection.PropertyInfo Property
-        {
-            get
-            {
-                if (_property is null)
-                {
-                    _property = this.ResolveProperty(TypeResolver.Instance);
-                }
+            => _property ?? (_property = this.ResolveProperty(TypeResolver.Instance))
+            ?? throw new TypeResolverException($"Failed to resolve property, consider using extension method to specify {nameof(ITypeResolver)}.");
 
-                return _property;
-            }
-        }
-
-        public static explicit operator System.Reflection.PropertyInfo(PropertyInfo p)
-            => p.Property;
+        public static explicit operator System.Reflection.PropertyInfo(PropertyInfo p) => p.Property;
     }
 }

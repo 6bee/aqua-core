@@ -28,14 +28,11 @@ namespace Aqua.TypeSystem
 
         internal MemberInfo(System.Reflection.MemberInfo memberInfo, TypeInfoProvider typeInfoProvider)
         {
-            if (!(memberInfo is null))
-            {
-                Name = memberInfo.Name;
-                DeclaringType = typeInfoProvider.Get(memberInfo.DeclaringType, false, false);
-            }
+            Name = memberInfo.Name;
+            DeclaringType = typeInfoProvider.Get(memberInfo.DeclaringType, false, false);
         }
 
-        protected MemberInfo(string name, TypeInfo declaringType)
+        protected MemberInfo(string name, TypeInfo? declaringType)
         {
             Name = name;
             DeclaringType = declaringType;
@@ -43,50 +40,33 @@ namespace Aqua.TypeSystem
 
         internal MemberInfo(MemberInfo memberInfo, TypeInfoProvider typeInfoProvider)
         {
-            if (!(memberInfo is null))
-            {
-                Name = memberInfo.Name;
-                DeclaringType = typeInfoProvider.Get(memberInfo.DeclaringType);
-            }
+            Name = memberInfo.Name;
+            DeclaringType = typeInfoProvider.Get(memberInfo.DeclaringType);
         }
 
         [Dynamic.Unmapped]
         public abstract MemberTypes MemberType { get; }
 
         [DataMember(Order = 1, EmitDefaultValue = false)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [DataMember(Order = 2, EmitDefaultValue = false)]
-        public TypeInfo DeclaringType { get; set; }
+        public TypeInfo? DeclaringType { get; set; }
 
-        public static explicit operator System.Reflection.MemberInfo(MemberInfo memberInfo)
-            => memberInfo.ResolveMemberInfo(TypeResolver.Instance);
+        public static explicit operator System.Reflection.MemberInfo?(MemberInfo? memberInfo) => memberInfo.ResolveMemberInfo(TypeResolver.Instance);
 
-        public override string ToString()
-            => $"{DeclaringType}.{Name}";
+        public override string ToString() => $"{DeclaringType}.{Name}";
 
-        public static MemberInfo Create(System.Reflection.MemberInfo memberInfo)
-            => Create(memberInfo, new TypeInfoProvider());
+        public static MemberInfo Create(System.Reflection.MemberInfo memberInfo) => Create(memberInfo, new TypeInfoProvider());
 
         internal static MemberInfo Create(System.Reflection.MemberInfo memberInfo, TypeInfoProvider typeInfoProvider)
-        {
-            switch (memberInfo.GetMemberType())
+            => memberInfo.GetMemberType() switch
             {
-                case MemberTypes.Field:
-                    return new FieldInfo((System.Reflection.FieldInfo)memberInfo, typeInfoProvider);
-
-                case MemberTypes.Constructor:
-                    return new ConstructorInfo((System.Reflection.ConstructorInfo)memberInfo, typeInfoProvider);
-
-                case MemberTypes.Property:
-                    return new PropertyInfo((System.Reflection.PropertyInfo)memberInfo, typeInfoProvider);
-
-                case MemberTypes.Method:
-                    return new MethodInfo((System.Reflection.MethodInfo)memberInfo, typeInfoProvider);
-
-                default:
-                    throw new Exception($"Not supported member type: {memberInfo.GetMemberType()}");
-            }
-        }
+                MemberTypes.Field => new FieldInfo((System.Reflection.FieldInfo)memberInfo, typeInfoProvider),
+                MemberTypes.Constructor => new ConstructorInfo((System.Reflection.ConstructorInfo)memberInfo, typeInfoProvider),
+                MemberTypes.Property => new PropertyInfo((System.Reflection.PropertyInfo)memberInfo, typeInfoProvider),
+                MemberTypes.Method => new MethodInfo((System.Reflection.MethodInfo)memberInfo, typeInfoProvider),
+                _ => throw new Exception($"Unsupported member type: {memberInfo.GetMemberType()}"),
+            };
     }
 }

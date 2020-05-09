@@ -30,10 +30,6 @@ namespace Aqua.Extensions
 
             public TRight Right { get; }
 
-            private bool Equals(Tuple<TLeft, TRight> other)
-                => Equals(Left, other.Left)
-                && Equals(Right, other.Right);
-
             public override bool Equals(object obj)
             {
                 if (obj is null)
@@ -46,7 +42,9 @@ namespace Aqua.Extensions
                     return true;
                 }
 
-                return obj is Tuple<TLeft, TRight> && Equals((Tuple<TLeft, TRight>)obj);
+                return obj is Tuple<TLeft, TRight> tuple
+                    && Equals(Left, tuple.Left)
+                    && Equals(Right, tuple.Right);
             }
 
             public override int GetHashCode()
@@ -58,32 +56,32 @@ namespace Aqua.Extensions
             }
         }
 
-        public static IEnumerable<Tuple<T, T>> FullOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey> keyEqualityComparer = null, IEqualityComparer<Tuple<T, T>> comparer = null)
+        public static IEnumerable<Tuple<T, T>> FullOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey>? keyEqualityComparer = null, IEqualityComparer<Tuple<T, T>>? comparer = null)
             => FullOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, Tuple.Create, keyEqualityComparer, comparer);
 
-        public static IEnumerable<TResult> FullOuterJoin<T, TKey, TResult>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, Func<T, T, TResult> resultSelector, IEqualityComparer<TKey> keyEqualityComparer = null, IEqualityComparer<TResult> comparer = null)
+        public static IEnumerable<TResult> FullOuterJoin<T, TKey, TResult>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, Func<T, T, TResult> resultSelector, IEqualityComparer<TKey>? keyEqualityComparer = null, IEqualityComparer<TResult>? comparer = null)
             => FullOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, resultSelector, keyEqualityComparer, comparer);
 
-        public static IEnumerable<Tuple<TLeft, TRight>> FullOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey> keyEqualityComparer = null, IEqualityComparer<Tuple<TLeft, TRight>> comparer = null)
+        public static IEnumerable<Tuple<TLeft, TRight>> FullOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey>? keyEqualityComparer = null, IEqualityComparer<Tuple<TLeft, TRight>>? comparer = null)
             => FullOuterJoin(leftSet, rightSet, leftKeySelector, rightKeySelector, Tuple.Create, keyEqualityComparer, comparer);
 
-        public static IEnumerable<TResult> FullOuterJoin<TLeft, TRight, TKey, TResult>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, Func<TLeft, TRight, TResult> resultSelector, IEqualityComparer<TKey> keyEqualityComparer = null, IEqualityComparer<TResult> comparer = null)
+        public static IEnumerable<TResult> FullOuterJoin<TLeft, TRight, TKey, TResult>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, Func<TLeft, TRight, TResult> resultSelector, IEqualityComparer<TKey>? keyEqualityComparer = null, IEqualityComparer<TResult>? comparer = null)
         {
             var leftOuterJoin = LeftOuterJoin(leftSet, rightSet, leftKeySelector, rightKeySelector, resultSelector, keyEqualityComparer);
             var rightOuterJoin = RightOuterJoin(leftSet, rightSet, leftKeySelector, rightKeySelector, resultSelector, keyEqualityComparer);
             return leftOuterJoin.Union(rightOuterJoin, comparer);
         }
 
-        public static IEnumerable<Tuple<T, T>> LeftOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey> keyEqualityComparer = null)
+        public static IEnumerable<Tuple<T, T>> LeftOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
             => LeftOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, Tuple.Create, keyEqualityComparer);
 
-        public static IEnumerable<TResult> LeftOuterJoin<T, TKey, TResult>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, Func<T, T, TResult> resultSelector, IEqualityComparer<TKey> keyEqualityComparer = null)
+        public static IEnumerable<TResult> LeftOuterJoin<T, TKey, TResult>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, Func<T, T, TResult> resultSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
             => LeftOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, resultSelector, keyEqualityComparer);
 
-        public static IEnumerable<Tuple<TLeft, TRight>> LeftOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey> keyEqualityComparer = null)
+        public static IEnumerable<Tuple<TLeft, TRight>> LeftOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
             => LeftOuterJoin(leftSet, rightSet, leftKeySelector, rightKeySelector, Tuple.Create, keyEqualityComparer);
 
-        public static IEnumerable<TResult> LeftOuterJoin<TLeft, TRight, TKey, TResult>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, Func<TLeft, TRight, TResult> resultSelector, IEqualityComparer<TKey> keyEqualityComparer = null)
+        public static IEnumerable<TResult> LeftOuterJoin<TLeft, TRight, TKey, TResult>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, Func<TLeft, TRight, TResult> resultSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
             => leftSet
             .GroupJoin(
                 rightSet,
@@ -95,16 +93,16 @@ namespace Aqua.Extensions
                 x => x.Group.DefaultIfEmpty(),
                 (x, y) => resultSelector(x.Key, y));
 
-        public static IEnumerable<Tuple<T, T>> RightOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey> keyEqualityComparer = null)
+        public static IEnumerable<Tuple<T, T>> RightOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
             => RightOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, Tuple.Create, keyEqualityComparer);
 
-        public static IEnumerable<TResult> RightOuterJoin<T, TKey, TResult>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, Func<T, T, TResult> resultSelector, IEqualityComparer<TKey> keyEqualityComparer = null)
+        public static IEnumerable<TResult> RightOuterJoin<T, TKey, TResult>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, Func<T, T, TResult> resultSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
             => RightOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, resultSelector, keyEqualityComparer);
 
-        public static IEnumerable<Tuple<TLeft, TRight>> RightOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey> keyEqualityComparer = null)
+        public static IEnumerable<Tuple<TLeft, TRight>> RightOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
             => RightOuterJoin(leftSet, rightSet, leftKeySelector, rightKeySelector, Tuple.Create, keyEqualityComparer);
 
-        public static IEnumerable<TResult> RightOuterJoin<TLeft, TRight, TKey, TResult>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, Func<TLeft, TRight, TResult> resultSelector, IEqualityComparer<TKey> keyEqualityComparer = null)
+        public static IEnumerable<TResult> RightOuterJoin<TLeft, TRight, TKey, TResult>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, Func<TLeft, TRight, TResult> resultSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
             => rightSet
             .GroupJoin(
                 leftSet,
@@ -116,9 +114,9 @@ namespace Aqua.Extensions
                 x => x.Group.DefaultIfEmpty(),
                 (x, y) => resultSelector(y, x.Key));
 
-        public static bool CollectionEquals<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2) => CollectionEquals(collection1, collection2, null);
+        public static bool CollectionEquals<T>(this IEnumerable<T>? collection1, IEnumerable<T>? collection2) => CollectionEquals(collection1, collection2, null);
 
-        public static bool CollectionEquals<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> comparer)
+        public static bool CollectionEquals<T>(this IEnumerable<T>? collection1, IEnumerable<T>? collection2, IEqualityComparer<T>? comparer)
         {
             if (collection1 is null && collection2 is null)
             {
@@ -173,9 +171,9 @@ namespace Aqua.Extensions
             return nullCounter == 0 && counters.Values.All(c => c == 0);
         }
 
-        public static int GetCollectionHashCode<T>(this IEnumerable<T> collection) => GetCollectionHashCode(collection, null);
+        public static int GetCollectionHashCode<T>(this IEnumerable<T>? collection) => GetCollectionHashCode(collection, null);
 
-        public static int GetCollectionHashCode<T>(this IEnumerable<T> collection, IEqualityComparer<T> comparer)
+        public static int GetCollectionHashCode<T>(this IEnumerable<T>? collection, IEqualityComparer<T>? comparer)
         {
             if (comparer is null)
             {
@@ -186,7 +184,7 @@ namespace Aqua.Extensions
             {
                 var hashCode = 0;
 
-                if (!(collection is null))
+                if (collection != null)
                 {
                     foreach (var item in collection)
                     {

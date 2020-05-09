@@ -41,20 +41,33 @@ namespace Aqua.TypeSystem.Emit
         {
             if (typeInfo.IsAnonymousType)
             {
-                var properties = typeInfo.Properties.Select(x => x.Name).ToList();
+                Exception CreateException(string reason) => throw new ArgumentException($"Cannot emit anonymous type '{typeInfo}' {reason}.");
+                var properties = typeInfo.Properties?
+                    .Select(x => x.Name ?? throw new ArgumentException("with unnamed property contained"))
+                    .ToList();
+                if (properties is null)
+                {
+                    throw CreateException("with not proeprties declared");
+                }
+
                 return _typeCache.GetOrCreate(properties, InternalEmitAnonymousType);
             }
-            else
-            {
-                return _typeCache.GetOrCreate(typeInfo, InternalEmitType);
-            }
+
+            return _typeCache.GetOrCreate(typeInfo, InternalEmitType);
         }
 
         private Type InternalEmitType(TypeInfo typeInfo)
         {
             var fullName = CreateUniqueClassName();
 
-            var propertyInfos = typeInfo.Properties?.ToArray() ?? throw new Exception("Type generation failed due to mussing properies description.");
+            var propertyInfos = typeInfo.Properties?
+                .Select(x => new
+                {
+                    Name = x.Name ?? throw new ArgumentException($"Property name must not be empty for type {typeInfo}."),
+                    Type = x.PropertyType?.Type ?? throw new ArgumentException($"Property type must not be null for type {typeInfo}."), // TODO: use ITypeResolver
+                })
+                .ToArray()
+                ?? throw new ArgumentException($"Properties description must not be missing for type {typeInfo}.");
 
             // define type
             var type = _module.DefineType(fullName, TypeAttributes.Public | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.Sealed, typeof(object));
@@ -64,7 +77,7 @@ namespace Aqua.TypeSystem.Emit
 
             // define fields
             var fields = propertyInfos
-                .Select(x => type.DefineField($"_{x.Name}", x.PropertyType.Type, FieldAttributes.Private))
+                .Select(x => type.DefineField($"_{x.Name}", x.Type, FieldAttributes.Private))
                 .ToArray();
 
             // define default constructor
@@ -79,9 +92,9 @@ namespace Aqua.TypeSystem.Emit
             var properties = propertyInfos
                 .Select((x, i) =>
                 {
-                    var property = type.DefineProperty(x.Name, PropertyAttributes.HasDefault, x.PropertyType.Type, null);
+                    var property = type.DefineProperty(x.Name, PropertyAttributes.HasDefault, x.Type, null);
 
-                    var propertyGetter = type.DefineMethod($"get_{x.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, x.PropertyType.Type, null);
+                    var propertyGetter = type.DefineMethod($"get_{x.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, x.Type, null);
                     var getterPil = propertyGetter.GetILGenerator();
                     getterPil.Emit(OpCodes.Ldarg_0);
                     getterPil.Emit(OpCodes.Ldfld, fields[i]);
@@ -89,7 +102,7 @@ namespace Aqua.TypeSystem.Emit
 
                     property.SetGetMethod(propertyGetter);
 
-                    var propertySetter = type.DefineMethod($"set_{x.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new[] { x.PropertyType.Type });
+                    var propertySetter = type.DefineMethod($"set_{x.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new[] { x.Type });
                     var setterPil = propertySetter.GetILGenerator();
                     setterPil.Emit(OpCodes.Ldarg_0);
                     setterPil.Emit(OpCodes.Ldarg_1);
@@ -103,7 +116,7 @@ namespace Aqua.TypeSystem.Emit
                 .ToArray();
 
             // create type
-            var t1 = type.CreateTypeInfo();
+            var t1 = type.CreateTypeInfo() ?? throw new Exception($"Failed to create {typeof(System.Reflection.TypeInfo).FullName} for '{typeInfo}'.");
             return t1.AsType();
         }
 
@@ -165,7 +178,7 @@ namespace Aqua.TypeSystem.Emit
                 .ToArray();
 
             // create type
-            var t1 = type.CreateTypeInfo();
+            var t1 = type.CreateTypeInfo() ?? throw new Exception($"Failed to create {typeof(System.Reflection.TypeInfo).FullName} for anonymous type.");
             return t1.AsType();
         }
 

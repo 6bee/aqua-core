@@ -7,6 +7,7 @@ namespace Aqua.TypeSystem.Emit
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     partial class TypeEmitter
@@ -76,7 +77,7 @@ namespace Aqua.TypeSystem.Emit
                 var properties = typeInfo.Properties;
                 _properties = properties is null
                     ? new List<Tuple<string, Type>>().AsReadOnly()
-                    : properties.Select(CreatePropertyInfo).ToList().AsReadOnly();
+                    : properties.Select(CreatePropertyInfo).ToList().AsReadOnly() !;
 
                 _hash = new Lazy<int>(_properties.GetCollectionHashCode);
             }
@@ -117,7 +118,8 @@ namespace Aqua.TypeSystem.Emit
 
             public override int GetHashCode() => _hash.Value;
 
-            private static Tuple<string, Type> CreatePropertyInfo(PropertyInfo propertyInfo)
+            [return: NotNullIfNotNull("propertyInfo")]
+            private static Tuple<string, Type>? CreatePropertyInfo(PropertyInfo? propertyInfo)
             {
                 if (propertyInfo is null)
                 {
@@ -138,7 +140,7 @@ namespace Aqua.TypeSystem.Emit
 
                 var propertyType = propertyTypeInfo.Type;
 
-                return new Tuple<string, Type>(propertyName, propertyType);
+                return new Tuple<string, Type>(propertyName!, propertyType);
             }
         }
 

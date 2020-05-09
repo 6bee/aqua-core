@@ -48,49 +48,45 @@ namespace Aqua.TypeSystem
         {
         }
 
-        protected MethodBaseInfo(string name, TypeInfo declaringType, BindingFlags bindingFlags, IEnumerable<TypeInfo> genericArguments, IEnumerable<TypeInfo> parameterTypes)
+        protected MethodBaseInfo(string name, TypeInfo declaringType, BindingFlags bindingFlags, IEnumerable<TypeInfo>? genericArguments, IEnumerable<TypeInfo>? parameterTypes)
             : base(name, declaringType)
         {
             BindingFlags = bindingFlags;
-
-            GenericArgumentTypes = genericArguments is null || !genericArguments.Any()
-                ? null
-                : genericArguments.ToList();
-
-            ParameterTypes = parameterTypes is null || !parameterTypes.Any()
-                ? null
-                : parameterTypes.ToList();
+            GenericArgumentTypes = genericArguments?.ToList();
+            ParameterTypes = parameterTypes?.ToList();
         }
 
         internal MethodBaseInfo(MethodBaseInfo methodBaseInfo, TypeInfoProvider typeInfoProvider)
             : base(methodBaseInfo, typeInfoProvider)
         {
             BindingFlags = methodBaseInfo.BindingFlags;
-            GenericArgumentTypes = methodBaseInfo.GenericArgumentTypes?.Select(typeInfoProvider.Get).ToList();
-            ParameterTypes = methodBaseInfo.ParameterTypes?.Select(typeInfoProvider.Get).ToList();
+
+            // TODO: why is the dammit operator required!?
+            GenericArgumentTypes = methodBaseInfo.GenericArgumentTypes?.Select(typeInfoProvider.Get).ToList() !;
+            ParameterTypes = methodBaseInfo.ParameterTypes?.Select(typeInfoProvider.Get).ToList() !;
         }
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
         public BindingFlags BindingFlags { get; set; }
 
         [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
-        public List<TypeInfo> GenericArgumentTypes { get; set; }
+        public List<TypeInfo>? GenericArgumentTypes { get; set; }
 
         [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
-        public List<TypeInfo> ParameterTypes { get; set; }
+        public List<TypeInfo>? ParameterTypes { get; set; }
 
-        public bool IsGenericMethod => !(GenericArgumentTypes is null) && GenericArgumentTypes.Any();
+        public bool IsGenericMethod => GenericArgumentTypes?.Any() == true;
 
         public override string ToString()
         {
-            var hasGenericArguments = !(GenericArgumentTypes is null) && GenericArgumentTypes.Any();
+            var hasGenericArguments = IsGenericMethod;
             return string.Format(
                 "{0}.{1}{3}{4}{5}({2})",
                 DeclaringType,
                 Name,
-                ParameterTypes is null ? null : string.Join(", ", ParameterTypes.Select(x => x.ToString()).ToArray()),
+                ParameterTypes is null ? null : string.Join(", ", ParameterTypes),
                 hasGenericArguments ? "<" : null,
-                hasGenericArguments ? string.Join(", ", GenericArgumentTypes.Select(x => x.ToString()).ToArray()) : null,
+                hasGenericArguments ? string.Join(", ", GenericArgumentTypes) : null,
                 hasGenericArguments ? ">" : null);
         }
     }

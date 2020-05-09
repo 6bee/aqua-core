@@ -60,7 +60,7 @@ namespace Aqua.Tests.Serialization
                     { "object", typeof(object).FullName },
                 };
 
-                if (typeMap.TryGetValue(typeName, out string t))
+                if (typeMap.TryGetValue(typeName, out var t))
                 {
                     typeName = t;
                 }

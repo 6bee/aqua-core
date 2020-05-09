@@ -5,12 +5,13 @@ namespace Aqua.TypeSystem
     using Aqua.Utils;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public class TypeInfoProvider : ITypeInfoProvider
     {
         private readonly Dictionary<Type, TypeInfo> _referenceTracker;
         private readonly Dictionary<TypeInfo, TypeInfo> _typeInfoReferenceTracker;
-        private readonly ITypeInfoProvider _parent;
+        private readonly ITypeInfoProvider? _parent;
 
         public TypeInfoProvider(bool includePropertyInfos = false, bool setMemberDeclaringTypes = false)
             : this(includePropertyInfos, setMemberDeclaringTypes, null, null)
@@ -23,7 +24,7 @@ namespace Aqua.TypeSystem
             _parent = parent;
         }
 
-        private TypeInfoProvider(bool includePropertyInfos, bool setMemberDeclaringTypes, Dictionary<Type, TypeInfo> referenceTracker, Dictionary<TypeInfo, TypeInfo> typeInfoReferenceTracker)
+        private TypeInfoProvider(bool includePropertyInfos, bool setMemberDeclaringTypes, Dictionary<Type, TypeInfo>? referenceTracker, Dictionary<TypeInfo, TypeInfo>? typeInfoReferenceTracker)
         {
             IncludePropertyInfos = includePropertyInfos;
             SetMemberDeclaringTypes = setMemberDeclaringTypes;
@@ -35,13 +36,12 @@ namespace Aqua.TypeSystem
 
         public bool SetMemberDeclaringTypes { get; }
 
-        internal void RegisterReference(Type type, TypeInfo typeInfo)
-            => _referenceTracker.Add(type, typeInfo);
+        internal void RegisterReference(Type type, TypeInfo typeInfo) => _referenceTracker.Add(type, typeInfo);
 
-        internal void RegisterReference(TypeInfo type, TypeInfo typeInfo)
-            => _typeInfoReferenceTracker.Add(type, typeInfo);
+        internal void RegisterReference(TypeInfo type, TypeInfo typeInfo) => _typeInfoReferenceTracker.Add(type, typeInfo);
 
-        public virtual TypeInfo Get(Type type, bool? includePropertyInfosOverride = null, bool? setMemberDeclaringTypesOverride = null)
+        [return: NotNullIfNotNull("type")]
+        public virtual TypeInfo? Get(Type? type, bool? includePropertyInfosOverride = null, bool? setMemberDeclaringTypesOverride = null)
         {
             if (type is null)
             {
@@ -53,7 +53,7 @@ namespace Aqua.TypeSystem
                 return typeInfo;
             }
 
-            if (!(_parent is null))
+            if (_parent != null)
             {
                 return _parent.Get(type, includePropertyInfosOverride, setMemberDeclaringTypesOverride);
             }
@@ -71,14 +71,15 @@ namespace Aqua.TypeSystem
             return new TypeInfo(type, context);
         }
 
-        internal TypeInfo Get(TypeInfo type)
+        [return: NotNullIfNotNull("type")]
+        internal TypeInfo? Get(TypeInfo? type)
         {
             if (type is null)
             {
                 return null;
             }
 
-            return _typeInfoReferenceTracker.TryGetValue(type, out TypeInfo typeInfo)
+            return _typeInfoReferenceTracker.TryGetValue(type, out var typeInfo)
                 ? typeInfo
                 : new TypeInfo(type, this);
         }

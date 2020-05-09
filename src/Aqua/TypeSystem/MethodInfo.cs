@@ -15,7 +15,7 @@ namespace Aqua.TypeSystem
     {
         [NonSerialized]
         [Dynamic.Unmapped]
-        private System.Reflection.MethodInfo _method;
+        private System.Reflection.MethodInfo? _method;
 
         public MethodInfo()
         {
@@ -56,41 +56,18 @@ namespace Aqua.TypeSystem
         {
         }
 
-        [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
-        public TypeInfo ReturnType { get; set; }
-
         public override MemberTypes MemberType => MemberTypes.Method;
+
+        [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
+        public TypeInfo? ReturnType { get; set; }
 
         [Dynamic.Unmapped]
         public System.Reflection.MethodInfo Method
-        {
-            get
-            {
-                if (_method is null)
-                {
-                    _method = this.ResolveMethod(TypeResolver.Instance);
-                }
+            => _method ?? (_method = this.ResolveMethod(TypeResolver.Instance))
+            ?? throw new TypeResolverException($"Failed to resolve method, consider using extension method to specify {nameof(ITypeResolver)}.");
 
-                return _method;
-            }
-        }
+        public override string ToString() => $"{ReturnType} {base.ToString()}";
 
-        public override string ToString()
-        {
-            string returnType;
-            try
-            {
-                returnType = new TypeInfo(Method.ReturnType, false, false).ToString();
-            }
-            catch
-            {
-                returnType = "'failed to resolve return type'";
-            }
-
-            return $"{returnType} {base.ToString()}";
-        }
-
-        public static explicit operator System.Reflection.MethodInfo(MethodInfo m)
-            => m.Method;
+        public static explicit operator System.Reflection.MethodInfo(MethodInfo m) => m.Method;
     }
 }

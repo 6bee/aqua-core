@@ -60,7 +60,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 },
             };
 
-            objects = new DynamicObjectMapper().Map<ClassWithEnum>(dynamicObjects);
+            var mapper = new DynamicObjectMapper();
+            objects = dynamicObjects.Select(mapper.Map<ClassWithEnum>);
         }
 
         [Fact]

@@ -6,6 +6,6 @@ namespace Aqua.Dynamic
 
     public interface IDynamicObjectFactory
     {
-        DynamicObject CreateDynamicObject(Type type, object instance);
+        DynamicObject CreateDynamicObject(Type? type, object instance);
     }
 }

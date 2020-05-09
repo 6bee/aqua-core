@@ -5,6 +5,7 @@ namespace Aqua.TypeSystem
     using Aqua.Utils;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
 
@@ -12,13 +13,13 @@ namespace Aqua.TypeSystem
     {
         private static readonly ITypeResolver _defaultTypeResolver = new TypeResolver();
 
-        private static ITypeResolver _instance;
+        private static ITypeResolver? _instance;
 
         private readonly TransparentCache<string, Type> _typeCache = new TransparentCache<string, Type>();
 
         private readonly Func<TypeInfo, Type> _typeEmitter;
 
-        public TypeResolver(Func<TypeInfo, Type> typeEmitter = null)
+        public TypeResolver(Func<TypeInfo, Type>? typeEmitter = null)
         {
             _typeEmitter = typeEmitter ?? new Emit.TypeEmitter().EmitType;
         }
@@ -30,14 +31,21 @@ namespace Aqua.TypeSystem
         /// Setting this property allows for registring a custom type resolver statically.
         /// Setting this property to null makes it fall-back to the default resolver.
         /// </remarks>
+        [AllowNull]
         public static ITypeResolver Instance
         {
             get => _instance ?? _defaultTypeResolver;
             set => _instance = value;
         }
 
-        public virtual Type ResolveType(TypeInfo typeInfo)
+        [return: NotNullIfNotNull("typeInfo")]
+        public virtual Type? ResolveType(TypeInfo? typeInfo)
         {
+            if (typeInfo is null)
+            {
+                return null;
+            }
+
             var cacheKey = string.Join(
                 " ",
                 Enumerable.Repeat(typeInfo.FullName, 1).Concat(
@@ -51,7 +59,7 @@ namespace Aqua.TypeSystem
 
         private Type ResolveTypeInternal(TypeInfo typeInfo)
         {
-            var type = Type.GetType(typeInfo.FullName);
+            Type? type = Type.GetType(typeInfo.FullName);
             if (!IsValid(typeInfo, type))
             {
                 var assemblies = GetAssemblies();
@@ -74,13 +82,14 @@ namespace Aqua.TypeSystem
 
             if (type is null)
             {
-                throw new Exception($"Type '{typeInfo.FullName}' could not be resolved");
+                throw new TypeResolverException($"Type '{typeInfo.FullName}' could not be resolved, consider secifying custom {nameof(ITypeResolver)}.");
             }
 
             return type;
         }
 
-        private Type ResolveOpenGenericType(TypeInfo typeInfo, Type type)
+        [return: NotNullIfNotNull("type")]
+        private Type? ResolveOpenGenericType(TypeInfo typeInfo, Type? type)
         {
             if (type is null)
             {
@@ -104,9 +113,9 @@ namespace Aqua.TypeSystem
             return type;
         }
 
-        private bool IsValid(TypeInfo typeInfo, Type resolvedType)
+        private bool IsValid(TypeInfo typeInfo, Type? resolvedType)
         {
-            if (!(resolvedType is null))
+            if (resolvedType != null)
             {
                 // can only validate properties if set in typeinfo
                 if (typeInfo.Properties?.Any() ?? false)
