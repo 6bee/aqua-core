@@ -4,12 +4,19 @@ namespace Aqua.TypeSystem.Extensions
 {
     using System;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class MemberInfoExtensions
     {
-        public static MemberTypes GetMemberType(this System.Reflection.MemberInfo member)
+        [return: NotNullIfNotNull("member")]
+        public static MemberTypes? GetMemberType(this System.Reflection.MemberInfo? member)
         {
+            if (member is null)
+            {
+                return null;
+            }
+
             if (member is System.Reflection.FieldInfo)
             {
                 return MemberTypes.Field;

@@ -4,6 +4,7 @@ namespace Aqua.TypeSystem
 {
     using Aqua.TypeSystem.Extensions;
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
@@ -57,15 +58,18 @@ namespace Aqua.TypeSystem
 
         public override string ToString() => $"{DeclaringType}.{Name}";
 
-        public static MemberInfo Create(System.Reflection.MemberInfo memberInfo) => Create(memberInfo, new TypeInfoProvider());
+        [return: NotNullIfNotNull("memberInfo")]
+        public static MemberInfo? Create(System.Reflection.MemberInfo? memberInfo) => Create(memberInfo, new TypeInfoProvider());
 
-        internal static MemberInfo Create(System.Reflection.MemberInfo memberInfo, TypeInfoProvider typeInfoProvider)
+        [return: NotNullIfNotNull("memberInfo")]
+        internal static MemberInfo? Create(System.Reflection.MemberInfo? memberInfo, TypeInfoProvider typeInfoProvider)
             => memberInfo.GetMemberType() switch
             {
-                MemberTypes.Field => new FieldInfo((System.Reflection.FieldInfo)memberInfo, typeInfoProvider),
-                MemberTypes.Constructor => new ConstructorInfo((System.Reflection.ConstructorInfo)memberInfo, typeInfoProvider),
-                MemberTypes.Property => new PropertyInfo((System.Reflection.PropertyInfo)memberInfo, typeInfoProvider),
-                MemberTypes.Method => new MethodInfo((System.Reflection.MethodInfo)memberInfo, typeInfoProvider),
+                null => null,
+                MemberTypes.Field => new FieldInfo((System.Reflection.FieldInfo)memberInfo!, typeInfoProvider),
+                MemberTypes.Constructor => new ConstructorInfo((System.Reflection.ConstructorInfo)memberInfo!, typeInfoProvider),
+                MemberTypes.Property => new PropertyInfo((System.Reflection.PropertyInfo)memberInfo!, typeInfoProvider),
+                MemberTypes.Method => new MethodInfo((System.Reflection.MethodInfo)memberInfo!, typeInfoProvider),
                 _ => throw new Exception($"Unsupported member type: {memberInfo.GetMemberType()}"),
             };
     }

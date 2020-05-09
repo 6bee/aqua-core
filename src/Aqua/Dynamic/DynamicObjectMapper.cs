@@ -883,7 +883,7 @@ namespace Aqua.Dynamic
             {
                 var properties = GetPropertiesForMapping(type) ??
                     type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
-                foreach (var property in properties.Where(p => p.GetCustomAttribute<UnmappedAttribute>() == null))
+                foreach (var property in properties.Where(p => p.GetCustomAttribute<UnmappedAttribute>() is null))
                 {
                     var value = property.GetValue(from);
                     value = MapToDynamicObjectIfRequired(value, setTypeInformation);
@@ -891,7 +891,7 @@ namespace Aqua.Dynamic
                 }
 
                 var fields = GetFieldsForMapping(type) ?? type.GetFields(BindingFlags.Instance | BindingFlags.Public);
-                foreach (var field in fields.Where(f => f.GetCustomAttribute<UnmappedAttribute>() == null))
+                foreach (var field in fields.Where(f => f.GetCustomAttribute<UnmappedAttribute>() is null))
                 {
                     var value = field.GetValue(from);
                     value = MapToDynamicObjectIfRequired(value, setTypeInformation);
@@ -995,7 +995,7 @@ namespace Aqua.Dynamic
             {
                 var properties = GetPropertiesForMapping(type) ??
                     type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite && p.GetIndexParameters().Length == 0);
-                foreach (var property in properties.Where(p => p.GetCustomAttribute<UnmappedAttribute>() == null))
+                foreach (var property in properties.Where(p => p.GetCustomAttribute<UnmappedAttribute>() is null))
                 {
                     if (item.TryGet(property.Name, out var rawValue))
                     {
@@ -1010,7 +1010,7 @@ namespace Aqua.Dynamic
                 }
 
                 var fields = GetFieldsForMapping(type) ?? type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-                foreach (var field in fields.Where(f => !f.IsInitOnly && f.GetCustomAttribute<UnmappedAttribute>() == null))
+                foreach (var field in fields.Where(f => !f.IsInitOnly && f.GetCustomAttribute<UnmappedAttribute>() is null))
                 {
                     if (item.TryGet(field.Name, out var rawValue))
                     {

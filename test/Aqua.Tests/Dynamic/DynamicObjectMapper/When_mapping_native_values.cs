@@ -33,7 +33,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             var result = MapAsValueMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
 
-            if (result == null)
+            if (result is null)
             {
                 if (type.IsValueType())
                 {
@@ -60,7 +60,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             var result = MapAsPropertyMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
 
-            if (result == null)
+            if (result is null)
             {
                 if (type.IsValueType())
                 {

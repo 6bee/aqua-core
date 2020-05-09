@@ -9,7 +9,7 @@ namespace Aqua.Tests.Serialization
     {
         public static T Serialize<T>(this T graph)
         {
-            if (graph == null)
+            if (graph is null)
             {
                 return graph;
             }

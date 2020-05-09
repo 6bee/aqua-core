@@ -152,19 +152,19 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [Fact]
         public void List_of_nullable_int_should_serialize()
         {
-            var result = Serialize<IEnumerable<int?>>(new List<int?> { null, 1, 11 });
+            _ = Serialize<IEnumerable<int?>>(new List<int?> { null, 1, 11 });
         }
 
         [Fact]
         public void Array_of_int_should_serialize()
         {
-            var result = Serialize(new[] { 1, 11 });
+            _ = Serialize(new[] { 1, 11 });
         }
 
         [Fact]
         public void Array_of_nullable_int_should_serialize()
         {
-            var result = Serialize(new int?[] { null, 1, 11 });
+            _ = Serialize(new int?[] { null, 1, 11 });
         }
 
         [Fact]
@@ -191,7 +191,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [Fact]
         public void Array_of_char_should_serialize()
         {
-            var result = Serialize(new[] { 'h', 'e', 'l', 'l', 'o' });
+            _ = Serialize(new[] { 'h', 'e', 'l', 'l', 'o' });
         }
 
         [Fact]
@@ -200,8 +200,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             int? i = 1;
             sbyte? b1 = -2;
             byte b2 = 2;
-
-            var result = Serialize(new { B = b1, N = new { I = i, B = b2 } });
+            _ = Serialize(new { B = b1, N = new { I = i, B = b2 } });
         }
 
         [Fact]

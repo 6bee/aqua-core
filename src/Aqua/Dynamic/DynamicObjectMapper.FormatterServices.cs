@@ -31,7 +31,7 @@ namespace Aqua.Dynamic
         {
             var customPropertySet = GetPropertiesForMapping(type);
             var customPropertyNames = customPropertySet?
-                .Where(p => p.GetCustomAttribute<UnmappedAttribute>() == null)
+                .Where(p => p.GetCustomAttribute<UnmappedAttribute>() is null)
                 .ToDictionary(x => x.Name);
 
             var members = FormatterServices.GetSerializableMembers(type);
@@ -78,7 +78,7 @@ namespace Aqua.Dynamic
         {
             var customPropertySet = GetPropertiesForMapping(type);
             var customPropertyNames = customPropertySet?
-                .Where(p => p.GetCustomAttribute<UnmappedAttribute>() == null)
+                .Where(p => p.GetCustomAttribute<UnmappedAttribute>() is null)
                 .ToDictionary(x => x.Name);
 
             var members = FormatterServices.GetSerializableMembers(type);
