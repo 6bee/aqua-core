@@ -105,13 +105,8 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         protected virtual void ReadObjectProperties(JsonReader reader, [DisallowNull] T result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {
-            while (true)
+            while (reader.TokenType != JsonToken.EndObject)
             {
-                if (reader.TokenType == JsonToken.EndObject)
-                {
-                    break;
-                }
-
                 if (reader.TokenType == JsonToken.PropertyName)
                 {
                     var name = (reader.Value as string) ?? throw reader.CreateException("Property name must not be null");
