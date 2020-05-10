@@ -33,20 +33,19 @@ namespace Aqua.TypeSystem
             ReturnType = typeInfoProvider.Get(methodInfo?.ReturnType, false, false);
         }
 
-        // TODO: replace binding flags by bool flags
-        public MethodInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, Type returnType)
-            : this(name, declaringType, bindingFlags, genericArguments, parameterTypes, returnType, new TypeInfoProvider())
+        public MethodInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments = null, IEnumerable<Type>? parameterTypes = null, Type? returnType = null)
+            : this(name, declaringType, genericArguments, parameterTypes, returnType, new TypeInfoProvider())
         {
         }
 
-        internal MethodInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, Type returnType, TypeInfoProvider typeInfoProvider)
-            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes, typeInfoProvider)
+        internal MethodInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes, Type? returnType, TypeInfoProvider typeInfoProvider)
+            : base(name, declaringType, genericArguments, parameterTypes, typeInfoProvider)
         {
             ReturnType = typeInfoProvider.Get(returnType, false, false);
         }
 
-        public MethodInfo(string name, TypeInfo declaringType, BindingFlags bindingFlags, IEnumerable<TypeInfo> genericArguments, IEnumerable<TypeInfo> parameterTypes, TypeInfo returnType)
-            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes)
+        public MethodInfo(string name, TypeInfo declaringType, IEnumerable<TypeInfo>? genericArguments = null, IEnumerable<TypeInfo>? parameterTypes = null, TypeInfo? returnType = null)
+            : base(name, declaringType, genericArguments, parameterTypes)
         {
             ReturnType = returnType;
         }
@@ -66,7 +65,7 @@ namespace Aqua.TypeSystem
             => _method ?? (_method = this.ResolveMethod(TypeResolver.Instance))
             ?? throw new TypeResolverException($"Failed to resolve method, consider using extension method to specify {nameof(ITypeResolver)}.");
 
-        public override string ToString() => $"{ReturnType} {base.ToString()}";
+        public override string ToString() => $"{ReturnType} {base.ToString()}".Trim();
 
         public static explicit operator System.Reflection.MethodInfo(MethodInfo m) => m.Method;
     }

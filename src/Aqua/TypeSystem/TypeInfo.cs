@@ -158,7 +158,7 @@ namespace Aqua.TypeSystem
         /// Gets <see cref="Type"/> by resolving this <see cref="TypeInfo"/> instance using the default <see cref="TypeResolver"/>.
         /// </summary>
         [Dynamic.Unmapped]
-        public Type Type => _type ?? (_type = TypeResolver.Instance.ResolveType(this));
+        public Type Type => _type ?? (_type = this.ResolveType(TypeResolver.Instance));
 
         public static explicit operator Type(TypeInfo t)
             => t.Type;

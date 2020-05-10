@@ -17,7 +17,7 @@ namespace Aqua.TypeSystem
         {
         }
 
-        public TypeResolverException(string message, Exception innerException)
+        public TypeResolverException(string message, Exception? innerException)
             : base(message, innerException)
         {
         }

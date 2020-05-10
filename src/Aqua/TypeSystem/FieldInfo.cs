@@ -48,7 +48,7 @@ namespace Aqua.TypeSystem
         public override MemberTypes MemberType => MemberTypes.Field;
 
         [Dynamic.Unmapped]
-        internal System.Reflection.FieldInfo Field
+        public System.Reflection.FieldInfo Field
             => _field ?? (_field = this.ResolveField(TypeResolver.Instance))
             ?? throw new TypeResolverException($"Failed to resolve field, consider using extension method to specify {nameof(ITypeResolver)}.");
 

@@ -3,6 +3,7 @@
 namespace Aqua.TypeSystem
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Runtime.Serialization;
     using BindingFlags = System.Reflection.BindingFlags;
@@ -30,9 +31,8 @@ namespace Aqua.TypeSystem
             _constructor = constructorInfo;
         }
 
-        // TODO: replace binding flags by bool flags
-        public ConstructorInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes)
-            : base(name, declaringType, bindingFlags, genericArguments, parameterTypes, new TypeInfoProvider())
+        public ConstructorInfo(string name, Type declaringType, IEnumerable<Type>? parameterTypes = null)
+            : base(name, declaringType, null, parameterTypes, new TypeInfoProvider())
         {
         }
 
@@ -43,12 +43,10 @@ namespace Aqua.TypeSystem
 
         public override MemberTypes MemberType => MemberTypes.Constructor;
 
-        internal System.Reflection.ConstructorInfo Constructor
+        public System.Reflection.ConstructorInfo Constructor
             => _constructor ?? (_constructor = this.ResolveConstructor(TypeResolver.Instance))
             ?? throw new TypeResolverException($"Failed to resolve constructor, consider using extension method to specify {nameof(ITypeResolver)}.");
 
         public static explicit operator System.Reflection.ConstructorInfo(ConstructorInfo c) => c.Constructor;
-
-        public override string ToString() => $".ctor {base.ToString()}";
     }
 }

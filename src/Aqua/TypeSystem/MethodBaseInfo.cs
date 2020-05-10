@@ -7,7 +7,6 @@ namespace Aqua.TypeSystem
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
-    using BindingFlags = System.Reflection.BindingFlags;
 
     [Serializable]
     [DataContract(Name = "MethodBase", IsReference = true)]
@@ -22,10 +21,6 @@ namespace Aqua.TypeSystem
         internal MethodBaseInfo(System.Reflection.MethodBase methodInfo, TypeInfoProvider typeInfoProvider)
             : base(methodInfo, typeInfoProvider)
         {
-            var bindingFlags = methodInfo.IsStatic ? BindingFlags.Static : BindingFlags.Instance;
-            bindingFlags |= methodInfo.IsPublic ? BindingFlags.Public : BindingFlags.NonPublic;
-            BindingFlags = bindingFlags;
-
             var genericArguments = methodInfo.IsGenericMethod ? methodInfo.GetGenericArguments() : null;
             GenericArgumentTypes = genericArguments is null || genericArguments.Length == 0
                 ? null
@@ -37,21 +32,18 @@ namespace Aqua.TypeSystem
                 : parameters.Select(x => typeInfoProvider.Get(x.ParameterType, false, false)).ToList();
         }
 
-        // TODO: replace binding flags by bool flags
-        internal MethodBaseInfo(string name, Type declaringType, BindingFlags bindingFlags, Type[] genericArguments, Type[] parameterTypes, TypeInfoProvider typeInfoProvider)
+        internal MethodBaseInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes, TypeInfoProvider typeInfoProvider)
             : this(
             name,
             typeInfoProvider.Get(declaringType, includePropertyInfosOverride: false, setMemberDeclaringTypesOverride: false),
-            bindingFlags,
             genericArguments?.Select(x => typeInfoProvider.Get(x, false, false)),
             parameterTypes?.Select(x => typeInfoProvider.Get(x, false, false)))
         {
         }
 
-        protected MethodBaseInfo(string name, TypeInfo declaringType, BindingFlags bindingFlags, IEnumerable<TypeInfo>? genericArguments, IEnumerable<TypeInfo>? parameterTypes)
+        protected MethodBaseInfo(string name, TypeInfo declaringType, IEnumerable<TypeInfo>? genericArguments, IEnumerable<TypeInfo>? parameterTypes)
             : base(name, declaringType)
         {
-            BindingFlags = bindingFlags;
             GenericArgumentTypes = genericArguments?.ToList();
             ParameterTypes = parameterTypes?.ToList();
         }
@@ -59,20 +51,15 @@ namespace Aqua.TypeSystem
         internal MethodBaseInfo(MethodBaseInfo methodBaseInfo, TypeInfoProvider typeInfoProvider)
             : base(methodBaseInfo, typeInfoProvider)
         {
-            BindingFlags = methodBaseInfo.BindingFlags;
-
             // TODO: why is the dammit operator required!?
             GenericArgumentTypes = methodBaseInfo.GenericArgumentTypes?.Select(typeInfoProvider.Get).ToList() !;
             ParameterTypes = methodBaseInfo.ParameterTypes?.Select(typeInfoProvider.Get).ToList() !;
         }
 
         [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
-        public BindingFlags BindingFlags { get; set; }
-
-        [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
         public List<TypeInfo>? GenericArgumentTypes { get; set; }
 
-        [DataMember(Order = 3, IsRequired = false, EmitDefaultValue = false)]
+        [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
         public List<TypeInfo>? ParameterTypes { get; set; }
 
         public bool IsGenericMethod => GenericArgumentTypes?.Any() ?? false;

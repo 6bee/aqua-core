@@ -65,7 +65,7 @@ namespace Aqua.TypeSystem
         public TypeInfo? PropertyType { get; set; }
 
         [Dynamic.Unmapped]
-        internal System.Reflection.PropertyInfo Property
+        public System.Reflection.PropertyInfo Property
             => _property ?? (_property = this.ResolveProperty(TypeResolver.Instance))
             ?? throw new TypeResolverException($"Failed to resolve property, consider using extension method to specify {nameof(ITypeResolver)}.");
 
