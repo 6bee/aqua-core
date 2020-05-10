@@ -2,42 +2,39 @@
 
 namespace Aqua.TypeSystem.Extensions
 {
-    using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
+    using System.Reflection;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class MemberInfoExtensions
     {
+        private static readonly Dictionary<MemberInfo, BindingFlags> _bindingFlagsCache = new Dictionary<MemberInfo, BindingFlags>();
+
         [return: NotNullIfNotNull("member")]
-        public static MemberTypes? GetMemberType(this System.Reflection.MemberInfo? member)
+        public static Aqua.TypeSystem.MemberTypes? GetMemberType(this MemberInfo? member) => (Aqua.TypeSystem.MemberTypes?)member?.MemberType;
+
+        [return: NotNullIfNotNull("member")]
+        public static BindingFlags? GetBindingFlags(this MemberInfo? member)
         {
             if (member is null)
             {
                 return null;
             }
 
-            if (member is System.Reflection.FieldInfo)
+            lock (_bindingFlagsCache)
             {
-                return MemberTypes.Field;
-            }
+                if (!_bindingFlagsCache.TryGetValue(member, out var bindingFlags))
+                {
+                    bindingFlags = (BindingFlags)member.GetType()
+                        .GetProperty("BindingFlags", BindingFlags.Instance | BindingFlags.NonPublic)
+                        .GetValue(member);
+                    _bindingFlagsCache.Add(member, bindingFlags);
+                }
 
-            if (member is System.Reflection.ConstructorInfo)
-            {
-                return MemberTypes.Constructor;
+                return bindingFlags;
             }
-
-            if (member is System.Reflection.MethodInfo)
-            {
-                return MemberTypes.Method;
-            }
-
-            if (member is System.Reflection.PropertyInfo)
-            {
-                return MemberTypes.Property;
-            }
-
-            throw new Exception($"Unsupported member type: {member.GetType()}");
         }
     }
 }

@@ -3,7 +3,6 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
-    using Aqua.TypeSystem.Extensions;
     using Shouldly;
     using System;
     using System.Globalization;

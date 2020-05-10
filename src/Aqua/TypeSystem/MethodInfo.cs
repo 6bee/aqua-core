@@ -6,7 +6,6 @@ namespace Aqua.TypeSystem
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Runtime.Serialization;
-    using BindingFlags = System.Reflection.BindingFlags;
 
     [Serializable]
     [DataContract(Name = "Method", IsReference = true)]
@@ -57,7 +56,7 @@ namespace Aqua.TypeSystem
 
         public override MemberTypes MemberType => MemberTypes.Method;
 
-        [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
+        [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo? ReturnType { get; set; }
 
         [Dynamic.Unmapped]

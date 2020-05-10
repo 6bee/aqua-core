@@ -56,10 +56,10 @@ namespace Aqua.TypeSystem
             ParameterTypes = methodBaseInfo.ParameterTypes?.Select(typeInfoProvider.Get).ToList() !;
         }
 
-        [DataMember(Order = 1, IsRequired = false, EmitDefaultValue = false)]
+        [DataMember(Order = 5, IsRequired = false, EmitDefaultValue = false)]
         public List<TypeInfo>? GenericArgumentTypes { get; set; }
 
-        [DataMember(Order = 2, IsRequired = false, EmitDefaultValue = false)]
+        [DataMember(Order = 6, IsRequired = false, EmitDefaultValue = false)]
         public List<TypeInfo>? ParameterTypes { get; set; }
 
         public bool IsGenericMethod => GenericArgumentTypes?.Any() ?? false;
@@ -71,7 +71,7 @@ namespace Aqua.TypeSystem
                 "{0}.{1}{3}{4}{5}({2})",
                 DeclaringType,
                 Name,
-                ParameterTypes is null ? null : string.Join(", ", ParameterTypes),
+                string.Join(", ", ParameterTypes ?? Enumerable.Empty<TypeInfo>()),
                 hasGenericArguments ? "<" : null,
                 hasGenericArguments ? string.Join(", ", GenericArgumentTypes) : null,
                 hasGenericArguments ? ">" : null);

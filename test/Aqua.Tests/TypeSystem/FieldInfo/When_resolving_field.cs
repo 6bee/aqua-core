@@ -13,6 +13,8 @@ namespace Aqua.Tests.TypeSystem.FieldInfo
         {
 #pragma warning disable CS0169 // The field is never used
 #pragma warning disable IDE0051 // Remove unused private members
+            private static string staticField;
+
             private string field;
 #pragma warning restore IDE0051 // Remove unused private members
 #pragma warning restore CS0169 // The field is never used
@@ -21,11 +23,8 @@ namespace Aqua.Tests.TypeSystem.FieldInfo
         [Fact]
         public void Should_throw_upon_casting_field_info_for_inexistent_field()
         {
-            var fieldInfo = new FieldInfo("Field", typeof(A));
-            Should.Throw<TypeResolverException>(() =>
-            {
-                _ = (System.Reflection.FieldInfo)fieldInfo;
-            }).Message.ShouldBe("Failed to resolve field, consider using extension method to specify ITypeResolver.");
+            var fieldInfo = new FieldInfo("FIELD", typeof(A));
+            ShouldThrowOnResolve(fieldInfo);
         }
 
         [Fact]
@@ -35,5 +34,26 @@ namespace Aqua.Tests.TypeSystem.FieldInfo
             var field = (System.Reflection.FieldInfo)fieldInfo;
             field.ShouldBeSameAs(typeof(A).GetField("field", BindingFlags.Instance | BindingFlags.NonPublic));
         }
+
+        [Fact]
+        public void Should_resolve_static_field()
+        {
+            var fieldInfo = new FieldInfo("staticField", typeof(A)) { IsStatic = true };
+            var field = (System.Reflection.FieldInfo)fieldInfo;
+            field.ShouldBeSameAs(typeof(A).GetField("staticField", BindingFlags.Static | BindingFlags.NonPublic));
+        }
+
+        [Fact]
+        public void Should_throw_upon_casting_field_info_missing_isstatic_set_to_true_for_static_member()
+        {
+            var fieldInfo = new FieldInfo("staticField", typeof(A));
+            ShouldThrowOnResolve(fieldInfo);
+        }
+
+        private static void ShouldThrowOnResolve(FieldInfo fieldInfo)
+            => Should.Throw<TypeResolverException>(() =>
+            {
+                _ = (System.Reflection.FieldInfo)fieldInfo;
+            }).Message.ShouldBe("Failed to resolve field, consider using extension method to specify ITypeResolver.");
     }
 }

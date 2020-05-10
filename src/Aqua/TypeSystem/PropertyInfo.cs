@@ -61,7 +61,7 @@ namespace Aqua.TypeSystem
 
         public override MemberTypes MemberType => MemberTypes.Property;
 
-        [DataMember(IsRequired = false, EmitDefaultValue = false)]
+        [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo? PropertyType { get; set; }
 
         [Dynamic.Unmapped]

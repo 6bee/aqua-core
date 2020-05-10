@@ -5,7 +5,6 @@ namespace Aqua.TypeSystem
     using Aqua.TypeSystem.Extensions;
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Reflection;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
@@ -23,8 +22,17 @@ namespace Aqua.TypeSystem
 
         internal MemberInfo(System.Reflection.MemberInfo memberInfo, TypeInfoProvider typeInfoProvider)
         {
+            if (memberInfo is null)
+            {
+                throw new ArgumentNullException(nameof(memberInfo));
+            }
+
             Name = memberInfo.Name;
             DeclaringType = typeInfoProvider.Get(memberInfo.DeclaringType, false, false);
+            if (memberInfo.GetBindingFlags().Contains(System.Reflection.BindingFlags.Static))
+            {
+                IsStatic = true;
+            }
         }
 
         protected MemberInfo(string name, TypeInfo? declaringType)
@@ -47,6 +55,9 @@ namespace Aqua.TypeSystem
 
         [DataMember(Order = 2, EmitDefaultValue = false)]
         public TypeInfo? DeclaringType { get; set; }
+
+        [DataMember(Order = 3, EmitDefaultValue = false)]
+        public bool? IsStatic { get; set; }
 
         public static explicit operator System.Reflection.MemberInfo?(MemberInfo? memberInfo) => memberInfo.ResolveMemberInfo(TypeResolver.Instance);
 

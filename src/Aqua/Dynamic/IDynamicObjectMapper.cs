@@ -15,15 +15,7 @@ namespace Aqua.Dynamic
         /// <param name="targetType">Target type for mapping, set this parameter to null if type information included within <see cref="DynamicObject"/> should be used.</param>
         /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
         [return: NotNullIfNotNull("obj")]
-        object? Map(DynamicObject? obj, Type? targetType);
-
-        /// <summary>
-        /// Maps a <see cref="DynamicObject"/> into a collection of objects.
-        /// </summary>
-        /// <param name="obj"><see cref="DynamicObject"/> to be mapped.</param>
-        /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
-        [return: NotNullIfNotNull("obj")]
-        object? Map(DynamicObject? obj);
+        object? Map(DynamicObject? obj, Type? targetType = null);
 
         /// <summary>
         /// Maps a <see cref="DynamicObject"/> into an instance of <typeparamref name="T"/>.

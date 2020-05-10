@@ -2,7 +2,6 @@
 
 namespace Aqua
 {
-    using Aqua.TypeSystem.Extensions;
     using System.Collections.Generic;
     using System.Linq;
     using BindingFlags = System.Reflection.BindingFlags;

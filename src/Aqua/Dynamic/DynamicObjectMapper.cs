@@ -455,28 +455,24 @@ namespace Aqua.Dynamic
         /// Maps a <see cref="DynamicObject"/> into an instance of the actual type represented by the dynamic object.
         /// </summary>
         /// <param name="obj"><see cref="DynamicObject"/> to be mapped.</param>
+        /// <param name="type">Target type for mapping, set this parameter to null if type information included within <see cref="DynamicObject"/> should be used.</param>
         /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
         [return: NotNullIfNotNull("obj")]
-        public object? Map(DynamicObject? obj)
+        public object? Map(DynamicObject? obj, Type? type = null)
         {
             if (obj is null)
             {
                 return null;
             }
 
-            var typeInfo = obj.Type ?? throw new DynamicObjectMapperException("Type property must not be null");
-            var type = typeInfo.ResolveType(_typeResolver);
-            return Map(obj, type);
-        }
+            if (type is null)
+            {
+                var typeInfo = obj.Type ?? throw new DynamicObjectMapperException("Type property must not be null if no target type specified to mapping method.");
+                type = typeInfo.ResolveType(_typeResolver);
+            }
 
-        /// <summary>
-        /// Maps a <see cref="DynamicObject"/> into an instance of the actual type represented by the dynamic object.
-        /// </summary>
-        /// <param name="obj"><see cref="DynamicObject"/> to be mapped.</param>
-        /// <param name="type">Target type for mapping, set this parameter to null if type information included within <see cref="DynamicObject"/> should be used.</param>
-        /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
-        [return: NotNullIfNotNull("obj")]
-        public object? Map(DynamicObject? obj, Type? type) => Wrap(() => MapFromDynamicObjectGraph(obj, type));
+            return Wrap(() => MapFromDynamicObjectGraph(obj, type));
+        }
 
         /// <summary>
         /// Maps a <see cref="DynamicObject"/> into an instance of <typeparamref name="T"/>.

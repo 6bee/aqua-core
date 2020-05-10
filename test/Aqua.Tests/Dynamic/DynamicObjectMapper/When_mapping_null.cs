@@ -4,8 +4,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
     using Shouldly;
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using Xunit;
 

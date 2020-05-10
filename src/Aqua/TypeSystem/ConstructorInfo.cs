@@ -6,13 +6,14 @@ namespace Aqua.TypeSystem
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Runtime.Serialization;
-    using BindingFlags = System.Reflection.BindingFlags;
 
     [Serializable]
     [DataContract(Name = "Constructor", IsReference = true)]
     [DebuggerDisplay("Constructor: {Name,nq}")]
     public class ConstructorInfo : MethodBaseInfo
     {
+        private const string DefaultStaticConstructorName = ".cctor";
+
         [NonSerialized]
         private System.Reflection.ConstructorInfo? _constructor;
 
@@ -34,6 +35,10 @@ namespace Aqua.TypeSystem
         public ConstructorInfo(string name, Type declaringType, IEnumerable<Type>? parameterTypes = null)
             : base(name, declaringType, null, parameterTypes, new TypeInfoProvider())
         {
+            if (string.Equals(name, DefaultStaticConstructorName, StringComparison.Ordinal))
+            {
+                IsStatic = true;
+            }
         }
 
         protected ConstructorInfo(ConstructorInfo constructorInfo)

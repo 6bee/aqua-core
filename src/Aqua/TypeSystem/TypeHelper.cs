@@ -2,7 +2,6 @@
 
 namespace Aqua.TypeSystem
 {
-    using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -164,10 +163,12 @@ namespace Aqua.TypeSystem
                 ?? Array.Empty<Type>();
 
             var constructorName = constructorInfo.Name;
+            var isStatic = constructorInfo.IsStatic ?? false;
             System.Reflection.ConstructorInfo? Filter(System.Reflection.ConstructorInfo[] candidates)
             {
                 var matches = candidates
                     .Where(m => string.Equals(m.Name, constructorName, StringComparison.Ordinal))
+                    .Where(m => m.IsStatic == isStatic)
                     .Where(m => m.GetParameters().Length == parameterTypes.Length)
                     .Where(m =>
                     {
@@ -209,7 +210,10 @@ namespace Aqua.TypeSystem
 
             var declaringType = fieldInfo.ResolveDeclaringType(typeResolver);
             var fieldName = fieldInfo.Name;
-            return bindingFlags => declaringType.GetField(fieldName, bindingFlags);
+            var isStatic = fieldInfo.IsStatic ?? false;
+            return bindingFlags => declaringType
+                .GetField(fieldName, bindingFlags)
+                .If(x => x.IsStatic == isStatic);
         }
 
         private static Func<BindingFlags, System.Reflection.MethodInfo?> CreateMethodResolver(MethodInfo? methodInfo, ITypeResolver typeResolver)
@@ -279,11 +283,13 @@ namespace Aqua.TypeSystem
                 ? i
                 : CountDeclarationDepth(type.BaseType.GetTypeInfo(), methodDeclaringType, i + 1);
 
+            var isStatic = methodInfo.IsStatic ?? false;
             var methodName = methodInfo.Name;
             System.Reflection.MethodInfo? Filter(System.Reflection.MethodInfo[] candidates)
             {
                 var matches = candidates
                     .Where(m => string.Equals(m.Name, methodName, StringComparison.Ordinal))
+                    .Where(m => m.IsStatic == isStatic)
                     .Where(m => parameterTypes is null || m.GetParameters().Length == parameterTypes.Length)
                     .Where(m => m.IsGenericMethod == isGenericMethod)
                     .Where(m => !m.IsGenericMethod || m.GetGenericArguments().Length == genericArguments!.Length)
@@ -335,8 +341,18 @@ namespace Aqua.TypeSystem
 
             var declaringType = propertyInfo.ResolveDeclaringType(typeResolver);
             var propertyName = propertyInfo.Name;
-            return bindingFlags => declaringType.GetProperty(propertyName, bindingFlags);
+            var isStatic = propertyInfo.IsStatic ?? false;
+            return bindingFlags => declaringType
+                .GetProperty(propertyName, bindingFlags)
+                .If(x => (x.GetGetMethod(true) ?? x.GetSetMethod(true)).IsStatic == isStatic);
         }
+
+        /// <summary>
+        /// Returns null if the condition is not met, the actual value otherwise.
+        /// </summary>
+        private static T? If<T>(this T t, Func<T, bool> predicate)
+            where T : class
+            => t != null && predicate(t) ? t : default;
 
         private static Type ResolveDeclaringType(this MemberInfo memberInfo, ITypeResolver typeResolver)
         {

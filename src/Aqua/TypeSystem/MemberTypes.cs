@@ -8,9 +8,9 @@ namespace Aqua.TypeSystem
     [Flags]
     public enum MemberTypes
     {
-        Constructor = 1,
-        Field = 4,
-        Method = 8,
-        Property = 16,
+        Constructor = System.Reflection.MemberTypes.Constructor,
+        Field = System.Reflection.MemberTypes.Field,
+        Method = System.Reflection.MemberTypes.Method,
+        Property = System.Reflection.MemberTypes.Property,
     }
 }

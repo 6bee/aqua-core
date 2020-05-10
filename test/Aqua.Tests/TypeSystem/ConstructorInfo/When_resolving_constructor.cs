@@ -48,10 +48,7 @@ namespace Aqua.Tests.TypeSystem.ConstructorInfo
         public void Should_throw_upon_casting_constructor_info_for_inexistent_constructor()
         {
             var constructorInfo = new ConstructorInfo("Constructor", typeof(A));
-            Should.Throw<TypeResolverException>(() =>
-            {
-                var x = (System.Reflection.ConstructorInfo)constructorInfo;
-            }).Message.ShouldBe("Failed to resolve constructor, consider using extension method to specify ITypeResolver.");
+            ShouldThrowOnResolve(constructorInfo);
         }
 
         [Fact]
@@ -61,6 +58,13 @@ namespace Aqua.Tests.TypeSystem.ConstructorInfo
             var constructor = (System.Reflection.ConstructorInfo)constructorInfo;
             var expected = typeof(A).GetConstructors(BindingFlags.NonPublic | BindingFlags.Static).Single();
             constructor.ShouldBeSameAs(expected);
+        }
+
+        [Fact]
+        public void Should_throw_upon_resolve_type_initializer_missing_isstatic_set_to_true()
+        {
+            var constructorInfo = new ConstructorInfo(".cctor", typeof(A)) { IsStatic = null };
+            ShouldThrowOnResolve(constructorInfo);
         }
 
         [Fact]
@@ -82,5 +86,11 @@ namespace Aqua.Tests.TypeSystem.ConstructorInfo
             var expected = typeof(Subtype<int>).GetConstructor(new[] { typeof(int) });
             constructor.ShouldBeSameAs(expected);
         }
+
+        private static void ShouldThrowOnResolve(ConstructorInfo constructorInfo)
+            => Should.Throw<TypeResolverException>(() =>
+            {
+                _ = (System.Reflection.ConstructorInfo)constructorInfo;
+            }).Message.ShouldBe("Failed to resolve constructor, consider using extension method to specify ITypeResolver.");
     }
 }
