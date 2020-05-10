@@ -52,7 +52,7 @@ namespace Aqua.TypeSystem
                 return typeof(IEnumerable<>).MakeGenericType(type.GetElementType());
             }
 
-            if (type.IsGenericType())
+            if (type.IsGenericType)
             {
                 foreach (var arg in type.GetGenericArguments())
                 {
@@ -77,7 +77,7 @@ namespace Aqua.TypeSystem
                 }
             }
 
-            var baseType = type.GetBaseType();
+            var baseType = type.BaseType;
             if (baseType != null && baseType != typeof(object))
             {
                 return FindIEnumerable(baseType);

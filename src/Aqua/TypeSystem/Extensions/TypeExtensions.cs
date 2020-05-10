@@ -12,8 +12,6 @@ namespace Aqua.TypeSystem.Extensions
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static partial class TypeExtensions
     {
-        public static bool IsClass(this Type type) => type.GetTypeInfo().IsClass;
-
         public static bool IsAnonymousType(this Type type)
             => (type.Name.Contains("AnonymousType")
                 && type.IsDefined<CompilerGeneratedAttribute>())
@@ -28,7 +26,7 @@ namespace Aqua.TypeSystem.Extensions
 
         internal static Type AsNonNullableType(this Type type)
         {
-            var isNullable = type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+            var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
             return isNullable ? type.GetGenericArguments()[0] : type;
         }
 
@@ -46,9 +44,9 @@ namespace Aqua.TypeSystem.Extensions
 
         private static bool Implements(this Type type, Type interfaceType, Type[][] typeArgs)
         {
-            var isAssignableFromSpecifiedInterface = interfaceType.IsGenericTypeDefinition()
+            var isAssignableFromSpecifiedInterface = interfaceType.IsGenericTypeDefinition
                 ? IsAssignableToGenericTypeDefinition(interfaceType, typeArgs)
-                : interfaceType.IsGenericType()
+                : interfaceType.IsGenericType
                 ? IsAssignableToGenericType(interfaceType, typeArgs)
                 : interfaceType.IsAssignableFrom;
 
@@ -63,7 +61,7 @@ namespace Aqua.TypeSystem.Extensions
             return i =>
             {
                 var genericArguments = i.GenericTypeArguments;
-                var isAssignable = i.IsGenericType()
+                var isAssignable = i.IsGenericType
                     && genericArguments.Count() == genericArgumentsCount
                     && interfaceTypeInfo.MakeGenericType(genericArguments).IsAssignableFrom(i);
                 if (isAssignable)
@@ -82,7 +80,7 @@ namespace Aqua.TypeSystem.Extensions
 
             return i =>
             {
-                if (i.IsGenericType() && !i.IsGenericTypeDefinition())
+                if (i.IsGenericType && !i.IsGenericTypeDefinition)
                 {
                     var typeDefinition = i.GetGenericTypeDefinition();
                     if (typeDefinition == interfaceTypeDefinition)
@@ -101,21 +99,6 @@ namespace Aqua.TypeSystem.Extensions
             };
         }
 
-        public static Type GetUnderlyingSystemType(this Type type) => type.UnderlyingSystemType;
-
-        public static bool IsGenericType(this Type type) => type.IsGenericType;
-
-        public static bool IsGenericTypeDefinition(this Type type) => type.IsGenericTypeDefinition;
-
         public static bool IsEnum(this Type type) => type.AsNonNullableType().IsEnum;
-
-        public static bool IsValueType(this Type type) => type.IsValueType;
-
-        public static bool IsSerializable(this Type type) => type.IsSerializable;
-
-        public static Type GetBaseType(this Type type) => type.BaseType;
-
-        public static IEnumerable<MemberInfo> GetMember(this Type type, string name, Aqua.TypeSystem.MemberTypes memberType, BindingFlags bindingFlags)
-            => type.GetMember(name, (MemberTypes)memberType, bindingFlags);
     }
 }

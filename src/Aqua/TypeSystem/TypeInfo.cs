@@ -65,7 +65,7 @@ namespace Aqua.TypeSystem
                     DeclaringType = typeInfoProvider.Get(type.DeclaringType, false, false);
                 }
 
-                IsGenericType = type.IsGenericType();
+                IsGenericType = type.IsGenericType;
 
                 if (IsGenericType && !type.GetTypeInfo().IsGenericTypeDefinition)
                 {

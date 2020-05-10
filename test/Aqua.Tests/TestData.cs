@@ -32,7 +32,7 @@ namespace Aqua.Tests
             .SelectMany(x => new[]
             {
                 x,
-                x.IsClass() ? x : typeof(Nullable<>).MakeGenericType(x),
+                x.IsClass ? x : typeof(Nullable<>).MakeGenericType(x),
             })
             .SelectMany(x => new[]
             {
@@ -114,8 +114,8 @@ namespace Aqua.Tests
             .SelectMany(x => new (Type Type, object Value)[]
             {
                 (x.GetType(), x),
-                (x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
-                (x.GetType().IsClass() ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), null),
+                (x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
+                (x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), null),
             })
             .Distinct()
             .SelectMany(

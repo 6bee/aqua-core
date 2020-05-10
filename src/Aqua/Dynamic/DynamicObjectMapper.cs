@@ -186,7 +186,7 @@ namespace Aqua.Dynamic
                 typeof(System.Numerics.Complex),
                 typeof(byte[]),
             }
-            .SelectMany(x => x.IsValueType() ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
+            .SelectMany(x => x.IsValueType ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
             .ToDictionary(x => x, x => (object?)null).ContainsKey;
 
         private static readonly Dictionary<Type, Dictionary<Type, object?>> _implicitNumericConversionsTable = new Dictionary<Type, Dictionary<Type, object?>>()
@@ -875,7 +875,7 @@ namespace Aqua.Dynamic
         /// </summary>
         private void PopulateObjectMembers(Type type, object from, DynamicObject to, Func<Type, bool> setTypeInformation)
         {
-            if (_utilizeFormatterServices && type.IsSerializable())
+            if (_utilizeFormatterServices && type.IsSerializable)
             {
                 MapObjectMembers(type, from, to, setTypeInformation);
             }
@@ -932,7 +932,7 @@ namespace Aqua.Dynamic
                     return method.CreateDelegate(t, instance);
                 };
             }
-            else if (_utilizeFormatterServices && targetType.IsSerializable())
+            else if (_utilizeFormatterServices && targetType.IsSerializable)
             {
                 factory = (t, item) => GetUninitializedObject(t);
                 initializer = PopulateObjectMembers;
@@ -975,7 +975,7 @@ namespace Aqua.Dynamic
                     };
                     initializer = CreatePropertyInitializer();
                 }
-                else if (targetType.IsValueType())
+                else if (targetType.IsValueType)
                 {
                     factory = (t, item) => Activator.CreateInstance(t);
                     initializer = CreatePropertyInitializer();
@@ -1160,7 +1160,7 @@ namespace Aqua.Dynamic
 
         private static bool IsMatchingDictionary(Type targetType, Type elementType)
         {
-            if (!(targetType.IsGenericType() && elementType.IsGenericType()))
+            if (!(targetType.IsGenericType && elementType.IsGenericType))
             {
                 return false;
             }
@@ -1195,11 +1195,11 @@ namespace Aqua.Dynamic
 
         private static bool IsAssignable(Type targetType, object? value)
         {
-            if (targetType.IsValueType())
+            if (targetType.IsValueType)
             {
                 if (value is null)
                 {
-                    return targetType.IsGenericType()
+                    return targetType.IsGenericType
                         && targetType.GetGenericTypeDefinition() == typeof(Nullable<>);
                 }
 

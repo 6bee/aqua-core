@@ -54,7 +54,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         [Fact]
         public void Emited_type_should_be_non_generic_type()
         {
-            emitedType.IsGenericType().ShouldBeFalse();
+            emitedType.IsGenericType.ShouldBeFalse();
         }
 
         [Fact]

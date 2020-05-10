@@ -35,10 +35,10 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             if (result is null)
             {
-                if (type.IsValueType())
+                if (type.IsValueType)
                 {
                     var message = $"value must not be null for type {type}";
-                    type.IsGenericType().ShouldBeTrue(message);
+                    type.IsGenericType.ShouldBeTrue(message);
                     type.GetGenericTypeDefinition().ShouldBe(typeof(Nullable<>), message);
                 }
             }
@@ -62,10 +62,10 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             if (result is null)
             {
-                if (type.IsValueType())
+                if (type.IsValueType)
                 {
                     var message = $"value must not be null for type {type}";
-                    type.IsGenericType().ShouldBeTrue(message);
+                    type.IsGenericType.ShouldBeTrue(message);
                     type.GetGenericTypeDefinition().ShouldBe(typeof(Nullable<>), message);
                 }
             }

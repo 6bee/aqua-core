@@ -35,7 +35,7 @@ namespace Aqua
                 {
                     var parameters = x.GetParameters();
                     return parameters.Length == 1
-                        && parameters[0].ParameterType.IsGenericType()
+                        && parameters[0].ParameterType.IsGenericType
                         && parameters[0].ParameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>);
                 })
                 .Single();
@@ -47,7 +47,7 @@ namespace Aqua
                 {
                     var parameters = x.GetParameters();
                     return parameters.Length == 1
-                        && parameters[0].ParameterType.IsGenericType()
+                        && parameters[0].ParameterType.IsGenericType
                         && parameters[0].ParameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>);
                 })
                 .Single();
@@ -114,7 +114,7 @@ namespace Aqua
                     }
 
                     var expressionParamType = parameters[1].ParameterType;
-                    if (!expressionParamType.IsGenericType())
+                    if (!expressionParamType.IsGenericType)
                     {
                         return false;
                     }
@@ -125,7 +125,7 @@ namespace Aqua
                         return false;
                     }
 
-                    if (!genericArguments.Single().IsGenericType())
+                    if (!genericArguments.Single().IsGenericType)
                     {
                         return false;
                     }
