@@ -2,6 +2,7 @@
 
 namespace Aqua.Tests.TypeSystem.MethodInfo
 {
+    using Aqua.Tests.Serialization;
     using Aqua.TypeSystem;
     using Shouldly;
     using System.Linq;
@@ -33,6 +34,18 @@ namespace Aqua.Tests.TypeSystem.MethodInfo
             public static string Method() => null;
         }
 
+        public class Overload
+        {
+            public string Method() => null;
+
+            public string Method(string s) => null;
+        }
+
+        public class NonEmptyParameterList
+        {
+            public string Method(string s) => null;
+        }
+
         [Fact]
         public void Should_throw_upon_casting_method_info_for_inexistent_method()
         {
@@ -50,7 +63,7 @@ namespace Aqua.Tests.TypeSystem.MethodInfo
         [Fact]
         public void Should_resolve_method()
         {
-            var methodInfo = new MethodInfo(nameof(A.Method), typeof(A));
+            var methodInfo = new MethodInfo(nameof(A.Method), typeof(A), new[] { typeof(int) });
             var method = (System.Reflection.MethodInfo)methodInfo;
             var expected = typeof(A)
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
@@ -88,7 +101,7 @@ namespace Aqua.Tests.TypeSystem.MethodInfo
         [Fact]
         public void Should_resolve_generic_method()
         {
-            var methodInfo = new MethodInfo(nameof(A.Method), typeof(A), new[] { typeof(byte) });
+            var methodInfo = new MethodInfo(nameof(A.Method), typeof(A), new[] { typeof(byte) }, new[] { typeof(byte) });
             var method = (System.Reflection.MethodInfo)methodInfo;
             var expected = typeof(A)
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
@@ -100,7 +113,7 @@ namespace Aqua.Tests.TypeSystem.MethodInfo
         [Fact]
         public void Should_resolve_method_of_base_type()
         {
-            var methodInfo = new MethodInfo(nameof(A.Method), typeof(Subtype));
+            var methodInfo = new MethodInfo(nameof(A.Method), typeof(Subtype), new[] { typeof(int) });
             var method = (System.Reflection.MethodInfo)methodInfo;
             var expected = typeof(Subtype)
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
@@ -111,7 +124,7 @@ namespace Aqua.Tests.TypeSystem.MethodInfo
         [Fact]
         public void Should_resolve_method_override_of_sub_type()
         {
-            var methodInfo = new MethodInfo(nameof(A.Method), typeof(Subtype), new[] { typeof(byte) });
+            var methodInfo = new MethodInfo(nameof(A.Method), typeof(Subtype), new[] { typeof(byte) }, new[] { typeof(byte) });
             var method = (System.Reflection.MethodInfo)methodInfo;
             var expected = typeof(Subtype)
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
@@ -123,13 +136,46 @@ namespace Aqua.Tests.TypeSystem.MethodInfo
         [Fact]
         public void Should_resolve_method_of_sub_subtype()
         {
-            var methodInfo = new MethodInfo(nameof(A.Method), typeof(SubSubtype), new[] { typeof(byte) });
+            var methodInfo = new MethodInfo(nameof(A.Method), typeof(SubSubtype), new[] { typeof(byte) }, new[] { typeof(byte) });
             var method = (System.Reflection.MethodInfo)methodInfo;
             var expected = typeof(SubSubtype)
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
                 .Single(x => x.Name == nameof(A.Method) && x.IsGenericMethod)
                 .MakeGenericMethod(typeof(byte));
             method.ShouldBeSameAs(expected);
+        }
+
+        [Fact]
+        public void Should_resolve_method_created_by_memberinfo()
+        {
+            var expected = typeof(Overload)
+                .GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .Single(x => x.Name == nameof(Overload.Method) && x.GetParameters().Length == 1);
+
+            var methodInfo = new MethodInfo(expected);
+
+            var methodInfo2 = JsonSerializationHelper.Serialize(methodInfo);
+
+            methodInfo2.Method.ShouldBeSameAs(expected);
+        }
+
+        [Fact]
+        public void Should_resolve_method_created_by_name()
+        {
+            var methodInfo = new MethodInfo(nameof(Overload.Method), typeof(Overload));
+
+            var expected = typeof(Overload)
+                .GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .Single(x => x.Name == nameof(Overload.Method) && x.GetParameters().Length == 0);
+
+            methodInfo.Method.ShouldBeSameAs(expected);
+        }
+
+        [Fact]
+        public void Should_throw_on_resolve_parameterized_method_with_no_parameter_list()
+        {
+            var methodInfo = new MethodInfo(nameof(NonEmptyParameterList.Method), typeof(NonEmptyParameterList));
+            ShouldThrowOnResolve(methodInfo);
         }
 
         private static void ShouldThrowOnResolve(MethodInfo methodInfo, string expectedExceptionMessage = "Failed to resolve method, consider using extension method to specify ITypeResolver.")

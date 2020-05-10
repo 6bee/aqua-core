@@ -2,8 +2,10 @@
 
 namespace Aqua.Tests.TypeSystem.ConstructorInfo
 {
+    using Aqua.Tests.Serialization;
     using Aqua.TypeSystem;
     using Shouldly;
+    using System;
     using System.Linq;
     using Xunit;
     using BindingFlags = System.Reflection.BindingFlags;
@@ -40,6 +42,24 @@ namespace Aqua.Tests.TypeSystem.ConstructorInfo
         {
             public SubSubtype()
                 : base(default)
+            {
+            }
+        }
+
+        public class Overload
+        {
+            public Overload()
+            {
+            }
+
+            public Overload(string s)
+            {
+            }
+        }
+
+        public class NoDefaulConstructor
+        {
+            public NoDefaulConstructor(string s)
             {
             }
         }
@@ -87,10 +107,48 @@ namespace Aqua.Tests.TypeSystem.ConstructorInfo
             constructor.ShouldBeSameAs(expected);
         }
 
+        [Fact]
+        public void Should_resolve_constructor_created_by_memberinfo()
+        {
+            var expected = typeof(Overload).GetConstructor(Array.Empty<Type>());
+            var ctor = new ConstructorInfo(expected);
+            var ctor2 = JsonSerializationHelper.Serialize(ctor);
+            ctor2.Constructor.ShouldBeSameAs(expected);
+        }
+
+        [Fact]
+        public void Should_resolve_default_constructor_created_by_name()
+        {
+            var ctor = new ConstructorInfo(".ctor", typeof(Overload));
+            var expected = typeof(Overload).GetConstructor(Array.Empty<Type>());
+            ctor.Constructor.ShouldBeSameAs(expected);
+        }
+
+        [Fact]
+        public void Should_resolve_default_constructor_created_by_name_with_empty_parameter_list()
+        {
+            var ctor = new ConstructorInfo(".ctor", typeof(Overload), new Type[0]);
+            var expected = typeof(Overload).GetConstructor(Array.Empty<Type>());
+            ctor.Constructor.ShouldBeSameAs(expected);
+        }
+
+        [Fact]
+        public void Should_resolve_default_constructor_created_by_name_with_parameter_list()
+        {
+            var ctor = new ConstructorInfo(".ctor", typeof(Overload), new[] { typeof(string) });
+            var expected = typeof(Overload).GetConstructor(new[] { typeof(string) });
+            ctor.Constructor.ShouldBeSameAs(expected);
+        }
+
+        [Fact]
+        public void Should_throw_on_resolve_non_default_constructor_with_no_parameter_list()
+        {
+            var ctor = new ConstructorInfo(".ctor", typeof(NoDefaulConstructor));
+            ShouldThrowOnResolve(ctor);
+        }
+
         private static void ShouldThrowOnResolve(ConstructorInfo constructorInfo)
-            => Should.Throw<TypeResolverException>(() =>
-            {
-                _ = (System.Reflection.ConstructorInfo)constructorInfo;
-            }).Message.ShouldBe("Failed to resolve constructor, consider using extension method to specify ITypeResolver.");
+            => Should.Throw<TypeResolverException>(() => _ = (System.Reflection.ConstructorInfo)constructorInfo)
+            .Message.ShouldBe("Failed to resolve constructor, consider using extension method to specify ITypeResolver.");
     }
 }

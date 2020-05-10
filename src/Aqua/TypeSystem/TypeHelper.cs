@@ -266,7 +266,8 @@ namespace Aqua.TypeSystem
                         throw CreateException($"parameter type '{typeInfo}' could not be reconstructed", ex);
                     }
                 })
-                .ToArray();
+                .ToArray()
+                ?? Array.Empty<Type>();
 
             Type? returnType;
             try
@@ -290,19 +291,14 @@ namespace Aqua.TypeSystem
                 var matches = candidates
                     .Where(m => string.Equals(m.Name, methodName, StringComparison.Ordinal))
                     .Where(m => m.IsStatic == isStatic)
-                    .Where(m => parameterTypes is null || m.GetParameters().Length == parameterTypes.Length)
+                    .Where(m => m.GetParameters().Length == parameterTypes.Length)
                     .Where(m => m.IsGenericMethod == isGenericMethod)
                     .Where(m => !m.IsGenericMethod || m.GetGenericArguments().Length == genericArguments!.Length)
                     .Select(m => m.IsGenericMethod ? m.MakeGenericMethod(genericArguments) : m)
                     .Where(m =>
                     {
-                        if (parameterTypes is null)
-                        {
-                            return true;
-                        }
-
                         var paramTypes = m.GetParameters();
-                        for (int i = 0; i < parameterTypes.Length; i++)
+                        for (int i = 0; i < paramTypes.Length; i++)
                         {
                             if (paramTypes[i].ParameterType != parameterTypes[i])
                             {

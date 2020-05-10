@@ -32,7 +32,12 @@ namespace Aqua.TypeSystem
             ReturnType = typeInfoProvider.Get(methodInfo?.ReturnType, false, false);
         }
 
-        public MethodInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments = null, IEnumerable<Type>? parameterTypes = null, Type? returnType = null)
+        public MethodInfo(string name, Type declaringType, IEnumerable<Type>? parameterTypes = null, Type? returnType = null)
+            : this(name, declaringType, null, parameterTypes, returnType, new TypeInfoProvider())
+        {
+        }
+
+        public MethodInfo(string name, Type declaringType, IEnumerable<Type> genericArguments, IEnumerable<Type> parameterTypes, Type? returnType = null)
             : this(name, declaringType, genericArguments, parameterTypes, returnType, new TypeInfoProvider())
         {
         }
