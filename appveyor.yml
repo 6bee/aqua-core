@@ -27,7 +27,7 @@ test_script:
   - dotnet test test\Aqua.Tests.VBNet
 
 after_test:
-  - dotnet test .\test\Aqua.Tests\ -f netcoreapp3.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory .\TestResults
+  - dotnet test test\Aqua.Tests -f netcoreapp3.0 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory .\TestResults
   - codecov -f **\coverage.cobertura.xml
 
 build:
