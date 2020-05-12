@@ -1,10 +1,10 @@
 ﻿<Project>
 
   <PropertyGroup>
-    <MajorVersion>4</MajorVersion>
-    <MinorVersion>7</MinorVersion>
+    <MajorVersion>5</MajorVersion>
+    <MinorVersion>0</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-003</PreReleaseLabel>
+    <PreReleaseLabel>alpha-001</PreReleaseLabel>
   </PropertyGroup>
 
   <PropertyGroup>
