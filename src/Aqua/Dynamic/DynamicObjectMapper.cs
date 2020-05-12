@@ -674,12 +674,9 @@ namespace Aqua.Dynamic
                         && parameters[0].ParameterType.IsAssignableFrom(enumerableType);
                 });
 
-                if (!(ctor is null))
-                {
-                    return ctor.Invoke(new[] { r1 });
-                }
-
-                throw new DynamicObjectMapperException($"Failed to project collection with element type {elementType} into type {resultType}");
+                return ctor is null
+                    ? throw new DynamicObjectMapperException($"Failed to project collection with element type {elementType} into type {resultType}")
+                    : ctor.Invoke(new[] { r1 });
             }
 
             if (resultType.IsEnum())
@@ -946,9 +943,9 @@ namespace Aqua.Dynamic
                         };
                     })
                     .OrderByDescending(i => i.ParametersCount == 0 ? int.MaxValue : i.ParametersCount)
-                    .FirstOrDefault(i => i.Parameters.All(p => !(p.Property is null)));
+                    .FirstOrDefault(i => i.Parameters.All(p => p.Property != null));
 
-                if (!(constructor is null))
+                if (constructor != null)
                 {
                     factory = (t, item) =>
                     {

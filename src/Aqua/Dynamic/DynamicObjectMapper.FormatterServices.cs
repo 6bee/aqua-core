@@ -86,7 +86,7 @@ namespace Aqua.Dynamic
             for (int i = 0; i < members.Length; i++)
             {
                 var memberName = GetCleanMemberName(members[i]);
-                if (!(customPropertyNames is null) && !customPropertyNames.ContainsKey(memberName))
+                if (customPropertyNames?.ContainsKey(memberName) == false)
                 {
                     continue;
                 }
@@ -109,7 +109,7 @@ namespace Aqua.Dynamic
             if (member.MemberType != MemberTypes.Property)
             {
                 var property = member.DeclaringType.GetProperty(memberName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                if (!(property is null))
+                if (property != null)
                 {
                     memberName = property.Name;
                 }
