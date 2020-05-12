@@ -16,6 +16,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             public Property(PropertyInfo propertyInfo)
             {
                 PropertyInfo = propertyInfo ?? throw new ArgumentNullException(nameof(propertyInfo));
+                IsIgnored = propertyInfo.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Any();
                 DataMemberAttribute = (DataMemberAttribute?)propertyInfo.GetCustomAttributes(typeof(DataMemberAttribute), false)?.FirstOrDefault();
                 Name = string.IsNullOrWhiteSpace(DataMemberAttribute?.Name) ? propertyInfo.Name : DataMemberAttribute!.Name;
                 EmitDefaultValue = DataMemberAttribute?.EmitDefaultValue == true;
@@ -37,6 +38,8 @@ namespace Aqua.Newtonsoft.Json.Converters
 
             public object? DefaultValue { get; }
 
+            public bool IsIgnored { get; }
+
             public int SortOrder => DataMemberAttribute?.Order ?? 0;
 
             public object? GetValue(object obj) => PropertyInfo.GetValue(obj);
@@ -57,6 +60,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                         .Where(x => x.CanRead && x.CanWrite)
                         .Where(x => x.GetIndexParameters().Length == 0)
                         .Select(x => new Property(x))
+                        .Where(x => !x.IsIgnored)
                         .OrderBy(x => x.SortOrder)
                         .ToList()
                         .AsReadOnly();

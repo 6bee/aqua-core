@@ -4,6 +4,7 @@ namespace Aqua.TypeSystem.Extensions
 {
     using System;
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
@@ -32,7 +33,7 @@ namespace Aqua.TypeSystem.Extensions
         public static bool Implements(this Type type, Type interfaceType) => type.Implements(interfaceType, new Type[1][]);
 
 #pragma warning disable SA1011 // Closing square brackets should be spaced correctly
-        public static bool Implements(this Type type, Type interfaceType, out Type[]? genericTypeArguments)
+        public static bool Implements(this Type type, Type interfaceType, [NotNullWhen(true)] out Type[]? genericTypeArguments)
 #pragma warning restore SA1011 // Closing square brackets should be spaced correctly
         {
             var typeArgs = new Type[1][];

@@ -18,7 +18,7 @@ namespace Aqua.Dynamic
         /// <param name="objects">Collection of <see cref="DynamicObject" /> to be mapped.</param>
         /// <param name="type">Target type for mapping, set this parameter to null if type information included within individual <see cref="DynamicObject" />s should be used.</param>
         /// <returns>Collection of objects created based on the <see cref="DynamicObject" />s specified.</returns>
-        public static IEnumerable Map(this IDynamicObjectMapper objectMapper, IEnumerable<DynamicObject>? objects, Type? type = null)
+        public static IEnumerable Map(this IDynamicObjectMapper objectMapper, IEnumerable<DynamicObject?> objects, Type? type = null)
         {
             if (objectMapper is null)
             {
@@ -30,12 +30,13 @@ namespace Aqua.Dynamic
                 throw new ArgumentNullException(nameof(objects));
             }
 
-            IEnumerable<object> source = objects.Select(x => objectMapper.Map(x, type));
+            IEnumerable<object?> source = objects.Select(x => objectMapper.Map(x, type));
             return type is null || type == typeof(object)
                 ? source.ToArray()
                 : (IEnumerable)DynamicObjectMapper.CastCollectionToArrayOfType(type, source);
         }
 
+#nullable disable
         /// <summary>
         /// Maps a collection of <see cref="DynamicObject" />s into a collection of <typeparamref name="T" />.
         /// </summary>
@@ -44,15 +45,7 @@ namespace Aqua.Dynamic
         /// <param name="objects">Collection of <see cref="DynamicObject" />s to be mapped.</param>
         /// <returns>Collection of <typeparamref name="T" /> created based on the <see cref="DynamicObject" />s specified.</returns>
         public static IEnumerable<T> Map<T>(this IDynamicObjectMapper objectMapper, IEnumerable<DynamicObject> objects)
-        {
-            if (objectMapper is null)
-            {
-                throw new ArgumentNullException(nameof(objectMapper));
-            }
-
-            return objects
-                .Select(objectMapper.Map<T>)
-                .ToList();
-        }
+            => (IEnumerable<T>)objectMapper.Map(objects, typeof(T));
+#nullable restore
     }
 }

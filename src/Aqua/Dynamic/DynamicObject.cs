@@ -102,7 +102,7 @@ namespace Aqua.Dynamic
 
             var dynamicObject = (mapper ?? new DynamicObjectMapper()).MapObject(obj);
             Type = dynamicObject?.Type;
-            Properties = dynamicObject?.Properties;
+            Properties = dynamicObject?.Properties ?? new PropertySet();
         }
 
         /// <summary>
@@ -116,19 +116,10 @@ namespace Aqua.Dynamic
             var type = dynamicObject.Type;
             Type = type is null ? null : new TypeInfo(type);
 
-            var properties = dynamicObject.Properties;
-            if (properties is null)
-            {
-                Properties = null;
-            }
-            else if (deepCopy)
-            {
-                Properties = new PropertySet(properties.Select(x => new Property(x)));
-            }
-            else
-            {
-                Properties = new PropertySet(properties);
-            }
+            var properties = dynamicObject.Properties ?? throw new ArgumentException($"Dynamic object must not have {nameof(Properties)} set to null.", nameof(dynamicObject));
+            Properties = deepCopy
+                ? new PropertySet(properties.Select(x => new Property(x)))
+                : new PropertySet(properties);
         }
 
         public event PropertyChangingEventHandler? PropertyChanging;
@@ -142,7 +133,7 @@ namespace Aqua.Dynamic
         public TypeInfo? Type { get; set; }
 
         [DataMember(Order = 2)]
-        public PropertySet? Properties { get; set; }
+        public PropertySet Properties { get; set; } = null!;
 
         /// <summary>
         /// Gets the count of members (dynamically added properties) hold by this dynamic object.

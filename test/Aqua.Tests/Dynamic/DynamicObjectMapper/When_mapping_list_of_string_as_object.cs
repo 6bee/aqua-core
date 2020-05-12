@@ -8,13 +8,13 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
     using System.Linq;
     using Xunit;
 
-    public class When_mapping_list_of_string
+    public class When_mapping_list_of_string_as_object
     {
         private readonly DynamicObject dynamicObject;
 
-        public When_mapping_list_of_string()
+        public When_mapping_list_of_string_as_object()
         {
-            dynamicObject = DynamicObject.Create(new List<string> { "One", "Two" });
+            dynamicObject = new DynamicObjectMapper().MapObject(new List<string> { "One", null });
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             var items = dynamicObject.Values.Single().ShouldBeOfType<object[]>();
             items[0].ShouldBe("One");
-            items[1].ShouldBe("Two");
+            items[1].ShouldBeNull();
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             var list = dynamicObject.CreateObject().ShouldBeOfType<List<string>>();
             list[0].ShouldBe("One");
-            list[1].ShouldBe("Two");
+            list[1].ShouldBeNull();
         }
     }
 }

@@ -24,9 +24,9 @@ namespace Aqua.Dynamic
         {
         }
 
-        public Property(string? name, object? value)
+        public Property(string name, object? value)
         {
-            Name = name ?? string.Empty;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
             Value = value;
         }
 
@@ -41,7 +41,7 @@ namespace Aqua.Dynamic
         }
 
         [DataMember(Order = 1)]
-        public string? Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [DataMember(Order = 2)]
         public object? Value { get; set; }

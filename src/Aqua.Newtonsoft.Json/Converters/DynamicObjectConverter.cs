@@ -118,7 +118,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                     reader.AssertStartObject(false);
 
                     reader.AssertProperty(nameof(DynamicProperty.Name));
-                    var name = reader.ReadAsString();
+                    var name = reader.ReadAsString() ?? throw reader.CreateException("Property name must not be null");
 
                     reader.AssertProperty(nameof(Type));
                     var type = reader.Read<TypeInfo?>(serializer);

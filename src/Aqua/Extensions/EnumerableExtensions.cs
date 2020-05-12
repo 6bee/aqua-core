@@ -3,9 +3,11 @@
 namespace Aqua.Extensions
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -194,6 +196,21 @@ namespace Aqua.Extensions
 
                 return hashCode;
             }
+        }
+
+        /// <summary>
+        /// Returns true if the object is of type <see cref="IEnumerable"/> but not <see cref="string"/>.
+        /// </summary>
+        internal static bool IsCollection(this object? obj, [NotNullWhen(true)] out IEnumerable? enumerable)
+        {
+            if (obj is IEnumerable x && !(obj is string))
+            {
+                enumerable = x;
+                return true;
+            }
+
+            enumerable = null;
+            return false;
         }
     }
 }

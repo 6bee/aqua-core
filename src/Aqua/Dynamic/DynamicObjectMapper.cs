@@ -2,6 +2,7 @@
 
 namespace Aqua.Dynamic
 {
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using Aqua.TypeSystem.Extensions;
     using Aqua.Utils;
@@ -410,7 +411,7 @@ namespace Aqua.Dynamic
         /// <param name="typeInfoProvider">Provides a hook for mapping type information when mapping to <see cref="DynamicObject"/>.</param>
         /// <param name="settings">Optional settings for dynamic object mapping.</param>
         /// <param name="isKnownTypeProvider">Optional instance to decide whether a type requires to be mapped into a <see cref="DynamicObject"/>, know types do not get mapped.</param>
-        public DynamicObjectMapper(ITypeResolver typeResolver, ITypeInfoProvider typeInfoProvider, DynamicObjectMapperSettings? settings = null, IIsKnownTypeProvider? isKnownTypeProvider = null)
+        public DynamicObjectMapper(ITypeResolver? typeResolver, ITypeInfoProvider? typeInfoProvider, DynamicObjectMapperSettings? settings = null, IIsKnownTypeProvider? isKnownTypeProvider = null)
             : this(settings, typeResolver, null, new InternalDynamicObjectFactory(typeInfoProvider), isKnownTypeProvider)
         {
         }
@@ -501,7 +502,7 @@ namespace Aqua.Dynamic
                 // cast
                 enumerable = x;
             }
-            else if (IsCollection(obj, out var collection))
+            else if (obj.IsCollection(out var collection))
             {
                 enumerable = collection
                     .Cast<object>()
@@ -619,7 +620,7 @@ namespace Aqua.Dynamic
             }
 
             var objectType = obj.GetType();
-            if (objectType == resultType && !IsCollection(obj, out _))
+            if (objectType == resultType && !obj.IsCollection(out _))
             {
                 return obj;
             }
@@ -634,7 +635,7 @@ namespace Aqua.Dynamic
                 return obj is string str ? ParseToNativeType(resultType.AsNonNullableType(), str) : obj;
             }
 
-            if (IsCollection(obj, out var collection))
+            if (obj.IsCollection(out var collection))
             {
                 var elementType = TypeHelper.GetElementType(resultType) !;
                 var items = collection
@@ -701,18 +702,6 @@ namespace Aqua.Dynamic
             return obj;
         }
 
-        private static bool IsCollection(object obj, [NotNullWhen(true)] out System.Collections.IEnumerable? enumerable)
-        {
-            if (obj is System.Collections.IEnumerable x && !(obj is string))
-            {
-                enumerable = x;
-                return true;
-            }
-
-            enumerable = null;
-            return false;
-        }
-
         /// <summary>
         /// Maps an object to a dynamic object.
         /// </summary>
@@ -744,7 +733,7 @@ namespace Aqua.Dynamic
                     return dynamicObject;
                 };
             }
-            else if (IsCollection(obj, out var collection) && !ShouldMapToDynamicObject(collection))
+            else if (obj.IsCollection(out var collection) && !ShouldMapToDynamicObject(collection))
             {
                 facotry = (t, o, f) =>
                 {

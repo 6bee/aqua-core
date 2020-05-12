@@ -98,7 +98,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             ? result
             : throw reader.CreateException("Unexpected token structure.");
 
-        public static bool TryRead(this JsonReader reader, TypeInfo type, JsonSerializer serializer, out object? result)
+        public static bool TryRead(this JsonReader reader, TypeInfo? type, JsonSerializer serializer, out object? result)
             => reader.TryRead(type.MapTypeInfo(), serializer, out result);
 
         public static bool TryRead(this JsonReader reader, Type? type, JsonSerializer serializer, out object? result)
