@@ -72,8 +72,8 @@ namespace Aqua.TypeSystem.Emit
             // define type
             var type = _module.DefineType(fullName, TypeAttributes.Public | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.Sealed, typeof(object));
 
-            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(EmittedTypeAttribute).GetConstructor(new Type[0]), new object[0]));
-            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(CompilerGeneratedAttribute).GetConstructor(new Type[0]), new object[0]));
+            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(EmittedTypeAttribute).GetConstructor(Array.Empty<Type>()), Array.Empty<object>()));
+            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(CompilerGeneratedAttribute).GetConstructor(Array.Empty<Type>()), Array.Empty<object>()));
 
             // define fields
             var fields = propertyInfos
@@ -132,8 +132,8 @@ namespace Aqua.TypeSystem.Emit
             // define type
             var type = _module.DefineType(fullName, TypeAttributes.Public | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.Sealed, typeof(object));
 
-            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(EmittedTypeAttribute).GetConstructor(new Type[0]), new object[0]));
-            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(CompilerGeneratedAttribute).GetConstructor(new Type[0]), new object[0]));
+            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(EmittedTypeAttribute).GetConstructor(Array.Empty<Type>()), Array.Empty<object>()));
+            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(CompilerGeneratedAttribute).GetConstructor(Array.Empty<Type>()), Array.Empty<object>()));
 
             // define generic parameters
             var genericTypeParameterNames = propertyNames.Select((x, i) => $"T{i}").ToArray();
