@@ -131,6 +131,9 @@ namespace Aqua.TypeSystem.Emit
                 .Select((x, i) => type.DefineField($"_{x}", genericTypeParameters[i], FieldAttributes.Private | FieldAttributes.InitOnly))
                 .ToArray();
 
+            // define constructor parameter names
+            var parameterNames = propertyNames.ToArray();
+
             // define constructor
             var constructor = type.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, genericTypeParameters.Cast<Type>().ToArray());
             var objectCtor = typeof(object).GetConstructor(Type.EmptyTypes);
@@ -142,6 +145,7 @@ namespace Aqua.TypeSystem.Emit
                 il.Emit(OpCodes.Ldarg_0);
                 il.Emit(OpCodes.Ldarg, i + 1);
                 il.Emit(OpCodes.Stfld, fields[i]);
+                constructor.DefineParameter(i + 1, ParameterAttributes.None, parameterNames[i]);
             }
 
             il.Emit(OpCodes.Ret);
