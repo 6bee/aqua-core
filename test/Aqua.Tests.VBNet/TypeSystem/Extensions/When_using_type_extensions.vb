@@ -2,7 +2,7 @@
 Imports Shouldly
 Imports Xunit
 
-Namespace Aqua.Test.TypeSystem.Extensions
+Namespace Aqua.Tests.TypeSystem.Extensions
     Public Class When_using_type_extensions
         Private Class CustomType
         End Class

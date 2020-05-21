@@ -3,7 +3,7 @@ Imports Aqua.TypeSystem.Extensions
 Imports Shouldly
 Imports Xunit
 
-Namespace Aqua.Test.TypeSystem.Extensions
+Namespace Aqua.Tests.TypeSystem.Extensions
     Public Class When_creating_constructor_info
         Private Class A
         End Class
