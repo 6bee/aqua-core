@@ -27,22 +27,14 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             public DataContractSerializer() : base(DataContractSerializationHelper.Serialize) { }
         }
 
-#pragma warning disable SA1512 // Single-line comments should not be followed by blank line
-
-        // NOTE: XML serialization doesn't support circular references
-        // public class XmlSerializer : When_serializing_dynamic_object
-        // {
-        //     public XmlSerializer() : base(XmlSerializationHelper.Serialize) { }
-        // }
-
-#pragma warning restore SA1512 // Single-line comments should not be followed by blank line
-
         public class BinaryFormatter : When_serializing_dynamic_object
         {
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
 
-#if NET
+        // XML serialization doesn't support circular references
+        // protobuf-net serialization doesn't support circular references
+#if NETFX
         public class NetDataContractSerializer : When_serializing_dynamic_object
         {
             public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }

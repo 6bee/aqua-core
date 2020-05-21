@@ -37,12 +37,19 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
 
-#if NET
+#if NETFX
         public class NetDataContractSerializer : When_serializing_dynamicobject_for_collections
         {
             public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
         }
 #endif
+
+#if COREFX
+        public class ProtobufNetSerializer : When_serializing_dynamicobject_for_collections
+        {
+            public ProtobufNetSerializer() : base(ProtobufNetSerializationHelper.Serialize) { }
+        }
+#endif // COREFX
 
 #pragma warning restore SA1502 // Element should not be on a single line
 #pragma warning restore SA1128 // Put constructor initializers on their own line
@@ -99,6 +106,15 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             var enumerable = new EnumerableProxy<int?>(new int?[] { null, 1, 22, 333 });
             var resurrected = Roundtrip(enumerable);
             resurrected.SequenceEqual(enumerable);
+        }
+
+        [Fact]
+        public void Should_roundtrip_array()
+        {
+            var enumerable = new int?[] { null, 1, 22, 333 };
+            var resurrected = Roundtrip(enumerable);
+            resurrected.SequenceEqual(enumerable);
+            resurrected.ShouldBeOfType<int?[]>();
         }
 
         [Fact]

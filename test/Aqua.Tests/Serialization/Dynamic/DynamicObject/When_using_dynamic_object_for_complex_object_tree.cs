@@ -32,12 +32,20 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
 
-#if NET
+#if NETFX
         public class NetDataContractSerializer : When_using_dynamic_object_for_complex_object_tree
         {
             public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
         }
 #endif
+
+#if COREFX
+        // TODO: figure out issue
+        // public class ProtobufNetSerializer : When_using_dynamic_object_for_complex_object_tree
+        // {
+        //     public ProtobufNetSerializer() : base(ProtobufNetSerializationHelper.Serialize) { }
+        // }
+#endif // COREFX
 
 #pragma warning restore SA1502 // Element should not be on a single line
 #pragma warning restore SA1128 // Put constructor initializers on their own line

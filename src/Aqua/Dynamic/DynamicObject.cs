@@ -91,17 +91,15 @@ namespace Aqua.Dynamic
         /// representing the object structure defined by the specified object.
         /// </summary>
         /// <param name="obj">The object to be represented by the new dynamic object.</param>
+        /// <param name="type">Optional type information to be stored. If this argument is null, The value's type is stored instead.</param>
         /// <param name="mapper">Optional instance of dynamic object mapper.</param>
         /// <exception cref="ArgumentNullException">The specified object is null.</exception>
-        public DynamicObject(object obj, IDynamicObjectMapper? mapper = null)
+        public DynamicObject(object obj, Type? type = null, IDynamicObjectMapper? mapper = null)
         {
-            if (obj is null)
-            {
-                throw new ArgumentNullException(nameof(obj));
-            }
-
             var dynamicObject = (mapper ?? new DynamicObjectMapper()).MapObject(obj);
-            Type = dynamicObject?.Type;
+            Type = type is null
+                ? dynamicObject?.Type
+                : new TypeInfo(type, false, false);
             Properties = dynamicObject?.Properties ?? new PropertySet();
         }
 
@@ -159,6 +157,8 @@ namespace Aqua.Dynamic
         {
             get => TryGet(name, out var value)
                 ? value
+                : name.Length == 0
+                ? (object?)null
                 : throw new Exception($"Member not found for name '{name}'");
             set => Set(name, value);
         }
@@ -253,6 +253,11 @@ namespace Aqua.Dynamic
         /// <returns>True is the dynamic object contains a member with the specified name; otherwise false.</returns>
         public bool TryGet(string name, out object? value)
         {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             var properties = Properties;
             if (properties is null)
             {

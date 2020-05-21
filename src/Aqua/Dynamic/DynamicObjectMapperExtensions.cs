@@ -2,6 +2,7 @@
 
 namespace Aqua.Dynamic
 {
+    using Aqua.Extensions;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace Aqua.Dynamic
             IEnumerable<object?> source = objects.Select(x => objectMapper.Map(x, type));
             return type is null || type == typeof(object)
                 ? source.ToArray()
-                : (IEnumerable)DynamicObjectMapper.CastCollectionToArrayOfType(type, source);
+                : source.CastCollectionToArrayOfType(type);
         }
 
 #nullable disable

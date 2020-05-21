@@ -37,9 +37,14 @@ namespace Aqua.TypeSystem.Extensions
 #pragma warning restore SA1011 // Closing square brackets should be spaced correctly
         {
             var typeArgs = new Type[1][];
-            var implements = type.Implements(interfaceType, typeArgs);
-            genericTypeArguments = implements ? typeArgs[0] : null;
-            return implements;
+            if (type.Implements(interfaceType, typeArgs))
+            {
+                genericTypeArguments = typeArgs[0];
+                return true;
+            }
+
+            genericTypeArguments = null;
+            return false;
         }
 
         private static bool Implements(this Type type, Type interfaceType, Type[][] typeArgs)

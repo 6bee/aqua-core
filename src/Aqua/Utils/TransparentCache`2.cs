@@ -2,6 +2,7 @@
 
 namespace Aqua.Utils
 {
+    using Aqua.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -90,10 +91,11 @@ namespace Aqua.Utils
         {
             lock (_cache)
             {
-                foreach (var iten in _cache.Where(x => !x.Value.IsAlive).ToArray())
-                {
-                    _cache.Remove(iten.Key);
-                }
+                _cache
+                    .Where(x => !x.Value.IsAlive)
+                    .Select(x => x.Key)
+                    .ToArray()
+                    .ForEach(_cache.Remove);
             }
         }
     }

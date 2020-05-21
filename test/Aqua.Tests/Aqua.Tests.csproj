@@ -3,7 +3,6 @@
   <PropertyGroup>
     <Description>Tests for aqua-core</Description>
     <TargetFrameworks>net48;netcoreapp3.0</TargetFrameworks>
-    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +10,10 @@
     <ProjectReference Include="..\..\src\Aqua.Newtonsoft.Json\Aqua.Newtonsoft.Json.csproj" />
     <ProjectReference Include="..\Aqua.Tests.TestObjects1\Aqua.Tests.TestObjects1.csproj" />
     <ProjectReference Include="..\Aqua.Tests.TestObjects2\Aqua.Tests.TestObjects2.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+    <ProjectReference Include="..\..\src\Aqua.protobuf-net\Aqua.protobuf-net.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,8 +31,12 @@
     </PackageReference>
   </ItemGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+    <DefineConstants>$(DefineConstants);COREFX</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net48' ">
-    <DefineConstants>$(DefineConstants);NET</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETFX</DefineConstants>
   </PropertyGroup>
 
 </Project>

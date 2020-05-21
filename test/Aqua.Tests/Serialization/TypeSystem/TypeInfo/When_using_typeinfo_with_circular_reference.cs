@@ -10,6 +10,36 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 
     public abstract partial class When_using_typeinfo_with_circular_reference
     {
+#pragma warning disable SA1128 // Put constructor initializers on their own line
+#pragma warning disable SA1502 // Element should not be on a single line
+
+        public class BinaryFormatter : When_using_typeinfo_with_circular_reference
+        {
+            public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
+        }
+
+        public class DataContractSerializer : When_using_typeinfo_with_circular_reference
+        {
+            public DataContractSerializer() : base(DataContractSerializationHelper.Serialize) { }
+        }
+
+        public class JsonSerializer : When_using_typeinfo_with_circular_reference
+        {
+            public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
+        }
+
+        // XmlSerializer doesn't support circular references
+        // protobuf-net doesn't support circular references
+#if NETFX
+        public class NetDataContractSerializer : When_using_typeinfo_with_circular_reference
+        {
+            public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
+        }
+#endif // NETFX
+
+#pragma warning restore SA1502 // Element should not be on a single line
+#pragma warning restore SA1128 // Put constructor initializers on their own line
+
         private class A
         {
             public A SelfReference { get; set; }

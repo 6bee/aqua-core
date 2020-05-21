@@ -21,15 +21,15 @@ namespace Aqua.TypeSystem
         {
         }
 
-        public ConstructorInfo(System.Reflection.ConstructorInfo constructorInfo)
-            : this(constructorInfo, new TypeInfoProvider())
+        public ConstructorInfo(System.Reflection.ConstructorInfo constructor)
+            : this(constructor, new TypeInfoProvider())
         {
         }
 
-        internal ConstructorInfo(System.Reflection.ConstructorInfo constructorInfo, TypeInfoProvider typeInfoProvider)
-            : base(constructorInfo, typeInfoProvider)
+        internal ConstructorInfo(System.Reflection.ConstructorInfo constructor, TypeInfoProvider typeInfoProvider)
+            : base(constructor, typeInfoProvider)
         {
-            _constructor = constructorInfo;
+            _constructor = constructor;
         }
 
         public ConstructorInfo(string name, Type declaringType, IEnumerable<Type>? parameterTypes = null)
@@ -41,8 +41,8 @@ namespace Aqua.TypeSystem
             }
         }
 
-        protected ConstructorInfo(ConstructorInfo constructorInfo)
-            : base(constructorInfo, new TypeInfoProvider())
+        protected ConstructorInfo(ConstructorInfo constructor)
+            : base(constructor, new TypeInfoProvider())
         {
         }
 

@@ -138,7 +138,6 @@ namespace Aqua.Tests
                 x.Culture,
             });
 
-        // NOTE: NativeValueLists don't work with json.net since list element types don't get corrected by NativeValueInspector
         public static IEnumerable<object[]> NativeValueLists
             => GenerateTestValueSet()
             .Select(x => new[]

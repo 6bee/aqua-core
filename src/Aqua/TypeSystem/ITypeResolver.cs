@@ -7,7 +7,7 @@ namespace Aqua.TypeSystem
 
     public interface ITypeResolver
     {
-        [return: NotNullIfNotNull("typeInfo")]
-        Type? ResolveType(TypeInfo? typeInfo);
+        [return: NotNullIfNotNull("type")]
+        Type? ResolveType(TypeInfo? type);
     }
 }

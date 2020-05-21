@@ -2,6 +2,7 @@
 
 namespace Aqua.TypeSystem
 {
+    using Aqua.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -85,35 +86,35 @@ namespace Aqua.TypeSystem
             return null;
         }
 
-        [return: NotNullIfNotNull("typeInfo")]
-        public static Type? ResolveType(this TypeInfo? typeInfo, ITypeResolver typeResolver) => typeResolver.ResolveType(typeInfo);
+        [return: NotNullIfNotNull("type")]
+        public static Type? ResolveType(this TypeInfo? type, ITypeResolver typeResolver) => typeResolver.ResolveType(type);
 
-        public static System.Reflection.MemberInfo? ResolveMemberInfo(this MemberInfo? memberInfo, ITypeResolver typeResolver)
-            => memberInfo?.MemberType switch
+        public static System.Reflection.MemberInfo? ResolveMemberInfo(this MemberInfo? member, ITypeResolver typeResolver)
+            => member?.MemberType switch
             {
                 null => null,
-                MemberTypes.Field => ((FieldInfo)memberInfo).ResolveField(typeResolver),
-                MemberTypes.Constructor => ((ConstructorInfo)memberInfo).ResolveConstructor(typeResolver),
-                MemberTypes.Property => ((PropertyInfo)memberInfo).ResolveProperty(typeResolver),
-                MemberTypes.Method => ((MethodInfo)memberInfo).ResolveMethod(typeResolver),
-                _ => throw new ArgumentException($"Unknown member type: {memberInfo.MemberType}"),
+                MemberTypes.Field => ((FieldInfo)member).ResolveField(typeResolver),
+                MemberTypes.Constructor => ((ConstructorInfo)member).ResolveConstructor(typeResolver),
+                MemberTypes.Property => ((PropertyInfo)member).ResolveProperty(typeResolver),
+                MemberTypes.Method => ((MethodInfo)member).ResolveMethod(typeResolver),
+                _ => throw new ArgumentException($"Unknown member type: {member.MemberType}"),
             };
 
-        public static System.Reflection.ConstructorInfo? ResolveConstructor(this ConstructorInfo? constructorInfo, ITypeResolver typeResolver)
-            => CreateConstructorResolver(constructorInfo, typeResolver)(Any);
+        public static System.Reflection.ConstructorInfo? ResolveConstructor(this ConstructorInfo? constructor, ITypeResolver typeResolver)
+            => CreateConstructorResolver(constructor, typeResolver)(Any);
 
-        public static System.Reflection.ConstructorInfo? ResolveConstructor(this ConstructorInfo? constructorInfo, ITypeResolver typeResolver, BindingFlags bindingFlags)
-            => CreateConstructorResolver(constructorInfo, typeResolver)(bindingFlags);
+        public static System.Reflection.ConstructorInfo? ResolveConstructor(this ConstructorInfo? constructor, ITypeResolver typeResolver, BindingFlags bindingFlags)
+            => CreateConstructorResolver(constructor, typeResolver)(bindingFlags);
 
-        public static System.Reflection.FieldInfo? ResolveField(this FieldInfo? fieldInfo, ITypeResolver typeResolver)
+        public static System.Reflection.FieldInfo? ResolveField(this FieldInfo? field, ITypeResolver typeResolver)
         {
-            var fieldResolver = CreateFieldResolver(fieldInfo, typeResolver);
+            var fieldResolver = CreateFieldResolver(field, typeResolver);
             return fieldResolver(Any | BindingFlags.DeclaredOnly)
                 ?? fieldResolver(Any);
         }
 
-        public static System.Reflection.FieldInfo? ResolveField(this FieldInfo? fieldInfo, ITypeResolver typeResolver, BindingFlags bindingAttr)
-            => CreateFieldResolver(fieldInfo, typeResolver)(bindingAttr);
+        public static System.Reflection.FieldInfo? ResolveField(this FieldInfo? field, ITypeResolver typeResolver, BindingFlags bindingAttr)
+            => CreateFieldResolver(field, typeResolver)(bindingAttr);
 
         public static System.Reflection.MethodInfo? ResolveMethod(this MethodInfo? methodInfo, ITypeResolver typeResolver)
         {
@@ -122,32 +123,34 @@ namespace Aqua.TypeSystem
                 ?? methodResolver(Any);
         }
 
-        public static System.Reflection.MethodInfo? ResolveMethod(this MethodInfo? methodInfo, ITypeResolver typeResolver, BindingFlags bindingflags)
-            => CreateMethodResolver(methodInfo, typeResolver)(bindingflags);
+        public static System.Reflection.MethodInfo? ResolveMethod(this MethodInfo? method, ITypeResolver typeResolver, BindingFlags bindingflags)
+            => CreateMethodResolver(method, typeResolver)(bindingflags);
 
-        public static System.Reflection.PropertyInfo? ResolveProperty(this PropertyInfo? propertyInfo, ITypeResolver typeResolver)
+        public static System.Reflection.PropertyInfo? ResolveProperty(this PropertyInfo? property, ITypeResolver typeResolver)
         {
-            var propertyResolver = CreatePropertyResolver(propertyInfo, typeResolver);
+            var propertyResolver = CreatePropertyResolver(property, typeResolver);
             return propertyResolver(Any | BindingFlags.DeclaredOnly)
                 ?? propertyResolver(Any);
         }
 
-        public static System.Reflection.PropertyInfo? ResolveProperty(this PropertyInfo? propertyInfo, ITypeResolver typeResolver, BindingFlags bindingAttr)
-            => CreatePropertyResolver(propertyInfo, typeResolver)(bindingAttr);
+        public static System.Reflection.PropertyInfo? ResolveProperty(this PropertyInfo? property, ITypeResolver typeResolver, BindingFlags bindingAttr)
+            => CreatePropertyResolver(property, typeResolver)(bindingAttr);
 
-        private static Func<BindingFlags, System.Reflection.ConstructorInfo?> CreateConstructorResolver(ConstructorInfo? constructorInfo, ITypeResolver typeResolver)
+        private static Func<BindingFlags, System.Reflection.ConstructorInfo?> CreateConstructorResolver(ConstructorInfo? constructor, ITypeResolver typeResolver)
         {
-            if (constructorInfo is null)
+            if (constructor is null)
             {
                 return _ => null;
             }
 
             Exception CreateException(string reason, Exception? innerException = null)
-                => new TypeResolverException($"Failed to resolve constructor '{constructorInfo}' since {reason}.");
+                => new TypeResolverException($"Failed to resolve constructor '{constructor}' since {reason}.");
 
-            var declaringType = constructorInfo.ResolveDeclaringType(typeResolver);
+            var declaringType = constructor.ResolveDeclaringType(typeResolver);
 
-            var parameterTypes = constructorInfo.ParameterTypes?
+            Type[] parameterTypes = constructor
+                .ParameterTypes
+                .AsEmptyIfNull()
                 .Select(typeInfo =>
                 {
                     try
@@ -159,11 +162,10 @@ namespace Aqua.TypeSystem
                         throw CreateException($"parameter type '{typeInfo}' could not be reconstructed", ex);
                     }
                 })
-                .ToArray()
-                ?? Array.Empty<Type>();
+                .ToArray();
 
-            var constructorName = constructorInfo.Name;
-            var isStatic = constructorInfo.IsStatic ?? false;
+            var constructorName = constructor.Name;
+            var isStatic = constructor.IsStatic ?? false;
             System.Reflection.ConstructorInfo? Filter(System.Reflection.ConstructorInfo[] candidates)
             {
                 var matches = candidates
@@ -201,39 +203,39 @@ namespace Aqua.TypeSystem
             return bindingflags => Filter(declaringType.GetConstructors(bindingflags));
         }
 
-        private static Func<BindingFlags, System.Reflection.FieldInfo?> CreateFieldResolver(FieldInfo? fieldInfo, ITypeResolver typeResolver)
+        private static Func<BindingFlags, System.Reflection.FieldInfo?> CreateFieldResolver(FieldInfo? field, ITypeResolver typeResolver)
         {
-            if (fieldInfo is null)
+            if (field is null)
             {
                 return _ => null;
             }
 
-            var declaringType = fieldInfo.ResolveDeclaringType(typeResolver);
-            var fieldName = fieldInfo.Name;
-            var isStatic = fieldInfo.IsStatic ?? false;
+            var declaringType = field.ResolveDeclaringType(typeResolver);
+            var fieldName = field.Name;
+            var isStatic = field.IsStatic ?? false;
             return bindingFlags => declaringType
                 .GetField(fieldName, bindingFlags)
                 .If(x => x.IsStatic == isStatic);
         }
 
-        private static Func<BindingFlags, System.Reflection.MethodInfo?> CreateMethodResolver(MethodInfo? methodInfo, ITypeResolver typeResolver)
+        private static Func<BindingFlags, System.Reflection.MethodInfo?> CreateMethodResolver(MethodInfo? method, ITypeResolver typeResolver)
         {
-            if (methodInfo is null)
+            if (method is null)
             {
                 return _ => null;
             }
 
             Exception CreateException(string reason, Exception? innerException = null)
-                => new TypeResolverException($"Failed to resolve method '{methodInfo}' since {reason}.");
+                => new TypeResolverException($"Failed to resolve method '{method}' since {reason}.");
 
-            var declaringType = methodInfo.ResolveDeclaringType(typeResolver);
+            var declaringType = method.ResolveDeclaringType(typeResolver);
             if (declaringType is null)
             {
                 throw CreateException("no declaring type specified");
             }
 
-            var isGenericMethod = methodInfo.IsGenericMethod;
-            var genericArguments = methodInfo.GenericArgumentTypes?
+            var isGenericMethod = method.IsGenericMethod;
+            var genericArguments = method.GenericArgumentTypes?
                 .Select(typeInfo =>
                 {
                     try
@@ -253,7 +255,9 @@ namespace Aqua.TypeSystem
                 throw CreateException("open generic method type is not supported");
             }
 
-            var parameterTypes = methodInfo.ParameterTypes?
+            Type[] parameterTypes = method
+                .ParameterTypes
+                .AsEmptyIfNull()
                 .Select(typeInfo =>
                 {
                     try
@@ -266,17 +270,16 @@ namespace Aqua.TypeSystem
                         throw CreateException($"parameter type '{typeInfo}' could not be reconstructed", ex);
                     }
                 })
-                .ToArray()
-                ?? Array.Empty<Type>();
+                .ToArray();
 
             Type? returnType;
             try
             {
-                returnType = typeResolver.ResolveType(methodInfo.ReturnType);
+                returnType = typeResolver.ResolveType(method.ReturnType);
             }
             catch (Exception ex)
             {
-                throw CreateException($"return type '{methodInfo.ReturnType}' could not be reconstructed", ex);
+                throw CreateException($"return type '{method.ReturnType}' could not be reconstructed", ex);
             }
 
             int CountDeclarationDepth(System.Reflection.TypeInfo type, System.Reflection.TypeInfo methodDeclaringType, int i)
@@ -284,8 +287,8 @@ namespace Aqua.TypeSystem
                 ? i
                 : CountDeclarationDepth(type.BaseType.GetTypeInfo(), methodDeclaringType, i + 1);
 
-            var isStatic = methodInfo.IsStatic ?? false;
-            var methodName = methodInfo.Name;
+            var isStatic = method.IsStatic ?? false;
+            var methodName = method.Name;
             System.Reflection.MethodInfo? Filter(System.Reflection.MethodInfo[] candidates)
             {
                 var matches = candidates
@@ -328,16 +331,16 @@ namespace Aqua.TypeSystem
             return bindingflags => Filter(declaringType.GetMethods(bindingflags));
         }
 
-        private static Func<BindingFlags, System.Reflection.PropertyInfo?> CreatePropertyResolver(PropertyInfo? propertyInfo, ITypeResolver typeResolver)
+        private static Func<BindingFlags, System.Reflection.PropertyInfo?> CreatePropertyResolver(PropertyInfo? property, ITypeResolver typeResolver)
         {
-            if (propertyInfo is null)
+            if (property is null)
             {
                 return _ => null;
             }
 
-            var declaringType = propertyInfo.ResolveDeclaringType(typeResolver);
-            var propertyName = propertyInfo.Name;
-            var isStatic = propertyInfo.IsStatic ?? false;
+            var declaringType = property.ResolveDeclaringType(typeResolver);
+            var propertyName = property.Name;
+            var isStatic = property.IsStatic ?? false;
             return bindingFlags => declaringType
                 .GetProperty(propertyName, bindingFlags)
                 .If(x => (x.GetGetMethod(true) ?? x.GetSetMethod(true)).IsStatic == isStatic);
@@ -350,23 +353,23 @@ namespace Aqua.TypeSystem
             where T : class
             => t != null && predicate(t) ? t : default;
 
-        private static Type ResolveDeclaringType(this MemberInfo memberInfo, ITypeResolver typeResolver)
+        private static Type ResolveDeclaringType(this MemberInfo member, ITypeResolver typeResolver)
         {
             Exception CreateException(string what, Exception? innerException = null)
-                => new TypeResolverException($"{what} for {memberInfo.MemberType.ToString().ToLower()} {memberInfo}", innerException);
+                => new TypeResolverException($"{what} for {member.MemberType.ToString().ToLower()} {member}", innerException);
 
-            if (memberInfo.DeclaringType is null)
+            if (member.DeclaringType is null)
             {
                 throw CreateException("No declaring type specified");
             }
 
             try
             {
-                return typeResolver.ResolveType(memberInfo.DeclaringType);
+                return typeResolver.ResolveType(member.DeclaringType);
             }
             catch (Exception ex)
             {
-                throw CreateException($"Declaring type '{memberInfo.DeclaringType}' could not be reconstructed", ex);
+                throw CreateException($"Declaring type '{member.DeclaringType}' could not be reconstructed", ex);
             }
         }
     }

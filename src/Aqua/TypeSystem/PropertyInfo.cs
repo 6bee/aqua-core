@@ -2,6 +2,7 @@
 
 namespace Aqua.TypeSystem
 {
+    using Aqua.Dynamic;
     using System;
     using System.Diagnostics;
     using System.Runtime.Serialization;
@@ -12,15 +13,15 @@ namespace Aqua.TypeSystem
     public class PropertyInfo : MemberInfo
     {
         [NonSerialized]
-        [Dynamic.Unmapped]
+        [Unmapped]
         private System.Reflection.PropertyInfo? _property;
 
         public PropertyInfo()
         {
         }
 
-        public PropertyInfo(System.Reflection.PropertyInfo propertyInfo)
-            : this(propertyInfo, new TypeInfoProvider())
+        public PropertyInfo(System.Reflection.PropertyInfo property)
+            : this(property, new TypeInfoProvider())
         {
         }
 
@@ -35,23 +36,23 @@ namespace Aqua.TypeSystem
             PropertyType = propertyType;
         }
 
-        protected PropertyInfo(PropertyInfo propertyInfo)
-            : base(propertyInfo, new TypeInfoProvider())
+        protected PropertyInfo(PropertyInfo property)
+            : base(property, new TypeInfoProvider())
         {
         }
 
-        internal PropertyInfo(PropertyInfo propertyInfo, TypeInfoProvider typeInfoProvider)
-            : base(propertyInfo, typeInfoProvider)
+        internal PropertyInfo(PropertyInfo property, TypeInfoProvider typeInfoProvider)
+            : base(property, typeInfoProvider)
         {
-            PropertyType = typeInfoProvider.Get(propertyInfo.PropertyType);
-            _property = propertyInfo._property;
+            PropertyType = typeInfoProvider.Get(property.PropertyType);
+            _property = property._property;
         }
 
-        internal PropertyInfo(System.Reflection.PropertyInfo propertyInfo, TypeInfoProvider typeInfoProvider)
-            : base(propertyInfo, typeInfoProvider)
+        internal PropertyInfo(System.Reflection.PropertyInfo property, TypeInfoProvider typeInfoProvider)
+            : base(property, typeInfoProvider)
         {
-            _property = propertyInfo;
-            PropertyType = typeInfoProvider.Get(propertyInfo.PropertyType, false, false);
+            _property = property;
+            PropertyType = typeInfoProvider.Get(property.PropertyType, false, false);
         }
 
         private PropertyInfo(string propertyName, Type propertyType, Type declaringType, TypeInfoProvider typeInfoProvider)
@@ -64,7 +65,7 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo? PropertyType { get; set; }
 
-        [Dynamic.Unmapped]
+        [Unmapped]
         public System.Reflection.PropertyInfo Property
             => _property ?? (_property = this.ResolveProperty(TypeResolver.Instance))
             ?? throw new TypeResolverException($"Failed to resolve property, consider using extension method to specify {nameof(ITypeResolver)}.");

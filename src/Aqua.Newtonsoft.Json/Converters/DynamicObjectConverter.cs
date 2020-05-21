@@ -3,12 +3,12 @@
 namespace Aqua.Newtonsoft.Json.Converters
 {
     using Aqua.Dynamic;
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using global::Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using static Aqua.Dynamic.DynamicObjectMapper;
     using DynamicProperty = Aqua.Dynamic.Property;
 
     public class DynamicObjectConverter : ObjectConverter<DynamicObject>
@@ -85,7 +85,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                     elementType = typeof(string);
                 }
 
-                var valueArray = CastCollectionToArrayOfType(elementType, values);
+                var valueArray = values.CastCollectionToArrayOfType(elementType);
                 SetResult(new[] { new DynamicProperty(string.Empty, valueArray) });
                 return;
             }

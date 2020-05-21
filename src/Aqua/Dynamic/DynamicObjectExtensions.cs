@@ -3,7 +3,10 @@
 namespace Aqua.Dynamic
 {
     using System;
+    using System.ComponentModel;
+    using System.Linq;
 
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static class DynamicObjectExtensions
     {
         /// <summary>
@@ -32,5 +35,8 @@ namespace Aqua.Dynamic
         /// <param name="mapper">Optional instance of dynamic object mapper.</param>
         public static T CreateObject<T>(this DynamicObject dynamicObject, IDynamicObjectMapper? mapper = null)
             => (mapper ?? new DynamicObjectMapper()).Map<T>(dynamicObject);
+
+        internal static bool IsSingleValueWrapper(this DynamicObject item)
+            => item.PropertyCount == 1 && string.IsNullOrEmpty(item.PropertyNames.Single());
     }
 }

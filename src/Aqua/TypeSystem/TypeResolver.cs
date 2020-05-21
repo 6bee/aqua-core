@@ -2,6 +2,7 @@
 
 namespace Aqua.TypeSystem
 {
+    using Aqua.Extensions;
     using Aqua.Utils;
     using System;
     using System.Collections.Generic;
@@ -46,11 +47,9 @@ namespace Aqua.TypeSystem
                 return null;
             }
 
-            var cacheKey = string.Join(
-                " ",
-                Enumerable.Repeat(typeInfo.FullName, 1).Concat(
-                    typeInfo.Properties?.Select(p => p.Name)
-                    ?? Enumerable.Empty<string>()));
+            var cacheKey = Enumerable.Repeat(typeInfo.FullName, 1)
+                .Concat(typeInfo.Properties?.Select(p => p.Name) ?? Enumerable.Empty<string>())
+                .StringJoin(" ");
 
             var type = _typeCache.GetOrCreate(cacheKey, _ => ResolveTypeInternal(typeInfo));
 

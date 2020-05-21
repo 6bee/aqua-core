@@ -2,9 +2,11 @@
 
 namespace Aqua.Dynamic
 {
+    using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Numerics;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
 
@@ -15,9 +17,9 @@ namespace Aqua.Dynamic
     [KnownType(typeof(string)), XmlInclude(typeof(string))]
     [KnownType(typeof(string[])), XmlInclude(typeof(string[]))]
     [KnownType(typeof(DateTimeOffset)), XmlInclude(typeof(DateTimeOffset))]
-    [KnownType(typeof(System.Numerics.BigInteger)), XmlInclude(typeof(System.Numerics.BigInteger))]
-    [KnownType(typeof(System.Numerics.Complex)), XmlInclude(typeof(System.Numerics.Complex))]
-    [DebuggerDisplay("{Name} = {Value}")]
+    [KnownType(typeof(BigInteger)), XmlInclude(typeof(BigInteger))]
+    [KnownType(typeof(Complex)), XmlInclude(typeof(Complex))]
+    [DebuggerDisplay("{Name,nq}: {Value}")]
     public class Property
     {
         public Property()
@@ -40,7 +42,7 @@ namespace Aqua.Dynamic
         {
         }
 
-        [DataMember(Order = 1)]
+        [DataMember(Order = 1, IsRequired = true)]
         public string Name { get; set; } = null!;
 
         [DataMember(Order = 2)]

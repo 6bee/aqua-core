@@ -65,9 +65,9 @@ Blog restoredBlog = new DynamicObjectMapper().Map(dynamicObject) as Blog;
 [10]: https://www.codefactor.io/repository/github/6bee/aqua-core
 [11]: https://img.shields.io/github/license/6bee/aqua-core.svg
 [12]: https://github.com/6bee/aqua-core/blob/master/license.txt
-[13]: https://buildstats.info/nuget/aqua-core?includePreReleases=true
+[13]: https://buildstats.info/nuget/aqua-core
 [14]: https://www.nuget.org/packages/aqua-core
-[15]: https://buildstats.info/nuget/aqua-core-newtonsoft-json?includePreReleases=true
+[15]: https://buildstats.info/nuget/aqua-core-newtonsoft-json
 [16]: https://www.nuget.org/packages/aqua-core-newtonsoft-json
 [17]: https://img.shields.io/myget/aqua/vpre/aqua-core.svg?style=flat-square&label=myget
 [18]: https://www.myget.org/feed/aqua/package/nuget/aqua-core

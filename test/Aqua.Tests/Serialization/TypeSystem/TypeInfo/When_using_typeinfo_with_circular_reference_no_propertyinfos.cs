@@ -9,6 +9,64 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 
     public abstract partial class When_using_typeinfo_with_circular_reference_no_propertyinfos
     {
+#pragma warning disable SA1128 // Put constructor initializers on their own line
+#pragma warning disable SA1502 // Element should not be on a single line
+
+        public class BinaryFormatter : When_using_typeinfo_with_circular_reference_no_propertyinfos
+        {
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
+        }
+
+        public class DataContractSerializer : When_using_typeinfo_with_circular_reference_no_propertyinfos
+        {
+            public DataContractSerializer()
+                : base(DataContractSerializationHelper.Serialize)
+            {
+            }
+        }
+
+        public class JsonSerializer : When_using_typeinfo_with_circular_reference_no_propertyinfos
+        {
+            public JsonSerializer()
+                : base(JsonSerializationHelper.Serialize)
+            {
+            }
+        }
+
+#if NETFX
+        public class NetDataContractSerializer : When_using_typeinfo_with_circular_reference_no_propertyinfos
+        {
+            public NetDataContractSerializer()
+                : base(NetDataContractSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // NETFX
+
+#if COREFX
+        public class ProtobufNetSerializer : When_using_typeinfo_with_circular_reference_no_propertyinfos
+        {
+            public ProtobufNetSerializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // COREFX
+
+        public class XmlSerializer : When_using_typeinfo_with_circular_reference_no_propertyinfos
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.Serialize)
+            {
+            }
+        }
+
+#pragma warning restore SA1502 // Element should not be on a single line
+#pragma warning restore SA1128 // Put constructor initializers on their own line
+
         private abstract class A
         {
             public int Number { get; set; }

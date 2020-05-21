@@ -2,6 +2,7 @@
 
 namespace Aqua.TypeSystem
 {
+    using Aqua.Dynamic;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -13,23 +14,23 @@ namespace Aqua.TypeSystem
     public class MethodInfo : MethodBaseInfo
     {
         [NonSerialized]
-        [Dynamic.Unmapped]
+        [Unmapped]
         private System.Reflection.MethodInfo? _method;
 
         public MethodInfo()
         {
         }
 
-        public MethodInfo(System.Reflection.MethodInfo methodInfo)
-            : this(methodInfo, new TypeInfoProvider())
+        public MethodInfo(System.Reflection.MethodInfo method)
+            : this(method, new TypeInfoProvider())
         {
         }
 
-        internal MethodInfo(System.Reflection.MethodInfo methodInfo, TypeInfoProvider typeInfoProvider)
-            : base(methodInfo, typeInfoProvider)
+        internal MethodInfo(System.Reflection.MethodInfo method, TypeInfoProvider typeInfoProvider)
+            : base(method, typeInfoProvider)
         {
-            _method = methodInfo;
-            ReturnType = typeInfoProvider.Get(methodInfo?.ReturnType, false, false);
+            _method = method;
+            ReturnType = typeInfoProvider.Get(method?.ReturnType, false, false);
         }
 
         public MethodInfo(string name, Type declaringType, IEnumerable<Type>? parameterTypes = null, Type? returnType = null)
@@ -54,8 +55,8 @@ namespace Aqua.TypeSystem
             ReturnType = returnType;
         }
 
-        protected MethodInfo(MethodInfo methodInfo)
-            : base(methodInfo, new TypeInfoProvider())
+        protected MethodInfo(MethodInfo method)
+            : base(method, new TypeInfoProvider())
         {
         }
 
@@ -64,7 +65,7 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo? ReturnType { get; set; }
 
-        [Dynamic.Unmapped]
+        [Unmapped]
         public System.Reflection.MethodInfo Method
             => _method ?? (_method = this.ResolveMethod(TypeResolver.Instance))
             ?? throw new TypeResolverException($"Failed to resolve method, consider using extension method to specify {nameof(ITypeResolver)}.");

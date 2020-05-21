@@ -118,21 +118,21 @@ namespace Aqua.TypeSystem.Emit
 
             public override int GetHashCode() => _hash.Value;
 
-            [return: NotNullIfNotNull("propertyInfo")]
-            private static Tuple<string, Type>? CreatePropertyInfo(PropertyInfo? propertyInfo)
+            [return: NotNullIfNotNull("property")]
+            private static Tuple<string, Type>? CreatePropertyInfo(PropertyInfo? property)
             {
-                if (propertyInfo is null)
+                if (property is null)
                 {
                     return null;
                 }
 
-                var propertyName = propertyInfo.Name;
+                var propertyName = property.Name;
                 if (string.IsNullOrEmpty(propertyName))
                 {
                     throw new ArgumentException("Property name missing");
                 }
 
-                var propertyTypeInfo = propertyInfo.PropertyType;
+                var propertyTypeInfo = property.PropertyType;
                 if (propertyTypeInfo is null)
                 {
                     throw new ArgumentException($"Property type missing for property '{propertyName}'");

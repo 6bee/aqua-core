@@ -2,6 +2,7 @@
 
 namespace Aqua.TypeSystem
 {
+    using Aqua.Dynamic;
     using Aqua.TypeSystem.Extensions;
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -20,16 +21,16 @@ namespace Aqua.TypeSystem
         {
         }
 
-        internal MemberInfo(System.Reflection.MemberInfo memberInfo, TypeInfoProvider typeInfoProvider)
+        internal MemberInfo(System.Reflection.MemberInfo member, TypeInfoProvider typeInfoProvider)
         {
-            if (memberInfo is null)
+            if (member is null)
             {
-                throw new ArgumentNullException(nameof(memberInfo));
+                throw new ArgumentNullException(nameof(member));
             }
 
-            Name = memberInfo.Name;
-            DeclaringType = typeInfoProvider.Get(memberInfo.DeclaringType, false, false);
-            if (memberInfo.GetBindingFlags().Contains(System.Reflection.BindingFlags.Static))
+            Name = member.Name;
+            DeclaringType = typeInfoProvider.Get(member.DeclaringType, false, false);
+            if (member.GetBindingFlags().Contains(System.Reflection.BindingFlags.Static))
             {
                 IsStatic = true;
             }
@@ -41,13 +42,13 @@ namespace Aqua.TypeSystem
             DeclaringType = declaringType;
         }
 
-        internal MemberInfo(MemberInfo memberInfo, TypeInfoProvider typeInfoProvider)
+        internal MemberInfo(MemberInfo member, TypeInfoProvider typeInfoProvider)
         {
-            Name = memberInfo.Name;
-            DeclaringType = typeInfoProvider.Get(memberInfo.DeclaringType);
+            Name = member.Name;
+            DeclaringType = typeInfoProvider.Get(member.DeclaringType);
         }
 
-        [Dynamic.Unmapped]
+        [Unmapped]
         public abstract MemberTypes MemberType { get; }
 
         [DataMember(Order = 1, EmitDefaultValue = false)]
@@ -59,23 +60,23 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 3, EmitDefaultValue = false)]
         public bool? IsStatic { get; set; }
 
-        public static explicit operator System.Reflection.MemberInfo?(MemberInfo? memberInfo) => memberInfo.ResolveMemberInfo(TypeResolver.Instance);
+        public static explicit operator System.Reflection.MemberInfo?(MemberInfo? member) => member.ResolveMemberInfo(TypeResolver.Instance);
 
         public override string ToString() => $"{DeclaringType}.{Name}";
 
-        [return: NotNullIfNotNull("memberInfo")]
-        public static MemberInfo? Create(System.Reflection.MemberInfo? memberInfo) => Create(memberInfo, new TypeInfoProvider());
+        [return: NotNullIfNotNull("member")]
+        public static MemberInfo? Create(System.Reflection.MemberInfo? member) => Create(member, new TypeInfoProvider());
 
-        [return: NotNullIfNotNull("memberInfo")]
-        internal static MemberInfo? Create(System.Reflection.MemberInfo? memberInfo, TypeInfoProvider typeInfoProvider)
-            => memberInfo.GetMemberType() switch
+        [return: NotNullIfNotNull("member")]
+        internal static MemberInfo? Create(System.Reflection.MemberInfo? member, TypeInfoProvider typeInfoProvider)
+            => member.GetMemberType() switch
             {
                 null => null,
-                MemberTypes.Field => new FieldInfo((System.Reflection.FieldInfo)memberInfo!, typeInfoProvider),
-                MemberTypes.Constructor => new ConstructorInfo((System.Reflection.ConstructorInfo)memberInfo!, typeInfoProvider),
-                MemberTypes.Property => new PropertyInfo((System.Reflection.PropertyInfo)memberInfo!, typeInfoProvider),
-                MemberTypes.Method => new MethodInfo((System.Reflection.MethodInfo)memberInfo!, typeInfoProvider),
-                _ => throw new Exception($"Unsupported member type: {memberInfo.GetMemberType()}"),
+                MemberTypes.Field => new FieldInfo((System.Reflection.FieldInfo)member!, typeInfoProvider),
+                MemberTypes.Constructor => new ConstructorInfo((System.Reflection.ConstructorInfo)member!, typeInfoProvider),
+                MemberTypes.Property => new PropertyInfo((System.Reflection.PropertyInfo)member!, typeInfoProvider),
+                MemberTypes.Method => new MethodInfo((System.Reflection.MethodInfo)member!, typeInfoProvider),
+                _ => throw new Exception($"Unsupported member type: {member.GetMemberType()}"),
             };
     }
 }

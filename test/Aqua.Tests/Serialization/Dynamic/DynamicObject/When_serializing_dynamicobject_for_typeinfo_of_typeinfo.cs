@@ -24,18 +24,14 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
         }
 
-#pragma warning disable SA1512 // Single-line comments should not be followed by blank line
-
-        // XML serialization doesn't support circular references
-
-#pragma warning restore SA1512 // Single-line comments should not be followed by blank line
-
         public class BinaryFormatter : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
 
-#if NET
+        // XML serialization doesn't support circular references
+        // protobuf-net doesn't support circular references
+#if NETFX
         public class NetDataContractSerializer : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {
             public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }

@@ -2,6 +2,8 @@
 
 namespace Aqua.TypeSystem
 {
+    using Aqua.Dynamic;
+    using Aqua.Extensions;
     using Aqua.TypeSystem.Extensions;
     using System;
     using System.Collections.Generic;
@@ -21,7 +23,7 @@ namespace Aqua.TypeSystem
         private static readonly Regex _arrayNameRegex = new Regex(@"^.*\[,*\]$");
 
         [NonSerialized]
-        [Dynamic.Unmapped]
+        [Unmapped]
         private Type? _type;
 
         public TypeInfo()
@@ -107,9 +109,7 @@ namespace Aqua.TypeSystem
             Name = typeInfo.Name;
             Namespace = typeInfo.Namespace;
             DeclaringType = typeInfo.DeclaringType is null ? null : typeInfoProvider.Get(typeInfo.DeclaringType);
-
-            // TODO: why is the dammit operator required!?
-            GenericArguments = typeInfo.GenericArguments?.Select(typeInfoProvider.Get).ToList() !;
+            GenericArguments = typeInfo.GenericArguments?.Select(x => typeInfoProvider.Get(x)).ToList();
             IsGenericType = typeInfo.IsGenericType;
             IsAnonymousType = typeInfo.IsAnonymousType;
             Properties = typeInfo.Properties?.Select(x => new PropertyInfo(x, typeInfoProvider)).ToList();
@@ -137,10 +137,13 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
         public List<PropertyInfo>? Properties { get; set; }
 
+        [Unmapped]
         public bool IsNested => DeclaringType != null;
 
+        [Unmapped]
         public bool IsGenericTypeDefinition => !GenericArguments?.Any() ?? true;
 
+        [Unmapped]
         public bool IsArray
         {
             get
@@ -150,29 +153,33 @@ namespace Aqua.TypeSystem
             }
         }
 
-        [Dynamic.Unmapped]
+        [Unmapped]
         public string FullName
             => IsNested
                 ? $"{DeclaringType!.FullName}+{Name}"
                 : $"{Namespace}{(string.IsNullOrEmpty(Namespace) ? null : ".")}{Name}";
 
+        [Unmapped]
+        internal string NameWithoutNameSpace
+            => IsNested
+                ? $"{DeclaringType!.NameWithoutNameSpace}+{Name}"
+                : Name ?? string.Empty;
+
         /// <summary>
         /// Gets <see cref="Type"/> by resolving this <see cref="TypeInfo"/> instance using the default <see cref="TypeResolver"/>.
         /// </summary>
-        [Dynamic.Unmapped]
+        [Unmapped]
         public Type Type => _type ?? (_type = this.ResolveType(TypeResolver.Instance));
 
-        public static explicit operator Type(TypeInfo t)
-            => t.Type;
+        public static explicit operator Type?(TypeInfo? t) => t?.Type;
 
-        public override string ToString()
-            => $"{FullName}{GetGenericArgumentsString()}";
+        public override string ToString() => $"{FullName}{GetGenericArgumentsString()}";
 
-        private string? GetGenericArgumentsString()
+        internal string? GetGenericArgumentsString()
         {
             var genericArguments = GenericArguments;
             var genericArgumentsString = IsGenericType && (genericArguments?.Any() ?? false)
-                ? $"[{string.Join(",", genericArguments)}]"
+                ? $"[{genericArguments.StringJoin(",")}]"
                 : null;
             return genericArgumentsString;
         }

@@ -2,6 +2,7 @@
 
 namespace Aqua.TypeSystem
 {
+    using Aqua.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -18,18 +19,19 @@ namespace Aqua.TypeSystem
         {
         }
 
-        internal MethodBaseInfo(System.Reflection.MethodBase methodInfo, TypeInfoProvider typeInfoProvider)
-            : base(methodInfo, typeInfoProvider)
+        internal MethodBaseInfo(System.Reflection.MethodBase method, TypeInfoProvider typeInfoProvider)
+            : base(method, typeInfoProvider)
         {
-            var genericArguments = methodInfo.IsGenericMethod ? methodInfo.GetGenericArguments() : null;
-            GenericArgumentTypes = genericArguments is null || genericArguments.Length == 0
-                ? null
-                : genericArguments.Select(x => typeInfoProvider.Get(x, false, false)).ToList();
-
-            var parameters = methodInfo.GetParameters();
-            ParameterTypes = parameters.Length == 0
-                ? null
-                : parameters.Select(x => typeInfoProvider.Get(x.ParameterType, false, false)).ToList();
+            var genericArguments = method.IsGenericMethod ? method.GetGenericArguments() : null;
+            GenericArgumentTypes = genericArguments
+                .AsNullIfEmpty()?
+                .Select(x => typeInfoProvider.Get(x, false, false))
+                .ToList();
+            ParameterTypes = method
+                .GetParameters()
+                .AsNullIfEmpty()?
+                .Select(x => typeInfoProvider.Get(x.ParameterType, false, false))
+                .ToList();
         }
 
         internal MethodBaseInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes, TypeInfoProvider typeInfoProvider)
@@ -44,16 +46,25 @@ namespace Aqua.TypeSystem
         protected MethodBaseInfo(string name, TypeInfo declaringType, IEnumerable<TypeInfo>? genericArguments, IEnumerable<TypeInfo>? parameterTypes)
             : base(name, declaringType)
         {
-            GenericArgumentTypes = genericArguments?.ToList();
-            ParameterTypes = parameterTypes?.ToList();
+            GenericArgumentTypes = genericArguments
+                .AsNullIfEmpty()?
+                .ToList();
+            ParameterTypes = parameterTypes
+                .AsNullIfEmpty()?
+                .ToList();
         }
 
-        internal MethodBaseInfo(MethodBaseInfo methodBaseInfo, TypeInfoProvider typeInfoProvider)
-            : base(methodBaseInfo, typeInfoProvider)
+        internal MethodBaseInfo(MethodBaseInfo method, TypeInfoProvider typeInfoProvider)
+            : base(method, typeInfoProvider)
         {
-            // TODO: why is the dammit operator required!?
-            GenericArgumentTypes = methodBaseInfo.GenericArgumentTypes?.Select(typeInfoProvider.Get).ToList() !;
-            ParameterTypes = methodBaseInfo.ParameterTypes?.Select(typeInfoProvider.Get).ToList() !;
+            GenericArgumentTypes = method.GenericArgumentTypes
+                .AsNullIfEmpty()?
+                .Select(x => typeInfoProvider.Get(x))
+                .ToList();
+            ParameterTypes = method.ParameterTypes
+                .AsNullIfEmpty()?
+                .Select(x => typeInfoProvider.Get(x))
+                .ToList();
         }
 
         [DataMember(Order = 5, IsRequired = false, EmitDefaultValue = false)]
@@ -71,9 +82,9 @@ namespace Aqua.TypeSystem
                 "{0}.{1}{3}{4}{5}({2})",
                 DeclaringType,
                 Name,
-                string.Join(", ", ParameterTypes ?? Enumerable.Empty<TypeInfo>()),
+                ParameterTypes.StringJoin(", "),
                 hasGenericArguments ? "<" : null,
-                hasGenericArguments ? string.Join(", ", GenericArgumentTypes) : null,
+                GenericArgumentTypes.StringJoin(", "),
                 hasGenericArguments ? ">" : null);
         }
     }

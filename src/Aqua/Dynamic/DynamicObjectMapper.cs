@@ -7,6 +7,7 @@ namespace Aqua.Dynamic
     using Aqua.TypeSystem.Extensions;
     using Aqua.Utils;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -14,6 +15,7 @@ namespace Aqua.Dynamic
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
+    using static Aqua.Dynamic.UnmappedAttributeHelper;
     using ConstructorInfo = System.Reflection.ConstructorInfo;
     using FieldInfo = System.Reflection.FieldInfo;
     using MethodInfo = System.Reflection.MethodInfo;
@@ -395,14 +397,12 @@ namespace Aqua.Dynamic
         private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper)
             .GetMethod(nameof(ToDictionary), BindingFlags.Static | BindingFlags.NonPublic);
 
+        private readonly DynamicObjectMapperSettings _settings;
         private readonly FromContext _fromContext;
         private readonly ToContext _toContext;
         private readonly ITypeResolver _typeResolver;
         private readonly Func<Type, bool> _isKnownType;
         private readonly Func<Type?, object, DynamicObject> _createDynamicObject;
-        private readonly bool _silentlySkipUnassignableMembers;
-        private readonly bool _formatNativeTypesAsString;
-        private readonly bool _utilizeFormatterServices;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObjectMapper"/> class.
@@ -426,16 +426,7 @@ namespace Aqua.Dynamic
         /// <param name="isKnownTypeProvider">Optional instance to decide whether a type requires to be mapped into a <see cref="DynamicObject"/>, know types do not get mapped.</param>
         public DynamicObjectMapper(DynamicObjectMapperSettings? settings = null, ITypeResolver? typeResolver = null, ITypeMapper? typeMapper = null, IDynamicObjectFactory? dynamicObjectFactory = null, IIsKnownTypeProvider? isKnownTypeProvider = null)
         {
-            if (settings is null)
-            {
-                settings = new DynamicObjectMapperSettings();
-            }
-
-            _silentlySkipUnassignableMembers = settings.SilentlySkipUnassignableMembers;
-
-            _formatNativeTypesAsString = settings.FormatNativeTypesAsString;
-
-            _utilizeFormatterServices = settings.UtilizeFormatterServices;
+            _settings = settings?.Copy() ?? new DynamicObjectMapperSettings();
 
             _fromContext = new FromContext();
 
@@ -447,9 +438,7 @@ namespace Aqua.Dynamic
                 ? (Func<Type, bool>)(t => false)
                 : isKnownTypeProvider.IsKnownType;
 
-            _createDynamicObject = dynamicObjectFactory is null
-                ? (Func<Type?, object, DynamicObject>)new InternalDynamicObjectFactory(null).CreateDynamicObject
-                : dynamicObjectFactory.CreateDynamicObject;
+            _createDynamicObject = (dynamicObjectFactory ?? new InternalDynamicObjectFactory(null)).CreateDynamicObject;
         }
 
         /// <summary>
@@ -547,7 +536,7 @@ namespace Aqua.Dynamic
         /// rather than into a collection of <see cref="DynamicObject"/>s. Default is false.
         /// </summary>
         /// <returns>True if the collection should be mapped into a single <see cref="DynamicObject"/>, false if each element should be mapped separately. Default is false.</returns>
-        protected virtual bool ShouldMapToDynamicObject(System.Collections.IEnumerable collection) => false;
+        protected virtual bool ShouldMapToDynamicObject(IEnumerable collection) => false;
 
         [return: NotNullIfNotNull("obj")]
         private object? MapFromDynamicObjectIfRequired(object? obj, Type? targetType)
@@ -606,7 +595,7 @@ namespace Aqua.Dynamic
                     return dynamicObj;
                 }
 
-                if (IsSingleValueWrapper(dynamicObj))
+                if (dynamicObj.IsSingleValueWrapper())
                 {
                     return MapFromDynamicObjectIfRequired(dynamicObj.Values.Single(), resultType);
                 }
@@ -734,7 +723,7 @@ namespace Aqua.Dynamic
             {
                 facotry = (t, o, f) =>
                 {
-                    var list = ((System.Collections.IEnumerable)o)
+                    var list = ((IEnumerable)o)
                         .Cast<object>()
                         .Select(x => MapToDynamicObjectIfRequired(x, f))
                         .ToArray();
@@ -816,7 +805,7 @@ namespace Aqua.Dynamic
 
             if (_isNativeType(type))
             {
-                return _formatNativeTypesAsString ? FormatNativeTypeAsString(obj, type) : obj;
+                return _settings.FormatNativeTypesAsString ? FormatNativeTypeAsString(obj, type) : obj;
             }
 
             if (type.IsEnum())
@@ -824,7 +813,7 @@ namespace Aqua.Dynamic
                 return obj.ToString();
             }
 
-            if (obj is System.Collections.IEnumerable collection && !ShouldMapToDynamicObject(collection))
+            if (obj is IEnumerable collection && !ShouldMapToDynamicObject(collection))
             {
                 var items = collection
                     .Cast<object>()
@@ -834,7 +823,7 @@ namespace Aqua.Dynamic
                 var elementType = TypeHelper.GetElementType(type) !;
                 if (elementType != typeof(object))
                 {
-                    if (elementType.IsEnum() || (_formatNativeTypesAsString && _isNativeType(elementType)))
+                    if (elementType.IsEnum() || (_settings.FormatNativeTypesAsString && _isNativeType(elementType)))
                     {
                         elementType = typeof(string);
                     }
@@ -843,10 +832,16 @@ namespace Aqua.Dynamic
                         elementType = typeof(DynamicObject);
                     }
 
-                    return CastCollectionToArrayOfType(elementType, items);
+                    return items.CastCollectionToArrayOfType(elementType);
                 }
 
                 return items;
+            }
+
+            if (_settings.PassthroughAquaTypeSystemTypes &&
+                (obj is TypeSystem.TypeInfo || obj is TypeSystem.MemberInfo))
+            {
+                return obj;
             }
 
             return MapToDynamicObjectGraph(obj, setTypeInformation);
@@ -857,23 +852,22 @@ namespace Aqua.Dynamic
         /// </summary>
         private void PopulateObjectMembers(Type type, object from, DynamicObject to, Func<Type, bool> setTypeInformation)
         {
-            if (_utilizeFormatterServices && type.IsSerializable)
+            if (_settings.UtilizeFormatterServices && type.IsSerializable)
             {
                 MapObjectMembers(type, from, to, setTypeInformation);
             }
             else
             {
-                var properties = GetPropertiesForMapping(type) ??
-                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
-                foreach (var property in properties.Where(p => p.GetCustomAttribute<UnmappedAttribute>() is null))
+                var properties = GetPropertiesForMapping(type) ?? type.GetDefaultPropertiesForSerialization();
+                foreach (var property in properties.Where(HasNoUnmappedAnnotation))
                 {
                     var value = property.GetValue(from);
                     value = MapToDynamicObjectIfRequired(value, setTypeInformation);
                     to.Add(property.Name, value);
                 }
 
-                var fields = GetFieldsForMapping(type) ?? type.GetFields(BindingFlags.Instance | BindingFlags.Public);
-                foreach (var field in fields.Where(f => f.GetCustomAttribute<UnmappedAttribute>() is null))
+                var fields = GetFieldsForMapping(type) ?? type.GetDefaultFieldsForSerialization();
+                foreach (var field in fields.Where(HasNoUnmappedAnnotation))
                 {
                     var value = field.GetValue(from);
                     value = MapToDynamicObjectIfRequired(value, setTypeInformation);
@@ -914,7 +908,7 @@ namespace Aqua.Dynamic
                     return method.CreateDelegate(t, instance);
                 };
             }
-            else if (_utilizeFormatterServices && targetType.IsSerializable)
+            else if (_settings.UtilizeFormatterServices && targetType.IsSerializable)
             {
                 factory = (t, item) => GetUninitializedObject(t);
                 initializer = PopulateObjectMembers;
@@ -975,44 +969,36 @@ namespace Aqua.Dynamic
         {
             return (type, item, obj) =>
             {
-                var properties = GetPropertiesForMapping(type) ??
-                    type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite && p.GetIndexParameters().Length == 0);
-                foreach (var property in properties.Where(p => p.GetCustomAttribute<UnmappedAttribute>() is null))
+                var properties = GetPropertiesForMapping(type) ?? type.GetDefaultPropertiesForDeserialization();
+                foreach (var property in properties.Where(HasNoUnmappedAnnotation))
                 {
                     if (item.TryGet(property.Name, out var rawValue))
                     {
                         var value = MapFromDynamicObjectGraph(rawValue, property.PropertyType);
                         if (IsAssignable(property.PropertyType, value) ||
                             TryExplicitConversions(property.PropertyType, ref value) ||
-                            !_silentlySkipUnassignableMembers)
+                            !_settings.SilentlySkipUnassignableMembers)
                         {
                             property.SetValue(obj, value);
                         }
                     }
                 }
 
-                var fields = GetFieldsForMapping(type) ?? type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-                foreach (var field in fields.Where(f => !f.IsInitOnly && f.GetCustomAttribute<UnmappedAttribute>() is null))
+                var fields = GetFieldsForMapping(type) ?? type.GetDefaultFieldsForDeserialization();
+                foreach (var field in fields.Where(f => !f.IsInitOnly && HasNoUnmappedAnnotation(f)))
                 {
                     if (item.TryGet(field.Name, out var rawValue))
                     {
                         var value = MapFromDynamicObjectGraph(rawValue, field.FieldType);
                         if (IsAssignable(field.FieldType, value) ||
                             TryExplicitConversions(field.FieldType, ref value) ||
-                            !_silentlySkipUnassignableMembers)
+                            !_settings.SilentlySkipUnassignableMembers)
                         {
                             field.SetValue(obj, value);
                         }
                     }
                 }
             };
-        }
-
-        internal static object CastCollectionToArrayOfType(Type elementType, System.Collections.IEnumerable items)
-        {
-            var castedItems = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
-            var array = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { castedItems });
-            return array;
         }
 
         private static object ParseToNativeType(Type targetType, string value)
@@ -1135,11 +1121,6 @@ namespace Aqua.Dynamic
             throw new DynamicObjectMapperException(new NotImplementedException($"string parser for type {targetType} is not implemented"));
         }
 
-        private static bool IsSingleValueWrapper(DynamicObject item)
-        {
-            return item.PropertyCount == 1 && string.IsNullOrEmpty(item.PropertyNames.Single());
-        }
-
         private static bool IsMatchingDictionary(Type targetType, Type elementType)
         {
             if (!(targetType.IsGenericType && elementType.IsGenericType))
@@ -1238,7 +1219,7 @@ namespace Aqua.Dynamic
                 }
             }
 
-            // TODO: utilze cast operators of any defined by either type
+            // TODO: utilze cast operators if any defined by either type
             return false;
         }
 

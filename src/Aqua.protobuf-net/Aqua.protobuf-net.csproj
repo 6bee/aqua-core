@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Provides protobuf-net configuration for Aqua types.</Description>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <PackageTags>protobuf protobuf-net proto2 proto3 binary serialization</PackageTags>
+    <RootNamespace>Aqua.ProtoBuf</RootNamespace>
+    <PackageId>aqua-core-protobuf-net</PackageId>
+    <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="protobuf-net" Version="2.4.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Aqua\Aqua.csproj" />
+  </ItemGroup>
+</Project>

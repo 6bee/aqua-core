@@ -2,6 +2,7 @@
 
 namespace Aqua.TypeSystem
 {
+    using Aqua.Dynamic;
     using System;
     using System.Diagnostics;
     using System.Runtime.Serialization;
@@ -12,22 +13,22 @@ namespace Aqua.TypeSystem
     public class FieldInfo : MemberInfo
     {
         [NonSerialized]
-        [Dynamic.Unmapped]
+        [Unmapped]
         private System.Reflection.FieldInfo? _field;
 
         public FieldInfo()
         {
         }
 
-        public FieldInfo(System.Reflection.FieldInfo fieldInfo)
-            : this(fieldInfo, new TypeInfoProvider())
+        public FieldInfo(System.Reflection.FieldInfo field)
+            : this(field, new TypeInfoProvider())
         {
         }
 
-        internal FieldInfo(System.Reflection.FieldInfo fieldInfo, TypeInfoProvider typeInfoProvider)
-            : base(fieldInfo, typeInfoProvider)
+        internal FieldInfo(System.Reflection.FieldInfo field, TypeInfoProvider typeInfoProvider)
+            : base(field, typeInfoProvider)
         {
-            _field = fieldInfo;
+            _field = field;
         }
 
         public FieldInfo(string fieldName, Type declaringType)
@@ -40,14 +41,14 @@ namespace Aqua.TypeSystem
         {
         }
 
-        protected FieldInfo(FieldInfo fieldInfo)
-            : base(fieldInfo, new TypeInfoProvider())
+        protected FieldInfo(FieldInfo field)
+            : base(field, new TypeInfoProvider())
         {
         }
 
         public override MemberTypes MemberType => MemberTypes.Field;
 
-        [Dynamic.Unmapped]
+        [Unmapped]
         public System.Reflection.FieldInfo Field
             => _field ?? (_field = this.ResolveField(TypeResolver.Instance))
             ?? throw new TypeResolverException($"Failed to resolve field, consider using extension method to specify {nameof(ITypeResolver)}.");

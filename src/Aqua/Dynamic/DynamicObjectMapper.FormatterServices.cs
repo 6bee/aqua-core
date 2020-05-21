@@ -9,6 +9,7 @@ namespace Aqua.Dynamic
     using System.Runtime.Serialization;
     using System.Security;
     using System.Text.RegularExpressions;
+    using static Aqua.Dynamic.UnmappedAttributeHelper;
 
     partial class DynamicObjectMapper
     {
@@ -31,7 +32,7 @@ namespace Aqua.Dynamic
         {
             var customPropertySet = GetPropertiesForMapping(type);
             var customPropertyNames = customPropertySet?
-                .Where(p => p.GetCustomAttribute<UnmappedAttribute>() is null)
+                .Where(HasNoUnmappedAnnotation)
                 .ToDictionary(x => x.Name);
 
             var members = FormatterServices.GetSerializableMembers(type);
@@ -60,7 +61,7 @@ namespace Aqua.Dynamic
                     var value = MapFromDynamicObjectGraph(dynamicProperty.Value, memberType);
                     if (IsAssignable(memberType, value) ||
                         TryExplicitConversions(memberType, ref value) ||
-                        !_silentlySkipUnassignableMembers)
+                        !_settings.SilentlySkipUnassignableMembers)
                     {
                         memberValueMap[member] = value;
                     }
@@ -78,7 +79,7 @@ namespace Aqua.Dynamic
         {
             var customPropertySet = GetPropertiesForMapping(type);
             var customPropertyNames = customPropertySet?
-                .Where(p => p.GetCustomAttribute<UnmappedAttribute>() is null)
+                .Where(HasNoUnmappedAnnotation)
                 .ToDictionary(x => x.Name);
 
             var members = FormatterServices.GetSerializableMembers(type);

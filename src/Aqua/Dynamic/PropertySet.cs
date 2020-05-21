@@ -40,13 +40,18 @@ namespace Aqua.Dynamic
         }
 
         public PropertySet(IEnumerable<Property> properties)
-            : this(properties.ToList())
+            : this(properties?.ToList() !)
+        {
+        }
+
+        public PropertySet(IEnumerable<KeyValuePair<string, object?>> properties)
+            : this(properties?.Select(x => new Property(x)).ToList() !)
         {
         }
 
         private PropertySet(List<Property> properties)
         {
-            _list = properties;
+            _list = properties ?? throw new ArgumentNullException(nameof(properties));
         }
 
         public int Count => _list.Count;

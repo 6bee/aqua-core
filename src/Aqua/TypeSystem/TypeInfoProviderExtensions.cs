@@ -9,25 +9,25 @@ namespace Aqua.TypeSystem
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class TypeInfoProviderExtensions
     {
-        [return: NotNullIfNotNull("constructorInfo")]
-        public static ConstructorInfo? GetConstructorInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.ConstructorInfo? constructorInfo)
-            => constructorInfo is null ? null : new ConstructorInfo(constructorInfo, typeInfoProvider.AsNative());
+        [return: NotNullIfNotNull("constructor")]
+        public static ConstructorInfo? GetConstructorInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.ConstructorInfo? constructor)
+            => constructor is null ? null : new ConstructorInfo(constructor, typeInfoProvider.AsNative());
 
-        [return: NotNullIfNotNull("fieldInfo")]
-        public static FieldInfo? GetFieldInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.FieldInfo? fieldInfo)
-            => fieldInfo is null ? null : new FieldInfo(fieldInfo, typeInfoProvider.AsNative());
+        [return: NotNullIfNotNull("field")]
+        public static FieldInfo? GetFieldInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.FieldInfo? field)
+            => field is null ? null : new FieldInfo(field, typeInfoProvider.AsNative());
 
-        [return: NotNullIfNotNull("methodInfo")]
-        public static MethodInfo? GetMethodInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.MethodInfo? methodInfo)
-            => methodInfo is null ? null : new MethodInfo(methodInfo, typeInfoProvider.AsNative());
+        [return: NotNullIfNotNull("method")]
+        public static MethodInfo? GetMethodInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.MethodInfo? method)
+            => method is null ? null : new MethodInfo(method, typeInfoProvider.AsNative());
 
-        [return: NotNullIfNotNull("memberInfo")]
-        public static MemberInfo? GetMemberInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.MemberInfo? memberInfo)
-            => memberInfo is null ? null : MemberInfo.Create(memberInfo, typeInfoProvider.AsNative());
+        [return: NotNullIfNotNull("member")]
+        public static MemberInfo? GetMemberInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.MemberInfo? member)
+            => member is null ? null : MemberInfo.Create(member, typeInfoProvider.AsNative());
 
-        [return: NotNullIfNotNull("propertyInfo")]
-        public static PropertyInfo? GetPropertyInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.PropertyInfo? propertyInfo)
-            => propertyInfo is null ? null : new PropertyInfo(propertyInfo, typeInfoProvider.AsNative());
+        [return: NotNullIfNotNull("property")]
+        public static PropertyInfo? GetPropertyInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.PropertyInfo? property)
+            => property is null ? null : new PropertyInfo(property, typeInfoProvider.AsNative());
 
         [return: NotNullIfNotNull("type")]
         public static TypeInfo? GetTypeInfo(this ITypeInfoProvider typeInfoProvider, Type type)

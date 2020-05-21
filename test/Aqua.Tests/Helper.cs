@@ -3,6 +3,8 @@
 namespace Aqua.Tests
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
 
@@ -17,8 +19,12 @@ namespace Aqua.Tests
             where T : struct
             => type == typeof(T)
             || type == typeof(T?)
-            || type == typeof(T[])
-            || type == typeof(T?[]);
+            || typeof(ICollection<T>).IsAssignableFrom(type)
+            || typeof(ICollection<T?>).IsAssignableFrom(type);
+
+        public static bool IsCollection(this Type type)
+            => typeof(IEnumerable).IsAssignableFrom(type)
+            && type != typeof(string);
 
         public static IDisposable CreateContext(this CultureInfo culture) => new CultureContext(culture);
 

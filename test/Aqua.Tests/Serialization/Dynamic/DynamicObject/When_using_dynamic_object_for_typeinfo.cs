@@ -33,12 +33,20 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
         }
 
-#if NET
+#if NETFX
         public class NetDataContractSerializer : When_using_dynamic_object_for_typeinfo
         {
             public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
         }
 #endif
+
+#if COREFX
+        // TODO: figure out issue
+        // public class ProtobufNetSerializer : When_using_dynamic_object_for_typeinfo
+        // {
+        //     public ProtobufNetSerializer() : base(ProtobufNetSerializationHelper.Serialize) { }
+        // }
+#endif // COREFX
 
 #pragma warning restore SA1502 // Element should not be on a single line
 #pragma warning restore SA1128 // Put constructor initializers on their own line
@@ -54,7 +62,8 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [MemberData(nameof(TestData.Types), MemberType = typeof(TestData))]
         public void Should_map_type_to_dynamic_object_and_back(Type type)
         {
-            var dynamicObject = new DynamicObjectMapper().MapObject(type);
+            var settings = new DynamicObjectMapperSettings { PassthroughAquaTypeSystemTypes = false };
+            var dynamicObject = new DynamicObjectMapper(settings).MapObject(type);
             var serialized = _serialize(dynamicObject);
             var resurectedType = (Type)new DynamicObjectMapper().Map(serialized);
 
