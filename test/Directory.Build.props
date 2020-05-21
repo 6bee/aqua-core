@@ -1,7 +1,5 @@
 ﻿<Project>
 
-  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
-
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
     <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>
@@ -9,4 +7,6 @@
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\Style.Tests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
+
 </Project>
