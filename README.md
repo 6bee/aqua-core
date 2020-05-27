@@ -1,5 +1,4 @@
 # aqua-core
-
 | branch   | AppVeyor                         | Travis CI                      | Codecov.io         | Codacy                  | CodeFactor             | License                     |
 | ---      | ---                              | ---                            | ---                | ---                     | ---                    | ---                         |
 | `master` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
@@ -22,7 +21,6 @@ Aqua-core provides a bunch of serializable classes:
 Any object graph may be translated into a `DynamicObject` structure and back to it's original type using `DynamicObjectMapper`.
 
 ## Sample
-
 Mapping an object graph into a `DynamicObject` and then back to it's original type
 ```C#
 Blog blog = new Blog
