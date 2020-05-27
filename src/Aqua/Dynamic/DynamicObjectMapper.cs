@@ -79,7 +79,15 @@ namespace Aqua.Dynamic
             }
         }
 
-        private sealed class ToContext
+        private interface IMappingContext
+        {
+            void Recycle();
+        }
+
+        /// <summary>
+        /// Execution context used for mapping to <see cref="DynamicObject"/>s.
+        /// </summary>
+        private sealed class ToContext : IMappingContext
         {
             private readonly Func<Type, Type> _dynamicObjectTypeInfoMapper;
 
@@ -118,9 +126,14 @@ namespace Aqua.Dynamic
 
                 return to;
             }
+
+            public void Recycle() => _referenceMap.Clear();
         }
 
-        private sealed class FromContext
+        /// <summary>
+        /// Execution context used for mapping from <see cref="DynamicObject"/>s.
+        /// </summary>
+        private sealed class FromContext : IMappingContext
         {
             private readonly Dictionary<ReferenceMapKey, object> _referenceMap;
 
@@ -155,6 +168,8 @@ namespace Aqua.Dynamic
 
                 return to;
             }
+
+            public void Recycle() => _referenceMap.Clear();
         }
 
         private const string NumericPattern = @"([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?";
@@ -461,7 +476,7 @@ namespace Aqua.Dynamic
                 type = typeInfo.ResolveType(_typeResolver);
             }
 
-            return Wrap(() => MapFromDynamicObjectGraph(obj, type));
+            return Wrap(() => MapFromDynamicObjectGraph(obj, type), _fromContext);
         }
 
         /// <summary>
@@ -515,7 +530,8 @@ namespace Aqua.Dynamic
         /// <param name="setTypeInformation">Set this parameter to true if type information should be included within the <see cref="DynamicObject"/>, set it to false otherwise.</param>
         /// <returns>An instance of <see cref="DynamicObject"/> representing the mapped instance.</returns>
         [return: NotNullIfNotNull("obj")]
-        public DynamicObject? MapObject(object? obj, Func<Type, bool>? setTypeInformation = null) => Wrap(() => MapToDynamicObjectGraph(obj, setTypeInformation ?? (_ => true)));
+        public DynamicObject? MapObject(object? obj, Func<Type, bool>? setTypeInformation = null)
+            => Wrap(() => MapToDynamicObjectGraph(obj, setTypeInformation ?? (_ => true)), _toContext);
 
         /// <summary>
         /// Maps an item of an object graph of <see cref="DynamicObject"/> back into its normal representation.
@@ -1150,7 +1166,6 @@ namespace Aqua.Dynamic
             return true;
         }
 
-        // used by reflection
         private static object ToDictionary<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> items)
         {
             return items.ToDictionary(x => x.Key, x => x.Value);
@@ -1279,19 +1294,29 @@ namespace Aqua.Dynamic
             return obj.ToString();
         }
 
-        private static T Wrap<T>(Func<T> func)
+        private T Wrap<T>(Func<T> func, IMappingContext mappingContext)
         {
-            try
+            lock (mappingContext)
             {
-                return func();
-            }
-            catch (DynamicObjectMapperException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new DynamicObjectMapperException(ex);
+                try
+                {
+                    return func();
+                }
+                catch (DynamicObjectMapperException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    throw new DynamicObjectMapperException(ex);
+                }
+                finally
+                {
+                    if (!_settings.PreserveMappingCache)
+                    {
+                        mappingContext.Recycle();
+                    }
+                }
             }
         }
     }

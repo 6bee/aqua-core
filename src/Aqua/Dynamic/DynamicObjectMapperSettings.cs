@@ -34,6 +34,14 @@ namespace Aqua.Dynamic
         /// The default value is <code>true</code>.
         /// </summary>
         public bool PassthroughAquaTypeSystemTypes { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether a cache of mapped objects should be preserved.
+        /// Caching improves performance in case of subsequentely mapping the same objects again.
+        /// This should be activated for mapping immutable objects only or if otherwise known, objects don't change their state.
+        /// The default value is <code>false</code>.
+        /// </summary>
+        public bool PreserveMappingCache { get; set; }
 #pragma warning restore SA1629 // Documentation text should end with a periods
 
         internal DynamicObjectMapperSettings Copy() => (DynamicObjectMapperSettings)MemberwiseClone();
