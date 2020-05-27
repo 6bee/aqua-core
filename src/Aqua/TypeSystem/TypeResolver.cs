@@ -68,7 +68,14 @@ namespace Aqua.TypeSystem
 
             if (type is null)
             {
-                type = _typeEmitter(typeInfo);
+                try
+                {
+                    type = _typeEmitter(typeInfo);
+                }
+                catch (Exception ex)
+                {
+                    throw new TypeResolverException($"Type '{typeInfo.FullName}' could not be resolved and emitting type at runtime failed.", ex);
+                }
             }
 
             if (type is null)
