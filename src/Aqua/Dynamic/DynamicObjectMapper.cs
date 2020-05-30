@@ -680,7 +680,7 @@ namespace Aqua.Dynamic
                 });
 
                 return ctor is null
-                    ? throw new DynamicObjectMapperException($"Failed to project collection with element type {elementType} into type {resultType}")
+                    ? throw new DynamicObjectMapperException($"Failed to project collection with element type '{elementType?.AssemblyQualifiedName}' into type '{resultType?.AssemblyQualifiedName}'")
                     : ctor.Invoke(new[] { r1 });
             }
 
