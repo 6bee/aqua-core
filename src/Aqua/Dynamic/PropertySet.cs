@@ -9,7 +9,7 @@ namespace Aqua.Dynamic
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// A sorted collection of properties where proeprty names are considered as set key.
+    /// A sorted collection of properties where property names are considered as set key.
     /// However, since <see cref="Property" /> is not immutable a <see cref="PropertySet"/> may technically not be considered a real set.
     /// </summary>
     [Serializable]

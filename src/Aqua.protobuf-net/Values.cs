@@ -8,10 +8,17 @@ namespace Aqua.ProtoBuf
     using System.Diagnostics.CodeAnalysis;
 
     [ProtoContract]
-    public abstract class Values
+    public abstract class Values : Value
     {
         [ProtoIgnore]
-        public object?[] ObjectArray { get; set; } = null!;
+        public override Type ValueType => ElementType.MakeArrayType();
+
+        [ProtoIgnore]
+        public object?[] ObjectArray
+        {
+            get => (object?[])ObjectValue;
+            set => ObjectValue = value;
+        }
 
         [ProtoIgnore]
         public abstract Type ElementType { get; }

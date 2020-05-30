@@ -56,7 +56,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         }
 
         [Fact]
-        public void Object_should_have_dictionary_proeprty_set()
+        public void Object_should_have_dictionary_property_set()
         {
             objectWithDictionaryProperty.Dictionary.ShouldNotBeNull();
         }

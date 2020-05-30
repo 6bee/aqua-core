@@ -19,7 +19,7 @@ namespace Aqua.ProtoBuf.Dynamic
         public override object ObjectValue
         {
             get => Convert(this);
-            set => throw new InvalidOperationException("Read-only proeprty may not be set.");
+            set => throw new InvalidOperationException("Read-only property may not be set.");
         }
 
         [ProtoMember(1)]
@@ -36,17 +36,22 @@ namespace Aqua.ProtoBuf.Dynamic
         public static DynamicObjectSurrogate? Convert(DynamicObject? source)
             => source is null
             ? null
-            : source.IsSingleValueWrapper() && source.Values.Single().IsCollection(out var collection)
-            ? new DynamicObjectSurrogate
-                {
-                    Type = source.Type,
-                    WrappedCollection = Values.Wrap(collection, TypeHelper.GetElementType(source.Type?.Type) !),
-                }
             : new DynamicObjectSurrogate
                 {
                     Type = source.Type,
-                    Properties = Map(source.Properties),
+                    Properties = Map(source),
                 };
+        ////: source.IsSingleValueWrapper() && source.Values.Single().IsCollection(out var collection)
+        ////? new DynamicObjectSurrogate
+        ////    {
+        ////        Type = source.Type,
+        ////        WrappedCollection = Values.Wrap(collection, TypeHelper.GetElementType(source.Type?.Type) !),
+        ////    }
+        ////: new DynamicObjectSurrogate
+        ////    {
+        ////        Type = source.Type,
+        ////        Properties = Map(source.Properties),
+        ////    };
 
         [ProtoConverter]
         [return: NotNullIfNotNull("surrogate")]
@@ -69,7 +74,15 @@ namespace Aqua.ProtoBuf.Dynamic
         private static object? UnwrapSingle(Value? element)
             => element?.ObjectValue;
 
-        private static Dictionary<string, Value?> Map(PropertySet properties)
-            => properties.ToDictionary(x => x.Name, x => Value.Wrap(x.Value));
+        ////private static Dictionary<string, Value?> Map(PropertySet properties)
+        ////    => properties.ToDictionary(x => x.Name, x => Value.Wrap(x.Value));
+
+        private static Dictionary<string, Value?> Map(DynamicObject source)
+            => source.IsSingleValueWrapper()
+            ? new Dictionary<string, Value?> { { string.Empty, Wrap(source.Values.Single(), source.Type?.Type) } }
+            : source.Properties.ToDictionary(x => x.Name, x => Value.Wrap(x.Value));
+
+        ////private static Value Wrap(object? source, Type? type)
+        ////    => new Value<int>();
     }
 }

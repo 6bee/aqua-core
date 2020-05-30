@@ -18,7 +18,7 @@ namespace Aqua.ProtoBuf
         public Values(IEnumerable array)
         {
             ObjectArray = array
-                .Cast<T>() // ensure corrent element type
+                .Cast<T>() // ensure correct element type
                 .Cast<object>()
                 .ToArray();
         }

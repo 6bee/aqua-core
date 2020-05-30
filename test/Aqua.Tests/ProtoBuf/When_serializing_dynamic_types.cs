@@ -26,8 +26,8 @@ namespace Aqua.Tests.ProtoBuf
 
             using var cultureContext = culture.CreateContext();
 
-            var proeprty = new Property("p1", value);
-            var copy = proeprty.Serialize();
+            var property = new Property("p1", value);
+            var copy = property.Serialize();
 
             copy.Value.ShouldBe(value);
         }
