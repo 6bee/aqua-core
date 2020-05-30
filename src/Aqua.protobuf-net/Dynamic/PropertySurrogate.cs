@@ -11,7 +11,7 @@ namespace Aqua.ProtoBuf.Dynamic
         [ProtoMember(1)]
         public string Name { get; set; } = null!;
 
-        [ProtoMember(2, DynamicType = true)]
+        [ProtoMember(2/*, DynamicType = true*/)]
         public Value? Value { get; set; }
 
         [ProtoConverter]

@@ -9,35 +9,41 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_using_dynamic_object_with_circular_reference
     {
-#pragma warning disable SA1128 // Put constructor initializers on their own line
-#pragma warning disable SA1502 // Element should not be on a single line
-
         public class JsonSerializer : When_using_dynamic_object_with_circular_reference
         {
-            public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
+            public JsonSerializer()
+                : base(JsonSerializationHelper.Serialize)
+            {
+            }
         }
 
         public class DataContractSerializer : When_using_dynamic_object_with_circular_reference
         {
-            public DataContractSerializer() : base(DataContractSerializationHelper.Serialize) { }
+            public DataContractSerializer()
+                : base(DataContractSerializationHelper.Serialize)
+            {
+            }
         }
 
         // XML serialization doesn't support circular references
         // protobuf-net doesn't support circular references
         public class BinaryFormatter : When_using_dynamic_object_with_circular_reference
         {
-            public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
         }
 
 #if NETFX
         public class NetDataContractSerializer : When_using_dynamic_object_with_circular_reference
         {
-            public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
+            public NetDataContractSerializer()
+                : base(NetDataContractSerializationHelper.Serialize)
+            {
+            }
         }
 #endif
-
-#pragma warning restore SA1502 // Element should not be on a single line
-#pragma warning restore SA1128 // Put constructor initializers on their own line
 
         private readonly DynamicObject serializedObject;
 

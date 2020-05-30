@@ -2,6 +2,8 @@
 
 namespace Aqua.ProtoBuf
 {
+    using Aqua.Dynamic;
+    using Aqua.ProtoBuf.Dynamic;
     using global::ProtoBuf;
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -10,15 +12,17 @@ namespace Aqua.ProtoBuf
     public abstract class Value
     {
         [ProtoIgnore]
-        public object ObjectValue { get; set; } = null!;
+        public virtual object ObjectValue { get; set; } = null!;
 
         [ProtoIgnore]
-        public abstract Type Type { get; }
+        public abstract Type ValueType { get; }
 
         [return: NotNullIfNotNull("value")]
         public static Value? Wrap(object? value)
             => value is null
             ? null
+            : value is DynamicObject d
+            ? DynamicObjectSurrogate.Convert(d)
             : value is Value v
             ? v
             : (Value)Activator.CreateInstance(typeof(Value<>).MakeGenericType(value.GetType()), new object[] { value });

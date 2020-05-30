@@ -12,9 +12,12 @@ namespace Aqua.ProtoBuf
     internal static class ProtoBufMetaExtensions
     {
         public static MetaType AddSubType<T>(this MetaType type, ref int fieldNumber, Action<MetaType>? configure = null)
+            => AddSubType(type, typeof(T), ref fieldNumber, configure);
+
+        public static MetaType AddSubType(this MetaType type, Type subType, ref int fieldNumber, Action<MetaType>? configure = null)
         {
             var n = fieldNumber++;
-            type.AddSubType(n, typeof(T));
+            type.AddSubType(n, subType);
             configure?.Invoke(type.GetSubtypes().Single(x => x.FieldNumber == n).DerivedType);
             return type;
         }
@@ -28,11 +31,11 @@ namespace Aqua.ProtoBuf
         public static void SetSurrogate<T>(this MetaType type)
             => type.SetSurrogate(typeof(T));
 
-        public static ValueMember MakeDynamicType(this ValueMember member)
-        {
-            member.DynamicType = true;
-            return member;
-        }
+        ////public static ValueMember MakeDynamicType(this ValueMember member)
+        ////{
+        ////    member.DynamicType = true;
+        ////    return member;
+        ////}
 
         /// <summary>Register a base class and it's subtypes from the same assebly, uncluding all their serializable fields and proeprties.</summary>
         public static RuntimeTypeModel RegisterBaseAndSubtypes<T>(this RuntimeTypeModel typeModel, ref int fieldNumber)

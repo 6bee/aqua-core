@@ -26,6 +26,6 @@ namespace Aqua.ProtoBuf
         }
 
         [ProtoIgnore]
-        public override Type Type => typeof(T);
+        public override Type ValueType => typeof(T);
     }
 }

@@ -1,10 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if COREFX
-
 namespace Aqua.Tests.Serialization
 {
-    using global::ProtoBuf.Meta;
     using System;
     using System.Collections;
     using System.Linq;
@@ -13,9 +10,11 @@ namespace Aqua.Tests.Serialization
 
     public static class ProtobufNetSerializationHelper
     {
-        private static readonly RuntimeTypeModel _configuration = RuntimeTypeModel.Create().ConfigureAquaTypes();
+#if COREFX
+        private static readonly global::ProtoBuf.Meta.RuntimeTypeModel _configuration = global::ProtoBuf.Meta.RuntimeTypeModel.Create().ConfigureAquaTypes();
 
         public static T Serialize<T>(this T graph) => (T)_configuration.DeepClone(graph);
+#endif // COREFX
 
         public static void SkipUnsupportedDataType(Type type, object value)
         {
@@ -28,5 +27,3 @@ namespace Aqua.Tests.Serialization
         }
     }
 }
-
-#endif // COREFX

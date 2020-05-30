@@ -9,9 +9,6 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 
     public abstract partial class When_using_typeinfo_with_circular_reference_no_propertyinfos
     {
-#pragma warning disable SA1128 // Put constructor initializers on their own line
-#pragma warning disable SA1502 // Element should not be on a single line
-
         public class BinaryFormatter : When_using_typeinfo_with_circular_reference_no_propertyinfos
         {
             public BinaryFormatter()
@@ -63,9 +60,6 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
             {
             }
         }
-
-#pragma warning restore SA1502 // Element should not be on a single line
-#pragma warning restore SA1128 // Put constructor initializers on their own line
 
         private abstract class A
         {

@@ -10,33 +10,45 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_using_dynamic_object_for_typeinfo
     {
-#pragma warning disable SA1128 // Put constructor initializers on their own line
-#pragma warning disable SA1502 // Element should not be on a single line
-
         public class DataContractSerializer : When_using_dynamic_object_for_typeinfo
         {
-            public DataContractSerializer() : base(DataContractSerializationHelper.Serialize) { }
+            public DataContractSerializer()
+                : base(DataContractSerializationHelper.Serialize)
+            {
+            }
         }
 
         public class JsonSerializer : When_using_dynamic_object_for_typeinfo
         {
-            public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
+            public JsonSerializer()
+                : base(JsonSerializationHelper.Serialize)
+            {
+            }
         }
 
         public class XmlSerializer : When_using_dynamic_object_for_typeinfo
         {
-            public XmlSerializer() : base(XmlSerializationHelper.Serialize) { }
+            public XmlSerializer()
+                : base(XmlSerializationHelper.Serialize)
+            {
+            }
         }
 
         public class BinaryFormatter : When_using_dynamic_object_for_typeinfo
         {
-            public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
         }
 
 #if NETFX
         public class NetDataContractSerializer : When_using_dynamic_object_for_typeinfo
         {
-            public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
+            public NetDataContractSerializer()
+                : base(NetDataContractSerializationHelper.Serialize)
+            {
+            }
         }
 #endif
 
@@ -47,9 +59,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         //     public ProtobufNetSerializer() : base(ProtobufNetSerializationHelper.Serialize) { }
         // }
 #endif // COREFX
-
-#pragma warning restore SA1502 // Element should not be on a single line
-#pragma warning restore SA1128 // Put constructor initializers on their own line
 
         private readonly Func<DynamicObject, DynamicObject> _serialize;
 

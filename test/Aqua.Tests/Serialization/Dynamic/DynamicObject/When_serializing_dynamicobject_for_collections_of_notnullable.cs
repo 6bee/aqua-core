@@ -12,47 +12,59 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     using System.Linq.Expressions;
     using Xunit;
 
-    public abstract class When_serializing_dynamicobject_for_collections
+    public abstract class When_serializing_dynamicobject_for_collections_of_notnullable
     {
-#pragma warning disable SA1128 // Put constructor initializers on their own line
-#pragma warning disable SA1502 // Element should not be on a single line
-
-        public class DataContractSerializer : When_serializing_dynamicobject_for_collections
+        public class DataContractSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {
-            public DataContractSerializer() : base(DataContractSerializationHelper.Serialize) { }
+            public DataContractSerializer()
+                : base(DataContractSerializationHelper.Serialize)
+            {
+            }
         }
 
-        public class JsonSerializer : When_serializing_dynamicobject_for_collections
+        public class JsonSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {
-            public JsonSerializer() : base(JsonSerializationHelper.Serialize) { }
+            public JsonSerializer()
+                : base(JsonSerializationHelper.Serialize)
+            {
+            }
         }
 
-        public class XmlSerializer : When_serializing_dynamicobject_for_collections
+        public class XmlSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {
-            public XmlSerializer() : base(XmlSerializationHelper.Serialize) { }
+            public XmlSerializer()
+                : base(XmlSerializationHelper.Serialize)
+            {
+            }
         }
 
-        public class BinaryFormatter : When_serializing_dynamicobject_for_collections
+        public class BinaryFormatter : When_serializing_dynamicobject_for_collections_of_notnullable
         {
-            public BinaryFormatter() : base(BinarySerializationHelper.Serialize) { }
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
         }
 
 #if NETFX
-        public class NetDataContractSerializer : When_serializing_dynamicobject_for_collections
+        public class NetDataContractSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {
-            public NetDataContractSerializer() : base(NetDataContractSerializationHelper.Serialize) { }
+            public NetDataContractSerializer()
+                : base(NetDataContractSerializationHelper.Serialize)
+            {
+            }
         }
 #endif
 
 #if COREFX
-        public class ProtobufNetSerializer : When_serializing_dynamicobject_for_collections
+        public class ProtobufNetSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {
-            public ProtobufNetSerializer() : base(ProtobufNetSerializationHelper.Serialize) { }
+            public ProtobufNetSerializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
         }
 #endif // COREFX
-
-#pragma warning restore SA1502 // Element should not be on a single line
-#pragma warning restore SA1128 // Put constructor initializers on their own line
 
         public sealed class QueryableProxy<T> : IQueryable<T>
         {
@@ -93,9 +105,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_source).GetEnumerator();
         }
 
-        private Func<DynamicObject, DynamicObject> _serialize;
+        private readonly Func<DynamicObject, DynamicObject> _serialize;
 
-        protected When_serializing_dynamicobject_for_collections(Func<DynamicObject, DynamicObject> serialize)
+        protected When_serializing_dynamicobject_for_collections_of_notnullable(Func<DynamicObject, DynamicObject> serialize)
         {
             _serialize = serialize;
         }
@@ -103,7 +115,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [Fact]
         public void Should_roundtrip_enumerableproxy()
         {
-            var enumerable = new EnumerableProxy<int?>(new int?[] { null, 1, 22, 333 });
+            var enumerable = new EnumerableProxy<int>(new[] { 0, 1, 22, -333 });
             var resurrected = Roundtrip(enumerable);
             resurrected.SequenceEqual(enumerable);
         }
@@ -111,34 +123,34 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [Fact]
         public void Should_roundtrip_array()
         {
-            var enumerable = new int?[] { null, 1, 22, 333 };
+            var enumerable = new[] { 0, 1, 22, -333 };
             var resurrected = Roundtrip(enumerable);
             resurrected.SequenceEqual(enumerable);
-            resurrected.ShouldBeOfType<int?[]>();
+            resurrected.ShouldBeOfType<int[]>();
         }
 
         [Fact]
         public void Should_roundtrip_enumerable_array()
         {
-            var enumerable = new int?[] { null, 1, 22, 333 }.AsEnumerable();
+            var enumerable = new[] { 0, 1, 22, -333 }.AsEnumerable();
             var resurrected = Roundtrip(enumerable);
             resurrected.SequenceEqual(enumerable);
-            resurrected.ShouldBeOfType<int?[]>();
+            resurrected.ShouldBeOfType<int[]>();
         }
 
         [Fact]
         public void Should_roundtrip_enumerable_List()
         {
-            var enumerable = new List<int?> { null, 1, 22, 333 }.AsEnumerable();
+            var enumerable = new List<int> { 0, 1, 22, -333 }.AsEnumerable();
             var resurrected = Roundtrip(enumerable);
             resurrected.SequenceEqual(enumerable);
-            resurrected.ShouldBeOfType<List<int?>>();
+            resurrected.ShouldBeOfType<List<int>>();
         }
 
         [Fact]
         public void Should_roundtrip_queryableproxy()
         {
-            var enumerable = new QueryableProxy<int?>(new int?[] { null, 1, 22, 333 }.AsQueryable());
+            var enumerable = new QueryableProxy<int>(new[] { 0, 1, 22, -333 }.AsQueryable());
             var resurrected = Roundtrip(enumerable);
             resurrected.SequenceEqual(enumerable);
         }
@@ -146,10 +158,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [Fact]
         public void Should_roundtrip_enumerablequeryable()
         {
-            var enumerable = new int?[] { null, 1, 22, 333 }.AsQueryable();
+            var enumerable = new[] { 0, 1, 22, -333 }.AsQueryable();
             var resurrected = Roundtrip(enumerable);
             resurrected.SequenceEqual(enumerable);
-            resurrected.ShouldBeOfType<EnumerableQuery<int?>>();
+            resurrected.ShouldBeOfType<EnumerableQuery<int>>();
         }
 
         private T Roundtrip<T>(T obj)
