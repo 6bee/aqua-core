@@ -3,11 +3,11 @@
 | ---      | ---                              | ---                            | ---                | ---                     | ---                    | ---                         |
 | `master` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
 
-| package                     | nuget                    | myget                          |
-| ---                         | ---                      | ---                            |
-| `aqua-core`                 | [![NuGet Badge][13]][14] | [![MyGet Pre Release][15]][16] |
-| `aqua-core-newtonsoft-json` | [![NuGet Badge][17]][18] | [![MyGet Pre Release][19]][20] |
-| `aqua-core-protobuf-net`    | [![NuGet Badge][21]][22] | [![MyGet Pre Release][23]][24] |
+| package                     | nuget                           | myget                          |
+| ---                         | ---                             | ---                            |
+| `aqua-core`                 | [![NuGet Badge][13]][14]        | [![MyGet Pre Release][15]][16] |
+| `aqua-core-newtonsoft-json` | [![NuGet Badge][17]][18]        | [![MyGet Pre Release][19]][20] |
+| `aqua-core-protobuf-net`    | <!--[![NuGet Badge][21]][22]--> | [![MyGet Pre Release][23]][24] |
 
 Transform any object-graph into a dynamic, composed dictionaries like structure, holding serializable values and type information.
 
