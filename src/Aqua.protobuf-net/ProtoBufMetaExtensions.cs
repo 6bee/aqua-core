@@ -31,12 +31,6 @@ namespace Aqua.ProtoBuf
         public static void SetSurrogate<T>(this MetaType type)
             => type.SetSurrogate(typeof(T));
 
-        ////public static ValueMember MakeDynamicType(this ValueMember member)
-        ////{
-        ////    member.DynamicType = true;
-        ////    return member;
-        ////}
-
         /// <summary>Register a base class and it's subtypes from the same assebly, uncluding all their serializable fields and proeprties.</summary>
         public static RuntimeTypeModel RegisterBaseAndSubtypes<T>(this RuntimeTypeModel typeModel, ref int fieldNumber)
         {

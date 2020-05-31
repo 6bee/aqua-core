@@ -9,6 +9,7 @@ namespace Aqua
     using System;
     using System.Collections.Immutable;
     using System.ComponentModel;
+    using System.Linq;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ProtoBufTypeModel
@@ -33,76 +34,44 @@ namespace Aqua
 
         private static RuntimeTypeModel ConfigureAquaValueWrappingTypes(this RuntimeTypeModel typeModel)
         {
-            var n = 10;
             return typeModel
-              .ConfigureTypedValueWrapper<Value>(typeof(Value<>), false, ref n)
-              .ConfigureTypedValueWrapper<Values>(typeof(Values<>), true, ref n);
+              .ConfigureTypedValueWrapper<Value>(typeof(Value<>))
+              .ConfigureTypedValueWrapper<Values>(typeof(Values<>));
         }
 
-        private static RuntimeTypeModel ConfigureTypedValueWrapper<TBase>(this RuntimeTypeModel typeModel, Type genericWrapperType, bool addNullableSupport, ref int n)
+        private static RuntimeTypeModel ConfigureTypedValueWrapper<TBase>(this RuntimeTypeModel typeModel, Type genericWrapperType)
         {
             var wrapperBaseType = typeModel.GetType<TBase>();
-
-            if (typeof(TBase) == typeof(Values))
-            {
-                wrapperBaseType.AddSubType<Values<Value>>(ref n);
-            }
-            else if (typeof(TBase).IsAssignableFrom(typeof(Values)))
-            {
-                wrapperBaseType.AddSubType<Values>(ref n);
-            }
-
-            if (typeof(TBase).IsAssignableFrom(typeof(NullValue)))
-            {
-                wrapperBaseType.AddSubType<NullValue>(ref n);
-            }
-            else
-            {
-                wrapperBaseType.AddSubType(genericWrapperType.MakeGenericType(typeof(NullValue)), ref n);
-            }
-
-            if (typeof(TBase).IsAssignableFrom(typeof(DynamicObjectSurrogate)))
-            {
-                wrapperBaseType.AddSubType<DynamicObjectSurrogate>(ref n);
-            }
-            else
-            {
-                wrapperBaseType.AddSubType(genericWrapperType.MakeGenericType(typeof(DynamicObjectSurrogate)), ref n);
-            }
-
-            foreach (var t in WrappedTypes)
+            var n = 10;
+            foreach (var t in SystemTypes)
             {
                 wrapperBaseType.AddSubType(genericWrapperType.MakeGenericType(t), ref n);
-
-                if (addNullableSupport && t.IsValueType)
-                {
-                    var tNullable = typeof(Nullable<>).MakeGenericType(t);
-                    wrapperBaseType.AddSubType(genericWrapperType.MakeGenericType(tNullable), ref n);
-                }
             }
 
             return typeModel;
         }
 
-        internal static ImmutableArray<Type> WrappedTypes { get; } = new[]
-        {
-            typeof(string),
-            typeof(int),
-            typeof(byte),
-            typeof(bool),
-            typeof(double),
-            typeof(char),
-            typeof(Guid),
-            typeof(long),
-            typeof(float),
-            typeof(decimal),
-            typeof(sbyte),
-            typeof(uint),
-            typeof(ulong),
-            typeof(short),
-            typeof(ushort),
-            typeof(DateTime),
-            typeof(TimeSpan),
-        }.ToImmutableArray();
+        internal static ImmutableArray<Type> SystemTypes { get; } = new[]
+            {
+                typeof(string),
+                typeof(int),
+                typeof(byte),
+                typeof(bool),
+                typeof(double),
+                typeof(char),
+                typeof(Guid),
+                typeof(long),
+                typeof(float),
+                typeof(decimal),
+                typeof(sbyte),
+                typeof(uint),
+                typeof(ulong),
+                typeof(short),
+                typeof(ushort),
+                typeof(DateTime),
+                typeof(TimeSpan),
+            }
+            .SelectMany(x => x.IsValueType ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
+            .ToImmutableArray();
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Aqua.ProtoBuf
 {
-    using Aqua.Dynamic;
     using Aqua.Extensions;
     using Aqua.ProtoBuf.Dynamic;
     using Aqua.TypeSystem;
@@ -11,6 +10,10 @@ namespace Aqua.ProtoBuf
     using System.Diagnostics.CodeAnalysis;
 
     [ProtoContract]
+    [ProtoInclude(1, typeof(NullValue))]
+    [ProtoInclude(2, typeof(Values))]
+    [ProtoInclude(3, typeof(DynamicObjectSurrogate))]
+    [ProtoInclude(4, typeof(DynamicObjectArraySurrogate))]
     public abstract class Value
     {
         [ProtoIgnore]
@@ -26,8 +29,6 @@ namespace Aqua.ProtoBuf
         internal static Value? Wrap(object? value, Type? type)
             => value is null
             ? null
-            : value is DynamicObject d
-            ? DynamicObjectSurrogate.Convert(d)
             : value is Value v
             ? v
             : value.IsCollection(out var collection)

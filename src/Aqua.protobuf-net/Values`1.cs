@@ -17,6 +17,11 @@ namespace Aqua.ProtoBuf
 
         public Values(IEnumerable array)
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             ObjectArray = array
                 .Cast<T>() // ensure correct element type
                 .Cast<object>()
@@ -25,14 +30,14 @@ namespace Aqua.ProtoBuf
 
         public Values(T[] array)
         {
-            Array = array;
+            Array = array ?? throw new ArgumentNullException(nameof(array));
         }
 
         [ProtoMember(1, IsRequired = true, OverwriteList = true)]
         public T[] Array
         {
-            get => ObjectArray?.Select(x => x is T t ? t : default).ToArray();
-            set => ObjectArray = value?.Cast<object>().ToArray();
+            get => ObjectArray.Select(x => x is T t ? t : default).ToArray();
+            set => ObjectArray = value.Cast<object>().ToArray();
         }
 
         [ProtoIgnore]

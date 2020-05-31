@@ -17,10 +17,8 @@ namespace Aqua.ProtoBuf
         [ProtoIgnore]
         public object?[] ObjectArray
         {
-            get => ElementType == typeof(Value)
-                ? ((object?[])ObjectValue).Select(x => (x as Value)?.ObjectValue).ToArray()
-                : (object?[])ObjectValue;
-            set => ObjectValue = value;
+            get => ((object[])ObjectValue).Select(x => x is NullValue ? null : x).ToArray();
+            set => ObjectValue = value.Select(x => x ?? new NullValue()).ToArray();
         }
 
         [ProtoIgnore]
@@ -30,8 +28,6 @@ namespace Aqua.ProtoBuf
         public static Values? Wrap(IEnumerable? sequence, Type elementType)
             => sequence is null
             ? null
-            : ProtoBufTypeModel.WrappedTypes.Contains(elementType)
-            ? (Values)Activator.CreateInstance(typeof(Values<>).MakeGenericType(elementType), new object[] { sequence })
-            : (Values)Activator.CreateInstance(typeof(Values<Value>), new object[] { sequence.Cast<object>().Select(Value.Wrap) });
+            : (Values)Activator.CreateInstance(typeof(Values<>).MakeGenericType(elementType), new object?[] { sequence });
     }
 }

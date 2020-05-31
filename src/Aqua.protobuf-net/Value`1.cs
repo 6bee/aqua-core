@@ -4,10 +4,10 @@ namespace Aqua.ProtoBuf
 {
     using global::ProtoBuf;
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     [ProtoContract]
     public sealed class Value<T> : Value
-        where T : notnull
     {
         public Value()
         {
@@ -19,10 +19,11 @@ namespace Aqua.ProtoBuf
         }
 
         [ProtoMember(1, IsRequired = true)]
+        [NotNull]
         public T TypedValue
         {
             get => (T)ObjectValue;
-            set => ObjectValue = value;
+            set => ObjectValue = value!;
         }
 
         [ProtoIgnore]
