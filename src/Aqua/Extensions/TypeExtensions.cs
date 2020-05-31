@@ -27,5 +27,9 @@ namespace Aqua.Extensions
         public static IEnumerable<PropertyInfo> GetDefaultPropertiesForDeserialization(this Type type)
             => type.GetProperties(PublicInstance)
             .Where(p => p.CanWrite && p.GetIndexParameters().Length == 0);
+
+        public static bool IsNullable(this Type type)
+            => type.IsClass
+            || (type.IsGenericType && typeof(Nullable<>) == type.GetGenericTypeDefinition());
     }
 }

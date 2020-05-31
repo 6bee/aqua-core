@@ -18,29 +18,47 @@ namespace Aqua.ProtoBuf
 
         public RuntimeTypeModel Model { get; }
 
-        public AquaTypeModel AddTypeSurrogate<T, TSurrogate>()
+        public AquaTypeModel AddTypeSurrogate<T, TSurrogate>(Action<MetaType>? config = null)
+            => AddTypeSurrogate<T>(typeof(TSurrogate), config);
+
+        public AquaTypeModel AddTypeSurrogate<T>(Type surrogateType, Action<MetaType>? config = null)
+            => AddTypeSurrogate(typeof(T), surrogateType, config);
+
+        public AquaTypeModel AddTypeSurrogate(Type type, Type surrogateType, Action<MetaType>? config = null)
         {
-            GetType<T>().SetSurrogate(typeof(TSurrogate));
+            GetType(type).SetSurrogate(surrogateType);
+            config?.Invoke(GetType(surrogateType));
             return this;
         }
 
-        public AquaTypeModel AddType<T>()
+        public AquaTypeModel AddType<T>(Action<MetaType>? config = null)
+            => AddType(typeof(T), config);
+
+        public AquaTypeModel AddType(Type type, Action<MetaType>? config = null)
         {
-            _ = GetType<T>();
+            var metaType = GetType(type);
+            config?.Invoke(metaType);
             return this;
         }
 
-        public AquaTypeModel AddSubType<TBase, T>() => AddSubType<TBase>(typeof(T));
+        public AquaTypeModel AddSubType<TBase, T>(Action<MetaType>? config = null)
+            => AddSubType<TBase>(typeof(T), config);
 
-        public AquaTypeModel AddSubType<TBase>(Type subtype)
+        public AquaTypeModel AddSubType<TBase>(Type subtype, Action<MetaType>? config = null)
+            => AddSubType(typeof(TBase), subtype, config);
+
+        public AquaTypeModel AddSubType(Type baseType, Type subtype, Action<MetaType>? config = null)
         {
-            var baseType = GetType<TBase>();
-            var n = baseType.GetFields().Length + baseType.GetSubtypes().Length + 1;
-            baseType.AddSubType(n, subtype);
+            var metaBase = GetType(baseType);
+            var n = metaBase.GetFields().Length + metaBase.GetSubtypes().Length + 1;
+            var metaSub = metaBase.AddSubType(n, subtype);
+            config?.Invoke(metaSub);
             return this;
         }
 
-        private MetaType GetType<T>() => Model[typeof(T)];
+        public MetaType GetType<T>() => GetType(typeof(T));
+
+        public MetaType GetType(Type type) => Model[type];
 
         public TypeModel Compile() => Model.Compile();
 

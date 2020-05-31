@@ -10,6 +10,7 @@ namespace Aqua.ProtoBuf.Dynamic
             => typeModel
             .AddTypeSurrogate<DynamicObject, DynamicObjectSurrogate>()
             .AddTypeSurrogate<Property, PropertySurrogate>()
-            .AddType<PropertySet>();
+            .AddType<PropertySet>()
+            .AddType<DynamicObjectArraySurrogate>(t => t[1].SupportNull = true);
     }
 }

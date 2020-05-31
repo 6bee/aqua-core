@@ -5,6 +5,8 @@
 namespace Aqua.Tests.ProtoBuf
 {
     using Aqua.Dynamic;
+    using Aqua.Extensions;
+    using Aqua.TypeSystem;
     using Shouldly;
     using System;
     using System.Collections;
@@ -18,22 +20,41 @@ namespace Aqua.Tests.ProtoBuf
     {
         [SkippableTheory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
-        public void Should_serialize_property(Type type, object value, CultureInfo culture)
+        public void Should_serialize_scalar_property(Type type, object value, CultureInfo culture)
         {
-            SkipUnsupportedDataType(type, value);
+            SkipUnsupportedDataType(type);
 
             using var cultureContext = culture.CreateContext();
 
             var property = new Property("p1", value);
-            var copy = property.Serialize();
+            var model = ProtoBufTypeModel.ConfigureAquaTypes(configureDefaultSystemTypes: false)
+                .AddDynamicPropertyType(type, addCollectionSupport: false, addNullableSupport: type.IsNullable())
+                .Compile();
+            var copy = property.Serialize(model);
+
+            copy.Value.ShouldBe(value);
+        }
+
+        [SkippableTheory]
+        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        public void Should_serialize_collection_property(Type type, object value, CultureInfo culture)
+        {
+            SkipUnsupportedDataType(type);
+
+            using var cultureContext = culture.CreateContext();
+
+            var property = new Property("p1", value);
+            var model = ProtoBufTypeModel.ConfigureAquaTypes(configureDefaultSystemTypes: false)
+                .AddDynamicPropertyType(TypeHelper.GetElementType(type), addSingleValueSuppoort: false, addNullableSupport: type.IsNullable())
+                .Compile();
+            var copy = property.Serialize(model);
 
             copy.Value.ShouldBe(value);
         }
 
         [Fact]
-        public void Should_serialize_property_set()
+        public void Should_serialize_well_known_property_set()
         {
             var propertySet = new PropertySet
             {
@@ -57,9 +78,9 @@ namespace Aqua.Tests.ProtoBuf
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
-        public void Should_serialize_property_set_2(Type type, object value, CultureInfo culture)
+        public void Should_serialize_property_set(Type type, object value, CultureInfo culture)
         {
-            SkipUnsupportedDataType(type, value);
+            SkipUnsupportedDataType(type);
 
             using var cultureContext = culture.CreateContext();
 
@@ -77,7 +98,7 @@ namespace Aqua.Tests.ProtoBuf
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         public void Should_serialize_dynamic_object(Type type, object value, CultureInfo culture)
         {
-            SkipUnsupportedDataType(type, value);
+            SkipUnsupportedDataType(type);
 
             using var cultureContext = culture.CreateContext();
 
@@ -95,7 +116,10 @@ namespace Aqua.Tests.ProtoBuf
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_dynamic_object_collection(Type type, IEnumerable value, CultureInfo culture)
         {
-            SkipUnsupportedDataType(type, value);
+            SkipUnsupportedDataType(type);
+            Skip.If(
+                value.Cast<object>().Any(x => x is null),
+                "protobuf-net doesn't support serialization of collection with null elements as the root object");
 
             using var cultureContext = culture.CreateContext();
 
@@ -205,7 +229,7 @@ namespace Aqua.Tests.ProtoBuf
         }
 
         [Fact]
-        public void Should_serialize_nested_dynamic_object_for_entity1()
+        public void Should_serialize_nested_dynamic_object_for_entity_relation()
         {
             var entity = new DynamicObjectMapper().MapObject(new OrderItemEntity
             {
@@ -230,7 +254,7 @@ namespace Aqua.Tests.ProtoBuf
         }
 
         [Fact]
-        public void Should_serialize_nested_dynamic_object_for_entity2()
+        public void Should_serialize_nested_dynamic_object_for_entity_collection()
         {
             var entity = new DynamicObjectMapper().MapObject(new OrderEntity
             {

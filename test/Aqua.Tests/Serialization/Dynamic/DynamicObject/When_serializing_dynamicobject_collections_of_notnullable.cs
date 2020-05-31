@@ -12,9 +12,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     using System.Linq.Expressions;
     using Xunit;
 
-    public abstract class When_serializing_dynamicobject_for_collections_of_nullable
+    public abstract class When_serializing_dynamicobject_collections_of_notnullable
     {
-        public class DataContractSerializer : When_serializing_dynamicobject_for_collections_of_nullable
+        public class DataContractSerializer : When_serializing_dynamicobject_collections_of_notnullable
         {
             public DataContractSerializer()
                 : base(DataContractSerializationHelper.Serialize)
@@ -22,7 +22,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
-        public class JsonSerializer : When_serializing_dynamicobject_for_collections_of_nullable
+        public class JsonSerializer : When_serializing_dynamicobject_collections_of_notnullable
         {
             public JsonSerializer()
                 : base(JsonSerializationHelper.Serialize)
@@ -30,15 +30,15 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
-        public class XmlSerializer : When_serializing_dynamicobject_for_collections_of_nullable
+        public class XmlSerializer : When_serializing_dynamicobject_collections_of_notnullable
         {
             public XmlSerializer()
-                : base(XmlSerializationHelper.Serialize)
+                : base(x => XmlSerializationHelper.Serialize(x.ToArray()))
             {
             }
         }
 
-        public class BinaryFormatter : When_serializing_dynamicobject_for_collections_of_nullable
+        public class BinaryFormatter : When_serializing_dynamicobject_collections_of_notnullable
         {
             public BinaryFormatter()
                 : base(BinarySerializationHelper.Serialize)
@@ -47,7 +47,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
 #if NETFX
-        public class NetDataContractSerializer : When_serializing_dynamicobject_for_collections_of_nullable
+        public class NetDataContractSerializer : When_serializing_dynamicobject_collections_of_notnullable
         {
             public NetDataContractSerializer()
                 : base(NetDataContractSerializationHelper.Serialize)
@@ -57,7 +57,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 #endif
 
 #if COREFX
-        public class ProtobufNetSerializer : When_serializing_dynamicobject_for_collections_of_nullable
+        public class ProtobufNetSerializer : When_serializing_dynamicobject_collections_of_notnullable
         {
             public ProtobufNetSerializer()
                 : base(ProtobufNetSerializationHelper.Serialize)
@@ -105,76 +105,69 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_source).GetEnumerator();
         }
 
-        private readonly Func<DynamicObject, DynamicObject> _serialize;
+        private readonly Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> _serialize;
 
-        protected When_serializing_dynamicobject_for_collections_of_nullable(Func<DynamicObject, DynamicObject> serialize)
+        protected When_serializing_dynamicobject_collections_of_notnullable(Func<IEnumerable<DynamicObject>, IEnumerable<DynamicObject>> serialize)
         {
             _serialize = serialize;
         }
 
         [Fact]
-        public void Should_roundtrip_array_with_two_null_trings()
-        {
-            var enumerable = new string[] { null, null };
-            var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceEqual(enumerable).ShouldBeTrue();
-        }
-
-        [Fact]
         public void Should_roundtrip_enumerableproxy()
         {
-            var enumerable = new EnumerableProxy<int?>(new int?[] { null, 1, 22, 333 });
+            var enumerable = new EnumerableProxy<int>(new[] { 0, 1, 22, -333 });
             var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceEqual(enumerable).ShouldBeTrue();
+            AssertSequenceEqual(enumerable, resurrected);
         }
 
         [Fact]
         public void Should_roundtrip_array()
         {
-            var enumerable = new int?[] { null, 1, 22, 333 };
+            var enumerable = new[] { 0, 1, 22, -333 };
             var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceEqual(enumerable).ShouldBeTrue();
-            resurrected.ShouldBeOfType<int?[]>();
+            AssertSequenceEqual(enumerable, resurrected);
         }
 
         [Fact]
         public void Should_roundtrip_enumerable_array()
         {
-            var enumerable = new int?[] { null, 1, 22, 333 }.AsEnumerable();
+            var enumerable = new[] { 0, 1, 22, -333 }.AsEnumerable();
             var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceEqual(enumerable).ShouldBeTrue();
-            resurrected.ShouldBeOfType<int?[]>();
+            AssertSequenceEqual(enumerable, resurrected);
         }
 
         [Fact]
         public void Should_roundtrip_enumerable_List()
         {
-            var enumerable = new List<int?> { null, 1, 22, 333 }.AsEnumerable();
+            var enumerable = new List<int> { 0, 1, 22, -333 }.AsEnumerable();
             var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceEqual(enumerable).ShouldBeTrue();
-            resurrected.ShouldBeOfType<List<int?>>();
+            AssertSequenceEqual(enumerable, resurrected);
         }
 
         [Fact]
         public void Should_roundtrip_queryableproxy()
         {
-            var enumerable = new QueryableProxy<int?>(new int?[] { 1, null, 22, 333 }.AsQueryable());
+            var enumerable = new QueryableProxy<int>(new[] { 0, 1, 22, -333 }.AsQueryable());
             var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceEqual(enumerable).ShouldBeTrue();
+            AssertSequenceEqual(enumerable, resurrected);
         }
 
         [Fact]
         public void Should_roundtrip_enumerablequeryable()
         {
-            var enumerable = new int?[] { null, 1, 22, 333 }.AsQueryable();
+            var enumerable = new[] { 0, 1, 22, -333 }.AsQueryable();
             var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceEqual(enumerable).ShouldBeTrue();
-            resurrected.ShouldBeOfType<EnumerableQuery<int?>>();
+            AssertSequenceEqual(enumerable, resurrected);
         }
 
-        private T Roundtrip<T>(T obj)
+        private static void AssertSequenceEqual<T>(IEnumerable<T> source, IEnumerable<T> result)
+            => result
+            .ShouldBeAssignableTo<IEnumerable<T>>()
+            .SequenceEqual(source).ShouldBeTrue();
+
+        private IEnumerable<T> Roundtrip<T>(IEnumerable<T> obj)
         {
-            var dynamicObject = new DynamicObjectMapper().MapObject(obj);
+            var dynamicObject = new DynamicObjectMapper().MapCollection(obj);
             var serializedDynamicObject = _serialize(dynamicObject);
             var resurrected = new DynamicObjectMapper().Map<T>(serializedDynamicObject);
             return resurrected;

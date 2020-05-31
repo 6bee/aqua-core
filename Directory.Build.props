@@ -34,13 +34,12 @@
     <EmbedAllSources>true</EmbedAllSources>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Nullable Condition=" '$(Nullable)' == '' ">enable</Nullable>
-    <IncludeGlobalAssemblyInfo Condition=" '$(IncludeGlobalAssemblyInfo)' == ''">true</IncludeGlobalAssemblyInfo>
+    <Nullable Condition="'$(Nullable)' == ''">enable</Nullable>
+    <IncludeGlobalAssemblyInfo Condition="'$(IncludeGlobalAssemblyInfo)' == ''">true</IncludeGlobalAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -52,11 +51,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" Condition=" '$(IncludeGlobalAssemblyInfo)' == 'true'" />
+    <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" Condition="'$(IncludeGlobalAssemblyInfo)' == 'true'" />
   </ItemGroup>
 
   <PropertyGroup>
-    <CodeAnalysisRuleSet Condition=" '$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>
+    <SignAssembly Condition="'$(SignAssembly)' == ''">true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)key.snk</AssemblyOriginatorKeyFile>
+    <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>

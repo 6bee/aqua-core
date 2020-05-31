@@ -12,7 +12,7 @@ namespace Aqua.ProtoBuf.Dynamic
     public class DynamicObjectArraySurrogate : Value
     {
         [ProtoIgnore]
-        public override Type ValueType => typeof(DynamicObject[]);
+        public override Type ValueType => typeof(DynamicObject?[]);
 
         [ProtoIgnore]
         public override object ObjectValue

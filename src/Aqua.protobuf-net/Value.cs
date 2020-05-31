@@ -10,10 +10,9 @@ namespace Aqua.ProtoBuf
     using System.Diagnostics.CodeAnalysis;
 
     [ProtoContract]
-    [ProtoInclude(1, typeof(NullValue))]
-    [ProtoInclude(2, typeof(Values))]
-    [ProtoInclude(3, typeof(DynamicObjectSurrogate))]
-    [ProtoInclude(4, typeof(DynamicObjectArraySurrogate))]
+    [ProtoInclude(1, typeof(Values))]
+    [ProtoInclude(2, typeof(DynamicObjectSurrogate))]
+    [ProtoInclude(3, typeof(DynamicObjectArraySurrogate))]
     public abstract class Value
     {
         [ProtoIgnore]

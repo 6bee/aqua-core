@@ -15,10 +15,10 @@ namespace Aqua.ProtoBuf
         public override Type ValueType => ElementType.MakeArrayType();
 
         [ProtoIgnore]
-        public object?[] ObjectArray
+        public virtual object?[] ObjectArray
         {
-            get => ((object[])ObjectValue).Select(x => x is NullValue ? null : x).ToArray();
-            set => ObjectValue = value.Select(x => x ?? new NullValue()).ToArray();
+            get => (object?[])ObjectValue;
+            set => ObjectValue = value;
         }
 
         [ProtoIgnore]

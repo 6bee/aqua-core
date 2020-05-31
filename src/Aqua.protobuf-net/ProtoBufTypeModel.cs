@@ -15,6 +15,28 @@ namespace Aqua
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ProtoBufTypeModel
     {
+        private static readonly ImmutableArray<Type> _systemTypes = new[]
+            {
+                typeof(string),
+                typeof(int),
+                typeof(byte),
+                typeof(bool),
+                typeof(double),
+                typeof(char),
+                typeof(Guid),
+                typeof(long),
+                typeof(float),
+                typeof(decimal),
+                typeof(sbyte),
+                typeof(uint),
+                typeof(ulong),
+                typeof(short),
+                typeof(ushort),
+                typeof(DateTime),
+                typeof(TimeSpan),
+            }
+            .ToImmutableArray();
+
         public static AquaTypeModel ConfigureAquaTypes(string? name = null, bool configureDefaultSystemTypes = true)
             => ConfigureAquaTypes(RuntimeTypeModel.Create(name), configureDefaultSystemTypes);
 
@@ -39,13 +61,11 @@ namespace Aqua
         /// <param name="typeModel">The <see cref="AquaTypeModel"/> used for model configutation.</param>
         /// <param name="addSingleValueSuppoort">Indicated whether the specified <see cref="Type"/> should be supposted as single value.</param>
         /// <param name="addCollectionSupport">Indicated whether the specified <see cref="Type"/> should be supposted as collection.</param>
-        /// <param name="addNullableSupport">Indicates whether the specified <see cref="Type"/> should be supported as both, <see cref="Nullable{T}"/> as well as <typeparamref name="T"/>. <br/>
-        /// This argument is is relevant for value types only and is ignored for reference types.</param>
+        /// <param name="addNullableSupport">Indicates whether protobuf-net should suport null values for the specified <see cref="Type"/>.</param>
         /// <returns>The <see cref="AquaTypeModel"/> under configuration.</returns>
         public static AquaTypeModel AddDynamicPropertyType<T>(this AquaTypeModel typeModel, bool addSingleValueSuppoort = true, bool addCollectionSupport = true, bool addNullableSupport = true)
-            => typeModel.AddDynamicPropertyType(typeof(T), addSingleValueSuppoort, addCollectionSupport, addNullableSupport);
+            => AddDynamicPropertyType(true, typeModel, typeof(T), addSingleValueSuppoort, addCollectionSupport, addNullableSupport);
 
-#pragma warning disable SA1629 // Documentation text should end with a period
         /// <summary>
         /// Add type configuration for the given <see cref="Type"/> to be supported as payload within a <see cref="DynamicObject"/> and/or <see cref="Property"/>.
         /// </summary>
@@ -53,58 +73,56 @@ namespace Aqua
         /// <param name="propertyType">The <see cref="Type"/> to be configured as dynamic payload.</param>
         /// <param name="addSingleValueSuppoort">Indicated whether the specified <see cref="Type"/> should be supposted as single value.</param>
         /// <param name="addCollectionSupport">Indicated whether the specified <see cref="Type"/> should be supposted as collection.</param>
-        /// <param name="addNullableSupport">Indicates whether the specified <see cref="Type"/> should be supported as both, <see cref="Nullable{T}"/> as well as <code>T</code>. <br/>
-        /// This argument is is relevant for value types only and is ignored for reference types.</param>
+        /// <param name="addNullableSupport">Indicates whether protobuf-net should support null values for the specified <see cref="Type"/>.</param>
         /// <returns>The <see cref="AquaTypeModel"/> under configuration.</returns>
-#pragma warning restore SA1629 // Documentation text should end with a period
         public static AquaTypeModel AddDynamicPropertyType(this AquaTypeModel typeModel, Type propertyType, bool addSingleValueSuppoort = true, bool addCollectionSupport = true, bool addNullableSupport = true)
+            => AddDynamicPropertyType(true, typeModel, propertyType, addSingleValueSuppoort, addCollectionSupport, addNullableSupport);
+
+        public static AquaTypeModel AddDynamicPropertyType(bool flag, AquaTypeModel typeModel, Type propertyType, bool addSingleValueSuppoort = true, bool addCollectionSupport = true, bool addNullableSupport = true)
         {
+            if (typeModel is null)
+            {
+                throw new ArgumentNullException(nameof(typeModel));
+            }
+
+            if (propertyType is null)
+            {
+                throw new ArgumentNullException(nameof(propertyType));
+            }
+
+            var isNullable = propertyType.IsNullable();
             if (addSingleValueSuppoort)
             {
-                typeModel.AddSubType<Value>(typeof(Value<>).MakeGenericType(propertyType));
+                var singleValueType = typeof(Value<>).MakeGenericType(propertyType);
+                typeModel.AddSubType<Value>(singleValueType);
+                if (isNullable && addNullableSupport)
+                {
+                    typeModel.GetType(singleValueType)[1].SupportNull = true;
+                }
             }
 
             if (addCollectionSupport)
             {
-                typeModel.AddSubType<Values>(typeof(Values<>).MakeGenericType(propertyType));
+                var collectionType = typeof(Values<>).MakeGenericType(propertyType);
+                typeModel.AddSubType<Values>(collectionType);
+                if (isNullable && addNullableSupport)
+                {
+                    typeModel.GetType(collectionType)[1].SupportNull = true;
+                }
             }
 
-            if (propertyType.IsValueType && addNullableSupport)
+            if (flag && propertyType.IsValueType && addNullableSupport)
             {
-                var invertedNullableType = propertyType.IsNullable()
+                var invertedNullableType = isNullable
                     ? propertyType.GetGenericArguments()[0]
                     : typeof(Nullable<>).MakeGenericType(propertyType);
-                typeModel.AddDynamicPropertyType(invertedNullableType, addSingleValueSuppoort, addCollectionSupport, false);
+                AddDynamicPropertyType(false, typeModel, invertedNullableType, addSingleValueSuppoort, addCollectionSupport, addNullableSupport);
             }
 
             return typeModel;
         }
 
-        private static bool IsNullable(this Type type) => type.IsGenericType && typeof(Nullable<>) == type.GetGenericTypeDefinition();
-
         private static void ConfigureDefaultSystemTypes(AquaTypeModel typeModel)
-            => SystemTypes.ForEach(t => typeModel.AddDynamicPropertyType(t));
-
-        internal static ImmutableArray<Type> SystemTypes { get; } = new[]
-            {
-                typeof(string),
-                typeof(int),
-                typeof(byte),
-                typeof(bool),
-                typeof(double),
-                typeof(char),
-                typeof(Guid),
-                typeof(long),
-                typeof(float),
-                typeof(decimal),
-                typeof(sbyte),
-                typeof(uint),
-                typeof(ulong),
-                typeof(short),
-                typeof(ushort),
-                typeof(DateTime),
-                typeof(TimeSpan),
-            }
-            .ToImmutableArray();
+            => _systemTypes.ForEach(t => typeModel.AddDynamicPropertyType(t));
     }
 }
