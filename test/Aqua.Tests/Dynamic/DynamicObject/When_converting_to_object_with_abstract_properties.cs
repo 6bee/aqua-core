@@ -29,9 +29,9 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             public object Value4 { get; set; }
         }
 
-        private DynamicObject dynamicObject;
+        private readonly DynamicObject dynamicObject;
 
-        private object obj;
+        private readonly object obj;
 
         public When_converting_to_object_with_abstract_properties()
         {

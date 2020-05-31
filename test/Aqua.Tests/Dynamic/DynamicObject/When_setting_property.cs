@@ -59,7 +59,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         private const string NewValue = "NewValue";
         private const string StringProperty = "StringProperty";
 
-        private DynamicObjectTest dynamicObject;
+        private readonly DynamicObjectTest dynamicObject;
 
         public When_setting_property()
         {
