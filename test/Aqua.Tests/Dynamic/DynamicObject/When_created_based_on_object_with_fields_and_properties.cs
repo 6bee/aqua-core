@@ -23,7 +23,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 #pragma warning disable SA1306 // Field names should begin with lower-case letter
 
             public readonly string StringValue = null;
-            private readonly string PrivateStringValue;
+            private string PrivateStringValue;
             public DateTime Date;
 
 #pragma warning restore SA1306 // Field names should begin with lower-case letter

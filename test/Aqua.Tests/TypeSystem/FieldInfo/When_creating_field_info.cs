@@ -14,9 +14,9 @@ namespace Aqua.Tests.TypeSystem.FieldInfo
         {
 #pragma warning disable CS0169 // The field is never used
 #pragma warning disable IDE0051 // Remove unused private members
-            private static readonly string staticField;
+            private static string staticField;
 
-            private readonly string field;
+            private string field;
 #pragma warning restore IDE0051 // Remove unused private members
 #pragma warning restore CS0169 // The field is never used
         }
