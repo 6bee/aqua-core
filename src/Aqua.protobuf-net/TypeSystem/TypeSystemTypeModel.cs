@@ -3,27 +3,17 @@
 namespace Aqua.ProtoBuf.TypeSystem
 {
     using Aqua.TypeSystem;
-    using global::ProtoBuf.Meta;
 
     internal static class TypeSystemTypeModel
     {
-        public static RuntimeTypeModel ConfigureAquaTypeSystemTypes(this RuntimeTypeModel typeModel)
-        {
-            _ = typeModel.GetType<TypeInfo>();
-
-            var n = 10;
-            typeModel
-                .GetType<MemberInfo>()
-                .AddSubType<PropertyInfo>(ref n)
-                .AddSubType<FieldInfo>(ref n)
-                .AddSubType<MethodBaseInfo>(ref n, m =>
-                {
-                    m
-                    .AddSubType<MethodInfo>(ref n)
-                    .AddSubType<ConstructorInfo>(ref n);
-                });
-
-            return typeModel;
-        }
+        public static AquaTypeModel ConfigureAquaTypeSystemTypes(this AquaTypeModel typeModel)
+            => typeModel
+            .AddType<TypeInfo>()
+            .AddType<MemberInfo>()
+            .AddSubType<MemberInfo, PropertyInfo>()
+            .AddSubType<MemberInfo, FieldInfo>()
+            .AddSubType<MemberInfo, MethodBaseInfo>()
+            .AddSubType<MethodBaseInfo, MethodInfo>()
+            .AddSubType<MethodBaseInfo, ConstructorInfo>();
     }
 }

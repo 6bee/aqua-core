@@ -3,19 +3,13 @@
 namespace Aqua.ProtoBuf.Dynamic
 {
     using Aqua.Dynamic;
-    using global::ProtoBuf.Meta;
 
     internal static class DynamicTypeModel
     {
-        public static RuntimeTypeModel ConfigureAquaDynamicTypes(this RuntimeTypeModel typeModel)
-        {
-            typeModel.GetType<Property>().SetSurrogate<PropertySurrogate>();
-
-            _ = typeModel.GetType<PropertySet>();
-
-            typeModel.GetType<DynamicObject>().SetSurrogate<DynamicObjectSurrogate>();
-
-            return typeModel;
-        }
+        public static AquaTypeModel ConfigureAquaDynamicTypes(this AquaTypeModel typeModel)
+            => typeModel
+            .AddTypeSurrogate<DynamicObject, DynamicObjectSurrogate>()
+            .AddTypeSurrogate<Property, PropertySurrogate>()
+            .AddType<PropertySet>();
     }
 }
