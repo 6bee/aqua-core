@@ -6,6 +6,7 @@ namespace Aqua.ProtoBuf
     using System;
     using System.Collections;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     [ProtoContract]
     public abstract class Values : Value
@@ -16,7 +17,9 @@ namespace Aqua.ProtoBuf
         [ProtoIgnore]
         public object?[] ObjectArray
         {
-            get => (object?[])ObjectValue;
+            get => ElementType == typeof(Value)
+                ? ((object?[])ObjectValue).Select(x => (x as Value)?.ObjectValue).ToArray()
+                : (object?[])ObjectValue;
             set => ObjectValue = value;
         }
 
@@ -27,6 +30,8 @@ namespace Aqua.ProtoBuf
         public static Values? Wrap(IEnumerable? sequence, Type elementType)
             => sequence is null
             ? null
-            : (Values)Activator.CreateInstance(typeof(Values<>).MakeGenericType(elementType), new object[] { sequence });
+            : ProtoBufTypeModel.WrappedTypes.Contains(elementType)
+            ? (Values)Activator.CreateInstance(typeof(Values<>).MakeGenericType(elementType), new object[] { sequence })
+            : (Values)Activator.CreateInstance(typeof(Values<Value>), new object[] { sequence.Cast<object>().Select(Value.Wrap) });
     }
 }

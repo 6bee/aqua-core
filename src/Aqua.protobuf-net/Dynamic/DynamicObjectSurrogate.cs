@@ -37,21 +37,10 @@ namespace Aqua.ProtoBuf.Dynamic
             => source is null
             ? null
             : new DynamicObjectSurrogate
-                {
-                    Type = source.Type,
-                    Properties = Map(source),
-                };
-        ////: source.IsSingleValueWrapper() && source.Values.Single().IsCollection(out var collection)
-        ////? new DynamicObjectSurrogate
-        ////    {
-        ////        Type = source.Type,
-        ////        WrappedCollection = Values.Wrap(collection, TypeHelper.GetElementType(source.Type?.Type) !),
-        ////    }
-        ////: new DynamicObjectSurrogate
-        ////    {
-        ////        Type = source.Type,
-        ////        Properties = Map(source.Properties),
-        ////    };
+            {
+                Type = source.Type,
+                Properties = Map(source),
+            };
 
         [ProtoConverter]
         [return: NotNullIfNotNull("surrogate")]
@@ -74,15 +63,9 @@ namespace Aqua.ProtoBuf.Dynamic
         private static object? UnwrapSingle(Value? element)
             => element?.ObjectValue;
 
-        ////private static Dictionary<string, Value?> Map(PropertySet properties)
-        ////    => properties.ToDictionary(x => x.Name, x => Value.Wrap(x.Value));
-
         private static Dictionary<string, Value?> Map(DynamicObject source)
             => source.IsSingleValueWrapper()
             ? new Dictionary<string, Value?> { { string.Empty, Wrap(source.Values.Single(), source.Type?.Type) } }
             : source.Properties.ToDictionary(x => x.Name, x => Value.Wrap(x.Value));
-
-        ////private static Value Wrap(object? source, Type? type)
-        ////    => new Value<int>();
     }
 }

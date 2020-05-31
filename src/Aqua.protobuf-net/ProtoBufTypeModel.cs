@@ -2,13 +2,12 @@
 
 namespace Aqua
 {
-    using Aqua.Extensions;
     using Aqua.ProtoBuf;
     using Aqua.ProtoBuf.Dynamic;
     using Aqua.ProtoBuf.TypeSystem;
     using global::ProtoBuf.Meta;
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.ComponentModel;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -44,22 +43,34 @@ namespace Aqua
         {
             var wrapperBaseType = typeModel.GetType<TBase>();
 
+            if (typeof(TBase) == typeof(Values))
+            {
+                wrapperBaseType.AddSubType<Values<Value>>(ref n);
+            }
+            else if (typeof(TBase).IsAssignableFrom(typeof(Values)))
+            {
+                wrapperBaseType.AddSubType<Values>(ref n);
+            }
+
             if (typeof(TBase).IsAssignableFrom(typeof(NullValue)))
             {
                 wrapperBaseType.AddSubType<NullValue>(ref n);
             }
-
-            if (typeof(TBase) != typeof(Values) && typeof(TBase).IsAssignableFrom(typeof(Values)))
+            else
             {
-                wrapperBaseType.AddSubType<Values>(ref n);
+                wrapperBaseType.AddSubType(genericWrapperType.MakeGenericType(typeof(NullValue)), ref n);
             }
 
             if (typeof(TBase).IsAssignableFrom(typeof(DynamicObjectSurrogate)))
             {
                 wrapperBaseType.AddSubType<DynamicObjectSurrogate>(ref n);
             }
+            else
+            {
+                wrapperBaseType.AddSubType(genericWrapperType.MakeGenericType(typeof(DynamicObjectSurrogate)), ref n);
+            }
 
-            foreach (var t in GetPrimitiveValueTypes())
+            foreach (var t in WrappedTypes)
             {
                 wrapperBaseType.AddSubType(genericWrapperType.MakeGenericType(t), ref n);
 
@@ -73,25 +84,25 @@ namespace Aqua
             return typeModel;
         }
 
-        private static IEnumerable<Type> GetPrimitiveValueTypes()
+        internal static ImmutableArray<Type> WrappedTypes { get; } = new[]
         {
-            yield return typeof(string);
-            yield return typeof(int);
-            yield return typeof(byte);
-            yield return typeof(bool);
-            yield return typeof(char);
-            yield return typeof(Guid);
-            yield return typeof(long);
-            yield return typeof(float);
-            yield return typeof(double);
-            yield return typeof(decimal);
-            yield return typeof(sbyte);
-            yield return typeof(uint);
-            yield return typeof(ulong);
-            yield return typeof(short);
-            yield return typeof(ushort);
-            yield return typeof(DateTime);
-            yield return typeof(TimeSpan);
-        }
+            typeof(string),
+            typeof(int),
+            typeof(byte),
+            typeof(bool),
+            typeof(double),
+            typeof(char),
+            typeof(Guid),
+            typeof(long),
+            typeof(float),
+            typeof(decimal),
+            typeof(sbyte),
+            typeof(uint),
+            typeof(ulong),
+            typeof(short),
+            typeof(ushort),
+            typeof(DateTime),
+            typeof(TimeSpan),
+        }.ToImmutableArray();
     }
 }
