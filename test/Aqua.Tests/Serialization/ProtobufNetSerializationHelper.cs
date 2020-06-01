@@ -3,6 +3,8 @@
 namespace Aqua.Tests.Serialization
 {
     using System;
+    using System.Collections;
+    using System.Linq;
     using System.Numerics;
     using Xunit;
 
@@ -17,11 +19,14 @@ namespace Aqua.Tests.Serialization
             => (T)(model ?? _configuration).DeepClone(graph);
 #endif // COREFX
 
-        public static void SkipUnsupportedDataType(Type type)
+        public static void SkipUnsupportedDataType(Type type, object value)
         {
             Skip.If(type.Is<DateTimeOffset>(), "Data type not supported by out-of-the-box protobuf-net");
             Skip.If(type.Is<BigInteger>(), "Data type not supported by out-of-the-box protobuf-net");
             Skip.If(type.Is<Complex>(), "Data type not supported by out-of-the-box protobuf-net");
+            Skip.If(
+                type.IsCollection() && ((IEnumerable)value).Cast<object>().Any(x => x is null),
+                "protobuf-net doesn't support serialization of collection with null elements as the root object");
         }
     }
 }

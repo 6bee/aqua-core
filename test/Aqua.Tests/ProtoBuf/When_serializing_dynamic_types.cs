@@ -18,11 +18,16 @@ namespace Aqua.Tests.ProtoBuf
 
     public class When_serializing_dynamic_types
     {
+        public class A
+        {
+            public A Reference { get; set; }
+        }
+
         [SkippableTheory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         public void Should_serialize_scalar_property(Type type, object value, CultureInfo culture)
         {
-            SkipUnsupportedDataType(type);
+            SkipUnsupportedDataType(type, value);
 
             using var cultureContext = culture.CreateContext();
 
@@ -40,7 +45,7 @@ namespace Aqua.Tests.ProtoBuf
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_collection_property(Type type, object value, CultureInfo culture)
         {
-            SkipUnsupportedDataType(type);
+            SkipUnsupportedDataType(type, value);
 
             using var cultureContext = culture.CreateContext();
 
@@ -80,7 +85,7 @@ namespace Aqua.Tests.ProtoBuf
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_property_set(Type type, object value, CultureInfo culture)
         {
-            SkipUnsupportedDataType(type);
+            SkipUnsupportedDataType(type, value);
 
             using var cultureContext = culture.CreateContext();
 
@@ -101,7 +106,7 @@ namespace Aqua.Tests.ProtoBuf
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         public void Should_serialize_dynamic_object(Type type, object value, CultureInfo culture)
         {
-            SkipUnsupportedDataType(type);
+            SkipUnsupportedDataType(type, value);
 
             using var cultureContext = culture.CreateContext();
 
@@ -119,10 +124,7 @@ namespace Aqua.Tests.ProtoBuf
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_dynamic_object_collection(Type type, IEnumerable value, CultureInfo culture)
         {
-            SkipUnsupportedDataType(type);
-            Skip.If(
-                value.Cast<object>().Any(x => x is null),
-                "protobuf-net doesn't support serialization of collection with null elements as the root object");
+            SkipUnsupportedDataType(type, value);
 
             using var cultureContext = culture.CreateContext();
 
@@ -294,6 +296,24 @@ namespace Aqua.Tests.ProtoBuf
             copy["Id"].ShouldBe(1);
             var items = copy["Items"].ShouldBeAssignableTo<ICollection<DynamicObject>>();
             items.Count.ShouldBe(2);
+        }
+
+        [Fact(Skip = "Circular references are not supported")]
+        public void Should_serialize_dynamic_object_with_cirtcular_reference()
+        {
+            var a = new A();
+            var b = new A { Reference = a };
+            var c = new A { Reference = b };
+            a.Reference = c;
+
+            var entity = new DynamicObjectMapper().MapObject(a);
+
+            var copy = entity.Serialize();
+
+            copy.ShouldBeOfType<DynamicObject>()[
+                nameof(a.Reference)].ShouldBeOfType<DynamicObject>()[
+                nameof(b.Reference)].ShouldBeOfType<DynamicObject>()[
+                nameof(c.Reference)].ShouldBeSameAs(copy);
         }
     }
 }
