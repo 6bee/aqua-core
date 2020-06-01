@@ -89,7 +89,10 @@ namespace Aqua.Tests.ProtoBuf
                 { "p1", value },
             };
 
-            var copy = propertySet.Serialize();
+            var config = ProtoBufTypeModel.ConfigureAquaTypes(configureDefaultSystemTypes: false)
+                .AddDynamicPropertyType(TypeHelper.GetElementType(type) ?? type)
+                .Compile();
+            var copy = propertySet.Serialize(config);
 
             copy["p1"].ShouldBe(value);
         }

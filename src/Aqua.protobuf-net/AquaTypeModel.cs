@@ -2,12 +2,14 @@
 
 namespace Aqua.ProtoBuf
 {
+    using Aqua.Dynamic;
+    using Aqua.Extensions;
     using global::ProtoBuf.Meta;
     using System;
 
     public class AquaTypeModel
     {
-        public AquaTypeModel(RuntimeTypeModel typeModel)
+        internal AquaTypeModel(RuntimeTypeModel typeModel)
         {
             Model = typeModel ?? throw new ArgumentNullException(nameof(typeModel));
 
@@ -17,19 +19,6 @@ namespace Aqua.ProtoBuf
         }
 
         public RuntimeTypeModel Model { get; }
-
-        public AquaTypeModel AddTypeSurrogate<T, TSurrogate>(Action<MetaType>? config = null)
-            => AddTypeSurrogate<T>(typeof(TSurrogate), config);
-
-        public AquaTypeModel AddTypeSurrogate<T>(Type surrogateType, Action<MetaType>? config = null)
-            => AddTypeSurrogate(typeof(T), surrogateType, config);
-
-        public AquaTypeModel AddTypeSurrogate(Type type, Type surrogateType, Action<MetaType>? config = null)
-        {
-            GetType(type).SetSurrogate(surrogateType);
-            config?.Invoke(GetType(surrogateType));
-            return this;
-        }
 
         public AquaTypeModel AddType<T>(Action<MetaType>? config = null)
             => AddType(typeof(T), config);
@@ -56,11 +45,85 @@ namespace Aqua.ProtoBuf
             return this;
         }
 
+        public AquaTypeModel AddTypeSurrogate<T, TSurrogate>(Action<MetaType>? config = null)
+            => AddTypeSurrogate<T>(typeof(TSurrogate), config);
+
+        public AquaTypeModel AddTypeSurrogate<T>(Type surrogateType, Action<MetaType>? config = null)
+            => AddTypeSurrogate(typeof(T), surrogateType, config);
+
+        public AquaTypeModel AddTypeSurrogate(Type type, Type surrogateType, Action<MetaType>? config = null)
+        {
+            GetType(type).SetSurrogate(surrogateType);
+            config?.Invoke(GetType(surrogateType));
+            return this;
+        }
+
         public MetaType GetType<T>() => GetType(typeof(T));
 
         public MetaType GetType(Type type) => Model[type];
 
         public TypeModel Compile() => Model.Compile();
+
+        /// <summary>
+        /// Add type configuration for the given <see cref="Type"/> to be supported as payload within a <see cref="DynamicObject"/> and/or <see cref="Property"/>.
+        /// </summary>
+        /// <typeparam name="T">The <see cref="Type"/> to be configured as dynamic payload.</typeparam>
+        /// <param name="addSingleValueSuppoort">Indicated whether the specified <see cref="Type"/> should be supposted as single value.</param>
+        /// <param name="addCollectionSupport">Indicated whether the specified <see cref="Type"/> should be supposted as collection.</param>
+        /// <param name="addNullableSupport">Indicates whether protobuf-net should suport null values for the specified <see cref="Type"/>.</param>
+        /// <returns>The <see cref="AquaTypeModel"/> under configuration.</returns>
+        public AquaTypeModel AddDynamicPropertyType<T>(bool addSingleValueSuppoort = true, bool addCollectionSupport = true, bool addNullableSupport = true)
+            => AddDynamicPropertyType(true, typeof(T), addSingleValueSuppoort, addCollectionSupport, addNullableSupport);
+
+        /// <summary>
+        /// Add type configuration for the given <see cref="Type"/> to be supported as payload within a <see cref="DynamicObject"/> and/or <see cref="Property"/>.
+        /// </summary>
+        /// <param name="propertyType">The <see cref="Type"/> to be configured as dynamic payload.</param>
+        /// <param name="addSingleValueSuppoort">Indicated whether the specified <see cref="Type"/> should be supposted as single value.</param>
+        /// <param name="addCollectionSupport">Indicated whether the specified <see cref="Type"/> should be supposted as collection.</param>
+        /// <param name="addNullableSupport">Indicates whether protobuf-net should support null values for the specified <see cref="Type"/>.</param>
+        /// <returns>The <see cref="AquaTypeModel"/> under configuration.</returns>
+        public AquaTypeModel AddDynamicPropertyType(Type propertyType, bool addSingleValueSuppoort = true, bool addCollectionSupport = true, bool addNullableSupport = true)
+            => AddDynamicPropertyType(true, propertyType, addSingleValueSuppoort, addCollectionSupport, addNullableSupport);
+
+        private AquaTypeModel AddDynamicPropertyType(bool flag, Type propertyType, bool addSingleValueSuppoort = true, bool addCollectionSupport = true, bool addNullableSupport = true)
+        {
+            if (propertyType is null)
+            {
+                throw new ArgumentNullException(nameof(propertyType));
+            }
+
+            var isNullable = propertyType.IsNullable();
+            if (addSingleValueSuppoort)
+            {
+                var singleValueType = typeof(Value<>).MakeGenericType(propertyType);
+                AddSubType<Value>(singleValueType);
+                if (isNullable && addNullableSupport)
+                {
+                    GetType(singleValueType)[1].SupportNull = true;
+                }
+            }
+
+            if (addCollectionSupport)
+            {
+                var collectionType = typeof(Values<>).MakeGenericType(propertyType);
+                AddSubType<Values>(collectionType);
+                if (isNullable && addNullableSupport)
+                {
+                    GetType(collectionType)[1].SupportNull = true;
+                }
+            }
+
+            if (flag && propertyType.IsValueType && addNullableSupport)
+            {
+                var invertedNullableType = isNullable
+                    ? propertyType.GetGenericArguments()[0]
+                    : typeof(Nullable<>).MakeGenericType(propertyType);
+                AddDynamicPropertyType(false, invertedNullableType, addSingleValueSuppoort, addCollectionSupport, addNullableSupport);
+            }
+
+            return this;
+        }
 
         public static implicit operator RuntimeTypeModel(AquaTypeModel model) => model.Model;
     }
