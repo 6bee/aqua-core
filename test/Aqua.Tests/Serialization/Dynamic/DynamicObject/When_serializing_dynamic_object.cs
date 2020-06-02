@@ -8,7 +8,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using System.Numerics;
     using System.Reflection;
     using Xunit;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
@@ -39,7 +38,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
-        // XML serialization doesn't support circular references
 #if NETFX
         public class NetDataContractSerializer : When_serializing_dynamic_object
         {
@@ -86,15 +84,13 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value(Type type, object value, CultureInfo culture)
         {
-            Skip.If(this.TestIs<XmlSerializer>(), "XmlSerializer has limited type support.");
-
 #if COREFX
             if (this.TestIs<ProtobufNetSerializer>())
             {
-                // Skip.If(type.IsEnum(), "TODO: to be investigated.");
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
 #endif // COREFX
+            Skip.If(this.TestIs<XmlSerializer>(), "XmlSerializer has limited type support.");
 
             using var cultureContext = culture.CreateContext();
 
@@ -108,14 +104,13 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value_when_using_string_formatting(Type type, object value, CultureInfo culture)
         {
-            Skip.If(this.TestIs<XmlSerializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
-
 #if COREFX
             if (this.TestIs<ProtobufNetSerializer>())
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
 #endif // COREFX
+            Skip.If(this.TestIs<XmlSerializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
 
             using var cultureContext = culture.CreateContext();
 
@@ -129,14 +124,13 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property(Type type, object value, CultureInfo culture)
         {
-            Skip.If(this.TestIs<XmlSerializer>(), "XmlSerializer has limited type support.");
-
 #if COREFX
             if (this.TestIs<ProtobufNetSerializer>())
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
 #endif // COREFX
+            Skip.If(this.TestIs<XmlSerializer>(), "XmlSerializer has limited type support.");
 
             using var cultureContext = culture.CreateContext();
 
