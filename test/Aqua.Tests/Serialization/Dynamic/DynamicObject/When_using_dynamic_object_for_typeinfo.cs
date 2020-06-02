@@ -10,6 +10,14 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_using_dynamic_object_for_typeinfo
     {
+        public class BinaryFormatter : When_using_dynamic_object_for_typeinfo
+        {
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
+        }
+
         public class DataContractSerializer : When_using_dynamic_object_for_typeinfo
         {
             public DataContractSerializer()
@@ -26,22 +34,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
-        public class XmlSerializer : When_using_dynamic_object_for_typeinfo
-        {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.Serialize)
-            {
-            }
-        }
-
-        public class BinaryFormatter : When_using_dynamic_object_for_typeinfo
-        {
-            public BinaryFormatter()
-                : base(BinarySerializationHelper.Serialize)
-            {
-            }
-        }
-
 #if NETFX
         public class NetDataContractSerializer : When_using_dynamic_object_for_typeinfo
         {
@@ -50,15 +42,25 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif
+#endif // NETFX
 
 #if COREFX
-        // TODO: figure out issue
-        // public class ProtobufNetSerializer : When_using_dynamic_object_for_typeinfo
-        // {
-        //     public ProtobufNetSerializer() : base(ProtobufNetSerializationHelper.Serialize) { }
-        // }
+        public class ProtobufNetSerializer : When_using_dynamic_object_for_typeinfo
+        {
+            public ProtobufNetSerializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
+        }
 #endif // COREFX
+
+        public class XmlSerializer : When_using_dynamic_object_for_typeinfo
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.Serialize)
+            {
+            }
+        }
 
         private readonly Func<DynamicObject, DynamicObject> _serialize;
 

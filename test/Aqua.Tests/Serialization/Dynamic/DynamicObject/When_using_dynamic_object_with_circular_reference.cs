@@ -9,6 +9,16 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_using_dynamic_object_with_circular_reference
     {
+        // XML serialization doesn't support circular references
+        // protobuf-net doesn't support circular references
+        public class BinaryFormatter : When_using_dynamic_object_with_circular_reference
+        {
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
+        }
+
         public class JsonSerializer : When_using_dynamic_object_with_circular_reference
         {
             public JsonSerializer()
@@ -21,16 +31,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             public DataContractSerializer()
                 : base(DataContractSerializationHelper.Serialize)
-            {
-            }
-        }
-
-        // XML serialization doesn't support circular references
-        // protobuf-net doesn't support circular references
-        public class BinaryFormatter : When_using_dynamic_object_with_circular_reference
-        {
-            public BinaryFormatter()
-                : base(BinarySerializationHelper.Serialize)
             {
             }
         }

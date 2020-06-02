@@ -11,6 +11,14 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_serializing_dynamicobject_for_typeinfo_of_typeinfo
     {
+        public class BinaryFormatter : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
+        {
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
+        }
+
         public class DataContractSerializer : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {
             public DataContractSerializer()
@@ -23,14 +31,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             public JsonSerializer()
                 : base(JsonSerializationHelper.Serialize)
-            {
-            }
-        }
-
-        public class BinaryFormatter : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
-        {
-            public BinaryFormatter()
-                : base(BinarySerializationHelper.Serialize)
             {
             }
         }

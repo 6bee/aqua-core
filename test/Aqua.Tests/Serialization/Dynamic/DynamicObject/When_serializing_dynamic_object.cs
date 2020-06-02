@@ -8,6 +8,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Numerics;
     using System.Reflection;
     using Xunit;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
@@ -39,7 +40,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         // XML serialization doesn't support circular references
-        // protobuf-net serialization doesn't support circular references
 #if NETFX
         public class NetDataContractSerializer : When_serializing_dynamic_object
         {
@@ -50,18 +50,28 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 #endif
 
+#if COREFX
+        public class ProtobufNetSerializer : When_serializing_dynamic_object
+        {
+            public ProtobufNetSerializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
+        }
+#endif // COREFX
+
+        public class XmlSerializer : When_serializing_dynamic_object
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.Serialize)
+            {
+            }
+        }
+
         private class A<T>
         {
             public T Value { get; set; }
         }
-
-        private static readonly MethodInfo SerializeMethod = typeof(When_serializing_dynamic_object)
-            .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
-            .Single(x => x.Name == nameof(Serialize) && x.GetGenericArguments().Length == 1);
-
-        private static readonly MethodInfo SerializeAsPropertyMethod = typeof(When_serializing_dynamic_object)
-            .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
-            .Single(x => x.Name == nameof(SerializeAsProperty) && x.GetGenericArguments().Length == 1);
 
         private readonly Func<DynamicObject, DynamicObject> _serialize;
 
@@ -70,59 +80,94 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             _serialize = serialize;
         }
 
-        [Theory]
+        [SkippableTheory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value(Type type, object value, CultureInfo culture)
         {
+            Skip.If(this.TestIs<XmlSerializer>(), "XmlSerializer has limited type support.");
+
+#if COREFX
+            if (this.TestIs<ProtobufNetSerializer>())
+            {
+                // Skip.If(type.IsEnum(), "TODO: to be investigated.");
+                ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
+#endif // COREFX
+
             using var cultureContext = culture.CreateContext();
 
-            var result = SerializeMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, false });
+            var result = Serialize(type, value, true, false);
             result.ShouldBe(value, $"type: {type.FullName}");
         }
 
-        [Theory]
+        [SkippableTheory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value_when_using_string_formatting(Type type, object value, CultureInfo culture)
         {
+            Skip.If(this.TestIs<XmlSerializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
+
+#if COREFX
+            if (this.TestIs<ProtobufNetSerializer>())
+            {
+                ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
+#endif // COREFX
+
             using var cultureContext = culture.CreateContext();
 
-            var result = SerializeMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, true });
+            var result = Serialize(type, value, true, true);
             result.ShouldBe(value, $"type: {type.FullName}");
         }
 
-        [Theory]
+        [SkippableTheory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property(Type type, object value, CultureInfo culture)
         {
+            Skip.If(this.TestIs<XmlSerializer>(), "XmlSerializer has limited type support.");
+
+#if COREFX
+            if (this.TestIs<ProtobufNetSerializer>())
+            {
+                ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
+#endif // COREFX
+
             using var cultureContext = culture.CreateContext();
 
-            var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, false });
+            var result = SerializeAsProperty(type, value, true, false);
             result.ShouldBe(value, $"type: {type.FullName}");
         }
 
-        [Theory]
+        [SkippableTheory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property_when_using_string_formatting(Type type, object value, CultureInfo culture)
         {
+            Skip.If(this.TestIs<XmlSerializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
+
             using var cultureContext = culture.CreateContext();
 
-            var result = SerializeAsPropertyMethod.MakeGenericMethod(type).Invoke(this, new[] { value, true, true });
+            var result = SerializeAsProperty(type, value, true, true);
             result.ShouldBe(value, $"type: {type.FullName}  ({value})");
         }
 
-        [Fact]
+        [SkippableFact]
         public void Should_serialize_DateTimeOffset_as_property()
         {
+#if COREFX
+            Skip.If(this.TestIs<ProtobufNetSerializer>(), "DateTimeOffset is not supported by XmlSerializer.");
+#endif // COREFX
+            Skip.If(this.TestIs<XmlSerializer>(), "DateTimeOffset is not supported by XmlSerializer.");
+
             var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
-            var result = SerializeAsPropertyMethod.MakeGenericMethod(value.GetType()).Invoke(this, new object[] { value, true, false });
+            var result = SerializeAsProperty(value.GetType(), value, true, false);
             result.ShouldBe(value);
         }
 
@@ -130,7 +175,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         public void Should_serialize_DateTimeOffset_as_property_when_using_string_formatting()
         {
             var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
-            var result = SerializeAsPropertyMethod.MakeGenericMethod(value.GetType()).Invoke(this, new object[] { value, true, true });
+            var result = SerializeAsProperty(value.GetType(), value, true, true);
             result.ShouldBe(value);
         }
 
@@ -208,8 +253,24 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             result.ShouldBe(0.1F);
         }
 
+        private object Serialize(Type type, object value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
+        {
+            var method = typeof(When_serializing_dynamic_object)
+                .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
+                .Single(x => x.Name == nameof(Serialize) && x.IsGenericMethod && x.GetGenericArguments().Length == 1);
+            return method.MakeGenericMethod(type).Invoke(this, new[] { value, setTypeFromGenericArgument, formatValuesAsStrings });
+        }
+
         private T Serialize<T>(T value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
             => Serialize<T, T>(value, setTypeFromGenericArgument, formatValuesAsStrings);
+
+        private object SerializeAsProperty(Type propertyTape, object propertyValue, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
+        {
+            var method = typeof(When_serializing_dynamic_object)
+              .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
+              .Single(x => x.Name == nameof(SerializeAsProperty) && x.IsGenericMethod && x.GetGenericArguments().Length == 1);
+            return method.MakeGenericMethod(propertyTape).Invoke(this, new[] { propertyValue, setTypeFromGenericArgument, formatValuesAsStrings });
+        }
 
         private T SerializeAsProperty<T>(T value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
             => Serialize<A<T>, A<T>>(new A<T> { Value = value }, setTypeFromGenericArgument, formatValuesAsStrings).Value;

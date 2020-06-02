@@ -14,6 +14,15 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_serializing_dynamicobject_collections_of_nullable
     {
+        // protobuf-net doesn't support serialization of collection with null elements as the root object
+        public class BinaryFormatter : When_serializing_dynamicobject_collections_of_nullable
+        {
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
+        }
+
         public class DataContractSerializer : When_serializing_dynamicobject_collections_of_nullable
         {
             public DataContractSerializer()
@@ -30,23 +39,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
-        public class XmlSerializer : When_serializing_dynamicobject_collections_of_nullable
-        {
-            public XmlSerializer()
-                : base(x => XmlSerializationHelper.Serialize(x.ToArray()))
-            {
-            }
-        }
-
-        public class BinaryFormatter : When_serializing_dynamicobject_collections_of_nullable
-        {
-            public BinaryFormatter()
-                : base(BinarySerializationHelper.Serialize)
-            {
-            }
-        }
-
-        // protobuf-net doesn't support serialization of collection with null elements as the root object
 #if NETFX
         public class NetDataContractSerializer : When_serializing_dynamicobject_collections_of_nullable
         {
@@ -56,6 +48,14 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 #endif
+
+        public class XmlSerializer : When_serializing_dynamicobject_collections_of_nullable
+        {
+            public XmlSerializer()
+                : base(x => XmlSerializationHelper.Serialize(x.ToArray()))
+            {
+            }
+        }
 
         public sealed class QueryableProxy<T> : IQueryable<T>
         {

@@ -14,6 +14,14 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_serializing_dynamicobject_for_collections_of_notnullable
     {
+        public class BinaryFormatter : When_serializing_dynamicobject_for_collections_of_notnullable
+        {
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
+            {
+            }
+        }
+
         public class DataContractSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {
             public DataContractSerializer()
@@ -26,22 +34,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             public JsonSerializer()
                 : base(JsonSerializationHelper.Serialize)
-            {
-            }
-        }
-
-        public class XmlSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
-        {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.Serialize)
-            {
-            }
-        }
-
-        public class BinaryFormatter : When_serializing_dynamicobject_for_collections_of_notnullable
-        {
-            public BinaryFormatter()
-                : base(BinarySerializationHelper.Serialize)
             {
             }
         }
@@ -65,6 +57,14 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 #endif // COREFX
+
+        public class XmlSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.Serialize)
+            {
+            }
+        }
 
         public sealed class QueryableProxy<T> : IQueryable<T>
         {

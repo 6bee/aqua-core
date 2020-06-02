@@ -14,13 +14,6 @@ namespace Aqua.ProtoBuf
         public override Type ValueType => ElementType.MakeArrayType();
 
         [ProtoIgnore]
-        public virtual object?[] ObjectArray
-        {
-            get => (object?[])ObjectValue;
-            set => ObjectValue = value;
-        }
-
-        [ProtoIgnore]
         public abstract Type ElementType { get; }
 
         [return: NotNullIfNotNull("sequence")]

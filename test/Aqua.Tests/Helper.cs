@@ -16,6 +16,9 @@ namespace Aqua.Tests
             where T : class
             => test.GetType() == typeof(T);
 
+        public static bool ValueIs(this object value, Type type)
+            => value?.GetType() == type;
+
         public static bool Is<T>(this Type type)
             where T : struct
             => type == typeof(T)

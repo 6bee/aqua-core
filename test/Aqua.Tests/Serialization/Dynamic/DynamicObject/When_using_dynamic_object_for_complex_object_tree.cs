@@ -9,10 +9,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_using_dynamic_object_for_complex_object_tree
     {
-        public class JsonSerializer : When_using_dynamic_object_for_complex_object_tree
+        public class BinaryFormatter : When_using_dynamic_object_for_complex_object_tree
         {
-            public JsonSerializer()
-                : base(JsonSerializationHelper.Serialize)
+            public BinaryFormatter()
+                : base(BinarySerializationHelper.Serialize)
             {
             }
         }
@@ -25,18 +25,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
-        public class XmlSerializer : When_using_dynamic_object_for_complex_object_tree
+        public class JsonSerializer : When_using_dynamic_object_for_complex_object_tree
         {
-            public XmlSerializer()
-                : base(XmlSerializationHelper.Serialize)
-            {
-            }
-        }
-
-        public class BinaryFormatter : When_using_dynamic_object_for_complex_object_tree
-        {
-            public BinaryFormatter()
-                : base(BinarySerializationHelper.Serialize)
+            public JsonSerializer()
+                : base(JsonSerializationHelper.Serialize)
             {
             }
         }
@@ -49,15 +41,25 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif
+#endif // NETFX
 
 #if COREFX
-        // TODO: figure out issue
-        // public class ProtobufNetSerializer : When_using_dynamic_object_for_complex_object_tree
-        // {
-        //     public ProtobufNetSerializer() : base(ProtobufNetSerializationHelper.Serialize) { }
-        // }
+        public class ProtobufNetSerializer : When_using_dynamic_object_for_complex_object_tree
+        {
+            public ProtobufNetSerializer()
+                : base(ProtobufNetSerializationHelper.Serialize)
+            {
+            }
+        }
 #endif // COREFX
+
+        public class XmlSerializer : When_using_dynamic_object_for_complex_object_tree
+        {
+            public XmlSerializer()
+                : base(XmlSerializationHelper.Serialize)
+            {
+            }
+        }
 
         private const double DoubleValue = 1.2345679e-87;
         private const string StringValue = "eleven";

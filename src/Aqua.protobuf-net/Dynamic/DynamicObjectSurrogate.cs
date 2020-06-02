@@ -3,6 +3,7 @@
 namespace Aqua.ProtoBuf.Dynamic
 {
     using Aqua.Dynamic;
+    using Aqua.Extensions;
     using Aqua.TypeSystem;
     using global::ProtoBuf;
     using System;
@@ -63,6 +64,19 @@ namespace Aqua.ProtoBuf.Dynamic
             ? DynamicObjectSurrogate.Convert(dynamicObject)
             : value is DynamicObject?[] dynamicObjectArray
             ? DynamicObjectArraySurrogate.Convert(dynamicObjectArray)
-            : Value.Wrap(value, type?.Type);
+            : Value.Wrap(value, RedirectTypeForStringFormattedValues(value, type?.Type));
+
+        private static Type? RedirectTypeForStringFormattedValues(object? value, Type? type)
+        {
+            if (type != null &&
+                value.IsCollection(out var collection) &&
+                collection.Any(x => x != null) &&
+                collection.All(x => x is null || x is string))
+            {
+                return typeof(string);
+            }
+
+            return type;
+        }
     }
 }

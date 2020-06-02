@@ -244,5 +244,43 @@ namespace Aqua.Extensions
                 _ = func(item);
             }
         }
+
+        internal static bool Any(this IEnumerable? source) => source?.GetEnumerator().MoveNext() == true;
+
+        internal static bool Any(this IEnumerable? source, Func<object, bool> predicate)
+        {
+            if (source is null)
+            {
+                return false;
+            }
+
+            foreach (var item in source)
+            {
+                if (predicate(item))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal static bool All(this IEnumerable? source, Func<object, bool> predicate)
+        {
+            if (source is null)
+            {
+                return true;
+            }
+
+            foreach (var item in source)
+            {
+                if (!predicate(item))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }

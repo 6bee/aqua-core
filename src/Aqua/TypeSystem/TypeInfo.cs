@@ -141,7 +141,7 @@ namespace Aqua.TypeSystem
         public bool IsNested => DeclaringType != null;
 
         [Unmapped]
-        public bool IsGenericTypeDefinition => !GenericArguments?.Any() ?? true;
+        public bool IsGenericTypeDefinition => IsGenericType && (!GenericArguments?.Any() ?? true);
 
         [Unmapped]
         public bool IsArray
