@@ -25,8 +25,5 @@ namespace Aqua.ProtoBuf
             get => (T)ObjectValue;
             set => ObjectValue = value!;
         }
-
-        [ProtoIgnore]
-        public override Type ValueType => typeof(T);
     }
 }

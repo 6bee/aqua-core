@@ -10,12 +10,6 @@ namespace Aqua.ProtoBuf
     [ProtoContract]
     public abstract class Values : Value
     {
-        [ProtoIgnore]
-        public override Type ValueType => ElementType.MakeArrayType();
-
-        [ProtoIgnore]
-        public abstract Type ElementType { get; }
-
         [return: NotNullIfNotNull("sequence")]
         public static Values? Wrap(IEnumerable? sequence, Type elementType)
             => sequence is null

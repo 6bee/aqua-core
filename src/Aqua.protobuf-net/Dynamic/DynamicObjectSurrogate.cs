@@ -15,9 +15,6 @@ namespace Aqua.ProtoBuf.Dynamic
     public class DynamicObjectSurrogate : Value
     {
         [ProtoIgnore]
-        public override Type ValueType => typeof(DynamicObject);
-
-        [ProtoIgnore]
         public override object ObjectValue
         {
             get => Convert(this);
