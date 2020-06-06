@@ -93,8 +93,10 @@ namespace Aqua.TypeSystem.Emit
 
                 emit = () => _typeCache.GetOrCreate(properties, InternalEmitAnonymousType);
             }
-
-            emit = () => _typeCache.GetOrCreate(type, InternalEmitType);
+            else
+            {
+                emit = () => _typeCache.GetOrCreate(type, InternalEmitType);
+            }
 
             try
             {
