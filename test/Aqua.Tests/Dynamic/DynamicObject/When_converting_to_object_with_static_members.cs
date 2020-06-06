@@ -11,12 +11,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     {
         private class CustomType
         {
-#pragma warning disable CS0414 // Private filed is assigned but never used
-#pragma warning disable SA1401 // Fields should be private
-#pragma warning disable IDE0051 // Remove unused private members
-#pragma warning disable IDE0044 // Add readonly modifier
-#pragma warning disable SA1306 // Field names should begin with lower-case letter
-
+#pragma warning disable CS0414 // CS0414: The field is assigned but its value is never used
             private const string PrivateConstString = "DefaultPrivateConstStringValue";
 
             public const string ConstString = "DefaultConstStringValue";
@@ -50,12 +45,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             public string ReadonlyProperty { get; } = "DefaultReadonlyPropertyValue";
 
             public string WriteonlyProperty { set => WriteonlyPropertyBackingField = value; }
-
-#pragma warning restore SA1306 // Field names should begin with lower-case letter
-#pragma warning restore IDE0044 // Add readonly modifier
-#pragma warning restore IDE0051 // Remove unused private members
-#pragma warning restore SA1401 // Fields should be private
-#pragma warning restore CS0414 // Private filed is assigned but never used
+#pragma warning restore CS0414 // CS0414: The field is assigned but its value is never used
         }
 
         private readonly CustomType obj;

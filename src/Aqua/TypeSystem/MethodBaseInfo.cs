@@ -19,7 +19,7 @@ namespace Aqua.TypeSystem
         {
         }
 
-        internal MethodBaseInfo(System.Reflection.MethodBase method, TypeInfoProvider typeInfoProvider)
+        protected MethodBaseInfo(System.Reflection.MethodBase method, TypeInfoProvider typeInfoProvider)
             : base(method, typeInfoProvider)
         {
             var genericArguments = method.IsGenericMethod ? method.GetGenericArguments() : null;
@@ -34,10 +34,10 @@ namespace Aqua.TypeSystem
                 .ToList();
         }
 
-        internal MethodBaseInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes, TypeInfoProvider typeInfoProvider)
+        protected MethodBaseInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes, TypeInfoProvider typeInfoProvider)
             : this(
             name,
-            typeInfoProvider.Get(declaringType, includePropertyInfosOverride: false, setMemberDeclaringTypesOverride: false),
+            typeInfoProvider.Get(declaringType, includePropertyInfos: false, setMemberDeclaringTypes: false),
             genericArguments?.Select(x => typeInfoProvider.Get(x, false, false)),
             parameterTypes?.Select(x => typeInfoProvider.Get(x, false, false)))
         {
@@ -54,7 +54,7 @@ namespace Aqua.TypeSystem
                 .ToList();
         }
 
-        internal MethodBaseInfo(MethodBaseInfo method, TypeInfoProvider typeInfoProvider)
+        protected MethodBaseInfo(MethodBaseInfo method, TypeInfoProvider typeInfoProvider)
             : base(method, typeInfoProvider)
         {
             GenericArgumentTypes = method.GenericArgumentTypes

@@ -144,7 +144,7 @@ namespace Aqua.TypeSystem
             }
 
             Exception CreateException(string reason, Exception? innerException = null)
-                => new TypeResolverException($"Failed to resolve constructor '{constructor}' since {reason}.");
+                => new TypeResolverException($"Failed to resolve constructor '{constructor}' since {reason}.", innerException);
 
             var declaringType = constructor.ResolveDeclaringType(typeResolver);
 
@@ -226,7 +226,7 @@ namespace Aqua.TypeSystem
             }
 
             Exception CreateException(string reason, Exception? innerException = null)
-                => new TypeResolverException($"Failed to resolve method '{method}' since {reason}.");
+                => new TypeResolverException($"Failed to resolve method '{method}' since {reason}.", innerException);
 
             var declaringType = method.ResolveDeclaringType(typeResolver);
             if (declaringType is null)

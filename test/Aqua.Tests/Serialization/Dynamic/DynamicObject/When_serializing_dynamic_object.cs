@@ -189,19 +189,19 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [Fact]
         public void List_of_nullable_int_should_serialize()
         {
-            _ = Serialize<IEnumerable<int?>>(new List<int?> { null, 1, 11 });
+            Should.NotThrow(() => Serialize<IEnumerable<int?>>(new List<int?> { null, 1, 11 }));
         }
 
         [Fact]
         public void Array_of_int_should_serialize()
         {
-            _ = Serialize(new[] { 1, 11 });
+            Should.NotThrow(() => Serialize(new[] { 1, 11 }));
         }
 
         [Fact]
         public void Array_of_nullable_int_should_serialize()
         {
-            _ = Serialize(new int?[] { null, 1, 11 });
+            Should.NotThrow(() => Serialize(new int?[] { null, 1, 11 }));
         }
 
         [Fact]
@@ -228,7 +228,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [Fact]
         public void Array_of_char_should_serialize()
         {
-            _ = Serialize(new[] { 'h', 'e', 'l', 'l', 'o' });
+            Should.NotThrow(() => Serialize(new[] { 'h', 'e', 'l', 'l', 'o' }));
         }
 
         [Fact]
@@ -237,7 +237,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             int? i = 1;
             sbyte? b1 = -2;
             byte b2 = 2;
-            _ = Serialize(new { B = b1, N = new { I = i, B = b2 } });
+            Should.NotThrow(() => Serialize(new { B = b1, N = new { I = i, B = b2 } }));
         }
 
         [Fact]
@@ -246,17 +246,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             var result = Serialize<float, float>(0.1F, formatValuesAsStrings: true);
             result.ShouldBe(0.1F);
         }
-
-        private object Serialize(Type type, object value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
-        {
-            var method = typeof(When_serializing_dynamic_object)
-                .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
-                .Single(x => x.Name == nameof(Serialize) && x.IsGenericMethod && x.GetGenericArguments().Length == 1);
-            return method.MakeGenericMethod(type).Invoke(this, new[] { value, setTypeFromGenericArgument, formatValuesAsStrings });
-        }
-
-        private T Serialize<T>(T value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
-            => Serialize<T, T>(value, setTypeFromGenericArgument, formatValuesAsStrings);
 
         private object SerializeAsProperty(Type propertyTape, object propertyValue, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
         {
@@ -268,6 +257,17 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
         private T SerializeAsProperty<T>(T value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
             => Serialize<A<T>, A<T>>(new A<T> { Value = value }, setTypeFromGenericArgument, formatValuesAsStrings).Value;
+
+        private object Serialize(Type type, object value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
+        {
+            var method = typeof(When_serializing_dynamic_object)
+                .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
+                .Single(x => x.Name == nameof(Serialize) && x.IsGenericMethod && x.GetGenericArguments().Length == 1);
+            return method.MakeGenericMethod(type).Invoke(this, new[] { value, setTypeFromGenericArgument, formatValuesAsStrings });
+        }
+
+        private T Serialize<T>(T value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
+            => Serialize<T, T>(value, setTypeFromGenericArgument, formatValuesAsStrings);
 
         private TResult Serialize<TResult, TSource>(TSource value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
         {

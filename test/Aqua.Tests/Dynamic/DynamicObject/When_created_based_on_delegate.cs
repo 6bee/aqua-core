@@ -32,6 +32,9 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             var o = new DynamicObject(a);
             var r = new DynamicObjectMapper().Map<Action>(o);
             r();
+
+            r.Method.ShouldBeSameAs(a.Method);
+            r.Target.ShouldNotBeSameAs(a.Target);
         }
 
         [Fact]
@@ -43,6 +46,9 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             var o = new DynamicObject(a);
             var r = new DynamicObjectMapper().Map<Action<int>>(o);
             r(2);
+
+            r.Method.ShouldBeSameAs(a.Method);
+            r.Target.ShouldNotBeSameAs(a.Target);
         }
 
         [Fact]
@@ -123,6 +129,17 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             var r = new DynamicObjectMapper().Map<F1>(o);
             var x = r(2);
             x.ShouldBe(4);
+        }
+
+        [Fact]
+        public void May_not_return_value_since_mapping_creates_a_fresh_instance_of_closure()
+        {
+            var value = 99;
+            Func<int> get = () => value;
+            var o = new DynamicObject(get);
+            var r = new DynamicObjectMapper().Map<Func<int>>(o);
+            var x = r();
+            x.ShouldBe(0);
         }
     }
 }

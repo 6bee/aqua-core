@@ -105,15 +105,15 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         }
 
         [Fact]
-        public void Should_have_the_property_of_type_C_not_set()
+        public void Should_have_the_property_of_type_C()
         {
-            obj.CProperty.ShouldBeNull(); // cannot automatically assign A to C (despite explicit cast!)
+            obj.CProperty.ShouldBeOfType<C>();
         }
 
         [Fact]
-        public void Should_have_the_property_of_type_D_not_set()
+        public void Should_have_the_property_of_type_D()
         {
-            obj.DProperty.ShouldBeNull(); // cannot automatically assign A to D (despite implicit cast!)
+            obj.DProperty.ShouldBeOfType<D>();
         }
     }
 }

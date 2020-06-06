@@ -24,8 +24,6 @@ namespace Aqua.TypeSystem.Emit
                 _hash = new Lazy<int>(_properties.GetCollectionHashCode);
             }
 
-            public IEnumerable<string> Properties => _properties;
-
             public override bool Equals(object obj)
             {
                 if (obj is null)
@@ -38,7 +36,8 @@ namespace Aqua.TypeSystem.Emit
                     return true;
                 }
 
-                return obj.GetType() == typeof(PropertyList) && Equals((PropertyList)obj);
+                return obj is PropertyList propertyList
+                    && Equals(propertyList);
             }
 
             private bool Equals(PropertyList other)
@@ -64,27 +63,23 @@ namespace Aqua.TypeSystem.Emit
 
         private sealed class TypeWithPropertyList
         {
-            private readonly string _typeFullName;
-
             private readonly ReadOnlyCollection<Tuple<string, Type>> _properties;
 
             private readonly Lazy<int> _hash;
 
-            public TypeWithPropertyList(TypeInfo typeInfo)
+            public TypeWithPropertyList(TypeInfo typeInfo, ITypeResolver typeResolver)
             {
-                _typeFullName = typeInfo.FullName;
+                TypeFullName = typeInfo.FullName;
 
                 var properties = typeInfo.Properties;
                 _properties = properties is null
                     ? new List<Tuple<string, Type>>().AsReadOnly()
-                    : properties.Select(CreatePropertyInfo).ToList().AsReadOnly() !;
+                    : properties.Select(x => CreatePropertyInfo(x, typeResolver)).ToList().AsReadOnly();
 
                 _hash = new Lazy<int>(_properties.GetCollectionHashCode);
             }
 
-            public string TypeFullName => _typeFullName;
-
-            public IEnumerable<Tuple<string, Type>> Properties => _properties;
+            public string TypeFullName { get; private set; }
 
             public override bool Equals(object obj)
             {
@@ -98,12 +93,13 @@ namespace Aqua.TypeSystem.Emit
                     return true;
                 }
 
-                return obj.GetType() == typeof(TypeWithPropertyList) && Equals((TypeWithPropertyList)obj);
+                return obj is TypeWithPropertyList list
+                    && Equals(list);
             }
 
             private bool Equals(TypeWithPropertyList other)
             {
-                if (!string.Equals(_typeFullName, other._typeFullName))
+                if (!string.Equals(TypeFullName, other.TypeFullName))
                 {
                     return false;
                 }
@@ -119,7 +115,7 @@ namespace Aqua.TypeSystem.Emit
             public override int GetHashCode() => _hash.Value;
 
             [return: NotNullIfNotNull("property")]
-            private static Tuple<string, Type>? CreatePropertyInfo(PropertyInfo? property)
+            private static Tuple<string, Type>? CreatePropertyInfo(PropertyInfo? property, ITypeResolver typeResolver)
             {
                 if (property is null)
                 {
@@ -138,7 +134,7 @@ namespace Aqua.TypeSystem.Emit
                     throw new ArgumentException($"Property type missing for property '{propertyName}'");
                 }
 
-                var propertyType = propertyTypeInfo.Type;
+                var propertyType = propertyTypeInfo.ResolveType(typeResolver);
 
                 return new Tuple<string, Type>(propertyName!, propertyType);
             }
@@ -146,6 +142,13 @@ namespace Aqua.TypeSystem.Emit
 
         private sealed class TypeCache : TransparentCache<object, Type>
         {
+            private readonly ITypeResolver _typeResolver;
+
+            public TypeCache(ITypeResolver typeResolver)
+            {
+                _typeResolver = typeResolver;
+            }
+
             internal Type GetOrCreate(IEnumerable<string> properties, Func<IEnumerable<string>, Type> factory)
             {
                 var key = new PropertyList(properties);
@@ -154,7 +157,7 @@ namespace Aqua.TypeSystem.Emit
 
             internal Type GetOrCreate(TypeInfo typeInfo, Func<TypeInfo, Type> factory)
             {
-                var key = new TypeWithPropertyList(typeInfo);
+                var key = new TypeWithPropertyList(typeInfo, _typeResolver);
                 return GetOrCreate(key, x => factory(typeInfo));
             }
         }

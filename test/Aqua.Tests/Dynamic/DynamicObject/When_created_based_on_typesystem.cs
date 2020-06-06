@@ -11,14 +11,10 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     public class When_created_based_on_typesystem
     {
         private static int _privateStaticField = 0;
-#pragma warning disable SA1401 // Fields should be private
         public static int PublicStaticField = 0;
-#pragma warning restore SA1401 // Fields should be private
 
         private int _privateField = 0;
-#pragma warning disable SA1401 // Fields should be private
         public int PublicField = 0;
-#pragma warning restore SA1401 // Fields should be private
 
         private int PrivateProperty { get; set; }
 

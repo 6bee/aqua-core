@@ -26,7 +26,7 @@ namespace Aqua.TypeSystem
         {
         }
 
-        internal ConstructorInfo(System.Reflection.ConstructorInfo constructor, TypeInfoProvider typeInfoProvider)
+        public ConstructorInfo(System.Reflection.ConstructorInfo constructor, TypeInfoProvider typeInfoProvider)
             : base(constructor, typeInfoProvider)
         {
             _constructor = constructor;

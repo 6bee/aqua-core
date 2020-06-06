@@ -13,6 +13,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
     {
         private static void SayHello<T>(IEnumerable<T> param)
         {
+            // empty
         }
 
         [Theory]

@@ -13,13 +13,13 @@ namespace Aqua.Tests
         {
             if (!type.GetTypeInfo().IsDefined(typeof(T)))
             {
-                throw new ExpectedAnnotation(type, typeof(T));
+                throw new ExpectedAnnotationException(type, typeof(T));
             }
         }
 
-        private class ExpectedAnnotation : Xunit.Sdk.XunitException
+        private sealed class ExpectedAnnotationException : Xunit.Sdk.XunitException
         {
-            public ExpectedAnnotation(Type type, Type attributeType)
+            public ExpectedAnnotationException(Type type, Type attributeType)
             {
                 Type = type;
                 AttributeType = attributeType;

@@ -22,7 +22,7 @@ namespace Aqua.TypeSystem
 
         public TypeResolver(Func<TypeInfo, Type>? typeEmitter = null)
         {
-            _typeEmitter = typeEmitter ?? new Emit.TypeEmitter().EmitType;
+            _typeEmitter = typeEmitter ?? new Emit.TypeEmitter(this).EmitType;
         }
 
         /// <summary>
@@ -40,20 +40,20 @@ namespace Aqua.TypeSystem
         }
 
         [return: NotNullIfNotNull("typeInfo")]
-        public virtual Type? ResolveType(TypeInfo? typeInfo)
+        public virtual Type? ResolveType(TypeInfo? type)
         {
-            if (typeInfo is null)
+            if (type is null)
             {
                 return null;
             }
 
-            var cacheKey = Enumerable.Repeat(typeInfo.FullName, 1)
-                .Concat(typeInfo.Properties?.Select(p => p.Name) ?? Enumerable.Empty<string>())
+            var cacheKey = Enumerable.Repeat(type.FullName, 1)
+                .Concat(type.Properties?.Select(p => p.Name) ?? Enumerable.Empty<string>())
                 .StringJoin(" ");
 
-            var type = _typeCache.GetOrCreate(cacheKey, _ => ResolveTypeInternal(typeInfo));
+            var resolvedType = _typeCache.GetOrCreate(cacheKey, _ => ResolveTypeInternal(type));
 
-            return ResolveOpenGenericType(typeInfo, type);
+            return ResolveOpenGenericType(type, resolvedType);
         }
 
         private Type ResolveTypeInternal(TypeInfo typeInfo)
@@ -71,6 +71,10 @@ namespace Aqua.TypeSystem
                 try
                 {
                     type = _typeEmitter(typeInfo);
+                }
+                catch (TypeResolverException)
+                {
+                    throw;
                 }
                 catch (Exception ex)
                 {

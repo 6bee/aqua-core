@@ -3,11 +3,13 @@
 namespace Aqua.Tests
 {
     using Aqua.TypeSystem;
+    using Shouldly;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
+    using System.Linq;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class Helper
@@ -53,5 +55,8 @@ namespace Aqua.Tests
                 CultureInfo.CurrentCulture = _culture;
             }
         }
+
+        public static void SequenceShouldBeEqual<T>(this IEnumerable<T> result, IEnumerable<T> expected)
+            => result.SequenceEqual(expected).ShouldBeTrue();
     }
 }

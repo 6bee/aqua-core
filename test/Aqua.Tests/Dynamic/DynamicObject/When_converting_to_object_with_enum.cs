@@ -10,7 +10,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
     public class When_converting_to_object_with_enum
     {
-        private enum CustomEnum
+        private enum Custom
         {
             Value0 = 0,
             Value1 = 1,
@@ -20,7 +20,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         private class ClassWithEnum
         {
-            public CustomEnum? EnumProperty { get; set; }
+            public Custom? EnumProperty { get; set; }
         }
 
         private readonly DynamicObject[] dynamicObjects;
@@ -34,21 +34,21 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 {
                     Properties = new PropertySet
                     {
-                        { "EnumProperty", CustomEnum.Value1 },
+                        { "EnumProperty", Custom.Value1 },
                     },
                 },
                 new DynamicObject(typeof(ClassWithEnum))
                 {
                     Properties = new PropertySet
                     {
-                        { "EnumProperty", CustomEnum.Value2.ToString().ToUpper() },
+                        { "EnumProperty", Custom.Value2.ToString().ToUpper() },
                     },
                 },
                 new DynamicObject(typeof(ClassWithEnum))
                 {
                     Properties = new PropertySet
                     {
-                        { "EnumProperty", (int)CustomEnum.Value3 },
+                        { "EnumProperty", (int)Custom.Value3 },
                     },
                 },
                 new DynamicObject(typeof(ClassWithEnum))
@@ -73,19 +73,19 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Enum_property_should_be_set_according_enum_value()
         {
-            objects.ElementAt(0).EnumProperty.ShouldBe(CustomEnum.Value1);
+            objects.ElementAt(0).EnumProperty.ShouldBe(Custom.Value1);
         }
 
         [Fact]
         public void Enum_property_should_be_set_according_string_value()
         {
-            objects.ElementAt(1).EnumProperty.ShouldBe(CustomEnum.Value2);
+            objects.ElementAt(1).EnumProperty.ShouldBe(Custom.Value2);
         }
 
         [Fact]
         public void Enum_property_should_be_set_according_int_value()
         {
-            objects.ElementAt(2).EnumProperty.ShouldBe(CustomEnum.Value3);
+            objects.ElementAt(2).EnumProperty.ShouldBe(Custom.Value3);
         }
 
         [Fact]

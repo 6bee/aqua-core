@@ -3,7 +3,6 @@
 namespace Aqua.ProtoBuf
 {
     using global::ProtoBuf;
-    using System;
     using System.Diagnostics.CodeAnalysis;
 
     [ProtoContract]

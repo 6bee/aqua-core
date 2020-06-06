@@ -40,8 +40,15 @@ namespace Aqua.TypeSystem
 
         internal void RegisterReference(TypeInfo type, TypeInfo typeInfo) => _typeInfoReferenceTracker.Add(type, typeInfo);
 
+        /// <summary>
+        /// Returns a <see cref="TypeInfo"/> representing the specified <see cref="Type"/>.
+        /// </summary>
+        /// <param name="type">The <see cref="Type"/> to be represented.</param>
+        /// <param name="includePropertyInfos">If provided overrules <seealso cref="IncludePropertyInfos"/> property set on class level.</param>
+        /// <param name="setMemberDeclaringTypes">If provided overrules <seealso cref="SetMemberDeclaringTypes"/> property set on class level.</param>
+        /// <returns>Returns a <see cref="TypeInfo"/> representing the specified <see cref="Type"/> or null if the type parameter is null.</returns>
         [return: NotNullIfNotNull("type")]
-        public virtual TypeInfo? Get(Type? type, bool? includePropertyInfosOverride = null, bool? setMemberDeclaringTypesOverride = null)
+        public virtual TypeInfo? Get(Type? type, bool? includePropertyInfos = null, bool? setMemberDeclaringTypes = null)
         {
             if (type is null)
             {
@@ -55,16 +62,16 @@ namespace Aqua.TypeSystem
 
             if (_parent != null)
             {
-                return _parent.Get(type, includePropertyInfosOverride, setMemberDeclaringTypesOverride);
+                return _parent.Get(type, includePropertyInfos, setMemberDeclaringTypes);
             }
 
             var context = this;
-            if ((includePropertyInfosOverride.HasValue && includePropertyInfosOverride != IncludePropertyInfos) ||
-                (setMemberDeclaringTypesOverride.HasValue && setMemberDeclaringTypesOverride != SetMemberDeclaringTypes))
+            if ((includePropertyInfos.HasValue && includePropertyInfos != IncludePropertyInfos) ||
+                (setMemberDeclaringTypes.HasValue && setMemberDeclaringTypes != SetMemberDeclaringTypes))
             {
                 context = new TypeInfoProvider(
-                    includePropertyInfosOverride ?? IncludePropertyInfos,
-                    setMemberDeclaringTypesOverride ?? SetMemberDeclaringTypes,
+                    includePropertyInfos ?? IncludePropertyInfos,
+                    setMemberDeclaringTypes ?? SetMemberDeclaringTypes,
                     this);
             }
 

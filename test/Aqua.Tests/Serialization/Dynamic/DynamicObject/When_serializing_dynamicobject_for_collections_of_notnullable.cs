@@ -3,7 +3,6 @@
 namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
-    using Aqua.Tests.Serialization;
     using Shouldly;
     using System;
     using System.Collections;
@@ -117,7 +116,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var enumerable = new EnumerableProxy<int>(new[] { 0, 1, 22, -333 });
             var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceEqual(enumerable);
+            resurrected.SequenceShouldBeEqual(enumerable);
         }
 
         [Fact]
@@ -125,7 +124,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var enumerable = new[] { 0, 1, 22, -333 };
             var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceEqual(enumerable);
+            resurrected.SequenceShouldBeEqual(enumerable);
             resurrected.ShouldBeOfType<int[]>();
         }
 
@@ -134,7 +133,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var enumerable = new[] { 0, 1, 22, -333 }.AsEnumerable();
             var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceEqual(enumerable);
+            resurrected.SequenceShouldBeEqual(enumerable);
             resurrected.ShouldBeOfType<int[]>();
         }
 
@@ -143,7 +142,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var enumerable = new List<int> { 0, 1, 22, -333 }.AsEnumerable();
             var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceEqual(enumerable);
+            resurrected.SequenceShouldBeEqual(enumerable);
             resurrected.ShouldBeOfType<List<int>>();
         }
 
@@ -152,7 +151,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var enumerable = new QueryableProxy<int>(new[] { 0, 1, 22, -333 }.AsQueryable());
             var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceEqual(enumerable);
+            resurrected.SequenceShouldBeEqual(enumerable);
         }
 
         [Fact]
@@ -160,7 +159,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var enumerable = new[] { 0, 1, 22, -333 }.AsQueryable();
             var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceEqual(enumerable);
+            resurrected.SequenceShouldBeEqual(enumerable);
             resurrected.ShouldBeOfType<EnumerableQuery<int>>();
         }
 

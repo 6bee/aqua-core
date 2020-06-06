@@ -61,7 +61,6 @@ namespace Aqua.Newtonsoft.Json.Converters
                 {
                     if (!reader.TryRead(elementType, serializer, out value))
                     {
-                        // TODO: is max length quota required?
                         if (reader.TokenType == JsonToken.EndArray)
                         {
                             return false;
@@ -79,7 +78,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                     values.Add(item);
                 }
 
-                if (values.Any(x => x != null && (elementType == typeof(object) || !elementType.IsAssignableFrom(x.GetType()))) &&
+                if (values.Any(x => x != null && (elementType == typeof(object) || !elementType.IsInstanceOfType(x))) &&
                     values.All(x => x is null || x is string))
                 {
                     elementType = typeof(string);
@@ -108,7 +107,6 @@ namespace Aqua.Newtonsoft.Json.Converters
 
                 bool NextItem()
                 {
-                    // TODO: is max length quota required?
                     reader.Advance();
                     return reader.TokenType != JsonToken.EndArray;
                 }

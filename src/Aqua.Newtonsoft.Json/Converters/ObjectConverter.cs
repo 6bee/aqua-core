@@ -11,6 +11,8 @@ namespace Aqua.Newtonsoft.Json.Converters
 
     public abstract class ObjectConverter : JsonConverter
     {
+        public static string TypeToke => "$type";
+
         protected sealed class Property
         {
             public Property(PropertyInfo propertyInfo)

@@ -25,7 +25,7 @@ namespace Aqua.TypeSystem
         {
         }
 
-        internal FieldInfo(System.Reflection.FieldInfo field, TypeInfoProvider typeInfoProvider)
+        public FieldInfo(System.Reflection.FieldInfo field, TypeInfoProvider typeInfoProvider)
             : base(field, typeInfoProvider)
         {
             _field = field;

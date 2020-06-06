@@ -157,8 +157,6 @@ namespace Aqua.Dynamic
         {
             get => TryGet(name, out var value)
                 ? value
-                : name.Length == 0
-                ? (object?)null
                 : throw new Exception($"Member not found for name '{name}'");
             set => Set(name, value);
         }

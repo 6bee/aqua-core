@@ -237,11 +237,31 @@ namespace Aqua.Extensions
         }
 
         [DebuggerStepThrough]
+        internal static void ForEach<T>(this IEnumerable<T> source, Action<T, int> action)
+        {
+            var index = 0;
+            foreach (var item in source)
+            {
+                action(item, index++);
+            }
+        }
+
+        [DebuggerStepThrough]
         internal static void ForEach<T, TResult>(this IEnumerable<T> source, Func<T, TResult> func)
         {
             foreach (var item in source)
             {
                 _ = func(item);
+            }
+        }
+
+        [DebuggerStepThrough]
+        internal static void ForEach<T, TResult>(this IEnumerable<T> source, Func<T, int, TResult> func)
+        {
+            var index = 0;
+            foreach (var item in source)
+            {
+                _ = func(item, index++);
             }
         }
 

@@ -77,13 +77,6 @@ namespace Aqua.Newtonsoft.Json.Converters
             }
         }
 
-        public static bool TryRead<T>(this JsonReader reader, JsonSerializer serializer, [MaybeNull] out T value)
-        {
-            var result = TryRead(reader, typeof(T), serializer, out var v);
-            value = result && v is T x ? x : default;
-            return result;
-        }
-
         [return: MaybeNull]
         public static T Read<T>(this JsonReader reader, JsonSerializer serializer)
             => reader.TryRead(serializer, out T result)
@@ -97,6 +90,13 @@ namespace Aqua.Newtonsoft.Json.Converters
             => reader.TryRead(type, serializer, out object? result)
             ? result
             : throw reader.CreateException("Unexpected token structure.");
+
+        public static bool TryRead<T>(this JsonReader reader, JsonSerializer serializer, [MaybeNull] out T value)
+        {
+            var result = TryRead(reader, typeof(T), serializer, out var v);
+            value = result && v is T x ? x : default;
+            return result;
+        }
 
         public static bool TryRead(this JsonReader reader, TypeInfo? type, JsonSerializer serializer, out object? result)
             => reader.TryRead(type.MapTypeInfo(), serializer, out result);

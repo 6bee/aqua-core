@@ -19,15 +19,9 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 DoubleValue = d;
             }
 
-#pragma warning disable SA1401 // Fields should be private
-#pragma warning disable SA1306 // Field names should begin with lower-case letter
-
             public readonly string StringValue = null;
             private string PrivateStringValue;
             public DateTime Date;
-
-#pragma warning restore SA1306 // Field names should begin with lower-case letter
-#pragma warning restore SA1401 // Fields should be private
 
             private double DoubleValue { get; }
 

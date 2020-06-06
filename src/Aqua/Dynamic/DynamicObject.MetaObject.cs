@@ -12,8 +12,8 @@ namespace Aqua.Dynamic
 
     partial class DynamicObject : IDynamicMetaObjectProvider
     {
-        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression expression)
-            => new MetaObject(expression, BindingRestrictions.GetInstanceRestriction(expression, this), this);
+        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter)
+            => new MetaObject(parameter, BindingRestrictions.GetInstanceRestriction(parameter, this), this);
 
         private sealed class MetaObject : DynamicMetaObject
         {
@@ -21,7 +21,7 @@ namespace Aqua.Dynamic
 
             private static readonly MethodInfo _getMethod = typeof(DynamicObject)
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Single(m => m.Name == "Get" && !m.IsGenericMethodDefinition);
+                .Single(m => m.Name == nameof(Get) && !m.IsGenericMethodDefinition);
 
             private static readonly MethodInfo _setMethod = typeof(DynamicObject)
                 .GetMethod(nameof(Set), BindingFlags.Public | BindingFlags.Instance);

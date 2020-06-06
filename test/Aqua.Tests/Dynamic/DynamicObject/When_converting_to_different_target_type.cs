@@ -4,10 +4,12 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
     using Shouldly;
+    using System.Diagnostics.CodeAnalysis;
     using Xunit;
 
     public class When_converting_to_different_target_type
     {
+        [SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out", Justification = "For clarity purpose")]
         private class SourceType
         {
             // public int Int32Value { get; set; }

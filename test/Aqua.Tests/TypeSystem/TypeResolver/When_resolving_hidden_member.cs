@@ -19,6 +19,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
 
             public void Method()
             {
+                // empty
             }
         }
 
@@ -32,6 +33,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
 
             public new void Method()
             {
+                // empty
             }
         }
 

@@ -26,7 +26,7 @@ namespace Aqua.TypeSystem
         {
         }
 
-        internal MethodInfo(System.Reflection.MethodInfo method, TypeInfoProvider typeInfoProvider)
+        public MethodInfo(System.Reflection.MethodInfo method, TypeInfoProvider typeInfoProvider)
             : base(method, typeInfoProvider)
         {
             _method = method;
@@ -43,7 +43,7 @@ namespace Aqua.TypeSystem
         {
         }
 
-        internal MethodInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes, Type? returnType, TypeInfoProvider typeInfoProvider)
+        public MethodInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes, Type? returnType, TypeInfoProvider typeInfoProvider)
             : base(name, declaringType, genericArguments, parameterTypes, typeInfoProvider)
         {
             ReturnType = typeInfoProvider.Get(returnType, false, false);

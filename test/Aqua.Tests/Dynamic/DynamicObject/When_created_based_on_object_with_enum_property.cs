@@ -8,7 +8,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
     public class When_created_based_on_object_with_enum_property
     {
-        private enum CustomEnum
+        private enum Custom
         {
             Value1,
             Value2,
@@ -17,7 +17,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         private class ClassWithEnum
         {
-            public CustomEnum EnumProperty { get; set; }
+            public Custom EnumProperty { get; set; }
         }
 
         private readonly ClassWithEnum source;
@@ -27,7 +27,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             source = new ClassWithEnum
             {
-                EnumProperty = CustomEnum.Value2,
+                EnumProperty = Custom.Value2,
             };
 
             dynamicObject = new DynamicObject(source);

@@ -460,23 +460,23 @@ namespace Aqua.Dynamic
         /// Maps a <see cref="DynamicObject"/> into an instance of the actual type represented by the dynamic object.
         /// </summary>
         /// <param name="obj"><see cref="DynamicObject"/> to be mapped.</param>
-        /// <param name="type">Target type for mapping, set this parameter to null if type information included within <see cref="DynamicObject"/> should be used.</param>
+        /// <param name="targetType">Target type for mapping, set this parameter to null if type information included within <see cref="DynamicObject"/> should be used.</param>
         /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
         [return: NotNullIfNotNull("obj")]
-        public object? Map(DynamicObject? obj, Type? type = null)
+        public object? Map(DynamicObject? obj, Type? targetType = null)
         {
             if (obj is null)
             {
                 return null;
             }
 
-            if (type is null)
+            if (targetType is null)
             {
                 var typeInfo = obj.Type ?? throw new DynamicObjectMapperException("Type property must not be null if no target type specified to mapping method.");
-                type = typeInfo.ResolveType(_typeResolver);
+                targetType = typeInfo.ResolveType(_typeResolver);
             }
 
-            return Wrap(() => MapFromDynamicObjectGraph(obj, type), _fromContext);
+            return Wrap(() => MapFromDynamicObjectGraph(obj, targetType), _fromContext);
         }
 
         /// <summary>
@@ -490,23 +490,23 @@ namespace Aqua.Dynamic
         /// <summary>
         /// Maps a collection of objects into a collection of <see cref="DynamicObject"/>.
         /// </summary>
-        /// <param name="obj">The object to be mapped.</param>
+        /// <param name="objects">The object to be mapped.</param>
         /// <param name="setTypeInformation">Set this parameter to true if type information should be included within the <see cref="DynamicObject"/>s, set it to false otherwise.</param>
         /// <returns>A collection of <see cref="DynamicObject"/> representing the objects specified.</returns>
         [return: NotNullIfNotNull("obj")]
-        public IEnumerable<DynamicObject?>? MapCollection(object? obj, Func<Type, bool>? setTypeInformation = null)
+        public IEnumerable<DynamicObject?>? MapCollection(object? objects, Func<Type, bool>? setTypeInformation = null)
         {
             IEnumerable<DynamicObject?>? enumerable;
-            if (obj is null)
+            if (objects is null)
             {
                 enumerable = null;
             }
-            else if (obj is IEnumerable<DynamicObject> x)
+            else if (objects is IEnumerable<DynamicObject> x)
             {
                 // cast
                 enumerable = x;
             }
-            else if (obj.IsCollection(out var collection))
+            else if (objects.IsCollection(out var collection))
             {
                 enumerable = collection
                     .Cast<object>()
@@ -515,7 +515,7 @@ namespace Aqua.Dynamic
             else
             {
                 // put single object into dynamic object
-                var value = MapObject(obj, setTypeInformation);
+                var value = MapObject(objects, setTypeInformation);
                 enumerable = new[] { value };
             }
 
@@ -705,101 +705,6 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Maps an object to a dynamic object.
-        /// </summary>
-        /// <remarks>Null references and dynamic objects are not mapped.</remarks>
-        [return: NotNullIfNotNull("obj")]
-        private DynamicObject? MapInternal(object? obj, Func<Type, bool> setTypeInformation)
-        {
-            if (obj is null)
-            {
-                return null;
-            }
-
-            if (obj is DynamicObject dynamicObject)
-            {
-                return dynamicObject;
-            }
-
-            Func<Type?, object, Func<Type, bool>, DynamicObject> facotry;
-            Action<Type, object, DynamicObject, Func<Type, bool>>? initializer = null;
-
-            var sourceType = obj.GetType();
-            if (_isNativeType(sourceType) || _isKnownType(sourceType) || sourceType.IsEnum())
-            {
-                facotry = (t, o, f) =>
-                {
-                    var value = MapToDynamicObjectIfRequired(o, f);
-                    var dynamicObject = _createDynamicObject(t, o);
-                    dynamicObject.Add(string.Empty, value);
-                    return dynamicObject;
-                };
-            }
-            else if (obj.IsCollection(out var collection) && !ShouldMapToDynamicObject(collection))
-            {
-                facotry = (t, o, f) =>
-                {
-                    var list = ((IEnumerable)o)
-                        .Cast<object>()
-                        .Select(x => MapToDynamicObjectIfRequired(x, f))
-                        .ToArray();
-                    var dynamicObject = _createDynamicObject(t, o);
-                    dynamicObject.Add(string.Empty, list);
-                    return dynamicObject;
-                };
-            }
-            else if (obj is Type t)
-            {
-                var typeInfo = new Lazy<TypeSystem.TypeInfo>(() => new TypeSystem.TypeInfo(t, false, false));
-                facotry = (t, o, f) => _createDynamicObject(typeof(Type), typeInfo.Value);
-                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo.Value, to, f);
-            }
-            else if (obj is TypeInfo ti)
-            {
-                var typeInfo = new Lazy<TypeSystem.TypeInfo>(() => new TypeSystem.TypeInfo(ti.AsType(), false, false));
-                facotry = (t, o, f) => _createDynamicObject(typeof(TypeInfo), typeInfo.Value);
-                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo.Value, to, f);
-            }
-            else if (obj is MethodInfo mi)
-            {
-                var methodInfo = new Lazy<TypeSystem.MethodInfo>(() => new TypeSystem.MethodInfo(mi));
-                facotry = (t, o, f) => _createDynamicObject(typeof(MethodInfo), methodInfo.Value);
-                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.MethodInfo), methodInfo.Value, to, f);
-            }
-            else if (obj is PropertyInfo pi)
-            {
-                var propertyInfo = new Lazy<TypeSystem.PropertyInfo>(() => new TypeSystem.PropertyInfo(pi));
-                facotry = (t, o, f) => _createDynamicObject(typeof(PropertyInfo), propertyInfo.Value);
-                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.PropertyInfo), propertyInfo.Value, to, f);
-            }
-            else if (obj is FieldInfo fi)
-            {
-                var fieldInfo = new Lazy<TypeSystem.FieldInfo>(() => new TypeSystem.FieldInfo(fi));
-                facotry = (t, o, f) => _createDynamicObject(typeof(FieldInfo), fieldInfo.Value);
-                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.FieldInfo), fieldInfo.Value, to, f);
-            }
-            else if (obj is ConstructorInfo ci)
-            {
-                var constructorInfo = new Lazy<TypeSystem.ConstructorInfo>(() => new TypeSystem.ConstructorInfo(ci));
-                facotry = (t, o, f) => _createDynamicObject(typeof(ConstructorInfo), constructorInfo.Value);
-                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.ConstructorInfo), constructorInfo.Value, to, f);
-            }
-            else if (obj is Delegate d)
-            {
-                var methodInfo = new Lazy<TypeSystem.MethodInfo>(() => new TypeSystem.MethodInfo(d.Method));
-                facotry = (t, o, f) => _createDynamicObject(typeof(MethodInfo), methodInfo.Value);
-                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.MethodInfo), methodInfo.Value, to, f);
-            }
-            else
-            {
-                facotry = (t, o, f) => _createDynamicObject(t, o);
-                initializer = PopulateObjectMembers;
-            }
-
-            return _toContext.TryGetOrCreateNew(sourceType, obj, facotry, initializer, setTypeInformation);
-        }
-
-        /// <summary>
         /// Maps from object to dynamic object if required.
         /// </summary>
         /// <remarks>Null references, strings, value types, and dynamic objects are no mapped.</remarks>
@@ -896,13 +801,112 @@ namespace Aqua.Dynamic
         /// Can be overriden in a derived class to return a list of <see cref="PropertyInfo"/> for a given type or null if defaul behaviour should be applied.
         /// </summary>
         /// <returns>If overriden in a derived class, returns a list of <see cref="PropertyInfo"/> for a given type or null if defaul behaviour should be applied.</returns>
+        [SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null", Justification = "Null has special meaning")]
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:Element parameters should be documented", Justification = "Null has special meaning")]
         protected virtual IEnumerable<PropertyInfo>? GetPropertiesForMapping(Type type) => null;
 
         /// <summary>
         /// Can be overriden in a derived class to return a list of <see cref="FieldInfo"/> for a given type or null if defaul behaviour should be applied.
         /// </summary>
         /// <returns>If overriden in a derived class, returns a list of <see cref="FieldInfo"/> for a given type or null if defaul behaviour should be applied.</returns>
+        [SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null", Justification = "Null has special meaning")]
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:Element parameters should be documented", Justification = "Null has special meaning")]
         protected virtual IEnumerable<FieldInfo>? GetFieldsForMapping(Type type) => null;
+
+        /// <summary>
+        /// Maps an object to a dynamic object.
+        /// </summary>
+        /// <remarks>Null references and dynamic objects are not mapped.</remarks>
+        [return: NotNullIfNotNull("obj")]
+        private DynamicObject? MapInternal(object? obj, Func<Type, bool> setTypeInformation)
+        {
+            if (obj is null)
+            {
+                return null;
+            }
+
+            if (obj is DynamicObject dynamicObject)
+            {
+                return dynamicObject;
+            }
+
+            Func<Type?, object, Func<Type, bool>, DynamicObject> facotry;
+            Action<Type, object, DynamicObject, Func<Type, bool>>? initializer = null;
+
+            var sourceType = obj.GetType();
+            if (_isNativeType(sourceType) || _isKnownType(sourceType) || sourceType.IsEnum())
+            {
+                facotry = (t, o, f) =>
+                {
+                    var value = MapToDynamicObjectIfRequired(o, f);
+                    var dynamicObject = _createDynamicObject(t, o);
+                    dynamicObject.Add(string.Empty, value);
+                    return dynamicObject;
+                };
+            }
+            else if (obj.IsCollection(out var collection) && !ShouldMapToDynamicObject(collection))
+            {
+                facotry = (t, o, f) =>
+                {
+                    var list = ((IEnumerable)o)
+                        .Cast<object>()
+                        .Select(x => MapToDynamicObjectIfRequired(x, f))
+                        .ToArray();
+                    var dynamicObject = _createDynamicObject(t, o);
+                    dynamicObject.Add(string.Empty, list);
+                    return dynamicObject;
+                };
+            }
+            else if (obj is Type t)
+            {
+                var typeInfo = new Lazy<TypeSystem.TypeInfo>(() => new TypeSystem.TypeInfo(t, false, false));
+                facotry = (t, o, f) => _createDynamicObject(typeof(Type), typeInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo.Value, to, f);
+            }
+            else if (obj is TypeInfo ti)
+            {
+                var typeInfo = new Lazy<TypeSystem.TypeInfo>(() => new TypeSystem.TypeInfo(ti.AsType(), false, false));
+                facotry = (t, o, f) => _createDynamicObject(typeof(TypeInfo), typeInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo.Value, to, f);
+            }
+            else if (obj is MethodInfo mi)
+            {
+                var methodInfo = new Lazy<TypeSystem.MethodInfo>(() => new TypeSystem.MethodInfo(mi));
+                facotry = (t, o, f) => _createDynamicObject(typeof(MethodInfo), methodInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.MethodInfo), methodInfo.Value, to, f);
+            }
+            else if (obj is PropertyInfo pi)
+            {
+                var propertyInfo = new Lazy<TypeSystem.PropertyInfo>(() => new TypeSystem.PropertyInfo(pi));
+                facotry = (t, o, f) => _createDynamicObject(typeof(PropertyInfo), propertyInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.PropertyInfo), propertyInfo.Value, to, f);
+            }
+            else if (obj is FieldInfo fi)
+            {
+                var fieldInfo = new Lazy<TypeSystem.FieldInfo>(() => new TypeSystem.FieldInfo(fi));
+                facotry = (t, o, f) => _createDynamicObject(typeof(FieldInfo), fieldInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.FieldInfo), fieldInfo.Value, to, f);
+            }
+            else if (obj is ConstructorInfo ci)
+            {
+                var constructorInfo = new Lazy<TypeSystem.ConstructorInfo>(() => new TypeSystem.ConstructorInfo(ci));
+                facotry = (t, o, f) => _createDynamicObject(typeof(ConstructorInfo), constructorInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.ConstructorInfo), constructorInfo.Value, to, f);
+            }
+            else if (obj is Delegate d)
+            {
+                var methodInfo = new Lazy<TypeSystem.MethodInfo>(() => new TypeSystem.MethodInfo(d.Method));
+                facotry = (t, o, f) => _createDynamicObject(typeof(MethodInfo), methodInfo.Value);
+                initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.MethodInfo), methodInfo.Value, to, f);
+            }
+            else
+            {
+                facotry = (t, o, f) => _createDynamicObject(t, o);
+                initializer = PopulateObjectMembers;
+            }
+
+            return _toContext.TryGetOrCreateNew(sourceType, obj, facotry, initializer, setTypeInformation);
+        }
 
         private object MapInternal(DynamicObject obj, Type? sourceType, Type targetType)
         {
@@ -1181,13 +1185,12 @@ namespace Aqua.Dynamic
                         && targetType.GetGenericTypeDefinition() == typeof(Nullable<>);
                 }
 
-                var type = value.GetType();
-                return targetType.IsAssignableFrom(type)
-                    || HasImplicitNumericConversions(type, targetType);
+                return targetType.IsInstanceOfType(value)
+                    || HasImplicitNumericConversions(value.GetType(), targetType);
             }
 
             return value is null
-                || targetType.IsAssignableFrom(value.GetType());
+                || targetType.IsInstanceOfType(value);
         }
 
         private static bool HasImplicitNumericConversions(Type from, Type to)
@@ -1219,22 +1222,27 @@ namespace Aqua.Dynamic
                 }
             }
 
-            if (sourceType == typeof(string))
+            if (value is string text)
             {
                 if (_isNativeType(targetType))
                 {
-                    value = ParseToNativeType(targetType, (string)value);
+                    value = ParseToNativeType(targetType, text);
                     return true;
                 }
 
                 if (targetType.IsEnum())
                 {
-                    value = Enum.Parse(targetType, (string)value);
+                    value = Enum.Parse(targetType, text);
                     return true;
                 }
             }
 
-            // TODO: utilze cast operators if any defined by either type
+            if (targetType.TryDynamicCast(value, out var result))
+            {
+                value = result;
+                return true;
+            }
+
             return false;
         }
 

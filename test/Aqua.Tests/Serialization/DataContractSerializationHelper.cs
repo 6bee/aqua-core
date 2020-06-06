@@ -4,6 +4,7 @@ namespace Aqua.Tests.Serialization
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -121,6 +122,7 @@ namespace Aqua.Tests.Serialization
 
         public static T Serialize<T>(this T graph) => Serialize(graph, null);
 
+        [SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out", Justification = "Debugging purpose")]
         public static T Serialize<T>(this T graph, Type[] knownTypes)
         {
             var serializer = new DataContractSerializer(typeof(T), new DataContractSerializerSettings

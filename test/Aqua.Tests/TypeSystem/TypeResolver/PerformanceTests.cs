@@ -5,12 +5,14 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
     using Aqua.TypeSystem;
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using Xunit;
 
     public class PerformanceTests
     {
         [Fact]
-        public void Performance_test_for_resolving_of_nested_anonymous_types()
+        [SuppressMessage("Blocker Code Smell", "S2699:Tests should include assertions", Justification = "Speed test")]
+        public void Performance_test_for_resolving_nested_anonymous_types()
         {
             Type GenerateAnonymousType<T>(uint nestingCount, T value)
             {

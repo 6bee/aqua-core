@@ -65,7 +65,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             };
 
             var mapper = new DynamicObjectMapper();
-            var result = dynamicObjects.Select(x => mapper.Map(x, typeof(CustomClass))).Cast<object>();
+            var result = dynamicObjects.Select(x => mapper.Map(x, typeof(CustomClass)));
 
             result.ShouldNotBeNull();
             result.Count().ShouldBe(3);
@@ -76,13 +76,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
         [Fact]
         public void Map_should_be_null_for_null_object()
-        {
-            var result = new DynamicObjectMapper().MapObject(null);
-            result.ShouldBeNull();
-        }
-
-        [Fact]
-        public void Map_single_should_be_null_for_null_object()
         {
             var result = new DynamicObjectMapper().MapObject(null);
             result.ShouldBeNull();

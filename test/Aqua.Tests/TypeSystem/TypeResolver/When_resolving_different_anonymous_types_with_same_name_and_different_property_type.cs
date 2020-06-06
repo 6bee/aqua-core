@@ -52,19 +52,17 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         {
             // may be resolved to anonymous type of more than one assembly
             resolvedType1.FullName.ShouldBe(type1.FullName);
-            GetPropertyDescriptions(resolvedType1).SequenceEqual(GetPropertyDescriptions(type1));
+            GetPropertyDescriptions(resolvedType1).SequenceShouldBeEqual(GetPropertyDescriptions(type1));
 
             resolvedType2.FullName.ShouldBe(type2.FullName);
-            GetPropertyDescriptions(resolvedType2).SequenceEqual(GetPropertyDescriptions(type2));
+            GetPropertyDescriptions(resolvedType2).SequenceShouldBeEqual(GetPropertyDescriptions(type2));
         }
 
         private static IEnumerable<object> GetPropertyDescriptions(Type type)
-        {
-            return type
-                .GetTypeInfo()
-                .GetProperties()
-                .Select(p => new { p.Name, PropertyType = p.PropertyType.FullName })
-                .ToArray();
-        }
+            => type
+            .GetTypeInfo()
+            .GetProperties()
+            .Select(p => new { p.Name, PropertyType = p.PropertyType.FullName })
+            .ToArray();
     }
 }

@@ -11,8 +11,6 @@ namespace Aqua.Newtonsoft.Json.Converters
     public class ObjectConverter<T> : ObjectConverter
         where T : class
     {
-        public static string TypeToke => "$type";
-
         public Func<string, Type?>? DefaultTypeResolver { get; set; }
 
         public Func<Type, T>? DefaultObjectFactory { get; set; }
@@ -21,9 +19,6 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public override sealed object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
             => ReadJson(reader, objectType, existingValue as T, serializer);
-
-        public override sealed void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-            => WriteJson(writer, value as T, serializer);
 
         public virtual T? ReadJson(JsonReader reader, Type objectType, T? existingValue, JsonSerializer serializer)
         {
@@ -78,6 +73,9 @@ namespace Aqua.Newtonsoft.Json.Converters
 
             return result;
         }
+
+        public override sealed void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+            => WriteJson(writer, value as T, serializer);
 
         public virtual void WriteJson(JsonWriter writer, T? value, JsonSerializer serializer)
         {

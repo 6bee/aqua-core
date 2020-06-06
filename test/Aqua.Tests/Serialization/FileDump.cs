@@ -2,10 +2,12 @@
 
 namespace Aqua.Tests.Serialization
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
 
     public static class FileDump
     {
+        [SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out", Justification = "For clarity purpose")]
         public static void Dump(this Stream stream, string path)
         {
             // using var fileStream = File.OpenWrite(path);

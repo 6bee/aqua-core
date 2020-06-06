@@ -2,6 +2,8 @@
 
 namespace Aqua.TypeSystem.Emit
 {
+    using Aqua.Extensions;
+    using Aqua.Utils;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -14,15 +16,53 @@ namespace Aqua.TypeSystem.Emit
 
     public sealed partial class TypeEmitter
     {
-        private readonly TypeCache _typeCache = new TypeCache();
+        private sealed class TypeResolverScope : ITypeResolver
+        {
+            private readonly HashSet<TypeInfo> _references = new HashSet<TypeInfo>(ReferenceEqualityComparer<TypeInfo>.Default);
+            private readonly ITypeResolver _typeResolver;
 
+            public TypeResolverScope(ITypeResolver typeResolver)
+            {
+                _typeResolver = typeResolver;
+            }
+
+            Type? ITypeResolver.ResolveType(TypeInfo? type)
+            {
+                if (type is null)
+                {
+                    return null;
+                }
+
+                lock (_references)
+                {
+                    try
+                    {
+                        if (!_references.Add(type))
+                        {
+                            throw new TypeEmitterException($"Cannot emit type with circular reference: '{type}'");
+                        }
+
+                        return _typeResolver.ResolveType(type);
+                    }
+                    finally
+                    {
+                        _references.Remove(type);
+                    }
+                }
+            }
+        }
+
+        private readonly TypeCache _typeCache;
         private readonly AssemblyBuilder _assemblyBuilder;
         private readonly ModuleBuilder _module;
+        private readonly TypeResolverScope _typeResolver;
         private int _classIndex = -1;
 
         [SecuritySafeCritical]
-        public TypeEmitter()
+        public TypeEmitter(ITypeResolver? typeResolver = null)
         {
+            _typeResolver = new TypeResolverScope(typeResolver ?? TypeResolver.Instance);
+            _typeCache = new TypeCache(_typeResolver);
             var assemblyName = new AssemblyName("Aqua.TypeSystem.Emit.Types");
             try
             {
@@ -37,12 +77,13 @@ namespace Aqua.TypeSystem.Emit
             _module = _assemblyBuilder.DefineDynamicModule(assemblyName.Name);
         }
 
-        public Type EmitType(TypeInfo typeInfo)
+        public Type EmitType(TypeInfo type)
         {
-            if (typeInfo.IsAnonymousType)
+            Func<Type> emit;
+            if (type.IsAnonymousType)
             {
-                Exception CreateException(string reason) => throw new ArgumentException($"Cannot emit anonymous type '{typeInfo}' {reason}.");
-                var properties = typeInfo.Properties?
+                Exception CreateException(string reason) => throw new ArgumentException($"Cannot emit anonymous type '{type}' {reason}.");
+                var properties = type.Properties?
                     .Select(x => x.Name ?? throw new ArgumentException("with unnamed property contained"))
                     .ToList();
                 if (properties is null)
@@ -50,10 +91,30 @@ namespace Aqua.TypeSystem.Emit
                     throw CreateException("with not proeprties declared");
                 }
 
-                return _typeCache.GetOrCreate(properties, InternalEmitAnonymousType);
+                emit = () => _typeCache.GetOrCreate(properties, InternalEmitAnonymousType);
             }
 
-            return _typeCache.GetOrCreate(typeInfo, InternalEmitType);
+            emit = () => _typeCache.GetOrCreate(type, InternalEmitType);
+
+            try
+            {
+                return emit();
+            }
+            catch (Exception ex)
+            {
+                var innerException = ex;
+                while (innerException != null)
+                {
+                    if (innerException is TypeEmitterException typeEmitterException)
+                    {
+                        throw typeEmitterException;
+                    }
+
+                    innerException = innerException.InnerException;
+                }
+
+                throw new TypeEmitterException($"Failed to emit type {type}", ex);
+            }
         }
 
         private Type InternalEmitType(TypeInfo typeInfo)
@@ -64,7 +125,7 @@ namespace Aqua.TypeSystem.Emit
                 .Select(x => new
                 {
                     Name = x.Name ?? throw new ArgumentException($"Property name must not be empty for type {typeInfo}."),
-                    Type = x.PropertyType?.Type ?? throw new ArgumentException($"Property type must not be null for type {typeInfo}."), // TODO: use ITypeResolver
+                    Type = x.PropertyType.ResolveType(_typeResolver) ?? throw new ArgumentException($"Property type must not be null for type {typeInfo}."),
                 })
                 .ToArray()
                 ?? throw new ArgumentException($"Properties description must not be missing for type {typeInfo}.");
@@ -89,8 +150,7 @@ namespace Aqua.TypeSystem.Emit
             il.Emit(OpCodes.Ret);
 
             // define properties
-            var properties = propertyInfos
-                .Select((x, i) =>
+            propertyInfos.ForEach((x, i) =>
                 {
                     var property = type.DefineProperty(x.Name, PropertyAttributes.HasDefault, x.Type, null);
 
@@ -110,13 +170,10 @@ namespace Aqua.TypeSystem.Emit
                     setterPil.Emit(OpCodes.Ret);
 
                     property.SetSetMethod(propertySetter);
-
-                    return property;
-                })
-                .ToArray();
+                });
 
             // create type
-            var t1 = type.CreateTypeInfo() ?? throw new Exception($"Failed to create {typeof(System.Reflection.TypeInfo).FullName} for '{typeInfo}'.");
+            var t1 = type.CreateTypeInfo() ?? throw new TypeEmitterException($"Failed to create {typeof(System.Reflection.TypeInfo).FullName} for '{typeInfo}'.");
             return t1.AsType();
         }
 
@@ -124,7 +181,7 @@ namespace Aqua.TypeSystem.Emit
         {
             if (!propertyNames.Any())
             {
-                throw new Exception("No properties specified");
+                throw new TypeEmitterException("No properties specified");
             }
 
             var fullName = CreateUniqueClassNameForAnonymousType(propertyNames);
@@ -164,8 +221,7 @@ namespace Aqua.TypeSystem.Emit
             il.Emit(OpCodes.Ret);
 
             // define properties
-            var properties = propertyNames
-                .Select((x, i) =>
+            propertyNames.ForEach((x, i) =>
                 {
                     var property = type.DefineProperty(x, PropertyAttributes.HasDefault, genericTypeParameters[i], null);
 
@@ -176,28 +232,23 @@ namespace Aqua.TypeSystem.Emit
                     pil.Emit(OpCodes.Ret);
 
                     property.SetGetMethod(propertyGetter);
-
-                    return property;
-                })
-                .ToArray();
+                });
 
             // create type
-            var t1 = type.CreateTypeInfo() ?? throw new Exception($"Failed to create {typeof(System.Reflection.TypeInfo).FullName} for anonymous type.");
+            var t1 = type.CreateTypeInfo() ?? throw new TypeEmitterException($"Failed to create {typeof(System.Reflection.TypeInfo).FullName} for anonymous type.");
             return t1.AsType();
         }
 
         private string CreateUniqueClassName()
         {
             var id = Interlocked.Increment(ref _classIndex);
-            var fullName = $"{_module.Name}.<>__EmittedType__{id}";
-            return fullName;
+            return $"{_module.Name}.<>__EmittedType__{id}";
         }
 
         private string CreateUniqueClassNameForAnonymousType(IEnumerable<string> properties)
         {
             var id = Interlocked.Increment(ref _classIndex);
-            var fullName = $"{_module.Name}.<>__EmittedType__{id}`{properties.Count()}";
-            return fullName;
+            return $"{_module.Name}.<>__EmittedType__{id}`{properties.Count()}";
         }
     }
 }
