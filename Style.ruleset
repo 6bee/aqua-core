@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Aqua" Description=" " ToolsVersion="16.0">
-  <Include Path="minimumrecommendedrules.ruleset" Action="Default" />
+  <Include Path="MinimumRecommendedRules.ruleset" Action="Default" />
   <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
     <Rule Id="S1121" Action="None" />
     <Rule Id="S1854" Action="None" />
