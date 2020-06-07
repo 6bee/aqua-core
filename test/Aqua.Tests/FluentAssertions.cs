@@ -3,6 +3,7 @@
 namespace Aqua.Tests
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
 
@@ -17,6 +18,7 @@ namespace Aqua.Tests
             }
         }
 
+        [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "Used in private scope only")]
         private sealed class ExpectedAnnotationException : Xunit.Sdk.XunitException
         {
             public ExpectedAnnotationException(Type type, Type attributeType)

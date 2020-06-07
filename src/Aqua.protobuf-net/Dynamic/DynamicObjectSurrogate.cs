@@ -24,7 +24,8 @@ namespace Aqua.ProtoBuf.Dynamic
         [ProtoMember(1)]
         public TypeInfo? Type { get; set; }
 
-        [ProtoMember(2)]
+        [ProtoMember(2, OverwriteList = true)]
+        [SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "Required for serialization")]
         public Dictionary<string, Value?>? Properties { get; set; }
 
         [ProtoConverter]

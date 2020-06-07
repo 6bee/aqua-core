@@ -80,7 +80,7 @@ namespace Aqua.TypeSystem.Emit
         public Type EmitType(TypeInfo type)
         {
             Func<Type> emit;
-            if (type.IsAnonymousType)
+            if (type.CheckNotNull(nameof(type)).IsAnonymousType)
             {
                 Exception CreateException(string reason) => throw new ArgumentException($"Cannot emit anonymous type '{type}' {reason}.");
                 var properties = type.Properties?

@@ -119,7 +119,7 @@ namespace Aqua
                     }
 
                     var genericArguments = expressionParamType.GetGenericArguments().ToArray();
-                    if (genericArguments.Count() != 1)
+                    if (genericArguments.Length != 1)
                     {
                         return false;
                     }
@@ -129,7 +129,7 @@ namespace Aqua
                         return false;
                     }
 
-                    if (genericArguments.Single().GetGenericArguments().Count() != 2)
+                    if (genericArguments.Single().GetGenericArguments().Length != 2)
                     {
                         return false;
                     }

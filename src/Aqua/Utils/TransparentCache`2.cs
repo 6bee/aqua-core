@@ -13,7 +13,6 @@ namespace Aqua.Utils
     /// or transparently create the requested value if not contained in cache.
     /// </summary>
     public class TransparentCache<TKey, TValue>
-        where TKey : class
         where TValue : class
     {
         private readonly Dictionary<TKey, WeakReference> _cache;
@@ -60,7 +59,7 @@ namespace Aqua.Utils
                 // create value if not found in cache
                 if (!isReferenceAlive)
                 {
-                    value = factory(key) ?? throw new Exception($"Value factory must not return null");
+                    value = factory.CheckNotNull(nameof(factory))(key) ?? throw new Exception($"Value factory must not return null");
                     _cache[key] = new WeakReference(value);
                 }
 

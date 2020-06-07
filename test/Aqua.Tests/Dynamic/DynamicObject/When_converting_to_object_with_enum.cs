@@ -41,7 +41,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
                 {
                     Properties = new PropertySet
                     {
-                        { "EnumProperty", Custom.Value2.ToString().ToUpper() },
+                        { "EnumProperty", Custom.Value2.ToString().ToUpperInvariant() },
                     },
                 },
                 new DynamicObject(typeof(ClassWithEnum))

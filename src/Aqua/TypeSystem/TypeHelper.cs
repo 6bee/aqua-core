@@ -6,6 +6,7 @@ namespace Aqua.TypeSystem
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
 
@@ -87,8 +88,10 @@ namespace Aqua.TypeSystem
         }
 
         [return: NotNullIfNotNull("type")]
-        public static Type? ResolveType(this TypeInfo? type, ITypeResolver typeResolver) => typeResolver.ResolveType(type);
+        public static Type? ResolveType(this TypeInfo? type, ITypeResolver typeResolver)
+            => typeResolver.CheckNotNull(nameof(typeResolver)).ResolveType(type);
 
+        [return: NotNullIfNotNull("member")]
         public static System.Reflection.MemberInfo? ResolveMemberInfo(this MemberInfo? member, ITypeResolver typeResolver)
             => member?.MemberType switch
             {
@@ -101,48 +104,68 @@ namespace Aqua.TypeSystem
             };
 
         public static System.Reflection.ConstructorInfo? ResolveConstructor(this ConstructorInfo? constructor, ITypeResolver typeResolver)
-            => CreateConstructorResolver(constructor, typeResolver)(Any);
+            => constructor is null
+            ? null
+            : CreateConstructorResolver(constructor, typeResolver.CheckNotNull(nameof(typeResolver)))(Any);
 
         public static System.Reflection.ConstructorInfo? ResolveConstructor(this ConstructorInfo? constructor, ITypeResolver typeResolver, BindingFlags bindingFlags)
-            => CreateConstructorResolver(constructor, typeResolver)(bindingFlags);
+            => constructor is null
+            ? null
+            : CreateConstructorResolver(constructor, typeResolver.CheckNotNull(nameof(typeResolver)))(bindingFlags);
 
         public static System.Reflection.FieldInfo? ResolveField(this FieldInfo? field, ITypeResolver typeResolver)
         {
+            if (field is null)
+            {
+                return null;
+            }
+
             var fieldResolver = CreateFieldResolver(field, typeResolver);
             return fieldResolver(Any | BindingFlags.DeclaredOnly)
                 ?? fieldResolver(Any);
         }
 
         public static System.Reflection.FieldInfo? ResolveField(this FieldInfo? field, ITypeResolver typeResolver, BindingFlags bindingAttr)
-            => CreateFieldResolver(field, typeResolver)(bindingAttr);
+            => field is null
+            ? null
+            : CreateFieldResolver(field, typeResolver)(bindingAttr);
 
-        public static System.Reflection.MethodInfo? ResolveMethod(this MethodInfo? methodInfo, ITypeResolver typeResolver)
+        public static System.Reflection.MethodInfo? ResolveMethod(this MethodInfo? method, ITypeResolver typeResolver)
         {
-            var methodResolver = CreateMethodResolver(methodInfo, typeResolver);
+            if (method is null)
+            {
+                return null;
+            }
+
+            var methodResolver = CreateMethodResolver(method, typeResolver.CheckNotNull(nameof(typeResolver)));
             return methodResolver(Any | BindingFlags.DeclaredOnly)
                 ?? methodResolver(Any);
         }
 
         public static System.Reflection.MethodInfo? ResolveMethod(this MethodInfo? method, ITypeResolver typeResolver, BindingFlags bindingflags)
-            => CreateMethodResolver(method, typeResolver)(bindingflags);
+            => method is null
+            ? null
+            : CreateMethodResolver(method, typeResolver.CheckNotNull(nameof(typeResolver)))(bindingflags);
 
         public static System.Reflection.PropertyInfo? ResolveProperty(this PropertyInfo? property, ITypeResolver typeResolver)
         {
+            if (property is null)
+            {
+                return null;
+            }
+
             var propertyResolver = CreatePropertyResolver(property, typeResolver);
             return propertyResolver(Any | BindingFlags.DeclaredOnly)
                 ?? propertyResolver(Any);
         }
 
         public static System.Reflection.PropertyInfo? ResolveProperty(this PropertyInfo? property, ITypeResolver typeResolver, BindingFlags bindingAttr)
-            => CreatePropertyResolver(property, typeResolver)(bindingAttr);
+            => property is null
+            ? null
+            : CreatePropertyResolver(property, typeResolver)(bindingAttr);
 
-        private static Func<BindingFlags, System.Reflection.ConstructorInfo?> CreateConstructorResolver(ConstructorInfo? constructor, ITypeResolver typeResolver)
+        private static Func<BindingFlags, System.Reflection.ConstructorInfo?> CreateConstructorResolver(ConstructorInfo constructor, ITypeResolver typeResolver)
         {
-            if (constructor is null)
-            {
-                return _ => null;
-            }
-
             Exception CreateException(string reason, Exception? innerException = null)
                 => new TypeResolverException($"Failed to resolve constructor '{constructor}' since {reason}.", innerException);
 
@@ -203,13 +226,8 @@ namespace Aqua.TypeSystem
             return bindingflags => Filter(declaringType.GetConstructors(bindingflags));
         }
 
-        private static Func<BindingFlags, System.Reflection.FieldInfo?> CreateFieldResolver(FieldInfo? field, ITypeResolver typeResolver)
+        private static Func<BindingFlags, System.Reflection.FieldInfo?> CreateFieldResolver(FieldInfo field, ITypeResolver typeResolver)
         {
-            if (field is null)
-            {
-                return _ => null;
-            }
-
             var declaringType = field.ResolveDeclaringType(typeResolver);
             var fieldName = field.Name;
             var isStatic = field.IsStatic ?? false;
@@ -218,13 +236,8 @@ namespace Aqua.TypeSystem
                 .If(x => x.IsStatic == isStatic);
         }
 
-        private static Func<BindingFlags, System.Reflection.MethodInfo?> CreateMethodResolver(MethodInfo? method, ITypeResolver typeResolver)
+        private static Func<BindingFlags, System.Reflection.MethodInfo?> CreateMethodResolver(MethodInfo method, ITypeResolver typeResolver)
         {
-            if (method is null)
-            {
-                return _ => null;
-            }
-
             Exception CreateException(string reason, Exception? innerException = null)
                 => new TypeResolverException($"Failed to resolve method '{method}' since {reason}.", innerException);
 
@@ -331,13 +344,8 @@ namespace Aqua.TypeSystem
             return bindingflags => Filter(declaringType.GetMethods(bindingflags));
         }
 
-        private static Func<BindingFlags, System.Reflection.PropertyInfo?> CreatePropertyResolver(PropertyInfo? property, ITypeResolver typeResolver)
+        private static Func<BindingFlags, System.Reflection.PropertyInfo?> CreatePropertyResolver(PropertyInfo property, ITypeResolver typeResolver)
         {
-            if (property is null)
-            {
-                return _ => null;
-            }
-
             var declaringType = property.ResolveDeclaringType(typeResolver);
             var propertyName = property.Name;
             var isStatic = property.IsStatic ?? false;
@@ -347,7 +355,7 @@ namespace Aqua.TypeSystem
         }
 
         /// <summary>
-        /// Returns null if the condition is not met, the actual value otherwise.
+        /// Returns null if the condition is not met, otherwise the actual value is returned.
         /// </summary>
         private static T? If<T>(this T t, Func<T, bool> predicate)
             where T : class
@@ -356,7 +364,7 @@ namespace Aqua.TypeSystem
         private static Type ResolveDeclaringType(this MemberInfo member, ITypeResolver typeResolver)
         {
             Exception CreateException(string what, Exception? innerException = null)
-                => new TypeResolverException($"{what} for {member.MemberType.ToString().ToLower()} {member}", innerException);
+                => new TypeResolverException($"{what} for {member.MemberType.ToString().ToLower(CultureInfo.CurrentCulture)} {member}", innerException);
 
             if (member.DeclaringType is null)
             {

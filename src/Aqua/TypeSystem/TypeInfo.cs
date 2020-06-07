@@ -36,17 +36,12 @@ namespace Aqua.TypeSystem
         }
 
         public TypeInfo(Type type, bool includePropertyInfos, bool setMemberDeclaringTypes)
-            : this(type, new TypeInfoProvider(includePropertyInfos, setMemberDeclaringTypes))
+            : this(type.CheckNotNull(nameof(type)), new TypeInfoProvider(includePropertyInfos, setMemberDeclaringTypes))
         {
         }
 
         internal TypeInfo(Type type, TypeInfoProvider typeInfoProvider)
         {
-            if (type is null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
             typeInfoProvider.RegisterReference(type, this);
 
             _type = type;
@@ -67,7 +62,7 @@ namespace Aqua.TypeSystem
 
             if (type.IsNested && !type.IsGenericParameter)
             {
-                DeclaringType = typeInfoProvider.Get(type.DeclaringType, false, false);
+                DeclaringType = typeInfoProvider.GetTypeInfo(type.DeclaringType, false, false);
             }
 
             IsGenericType = type.IsGenericType;
@@ -76,7 +71,7 @@ namespace Aqua.TypeSystem
             {
                 GenericArguments = type
                     .GetGenericArguments()
-                    .Select(x => typeInfoProvider.Get(x))
+                    .Select(x => typeInfoProvider.GetTypeInfo(x))
                     .ToList();
             }
 
@@ -87,23 +82,18 @@ namespace Aqua.TypeSystem
                 Properties = type
                     .GetProperties()
                     .OrderBy(x => x.MetadataToken)
-                    .Select(x => new PropertyInfo(x.Name, typeInfoProvider.Get(x.PropertyType), typeInfoProvider.SetMemberDeclaringTypes ? this : null))
+                    .Select(x => new PropertyInfo(x.Name, typeInfoProvider.GetTypeInfo(x.PropertyType), typeInfoProvider.SetMemberDeclaringTypes ? this : null))
                     .ToList();
             }
         }
 
-        public TypeInfo(TypeInfo typeInfo)
-            : this(typeInfo, new TypeInfoProvider())
+        public TypeInfo(TypeInfo type)
+            : this(type.CheckNotNull(nameof(type)), new TypeInfoProvider())
         {
         }
 
         internal TypeInfo(TypeInfo typeInfo, TypeInfoProvider typeInfoProvider)
         {
-            if (typeInfo is null)
-            {
-                throw new ArgumentNullException(nameof(typeInfo));
-            }
-
             typeInfoProvider.RegisterReference(typeInfo, this);
 
             Name = typeInfo.Name;
@@ -169,9 +159,15 @@ namespace Aqua.TypeSystem
         /// Gets <see cref="Type"/> by resolving this <see cref="TypeInfo"/> instance using the default <see cref="TypeResolver"/>.
         /// </summary>
         [Unmapped]
-        public Type Type => _type ?? (_type = this.ResolveType(TypeResolver.Instance));
+        ////[Obsolete("User method ToType() instead, this method is being removed in a future version.", false)]
+        public Type Type => ToType();
 
-        public static explicit operator Type?(TypeInfo? t) => t?.Type;
+        /// <summary>
+        /// Returns the <see cref="Type"/> represented by this <see cref="TypeInfo"/> instance by resolving it using the default <see cref="TypeResolver"/>.
+        /// </summary>
+        public Type ToType() => _type ?? (_type = this.ResolveType(TypeResolver.Instance));
+
+        public static explicit operator Type?(TypeInfo? type) => type?.ToType();
 
         public override string ToString() => $"{FullName}{GetGenericArgumentsString()}";
 

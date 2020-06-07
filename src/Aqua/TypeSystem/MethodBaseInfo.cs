@@ -22,24 +22,24 @@ namespace Aqua.TypeSystem
         protected MethodBaseInfo(System.Reflection.MethodBase method, TypeInfoProvider typeInfoProvider)
             : base(method, typeInfoProvider)
         {
-            var genericArguments = method.IsGenericMethod ? method.GetGenericArguments() : null;
+            var genericArguments = method.CheckNotNull(nameof(method)).IsGenericMethod ? method.GetGenericArguments() : null;
             GenericArgumentTypes = genericArguments
                 .AsNullIfEmpty()?
-                .Select(x => typeInfoProvider.Get(x, false, false))
+                .Select(x => typeInfoProvider.GetTypeInfo(x, false, false))
                 .ToList();
             ParameterTypes = method
                 .GetParameters()
                 .AsNullIfEmpty()?
-                .Select(x => typeInfoProvider.Get(x.ParameterType, false, false))
+                .Select(x => typeInfoProvider.GetTypeInfo(x.ParameterType, false, false))
                 .ToList();
         }
 
         protected MethodBaseInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes, TypeInfoProvider typeInfoProvider)
             : this(
             name,
-            typeInfoProvider.Get(declaringType, includePropertyInfos: false, setMemberDeclaringTypes: false),
-            genericArguments?.Select(x => typeInfoProvider.Get(x, false, false)),
-            parameterTypes?.Select(x => typeInfoProvider.Get(x, false, false)))
+            typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).GetTypeInfo(declaringType, includePropertyInfos: false, setMemberDeclaringTypes: false),
+            genericArguments?.Select(x => typeInfoProvider.GetTypeInfo(x, false, false)),
+            parameterTypes?.Select(x => typeInfoProvider.GetTypeInfo(x, false, false)))
         {
         }
 
@@ -57,7 +57,7 @@ namespace Aqua.TypeSystem
         protected MethodBaseInfo(MethodBaseInfo method, TypeInfoProvider typeInfoProvider)
             : base(method, typeInfoProvider)
         {
-            GenericArgumentTypes = method.GenericArgumentTypes
+            GenericArgumentTypes = method.CheckNotNull(nameof(method)).GenericArgumentTypes
                 .AsNullIfEmpty()?
                 .Select(x => typeInfoProvider.Get(x))
                 .ToList();

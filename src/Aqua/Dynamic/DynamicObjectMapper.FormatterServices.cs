@@ -2,6 +2,7 @@
 
 namespace Aqua.Dynamic
 {
+    using Aqua.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -20,9 +21,7 @@ namespace Aqua.Dynamic
         /// </summary>
         [SecuritySafeCritical]
         private static object GetUninitializedObject(Type type)
-        {
-            return FormatterServices.GetUninitializedObject(type);
-        }
+            => FormatterServices.GetUninitializedObject(type);
 
         /// <summary>
         /// Populate object members type by using <see cref="FormatterServices" />.
@@ -38,9 +37,7 @@ namespace Aqua.Dynamic
             var members = FormatterServices.GetSerializableMembers(type);
             var membersByCleanName = members.ToDictionary(GetCleanMemberName);
             var memberValueMap = new Dictionary<MemberInfo, object?>();
-
-            var properties = from.Properties ?? Enumerable.Empty<Property>();
-            foreach (var dynamicProperty in properties)
+            foreach (var dynamicProperty in from.Properties.AsEmptyIfNull())
             {
                 var name = dynamicProperty.Name;
 

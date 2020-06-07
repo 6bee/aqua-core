@@ -19,6 +19,7 @@ namespace Aqua.ProtoBuf.Dynamic
         }
 
         [ProtoMember(1, IsRequired = true, OverwriteList = true)]
+        [SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "Required for serialization")]
         public DynamicObjectSurrogate?[] Collection { get; set; } = null!;
 
         [return: NotNullIfNotNull("source")]

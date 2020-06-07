@@ -23,13 +23,8 @@ namespace Aqua.TypeSystem
 
         protected MemberInfo(System.Reflection.MemberInfo member, TypeInfoProvider typeInfoProvider)
         {
-            if (member is null)
-            {
-                throw new ArgumentNullException(nameof(member));
-            }
-
-            Name = member.Name;
-            DeclaringType = typeInfoProvider.Get(member.DeclaringType, false, false);
+            Name = member.CheckNotNull(nameof(member)).Name;
+            DeclaringType = typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).GetTypeInfo(member.DeclaringType, false, false);
             if (member.GetBindingFlags().Contains(System.Reflection.BindingFlags.Static))
             {
                 IsStatic = true;
@@ -44,8 +39,8 @@ namespace Aqua.TypeSystem
 
         protected MemberInfo(MemberInfo member, TypeInfoProvider typeInfoProvider)
         {
-            Name = member.Name;
-            DeclaringType = typeInfoProvider.Get(member.DeclaringType);
+            Name = member.CheckNotNull(nameof(member)).Name;
+            DeclaringType = typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).Get(member.DeclaringType);
         }
 
         [Unmapped]
@@ -60,7 +55,11 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 3, EmitDefaultValue = false)]
         public bool? IsStatic { get; set; }
 
-        public static explicit operator System.Reflection.MemberInfo?(MemberInfo? member) => member.ResolveMemberInfo(TypeResolver.Instance);
+        public static explicit operator System.Reflection.MemberInfo(MemberInfo member)
+            => member.CheckNotNull(nameof(member)).ToMemberInfo();
+
+        public System.Reflection.MemberInfo ToMemberInfo()
+            => this.ResolveMemberInfo(TypeResolver.Instance);
 
         public override string ToString() => $"{DeclaringType}.{Name}";
 

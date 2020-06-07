@@ -13,9 +13,14 @@ namespace Aqua.TypeSystem.Extensions
     public static partial class TypeExtensions
     {
         public static bool IsAnonymousType(this Type type)
-            => (type.Name.Contains("AnonymousType")
-                && type.IsDefined<CompilerGeneratedAttribute>())
-                || type.IsEmittedType();
+            => (type.CheckNotNull(nameof(type)).Name.Contains("AnonymousType", StringComparison.Ordinal)
+            && type.IsDefined<CompilerGeneratedAttribute>())
+            || type.IsEmittedType();
+
+#if NETSTANDARD2_0
+        [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "Extra parameter added on purpose")]
+        private static bool Contains(this string text, string value, StringComparison stringComparison) => text.Contains(value);
+#endif // NETSTANDARD2_0
 
         public static bool IsEmittedType(this Type type) => type.IsDefined<Emit.EmittedTypeAttribute>();
 
@@ -30,14 +35,15 @@ namespace Aqua.TypeSystem.Extensions
             return isNullable ? type.GetGenericArguments()[0] : type;
         }
 
-        public static bool Implements(this Type type, Type interfaceType) => type.Implements(interfaceType, new Type[1][]);
+        public static bool Implements(this Type type, Type interfaceType)
+            => type.CheckNotNull(nameof(type)).Implements(interfaceType.CheckNotNull(nameof(interfaceType)), new Type[1][]);
 
 #pragma warning disable SA1011 // Closing square brackets should be spaced correctly
         public static bool Implements(this Type type, Type interfaceType, [NotNullWhen(true)] out Type[]? genericTypeArguments)
 #pragma warning restore SA1011 // Closing square brackets should be spaced correctly
         {
             var typeArgs = new Type[1][];
-            if (type.Implements(interfaceType, typeArgs))
+            if (type.CheckNotNull(nameof(type)).Implements(interfaceType.CheckNotNull(nameof(interfaceType)), typeArgs))
             {
                 genericTypeArguments = typeArgs[0];
                 return true;
@@ -67,7 +73,7 @@ namespace Aqua.TypeSystem.Extensions
             {
                 var genericArguments = i.GenericTypeArguments;
                 var isAssignable = i.IsGenericType
-                    && genericArguments.Count() == genericArgumentsCount
+                    && genericArguments.Length == genericArgumentsCount
                     && interfaceTypeInfo.MakeGenericType(genericArguments).IsAssignableFrom(i);
                 if (isAssignable)
                 {
@@ -104,6 +110,7 @@ namespace Aqua.TypeSystem.Extensions
             };
         }
 
-        public static bool IsEnum(this Type type) => type.AsNonNullableType().IsEnum;
+        public static bool IsEnum(this Type type)
+            => type.CheckNotNull(nameof(type)).AsNonNullableType().IsEnum;
     }
 }

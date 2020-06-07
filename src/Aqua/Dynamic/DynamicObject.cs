@@ -111,7 +111,7 @@ namespace Aqua.Dynamic
         /// <exception cref="ArgumentNullException">The specified members collection is null.</exception>
         internal protected DynamicObject(DynamicObject dynamicObject, bool deepCopy = true)
         {
-            var type = dynamicObject.Type;
+            var type = dynamicObject.CheckNotNull(nameof(dynamicObject)).Type;
             Type = type is null ? null : new TypeInfo(type);
 
             var properties = dynamicObject.Properties ?? throw new ArgumentException($"Dynamic object must not have {nameof(Properties)} set to null.", nameof(dynamicObject));
@@ -157,7 +157,7 @@ namespace Aqua.Dynamic
         {
             get => TryGet(name, out var value)
                 ? value
-                : throw new Exception($"Member not found for name '{name}'");
+                : throw new ArgumentException($"Member not found for name '{name}'");
             set => Set(name, value);
         }
 
@@ -170,7 +170,7 @@ namespace Aqua.Dynamic
         public object? Set(string name, object? value)
         {
             var properties = GetOrCreatePropertSet();
-            var property = properties.SingleOrDefault(x => string.Equals(x.Name, name));
+            var property = properties.SingleOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
 
             var oldValue = property?.Value;
             OnPropertyChanging(name, oldValue, value);

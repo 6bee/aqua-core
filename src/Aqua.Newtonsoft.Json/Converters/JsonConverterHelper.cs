@@ -52,13 +52,14 @@ namespace Aqua.Newtonsoft.Json.Converters
         }
 
         public static JsonSerializationException CreateException(this JsonReader reader, string message)
-            => reader is IJsonLineInfo lineInfo && lineInfo.HasLineInfo()
+            => reader.CheckNotNull(nameof(reader)) is IJsonLineInfo lineInfo && lineInfo.HasLineInfo()
             ? new JsonSerializationException(message, reader.Path, lineInfo.LineNumber, lineInfo.LinePosition, null)
             : new JsonSerializationException(message);
 
         public static void Advance(this JsonReader reader, string? errorMessage = null)
         {
-            if (!reader.Read())
+            reader.CheckNotNull(nameof(reader));
+            if (!reader.CheckNotNull(nameof(reader)).Read())
             {
                 throw reader.CreateException(errorMessage ?? "Unexpected token structure.");
             }
@@ -66,6 +67,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public static void AssertProperty(this JsonReader reader, string propertyName, bool advance = true)
         {
+            reader.CheckNotNull(nameof(reader));
             if (advance)
             {
                 reader.Advance();
@@ -79,15 +81,15 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         [return: MaybeNull]
         public static T Read<T>(this JsonReader reader, JsonSerializer serializer)
-            => reader.TryRead(serializer, out T result)
+            => reader.CheckNotNull(nameof(reader)).TryRead(serializer, out T result)
             ? result
             : throw reader.CreateException("Unexpected token structure.");
 
         public static object? Read(this JsonReader reader, TypeInfo? type, JsonSerializer serializer)
-            => reader.Read(type.MapTypeInfo(), serializer);
+            => reader.CheckNotNull(nameof(reader)).Read(type.MapTypeInfo(), serializer);
 
         public static object? Read(this JsonReader reader, Type? type, JsonSerializer serializer)
-            => reader.TryRead(type, serializer, out object? result)
+            => reader.CheckNotNull(nameof(reader)).TryRead(type, serializer, out object? result)
             ? result
             : throw reader.CreateException("Unexpected token structure.");
 
@@ -103,6 +105,9 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public static bool TryRead(this JsonReader reader, Type? type, JsonSerializer serializer, out object? result)
         {
+            reader.CheckNotNull(nameof(reader));
+            serializer.CheckNotNull(nameof(serializer));
+
             if (type != null && _typeReaders.TryGetValue(type, out var read))
             {
                 result = read(reader);
@@ -137,6 +142,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public static void AssertStartObject(this JsonReader reader, bool advance = true)
         {
+            reader.CheckNotNull(nameof(reader));
             if (advance && !reader.Read())
             {
                 throw reader.CreateException($"Expected start object.");
@@ -150,6 +156,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public static void AssertEndObject(this JsonReader reader, bool advance = true)
         {
+            reader.CheckNotNull(nameof(reader));
             if (advance)
             {
                 reader.Advance();
@@ -168,12 +175,13 @@ namespace Aqua.Newtonsoft.Json.Converters
         public static void AssertIdToken(this JsonReader reader, bool advance = false) => AssertProperty(reader, IdToken, advance);
 
         public static bool IsProperty(this JsonReader reader, string propertyName)
-            => reader.TokenType == JsonToken.PropertyName
+            => reader.CheckNotNull(nameof(reader)).TokenType == JsonToken.PropertyName
             && string.Equals(reader.Value as string, propertyName, StringComparison.Ordinal);
 
         public static bool TryWriteReference(this JsonWriter writer, JsonSerializer serializer, object value)
         {
-            var referenceResolver = serializer.ReferenceResolver;
+            writer.CheckNotNull(nameof(writer));
+            var referenceResolver = serializer.CheckNotNull(nameof(serializer)).ReferenceResolver;
             if (referenceResolver is null)
             {
                 return false;

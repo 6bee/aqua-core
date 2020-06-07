@@ -25,25 +25,27 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
         }
 
         public override JsonContract ResolveContract(Type type)
-            => _decorated is null || typeof(DynamicObject).IsAssignableFrom(type)
-            ? base.ResolveContract(type)
-            : _decorated.ResolveContract(type);
+        {
+            type.CheckNotNull(nameof(type));
+            return _decorated is null || typeof(DynamicObject).IsAssignableFrom(type)
+                ? base.ResolveContract(type)
+                : _decorated.ResolveContract(type);
+        }
 
         protected override JsonContract CreateContract(Type objectType)
-            => IsTypeHandled(objectType)
+            => IsTypeHandled(objectType.CheckNotNull(nameof(objectType)))
             ? CreateObjectContract(objectType)
             : base.CreateContract(objectType);
 
         private static bool IsTypeHandled(Type type)
-            => type.IsClass
+            => type.CheckNotNull(nameof(type)).IsClass
             && Equals(type.Assembly, typeof(DynamicObject).Assembly)
             && type.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0;
 
         protected override JsonObjectContract CreateObjectContract(Type objectType)
         {
-            var contract = base.CreateObjectContract(objectType);
-
-            if (IsTypeHandled(objectType))
+            var contract = base.CreateObjectContract(objectType.CheckNotNull(nameof(objectType)));
+            if (IsTypeHandled(objectType.CheckNotNull(nameof(objectType))))
             {
                 contract.IsReference = true;
                 contract.ItemReferenceLoopHandling = ReferenceLoopHandling.Serialize;

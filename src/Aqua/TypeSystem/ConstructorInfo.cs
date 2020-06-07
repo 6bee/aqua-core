@@ -48,10 +48,14 @@ namespace Aqua.TypeSystem
 
         public override MemberTypes MemberType => MemberTypes.Constructor;
 
-        public System.Reflection.ConstructorInfo Constructor
+        [Obsolete("Use method ToConstructorInfo() instead", true)]
+        public System.Reflection.ConstructorInfo Constructor => ToConstructorInfo();
+
+        public static explicit operator System.Reflection.ConstructorInfo(ConstructorInfo constructor)
+            => constructor.CheckNotNull(nameof(constructor)).ToConstructorInfo();
+
+        public System.Reflection.ConstructorInfo ToConstructorInfo()
             => _constructor ?? (_constructor = this.ResolveConstructor(TypeResolver.Instance))
             ?? throw new TypeResolverException($"Failed to resolve constructor, consider using extension method to specify {nameof(ITypeResolver)}.");
-
-        public static explicit operator System.Reflection.ConstructorInfo(ConstructorInfo c) => c.Constructor;
     }
 }

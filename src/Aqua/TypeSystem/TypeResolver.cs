@@ -115,7 +115,7 @@ namespace Aqua.TypeSystem
             return type;
         }
 
-        private bool IsValid(TypeInfo typeInfo, Type? resolvedType)
+        private static bool IsValid(TypeInfo typeInfo, Type? resolvedType)
         {
             if (resolvedType is null)
             {

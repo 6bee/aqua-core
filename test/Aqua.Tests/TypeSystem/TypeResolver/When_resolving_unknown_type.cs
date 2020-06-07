@@ -6,7 +6,6 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
     using Aqua.TypeSystem.Emit;
     using Shouldly;
     using System;
-    using System.Linq;
     using Xunit;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
@@ -59,7 +58,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         [Fact]
         public void Emited_type_should_have_two_properties()
         {
-            emitedType.GetProperties().Count().ShouldBe(2);
+            emitedType.GetProperties().Length.ShouldBe(2);
         }
 
         [Fact]

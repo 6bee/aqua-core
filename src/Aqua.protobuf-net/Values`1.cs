@@ -5,6 +5,7 @@ namespace Aqua.ProtoBuf
     using global::ProtoBuf;
     using System;
     using System.Collections;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
 #nullable disable
@@ -40,6 +41,7 @@ namespace Aqua.ProtoBuf
         }
 
         [ProtoMember(1, IsRequired = true, OverwriteList = true)]
+        [SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "Property used as serialization contract")]
         public T[] Array
         {
             get => (T[])ObjectValue;

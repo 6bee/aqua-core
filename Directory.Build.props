@@ -4,7 +4,7 @@
     <MajorVersion>5</MajorVersion>
     <MinorVersion>0</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-012</PreReleaseLabel>
+    <PreReleaseLabel>alpha-014</PreReleaseLabel>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -43,6 +43,10 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>
+    <EnableStyleCopAnalyzers Condition="'$(EnableStyleCopAnalyzers)' == ''">true</EnableStyleCopAnalyzers>
+    <EnableSonarAnalyzers Condition="'$(EnableSonarAnalyzers)' == ''">true</EnableSonarAnalyzers>
+    <EnableFxCopAnalyzers Condition="'$(EnableFxCopAnalyzers)' == ''">true</EnableFxCopAnalyzers>
   </PropertyGroup>
     
   <ItemGroup>
@@ -62,17 +66,20 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" Condition="'$(EnableStyleCopAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.7.0.17535">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.7.0.17535" Condition="'$(EnableSonarAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0" Condition="'$(EnableFxCopAnalyzers)' == 'true'">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 

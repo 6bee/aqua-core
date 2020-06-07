@@ -6,6 +6,7 @@ namespace Aqua.ProtoBuf
     using Aqua.Extensions;
     using global::ProtoBuf.Meta;
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     public class AquaTypeModel
     {
@@ -125,6 +126,7 @@ namespace Aqua.ProtoBuf
             return this;
         }
 
-        public static implicit operator RuntimeTypeModel(AquaTypeModel model) => model.Model;
+        [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Model property may be used")]
+        public static implicit operator RuntimeTypeModel(AquaTypeModel model) => model.CheckNotNull(nameof(model)).Model;
     }
 }

@@ -5,6 +5,7 @@ namespace Aqua.Newtonsoft.Json.Converters
     using global::Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
@@ -13,6 +14,7 @@ namespace Aqua.Newtonsoft.Json.Converters
     {
         public static string TypeToke => "$type";
 
+        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Preferred name")]
         protected sealed class Property
         {
             public Property(PropertyInfo propertyInfo)
@@ -53,6 +55,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         protected static IReadOnlyCollection<Property> GetProperties(Type type)
         {
+            type.CheckNotNull(nameof(type));
             lock (_properties)
             {
                 if (!_properties.TryGetValue(type, out var propertySet))

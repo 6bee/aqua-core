@@ -30,7 +30,7 @@ namespace Aqua.TypeSystem
             : base(method, typeInfoProvider)
         {
             _method = method;
-            ReturnType = typeInfoProvider.Get(method?.ReturnType, false, false);
+            ReturnType = typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).GetTypeInfo(method?.ReturnType, false, false);
         }
 
         public MethodInfo(string name, Type declaringType, IEnumerable<Type>? parameterTypes = null, Type? returnType = null)
@@ -46,7 +46,7 @@ namespace Aqua.TypeSystem
         public MethodInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes, Type? returnType, TypeInfoProvider typeInfoProvider)
             : base(name, declaringType, genericArguments, parameterTypes, typeInfoProvider)
         {
-            ReturnType = typeInfoProvider.Get(returnType, false, false);
+            ReturnType = typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).GetTypeInfo(returnType, false, false);
         }
 
         public MethodInfo(string name, TypeInfo declaringType, IEnumerable<TypeInfo>? genericArguments = null, IEnumerable<TypeInfo>? parameterTypes = null, TypeInfo? returnType = null)
@@ -65,13 +65,16 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo? ReturnType { get; set; }
 
-        [Unmapped]
-        public System.Reflection.MethodInfo Method
-            => _method ?? (_method = this.ResolveMethod(TypeResolver.Instance))
-            ?? throw new TypeResolverException($"Failed to resolve method, consider using extension method to specify {nameof(ITypeResolver)}.");
+        [Obsolete("Use method ToMethodInfo() instead", true)]
+        public System.Reflection.MethodInfo Method => ToMethodInfo();
 
         public override string ToString() => $"{ReturnType} {base.ToString()}".Trim();
 
-        public static explicit operator System.Reflection.MethodInfo(MethodInfo m) => m.Method;
+        public static explicit operator System.Reflection.MethodInfo(MethodInfo method)
+            => method.CheckNotNull(nameof(method)).ToMethodInfo();
+
+        public System.Reflection.MethodInfo ToMethodInfo()
+            => _method ?? (_method = this.ResolveMethod(TypeResolver.Instance))
+            ?? throw new TypeResolverException($"Failed to resolve method, consider using extension method to specify {nameof(ITypeResolver)}.");
     }
 }

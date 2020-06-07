@@ -11,8 +11,8 @@ Namespace Aqua.Tests.TypeSystem.Extensions
         <Fact>
         Public Sub Should_create_from_memberinfo()
             Dim a = New A
-            Dim types(-1) As Type
-            Dim ctor = a.GetType().GetConstructor(types)
+            Dim typeargs = Array.Empty(Of Type)()
+            Dim ctor = a.GetType().GetConstructor(typeargs)
             Dim ctorInfo = New ConstructorInfo(ctor)
             ctorInfo.Name.ShouldBe(".ctor")
             ctorInfo.IsStatic.ShouldBeNull()
@@ -23,9 +23,9 @@ Namespace Aqua.Tests.TypeSystem.Extensions
         Public Sub Should_create_from_name()
             Dim a = New A
             Dim ctorInfo = New ConstructorInfo(".ctor", a.GetType())
-            Dim types(-1) As Type
-            Dim ctor = a.GetType().GetConstructor(types)
-            ctorInfo.Constructor.ShouldBeSameAs(ctor)
+            Dim typeargs = Array.Empty(Of Type)()
+            Dim ctor = a.GetType().GetConstructor(typeargs)
+            ctorInfo.ToConstructorInfo.ShouldBeSameAs(ctor)
         End Sub
     End Class
 End Namespace

@@ -24,31 +24,31 @@ namespace Aqua.Tests.Serialization
 
                 var isArray = 0;
                 var isNullable = false;
-                if (typeName.StartsWith("ArrayOf_"))
+                if (typeName.StartsWith("ArrayOf_", StringComparison.Ordinal))
                 {
                     typeName = typeName.Substring(8);
                     isArray++;
                 }
 
-                if (typeName.StartsWith("ListOf_"))
+                if (typeName.StartsWith("ListOf_", StringComparison.Ordinal))
                 {
                     typeName = typeName.Substring(7);
                     isArray++;
                 }
 
-                if (typeName.StartsWith("ArrayOf"))
+                if (typeName.StartsWith("ArrayOf", StringComparison.Ordinal))
                 {
                     typeName = typeName.Substring(7);
                     isArray++;
                 }
 
-                if (typeName.StartsWith("ListOf"))
+                if (typeName.StartsWith("ListOf", StringComparison.Ordinal))
                 {
                     typeName = typeName.Substring(6);
                     isArray++;
                 }
 
-                if (typeName.StartsWith("NullableOf"))
+                if (typeName.StartsWith("NullableOf", StringComparison.Ordinal))
                 {
                     typeName = typeName.Substring(10);
                     isNullable = true;
@@ -75,9 +75,10 @@ namespace Aqua.Tests.Serialization
                         {
                             return x.GetType(typeName);
                         }
-                        catch (Exception ex)
+#pragma warning disable CA1031 // Do not catch general exception types
+                        catch
+#pragma warning restore CA1031 // Do not catch general exception types
                         {
-                            _ = ex;
                             return null;
                         }
                     })

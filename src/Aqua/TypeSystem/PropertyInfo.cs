@@ -21,7 +21,7 @@ namespace Aqua.TypeSystem
         }
 
         public PropertyInfo(System.Reflection.PropertyInfo property)
-            : this(property, new TypeInfoProvider())
+            : this(property.CheckNotNull(nameof(property)), new TypeInfoProvider())
         {
         }
 
@@ -52,11 +52,11 @@ namespace Aqua.TypeSystem
             : base(property, typeInfoProvider)
         {
             _property = property;
-            PropertyType = typeInfoProvider.Get(property.PropertyType, false, false);
+            PropertyType = typeInfoProvider.GetTypeInfo(property.PropertyType, false, false);
         }
 
         private PropertyInfo(string propertyName, Type propertyType, Type declaringType, TypeInfoProvider typeInfoProvider)
-            : this(propertyName, typeInfoProvider.Get(propertyType, false, false), typeInfoProvider.Get(declaringType, false, false))
+            : this(propertyName, typeInfoProvider.GetTypeInfo(propertyType, false, false), typeInfoProvider.GetTypeInfo(declaringType, false, false))
         {
         }
 
@@ -66,10 +66,14 @@ namespace Aqua.TypeSystem
         public TypeInfo? PropertyType { get; set; }
 
         [Unmapped]
-        public System.Reflection.PropertyInfo Property
+        [Obsolete("Use method ToPropertyInfo() instead", true)]
+        public System.Reflection.PropertyInfo Property => ToPropertyInfo();
+
+        public static explicit operator System.Reflection.PropertyInfo(PropertyInfo proeprty)
+            => proeprty.CheckNotNull(nameof(proeprty)).ToPropertyInfo();
+
+        public System.Reflection.PropertyInfo ToPropertyInfo()
             => _property ?? (_property = this.ResolveProperty(TypeResolver.Instance))
             ?? throw new TypeResolverException($"Failed to resolve property, consider using extension method to specify {nameof(ITypeResolver)}.");
-
-        public static explicit operator System.Reflection.PropertyInfo(PropertyInfo p) => p.Property;
     }
 }

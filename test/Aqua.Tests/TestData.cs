@@ -5,7 +5,6 @@ namespace Aqua.Tests
     using Aqua.Dynamic;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Numerics;
@@ -13,7 +12,6 @@ namespace Aqua.Tests
 
     public static class TestData
     {
-        [SuppressMessage("Minor Code Smell", "S2344:Enumeration type names should not have \"Flags\" or \"Enum\" suffixes", Justification = "For clarity purpose")]
         public enum TestEnum
         {
             Foo,

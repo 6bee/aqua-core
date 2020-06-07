@@ -8,6 +8,6 @@ namespace Aqua.TypeSystem
     public interface ITypeInfoProvider
     {
         [return: NotNullIfNotNull("type")]
-        TypeInfo? Get(Type? type, bool? includePropertyInfos = null, bool? setMemberDeclaringTypes = null);
+        TypeInfo? GetTypeInfo(Type? type, bool? includePropertyInfos = null, bool? setMemberDeclaringTypes = null);
     }
 }

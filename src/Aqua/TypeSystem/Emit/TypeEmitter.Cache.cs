@@ -99,7 +99,7 @@ namespace Aqua.TypeSystem.Emit
 
             private bool Equals(TypeWithPropertyList other)
             {
-                if (!string.Equals(TypeFullName, other.TypeFullName))
+                if (!string.Equals(TypeFullName, other.TypeFullName, StringComparison.Ordinal))
                 {
                     return false;
                 }

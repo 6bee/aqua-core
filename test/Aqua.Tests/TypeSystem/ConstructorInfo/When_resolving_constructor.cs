@@ -113,7 +113,7 @@ namespace Aqua.Tests.TypeSystem.ConstructorInfo
             var expected = typeof(Overload).GetConstructor(Array.Empty<Type>());
             var ctor = new ConstructorInfo(expected);
             var ctor2 = JsonSerializationHelper.Serialize(ctor);
-            ctor2.Constructor.ShouldBeSameAs(expected);
+            ctor2.ToConstructorInfo().ShouldBeSameAs(expected);
         }
 
         [Fact]
@@ -121,15 +121,15 @@ namespace Aqua.Tests.TypeSystem.ConstructorInfo
         {
             var ctor = new ConstructorInfo(".ctor", typeof(Overload));
             var expected = typeof(Overload).GetConstructor(Array.Empty<Type>());
-            ctor.Constructor.ShouldBeSameAs(expected);
+            ctor.ToConstructorInfo().ShouldBeSameAs(expected);
         }
 
         [Fact]
         public void Should_resolve_default_constructor_created_by_name_with_empty_parameter_list()
         {
-            var ctor = new ConstructorInfo(".ctor", typeof(Overload), new Type[0]);
+            var ctor = new ConstructorInfo(".ctor", typeof(Overload), Array.Empty<Type>());
             var expected = typeof(Overload).GetConstructor(Array.Empty<Type>());
-            ctor.Constructor.ShouldBeSameAs(expected);
+            ctor.ToConstructorInfo().ShouldBeSameAs(expected);
         }
 
         [Fact]
@@ -137,7 +137,7 @@ namespace Aqua.Tests.TypeSystem.ConstructorInfo
         {
             var ctor = new ConstructorInfo(".ctor", typeof(Overload), new[] { typeof(string) });
             var expected = typeof(Overload).GetConstructor(new[] { typeof(string) });
-            ctor.Constructor.ShouldBeSameAs(expected);
+            ctor.ToConstructorInfo().ShouldBeSameAs(expected);
         }
 
         [Fact]

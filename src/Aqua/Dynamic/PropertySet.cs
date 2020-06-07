@@ -5,6 +5,7 @@ namespace Aqua.Dynamic
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.Serialization;
 
@@ -30,6 +31,7 @@ namespace Aqua.Dynamic
                 => ReferenceEquals(x, y)
                 || string.Equals(x.Name, y.Name, StringComparison.Ordinal);
 
+            [SuppressMessage("Globalization", "CA1307:Specify StringComparison", Justification = "Globalization issue with hash codes?")]
             public int GetHashCode(Property obj) => obj?.Name?.GetHashCode() ?? 0;
         }
 
@@ -122,9 +124,17 @@ namespace Aqua.Dynamic
         }
 
         public static implicit operator Dictionary<string, object?>(PropertySet propertySet)
-            => propertySet.Select(x => (KeyValuePair<string, object?>)x).ToDictionary(x => x.Key, x => x.Value);
+            => propertySet.CheckNotNull(nameof(propertySet)).ToDictionary();
 
         public static implicit operator PropertySet(Dictionary<string, object?> dictionary)
-            => new PropertySet(dictionary.Select(x => (Property)x));
+            => ToPropertySet(dictionary);
+
+        public Dictionary<string, object?> ToDictionary()
+            => _list
+            .Select(x => x.ToKeyValuePair())
+            .ToDictionary(x => x.Key, x => x.Value);
+
+        public static PropertySet ToPropertySet(Dictionary<string, object?> dictionary)
+            => new PropertySet(dictionary.CheckNotNull(nameof(dictionary)).Select(x => (Property)x));
     }
 }

@@ -31,7 +31,7 @@ namespace Aqua.TypeSystem
 
         [return: NotNullIfNotNull("type")]
         public static TypeInfo? GetTypeInfo(this ITypeInfoProvider typeInfoProvider, Type type)
-            => typeInfoProvider?.Get(type);
+            => typeInfoProvider?.GetTypeInfo(type);
 
         private static TypeInfoProvider AsNative(this ITypeInfoProvider typeInfoProvider)
             => (typeInfoProvider as TypeInfoProvider) ?? new TypeInfoProvider(false, false, typeInfoProvider);

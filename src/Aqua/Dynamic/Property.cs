@@ -5,6 +5,7 @@ namespace Aqua.Dynamic
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Numerics;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
@@ -19,6 +20,7 @@ namespace Aqua.Dynamic
     [KnownType(typeof(BigInteger)), XmlInclude(typeof(BigInteger))]
     [KnownType(typeof(Complex)), XmlInclude(typeof(Complex))]
     [DebuggerDisplay("{Name,nq}: {Value}")]
+    [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Preferred name")]
     public class Property
     {
         public Property()
@@ -37,7 +39,7 @@ namespace Aqua.Dynamic
         }
 
         internal protected Property(Property property)
-            : this(property.Name, property.Value)
+            : this(property.CheckNotNull(nameof(property)).Name, property.Value)
         {
         }
 
@@ -48,9 +50,15 @@ namespace Aqua.Dynamic
         public object? Value { get; set; }
 
         public static implicit operator KeyValuePair<string, object?>(Property property)
-            => new KeyValuePair<string, object?>(property.Name ?? string.Empty, property.Value);
+            => property.CheckNotNull(nameof(property)).ToKeyValuePair();
 
         public static implicit operator Property(KeyValuePair<string, object?> keyValuePair)
+            => ToProperty(keyValuePair);
+
+        public KeyValuePair<string, object?> ToKeyValuePair()
+            => new KeyValuePair<string, object?>(Name ?? string.Empty, Value);
+
+        public static Property ToProperty(KeyValuePair<string, object?> keyValuePair)
             => new Property(keyValuePair);
     }
 }

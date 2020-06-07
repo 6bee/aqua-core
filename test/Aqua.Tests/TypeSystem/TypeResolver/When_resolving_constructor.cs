@@ -14,7 +14,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         [Fact]
         public void Of_generic_list()
         {
-            var constructorInfo = new ConstructorInfo(typeof(List<string>).GetConstructor(new Type[0]));
+            var constructorInfo = new ConstructorInfo(typeof(List<string>).GetConstructor(Array.Empty<Type>()));
             constructorInfo.ResolveConstructor(new TypeResolver()).GetParameters().ShouldBeEmpty();
         }
     }

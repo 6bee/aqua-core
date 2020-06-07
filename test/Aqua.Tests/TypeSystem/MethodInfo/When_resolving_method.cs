@@ -156,7 +156,7 @@ namespace Aqua.Tests.TypeSystem.MethodInfo
 
             var methodInfo2 = JsonSerializationHelper.Serialize(methodInfo);
 
-            methodInfo2.Method.ShouldBeSameAs(expected);
+            methodInfo2.ToMethodInfo().ShouldBeSameAs(expected);
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace Aqua.Tests.TypeSystem.MethodInfo
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
                 .Single(x => x.Name == nameof(Overload.Method) && x.GetParameters().Length == 0);
 
-            methodInfo.Method.ShouldBeSameAs(expected);
+            methodInfo.ToMethodInfo().ShouldBeSameAs(expected);
         }
 
         [Fact]

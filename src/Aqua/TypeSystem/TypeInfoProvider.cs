@@ -48,7 +48,7 @@ namespace Aqua.TypeSystem
         /// <param name="setMemberDeclaringTypes">If provided overrules <seealso cref="SetMemberDeclaringTypes"/> property set on class level.</param>
         /// <returns>Returns a <see cref="TypeInfo"/> representing the specified <see cref="Type"/> or null if the type parameter is null.</returns>
         [return: NotNullIfNotNull("type")]
-        public virtual TypeInfo? Get(Type? type, bool? includePropertyInfos = null, bool? setMemberDeclaringTypes = null)
+        public virtual TypeInfo? GetTypeInfo(Type? type, bool? includePropertyInfos = null, bool? setMemberDeclaringTypes = null)
         {
             if (type is null)
             {
@@ -62,7 +62,7 @@ namespace Aqua.TypeSystem
 
             if (_parent != null)
             {
-                return _parent.Get(type, includePropertyInfos, setMemberDeclaringTypes);
+                return _parent.GetTypeInfo(type, includePropertyInfos, setMemberDeclaringTypes);
             }
 
             var context = this;
@@ -80,16 +80,11 @@ namespace Aqua.TypeSystem
 
         [return: NotNullIfNotNull("type")]
         internal TypeInfo? Get(TypeInfo? type)
-        {
-            if (type is null)
-            {
-                return null;
-            }
-
-            return _typeInfoReferenceTracker.TryGetValue(type, out var typeInfo)
-                ? typeInfo
-                : new TypeInfo(type, this);
-        }
+            => type is null
+            ? null
+            : _typeInfoReferenceTracker.TryGetValue(type, out var typeInfo)
+            ? typeInfo
+            : new TypeInfo(type, this);
 
         private static Dictionary<T, TypeInfo> CreateReferenceTracker<T>()
             => new Dictionary<T, TypeInfo>(ReferenceEqualityComparer<T>.Default);

@@ -13,59 +13,14 @@ namespace Aqua.Extensions
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class EnumerableExtensions
     {
-        private static class Tuple
-        {
-            public static Tuple<TLeft, TRight> Create<TLeft, TRight>(TLeft left, TRight right)
-                => new Tuple<TLeft, TRight>(left, right);
-        }
-
-        [DebuggerDisplay("{Left}|{Right}")]
-        public sealed class Tuple<TLeft, TRight>
-        {
-            public Tuple(TLeft left, TRight right)
-            {
-                Left = left;
-                Right = right;
-            }
-
-            public TLeft Left { get; }
-
-            public TRight Right { get; }
-
-            public override bool Equals(object obj)
-            {
-                if (obj is null)
-                {
-                    return false;
-                }
-
-                if (ReferenceEquals(this, obj))
-                {
-                    return true;
-                }
-
-                return obj is Tuple<TLeft, TRight> tuple
-                    && Equals(Left, tuple.Left)
-                    && Equals(Right, tuple.Right);
-            }
-
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    return ((Left?.GetHashCode() ?? 0) * 397) ^ (Right?.GetHashCode() ?? 0);
-                }
-            }
-        }
-
-        public static IEnumerable<Tuple<T, T>> FullOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey>? keyEqualityComparer = null, IEqualityComparer<Tuple<T, T>>? comparer = null)
-            => FullOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, Tuple.Create, keyEqualityComparer, comparer);
+        public static IEnumerable<(T Left, T Right)> FullOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey>? keyEqualityComparer = null, IEqualityComparer<(T Left, T Right)>? comparer = null)
+            => FullOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, CreateTuple, keyEqualityComparer, comparer);
 
         public static IEnumerable<TResult> FullOuterJoin<T, TKey, TResult>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, Func<T, T, TResult> resultSelector, IEqualityComparer<TKey>? keyEqualityComparer = null, IEqualityComparer<TResult>? comparer = null)
             => FullOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, resultSelector, keyEqualityComparer, comparer);
 
-        public static IEnumerable<Tuple<TLeft, TRight>> FullOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey>? keyEqualityComparer = null, IEqualityComparer<Tuple<TLeft, TRight>>? comparer = null)
-            => FullOuterJoin(leftSet, rightSet, leftKeySelector, rightKeySelector, Tuple.Create, keyEqualityComparer, comparer);
+        public static IEnumerable<(TLeft Left, TRight Right)> FullOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey>? keyEqualityComparer = null, IEqualityComparer<(TLeft Left, TRight Right)>? comparer = null)
+            => FullOuterJoin(leftSet, rightSet, leftKeySelector, rightKeySelector, CreateTuple, keyEqualityComparer, comparer);
 
         public static IEnumerable<TResult> FullOuterJoin<TLeft, TRight, TKey, TResult>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, Func<TLeft, TRight, TResult> resultSelector, IEqualityComparer<TKey>? keyEqualityComparer = null, IEqualityComparer<TResult>? comparer = null)
         {
@@ -74,14 +29,14 @@ namespace Aqua.Extensions
             return leftOuterJoin.Union(rightOuterJoin, comparer);
         }
 
-        public static IEnumerable<Tuple<T, T>> LeftOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
-            => LeftOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, Tuple.Create, keyEqualityComparer);
+        public static IEnumerable<(T Left, T Right)> LeftOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
+            => LeftOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, CreateTuple, keyEqualityComparer);
 
         public static IEnumerable<TResult> LeftOuterJoin<T, TKey, TResult>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, Func<T, T, TResult> resultSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
             => LeftOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, resultSelector, keyEqualityComparer);
 
-        public static IEnumerable<Tuple<TLeft, TRight>> LeftOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
-            => LeftOuterJoin(leftSet, rightSet, leftKeySelector, rightKeySelector, Tuple.Create, keyEqualityComparer);
+        public static IEnumerable<(TLeft Left, TRight Right)> LeftOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
+            => LeftOuterJoin(leftSet, rightSet, leftKeySelector, rightKeySelector, CreateTuple, keyEqualityComparer);
 
         public static IEnumerable<TResult> LeftOuterJoin<TLeft, TRight, TKey, TResult>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, Func<TLeft, TRight, TResult> resultSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
             => leftSet
@@ -95,14 +50,14 @@ namespace Aqua.Extensions
                 x => x.Group.DefaultIfEmpty(),
                 (x, y) => resultSelector(x.Key, y));
 
-        public static IEnumerable<Tuple<T, T>> RightOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
-            => RightOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, Tuple.Create, keyEqualityComparer);
+        public static IEnumerable<(T Left, T Right)> RightOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
+            => RightOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, CreateTuple, keyEqualityComparer);
 
         public static IEnumerable<TResult> RightOuterJoin<T, TKey, TResult>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, Func<T, T, TResult> resultSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
             => RightOuterJoin(leftSet, rightSet, comparisonSelector, comparisonSelector, resultSelector, keyEqualityComparer);
 
-        public static IEnumerable<Tuple<TLeft, TRight>> RightOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
-            => RightOuterJoin(leftSet, rightSet, leftKeySelector, rightKeySelector, Tuple.Create, keyEqualityComparer);
+        public static IEnumerable<(TLeft Left, TRight Right)> RightOuterJoin<TLeft, TRight, TKey>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
+            => RightOuterJoin(leftSet, rightSet, leftKeySelector, rightKeySelector, CreateTuple, keyEqualityComparer);
 
         public static IEnumerable<TResult> RightOuterJoin<TLeft, TRight, TKey, TResult>(this IEnumerable<TLeft> leftSet, IEnumerable<TRight> rightSet, Func<TLeft, TKey> leftKeySelector, Func<TRight, TKey> rightKeySelector, Func<TLeft, TRight, TResult> resultSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
             => rightSet
@@ -177,10 +132,7 @@ namespace Aqua.Extensions
 
         public static int GetCollectionHashCode<T>(this IEnumerable<T>? collection, IEqualityComparer<T>? comparer)
         {
-            if (comparer is null)
-            {
-                comparer = EqualityComparer<T>.Default;
-            }
+            comparer ??= EqualityComparer<T>.Default;
 
             unchecked
             {
@@ -302,5 +254,12 @@ namespace Aqua.Extensions
 
             return true;
         }
+
+#if NETSTANDARD2_0
+        internal static HashSet<T> ToHashSet<T>(this IEnumerable<T> source) => new HashSet<T>(source);
+#endif // NETSTANDARD2_0
+
+        [SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "Indeed the parameters are being used")]
+        private static (TLeft Left, TRight Right) CreateTuple<TLeft, TRight>(TLeft left, TRight right) => (left, right);
     }
 }
