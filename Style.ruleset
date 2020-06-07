@@ -22,5 +22,6 @@
     <Rule Id="SA1205" Action="None" />
     <Rule Id="SA1309" Action="None" />
     <Rule Id="SA1312" Action="Info" />
+    <Rule Id="SX1101" Action="Warning" />
   </Rules>
 </RuleSet>
