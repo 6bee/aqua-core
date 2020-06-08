@@ -80,13 +80,13 @@ namespace Aqua.TypeSystem
             switch (memberInfo.MemberType)
             {
                 case MemberTypes.Field:
-                    return ((FieldInfo)memberInfo).ResolveField(typeResolver, MemberInfo.Scope.Any);
+                    return ((FieldInfo)memberInfo).ResolveField(typeResolver);
 
                 case MemberTypes.Constructor:
                     return ((ConstructorInfo)memberInfo).ResolveConstructor(typeResolver);
 
                 case MemberTypes.Property:
-                    return ((PropertyInfo)memberInfo).ResolveProperty(typeResolver, MemberInfo.Scope.Any);
+                    return ((PropertyInfo)memberInfo).ResolveProperty(typeResolver);
 
                 case MemberTypes.Method:
                     return ((MethodInfo)memberInfo).ResolveMethod(typeResolver);
@@ -162,7 +162,8 @@ namespace Aqua.TypeSystem
         }
 
         public static System.Reflection.FieldInfo ResolveField(this FieldInfo fieldInfo, ITypeResolver typeResolver)
-            => fieldInfo?.ResolveDeclaringType(typeResolver).GetField(fieldInfo.Name);
+            => fieldInfo?.ResolveField(typeResolver, MemberInfo.Scope.Any | BindingFlags.DeclaredOnly)
+            ?? fieldInfo?.ResolveField(typeResolver, MemberInfo.Scope.Any);
 
         public static System.Reflection.FieldInfo ResolveField(this FieldInfo fieldInfo, ITypeResolver typeResolver, BindingFlags bindingAttr)
             => fieldInfo?.ResolveDeclaringType(typeResolver).GetField(fieldInfo.Name, bindingAttr);
@@ -247,7 +248,8 @@ namespace Aqua.TypeSystem
         }
 
         public static System.Reflection.PropertyInfo ResolveProperty(this PropertyInfo propertyInfo, ITypeResolver typeResolver)
-            => propertyInfo?.ResolveDeclaringType(typeResolver).GetTypeInfo().GetDeclaredProperty(propertyInfo.Name);
+            => propertyInfo?.ResolveProperty(typeResolver, MemberInfo.Scope.Any | BindingFlags.DeclaredOnly)
+            ?? propertyInfo?.ResolveProperty(typeResolver, MemberInfo.Scope.Any);
 
         public static System.Reflection.PropertyInfo ResolveProperty(this PropertyInfo propertyInfo, ITypeResolver typeResolver, BindingFlags bindingAttr)
             => propertyInfo?.ResolveDeclaringType(typeResolver).GetProperty(propertyInfo.Name, bindingAttr);
