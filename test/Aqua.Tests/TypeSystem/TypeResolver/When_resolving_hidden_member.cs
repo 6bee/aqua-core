@@ -49,6 +49,19 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         }
 
         [Fact]
+        public void ResolveMemberInfo_should_return_original_property_info()
+        {
+            var typeResolver = new TypeResolver();
+
+            System.Reflection.TypeInfo type = typeof(TypeHiding).GetTypeInfo();
+            System.Reflection.PropertyInfo propertyInfo = type.GetDeclaredProperty(nameof(TypeHiding.Property));
+            Aqua.TypeSystem.PropertyInfo mappedProperty = new Aqua.TypeSystem.PropertyInfo(propertyInfo);
+            System.Reflection.MemberInfo resolvedMember = mappedProperty.ResolveMemberInfo(typeResolver);
+
+            resolvedMember.ShouldBe(propertyInfo);
+        }
+
+        [Fact]
         public void ResolveField_should_return_original_field_info()
         {
             var typeResolver = new TypeResolver();
@@ -62,6 +75,19 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         }
 
         [Fact]
+        public void ResolveMemberInfo_should_return_original_field_info()
+        {
+            var typeResolver = new TypeResolver();
+
+            System.Reflection.TypeInfo type = typeof(TypeHiding).GetTypeInfo();
+            System.Reflection.FieldInfo fieldInfo = type.GetDeclaredField(nameof(TypeHiding.Field));
+            Aqua.TypeSystem.FieldInfo mappedField = new Aqua.TypeSystem.FieldInfo(fieldInfo);
+            System.Reflection.MemberInfo resolvedMember = mappedField.ResolveMemberInfo(typeResolver);
+
+            resolvedMember.ShouldBe(fieldInfo);
+        }
+
+        [Fact]
         public void ResolveMethod_should_return_original_method_info()
         {
             var typeResolver = new TypeResolver();
@@ -72,6 +98,19 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
             System.Reflection.MethodInfo resolvedMethod = mappedMethod.ResolveMethod(typeResolver);
 
             resolvedMethod.ShouldBe(methodInfo);
+        }
+
+        [Fact]
+        public void ResolveMemberInfo_should_return_original_method_info()
+        {
+            var typeResolver = new TypeResolver();
+
+            System.Reflection.TypeInfo type = typeof(TypeHiding).GetTypeInfo();
+            System.Reflection.MethodInfo methodInfo = type.GetDeclaredMethod(nameof(TypeHiding.Method));
+            Aqua.TypeSystem.MethodInfo mappedMethod = new Aqua.TypeSystem.MethodInfo(methodInfo);
+            System.Reflection.MemberInfo resolvedMember = mappedMethod.ResolveMemberInfo(typeResolver);
+
+            resolvedMember.ShouldBe(methodInfo);
         }
     }
 }
