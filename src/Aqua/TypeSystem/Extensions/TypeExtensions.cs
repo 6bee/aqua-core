@@ -36,14 +36,14 @@ namespace Aqua.TypeSystem.Extensions
         }
 
         public static bool Implements(this Type type, Type interfaceType)
-            => type.CheckNotNull(nameof(type)).Implements(interfaceType.CheckNotNull(nameof(interfaceType)), new Type[1][]);
+            => type.Implements(interfaceType, new Type[1][]);
 
 #pragma warning disable SA1011 // Closing square brackets should be spaced correctly
         public static bool Implements(this Type type, Type interfaceType, [NotNullWhen(true)] out Type[]? genericTypeArguments)
 #pragma warning restore SA1011 // Closing square brackets should be spaced correctly
         {
             var typeArgs = new Type[1][];
-            if (type.CheckNotNull(nameof(type)).Implements(interfaceType.CheckNotNull(nameof(interfaceType)), typeArgs))
+            if (type.Implements(interfaceType, typeArgs))
             {
                 genericTypeArguments = typeArgs[0];
                 return true;
@@ -55,7 +55,7 @@ namespace Aqua.TypeSystem.Extensions
 
         private static bool Implements(this Type type, Type interfaceType, Type[][] typeArgs)
         {
-            var isAssignableFromSpecifiedInterface = interfaceType.IsGenericTypeDefinition
+            var isAssignableFromSpecifiedInterface = interfaceType.CheckNotNull(nameof(interfaceType)).IsGenericTypeDefinition
                 ? IsAssignableToGenericTypeDefinition(interfaceType, typeArgs)
                 : interfaceType.IsGenericType
                 ? IsAssignableToGenericType(interfaceType, typeArgs)
