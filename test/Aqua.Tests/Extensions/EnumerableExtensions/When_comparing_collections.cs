@@ -80,6 +80,24 @@ namespace Aqua.Tests.Extensions.EnumerableExtensions
         }
 
         [Fact]
+        public void Collection_with_null_only_should_have_same_hash_code()
+        {
+            var list1 = new int?[] { null, null };
+            var list2 = new int?[] { null, null };
+
+            list1.GetCollectionHashCode().ShouldBe(list2.GetCollectionHashCode());
+        }
+
+        [Fact]
+        public void Collection_with_different_number_of_null_only_should_have_same_hash_code()
+        {
+            var list1 = new int?[] { null, null };
+            var list2 = new int?[] { null, null, null };
+
+            list1.GetCollectionHashCode().ShouldNotBe(list2.GetCollectionHashCode());
+        }
+
+        [Fact]
         public void Two_null_reference_collections_should_be_equal()
         {
             var list1 = default(IEnumerable<object>);
