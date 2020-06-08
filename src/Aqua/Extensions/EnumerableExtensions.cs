@@ -116,8 +116,16 @@ namespace Aqua.Extensions
                 x => x.Group.DefaultIfEmpty(),
                 (x, y) => resultSelector(y, x.Key));
 
+        /// <summary>
+        /// Compares two collections for equality considering the same number of equal elements regardles of the elements sort oders.
+        /// </summary>
+        /// <returns>True if the collections are equal, false otherwise.</returns>
         public static bool CollectionEquals<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2) => CollectionEquals(collection1, collection2, null);
 
+        /// <summary>
+        /// Compares two collections for equality considering the same number of equal elements regardles of the elements sort oders.
+        /// </summary>
+        /// <returns>True if the collections are equal, false otherwise.</returns>
         public static bool CollectionEquals<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> comparer)
         {
             if (collection1 is null && collection2 is null)
@@ -173,8 +181,16 @@ namespace Aqua.Extensions
             return nullCounter == 0 && counters.Values.All(c => c == 0);
         }
 
+        /// <summary>
+        /// Computes a collection's hash code based on the elements contained. The hash code is not affected by the sort order.
+        /// </summary>
+        /// <returns>The collection's hash code.</returns>
         public static int GetCollectionHashCode<T>(this IEnumerable<T> collection) => GetCollectionHashCode(collection, null);
 
+        /// <summary>
+        /// Computes a collection's hash code based on the elements contained. The hash code is not affected by the sort order.
+        /// </summary>
+        /// <returns>The collection's hash code.</returns>
         public static int GetCollectionHashCode<T>(this IEnumerable<T> collection, IEqualityComparer<T> comparer)
         {
             if (comparer is null)
