@@ -4,7 +4,7 @@
     <MajorVersion>5</MajorVersion>
     <MinorVersion>0</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-016</PreReleaseLabel>
+    <PreReleaseLabel>alpha-017</PreReleaseLabel>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -15,7 +15,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Copyright>Copyright © Christof Senn 2013-2020</Copyright>
+    <CopyrightYear>$([System.DateTime]::Now.ToString("yyyy"))</CopyrightYear>
+    <Copyright>Copyright © Christof Senn 2013-$(CopyrightYear)</Copyright>
     <Authors>Christof Senn</Authors>
     <PackageIcon>aqua-small.png</PackageIcon>
     <PackageProjectUrl>https://github.com/6bee/aqua-core</PackageProjectUrl>
