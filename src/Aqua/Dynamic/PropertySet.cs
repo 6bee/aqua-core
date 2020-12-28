@@ -54,7 +54,7 @@ namespace Aqua.Dynamic
 
         private PropertySet(List<Property> properties)
         {
-            _list = properties ?? throw new ArgumentNullException(nameof(properties));
+            _list = properties.CheckNotNull(nameof(properties));
         }
 
         public int Count => _list.Count;
@@ -130,9 +130,7 @@ namespace Aqua.Dynamic
             => ToPropertySet(dictionary);
 
         public Dictionary<string, object?> ToDictionary()
-            => _list
-            .Select(x => x.ToKeyValuePair())
-            .ToDictionary(x => x.Key, x => x.Value);
+            => _list.ToDictionary(x => x.Name ?? string.Empty, x => x.Value);
 
         public static PropertySet ToPropertySet(Dictionary<string, object?> dictionary)
             => new PropertySet(dictionary.CheckNotNull(nameof(dictionary)).Select(x => (Property)x));

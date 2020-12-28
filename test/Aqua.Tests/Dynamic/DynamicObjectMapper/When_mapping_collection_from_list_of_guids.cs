@@ -31,7 +31,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             foreach (var dynamicObject in dynamicObjects)
             {
-                dynamicObject.Type.Type.ShouldBe(typeof(Guid));
+                dynamicObject.Type.ToType().ShouldBe(typeof(Guid));
             }
         }
 

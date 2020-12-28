@@ -16,7 +16,7 @@ Namespace Aqua.Tests.TypeSystem.Extensions
             Dim ctorInfo = New ConstructorInfo(ctor)
             ctorInfo.Name.ShouldBe(".ctor")
             ctorInfo.IsStatic.ShouldBeNull()
-            ctorInfo.DeclaringType.Type.ShouldBeSameAs(a.GetType())
+            ctorInfo.DeclaringType.ToType().ShouldBeSameAs(a.GetType())
         End Sub
 
         <Fact>

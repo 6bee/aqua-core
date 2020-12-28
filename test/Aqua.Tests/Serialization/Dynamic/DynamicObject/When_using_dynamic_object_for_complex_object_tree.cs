@@ -33,7 +33,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
-#if NETFX
+#if NETFRAMEWORK
         public class NetDataContractSerializer : When_using_dynamic_object_for_complex_object_tree
         {
             public NetDataContractSerializer()
@@ -41,9 +41,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif // NETFX
+#endif // NETFRAMEWORK
 
-#if COREFX
+#if NETCOREAPP
         public class ProtobufNetSerializer : When_using_dynamic_object_for_complex_object_tree
         {
             public ProtobufNetSerializer()
@@ -51,7 +51,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif // COREFX
+#endif // NETCOREAPP
 
         public class XmlSerializer : When_using_dynamic_object_for_complex_object_tree
         {
@@ -107,7 +107,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [Fact]
         public void Clone_should_contain_nested_type_property()
         {
-            var nestedObject = serializedObject["Reference"] as DynamicObject;
+            var nestedObject = serializedObject["Reference"].ShouldBeOfType<DynamicObject>();
 
             nestedObject["Type"].ShouldBe(CustomType);
         }
@@ -115,9 +115,11 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [Fact]
         public void Clone_should_contain_type_information()
         {
-            var nestedObject = serializedObject["Reference"] as DynamicObject;
+            var nestedObject = serializedObject["Reference"].ShouldBeOfType<DynamicObject>();
 
-            (nestedObject.Type?.Type).ShouldBe(typeof(string));
+            var typeInfo = nestedObject.Type.ShouldNotBeNull();
+
+            typeInfo.ToType().ShouldBe(typeof(string));
         }
     }
 }

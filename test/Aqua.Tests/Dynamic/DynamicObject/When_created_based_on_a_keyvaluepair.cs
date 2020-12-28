@@ -21,7 +21,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Type_property_should_be_set_to_keyvaluepair()
         {
-            dynamicObject.Type.Type.ShouldBe(typeof(KeyValuePair<string, string>));
+            dynamicObject.Type.ToType().ShouldBe(typeof(KeyValuePair<string, string>));
         }
 
         [Fact]

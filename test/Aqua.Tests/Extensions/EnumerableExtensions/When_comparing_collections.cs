@@ -2,7 +2,7 @@
 
 namespace Aqua.Tests.Extensions.EnumerableExtensions
 {
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using Shouldly;
     using System.Collections.Generic;
     using Xunit;

@@ -2,7 +2,7 @@
 
 namespace Aqua.Dynamic
 {
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -107,7 +107,7 @@ namespace Aqua.Dynamic
             if (member.MemberType != MemberTypes.Property)
             {
                 var property = member.DeclaringType.GetProperty(memberName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                if (property != null)
+                if (property is not null)
                 {
                     memberName = property.Name;
                 }

@@ -37,7 +37,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
-#if NETFX
+#if NETFRAMEWORK
         public class NetDataContractSerializer : When_serializing_dynamicobject_collections_of_nullable
         {
             public NetDataContractSerializer()
@@ -45,7 +45,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif
+#endif // NETFRAMEWORK
 
         public class XmlSerializer : When_serializing_dynamicobject_collections_of_nullable
         {

@@ -35,7 +35,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
-#if NETFX
+#if NETFRAMEWORK
         public class NetDataContractSerializer : When_using_dynamic_object_with_circular_reference
         {
             public NetDataContractSerializer()
@@ -43,7 +43,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif
+#endif // NETFRAMEWORK
 
         private readonly DynamicObject serializedObject;
 

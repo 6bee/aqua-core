@@ -36,7 +36,11 @@ namespace Aqua.Dynamic
         public static T CreateObject<T>(this DynamicObject dynamicObject, IDynamicObjectMapper? mapper = null)
             => (mapper ?? new DynamicObjectMapper()).Map<T>(dynamicObject);
 
-        internal static bool IsSingleValueWrapper(this DynamicObject item)
-            => item.PropertyCount == 1 && string.IsNullOrEmpty(item.PropertyNames.Single());
+        /// <summary>
+        /// Returns <see langword="true" /> if this <see cref="DynamicObject"/> wraps a single value, <see langword="false" /> otherwise.
+        /// </summary>
+        public static bool IsSingleValueWrapper(this DynamicObject dynamicObject)
+            => dynamicObject.CheckNotNull(nameof(dynamicObject)).PropertyCount == 1
+            && string.IsNullOrEmpty(dynamicObject.PropertyNames.Single());
     }
 }

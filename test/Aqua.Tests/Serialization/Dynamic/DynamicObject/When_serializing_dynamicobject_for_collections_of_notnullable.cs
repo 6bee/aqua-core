@@ -37,7 +37,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
-#if NETFX
+#if NETFRAMEWORK
         public class NetDataContractSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {
             public NetDataContractSerializer()
@@ -45,9 +45,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif
+#endif // NETFRAMEWORK
 
-#if COREFX
+#if NETCOREAPP
         public class ProtobufNetSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {
             public ProtobufNetSerializer()
@@ -55,7 +55,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif // COREFX
+#endif // NETCOREAPP
 
         public class XmlSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {

@@ -29,8 +29,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_objects_type_property_should_be_set_to_guid()
         {
-            dynamicObjects.ElementAt(0).Type.Type.ShouldBe(typeof(Guid));
-            dynamicObjects.ElementAt(1).Type.Type.ShouldBe(typeof(Guid));
+            dynamicObjects.ElementAt(0).Type.ToType().ShouldBe(typeof(Guid));
+            dynamicObjects.ElementAt(1).Type.ToType().ShouldBe(typeof(Guid));
             dynamicObjects.ElementAt(2).ShouldBeNull();
         }
 

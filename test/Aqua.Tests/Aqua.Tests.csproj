@@ -1,10 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Tests for aqua-core</Description>
-    <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
-    <DefineConstants Condition="'$(TargetFramework)' == 'netcoreapp3.1'">$(DefineConstants);COREFX</DefineConstants>
-    <DefineConstants Condition="'$(TargetFramework)' == 'net48'">$(DefineConstants);NETFX</DefineConstants>
+    <TargetFrameworks>net48;net5.0;netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,20 +13,20 @@
     <ProjectReference Include="..\Aqua.Tests.TestObjects2\Aqua.Tests.TestObjects2.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+  <ItemGroup Condition="$(DefineConstants.Contains('NETCOREAPP'))">
     <ProjectReference Include="..\..\src\Aqua.protobuf-net\Aqua.protobuf-net.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Xunit.SkippableFact" Version="1.3.12" />
-    <PackageReference Include="Shouldly" Version="3.0.2" />
-    <PackageReference Include="coverlet.collector" Version="1.2.1">
+    <PackageReference Include="Xunit.SkippableFact" Version="1.4.13" />
+    <PackageReference Include="Shouldly" Version="4.0.3" />
+    <PackageReference Include="coverlet.collector" Version="1.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.Extensions
+namespace Aqua.EnumerableExtensions
 {
     using System;
     using System.Collections;
@@ -154,7 +154,7 @@ namespace Aqua.Extensions
             {
                 var hashCode = 0;
 
-                if (collection != null)
+                if (collection is not null)
                 {
                     foreach (var item in collection)
                     {
@@ -169,7 +169,7 @@ namespace Aqua.Extensions
         /// <summary>
         /// Returns true if the object is of type <see cref="IEnumerable"/> but not <see cref="string"/>.
         /// </summary>
-        internal static bool IsCollection(this object? obj, [NotNullWhen(true)] out IEnumerable? enumerable)
+        public static bool IsCollection(this object? obj, [NotNullWhen(true)] out IEnumerable? enumerable)
         {
             if (obj is IEnumerable x && !(obj is string))
             {
@@ -181,22 +181,22 @@ namespace Aqua.Extensions
             return false;
         }
 
-        internal static IEnumerable CastCollectionToArrayOfType(this IEnumerable items, Type elementType)
+        public static IEnumerable CastCollectionToArrayOfType(this IEnumerable items, Type elementType)
         {
             var castedItems = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
             var array = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { castedItems });
             return (IEnumerable)array;
         }
 
-        internal static IEnumerable<T> AsEmptyIfNull<T>(this IEnumerable<T>? source) => source ?? Enumerable.Empty<T>();
+        public static IEnumerable<T> AsEmptyIfNull<T>(this IEnumerable<T>? source) => source ?? Enumerable.Empty<T>();
 
-        internal static IEnumerable<T>? AsNullIfEmpty<T>(this IEnumerable<T>? source) => source?.Any() == true ? source : null;
+        public static IEnumerable<T>? AsNullIfEmpty<T>(this IEnumerable<T>? source) => source?.Any() == true ? source : null;
 
         [return: NotNullIfNotNull("source")]
-        internal static string? StringJoin<T>(this IEnumerable<T>? source, string separator) => source is null ? default : string.Join(separator, source);
+        public static string? StringJoin<T>(this IEnumerable<T>? source, string separator) => source is null ? default : string.Join(separator, source);
 
         [DebuggerStepThrough]
-        internal static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
             foreach (var item in source)
             {
@@ -205,7 +205,7 @@ namespace Aqua.Extensions
         }
 
         [DebuggerStepThrough]
-        internal static void ForEach<T>(this IEnumerable<T> source, Action<T, int> action)
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T, int> action)
         {
             var index = 0;
             foreach (var item in source)
@@ -215,7 +215,7 @@ namespace Aqua.Extensions
         }
 
         [DebuggerStepThrough]
-        internal static void ForEach<T, TResult>(this IEnumerable<T> source, Func<T, TResult> func)
+        public static void ForEach<T, TResult>(this IEnumerable<T> source, Func<T, TResult> func)
         {
             foreach (var item in source)
             {
@@ -224,7 +224,7 @@ namespace Aqua.Extensions
         }
 
         [DebuggerStepThrough]
-        internal static void ForEach<T, TResult>(this IEnumerable<T> source, Func<T, int, TResult> func)
+        public static void ForEach<T, TResult>(this IEnumerable<T> source, Func<T, int, TResult> func)
         {
             var index = 0;
             foreach (var item in source)
@@ -233,9 +233,9 @@ namespace Aqua.Extensions
             }
         }
 
-        internal static bool Any(this IEnumerable? source) => source?.GetEnumerator().MoveNext() == true;
+        public static bool Any(this IEnumerable? source) => source?.GetEnumerator().MoveNext() == true;
 
-        internal static bool Any(this IEnumerable? source, Func<object, bool> predicate)
+        public static bool Any(this IEnumerable? source, Func<object, bool> predicate)
         {
             if (source is null)
             {
@@ -253,7 +253,7 @@ namespace Aqua.Extensions
             return false;
         }
 
-        internal static bool All(this IEnumerable? source, Func<object, bool> predicate)
+        public static bool All(this IEnumerable? source, Func<object, bool> predicate)
         {
             if (source is null)
             {

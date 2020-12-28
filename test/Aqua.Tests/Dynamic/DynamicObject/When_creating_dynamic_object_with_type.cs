@@ -17,7 +17,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             var dynamicObject = new DynamicObject(typeof(CustomClass));
 
-            dynamicObject.Type.Type.ShouldBe(typeof(CustomClass));
+            dynamicObject.Type.ToType().ShouldBe(typeof(CustomClass));
         }
     }
 }

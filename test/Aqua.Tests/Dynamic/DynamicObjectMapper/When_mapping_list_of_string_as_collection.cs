@@ -26,7 +26,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_type_should_be_array_of_string()
         {
-            dynamicObjects.ShouldAllBe(x => x == null || x.Type.Type == typeof(string));
+            dynamicObjects.ShouldAllBe(x => x == null || x.Type.ToType() == typeof(string));
         }
 
         [Fact]

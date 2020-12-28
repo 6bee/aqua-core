@@ -23,7 +23,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Type_property_should_be_set_to_type_of_guid()
         {
-            dynamicObject.Type.Type.ShouldBe(typeof(Guid));
+            dynamicObject.Type.ToType().ShouldBe(typeof(Guid));
         }
 
         [Fact]

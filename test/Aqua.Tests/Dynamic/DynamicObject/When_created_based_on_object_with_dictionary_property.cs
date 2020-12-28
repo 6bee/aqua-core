@@ -36,7 +36,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Type_property_should_be_set_to_custom_class()
         {
-            dynamicObject.Type.Type.ShouldBe(typeof(ClassWithDictionaryProperty));
+            dynamicObject.Type.ToType().ShouldBe(typeof(ClassWithDictionaryProperty));
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             foreach (DynamicObject element in (object[])dynamicObject["Dictionary"])
             {
-                element.Type.Type.ShouldBe(typeof(KeyValuePair<string, string>));
+                element.Type.ToType().ShouldBe(typeof(KeyValuePair<string, string>));
             }
         }
 

@@ -110,7 +110,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             array[0]
                 .ShouldBeOfType<DynamicObject>()
-                .Type.Type.ShouldBe(typeof(Item));
+                .Type.ToType().ShouldBe(typeof(Item));
         }
 
         [Fact]
@@ -128,7 +128,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             array[0]
                 .ShouldBeOfType<DynamicObject>()
-                .Type.Type.ShouldBe(typeof(Item));
+                .Type.ToType().ShouldBe(typeof(Item));
         }
 
         [Fact]

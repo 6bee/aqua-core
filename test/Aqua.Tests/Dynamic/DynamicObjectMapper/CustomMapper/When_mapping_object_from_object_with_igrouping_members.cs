@@ -3,7 +3,7 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
 {
     using Aqua.Dynamic;
-    using Aqua.TypeSystem.Extensions;
+    using Aqua.TypeExtensions;
     using Shouldly;
     using System;
     using System.Collections;
@@ -22,7 +22,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
         {
             protected override DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
             {
-                if (obj != null && obj.GetType().Implements(typeof(IGrouping<,>)))
+                if (obj is not null && obj.GetType().Implements(typeof(IGrouping<,>)))
                 {
                     var mappedGrouping = typeof(CustomDynamicObjectMapper)
                         .GetMethod(nameof(MapGrouping), BindingFlags.NonPublic | BindingFlags.Instance)
@@ -65,7 +65,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
         [Fact]
         public void Dynamic_grouping_type_should_be_igrouping()
         {
-            dynamicGrouping.Type.Type.Implements(typeof(IGrouping<,>)).ShouldBeTrue();
+            dynamicGrouping.Type.ToType().Implements(typeof(IGrouping<,>)).ShouldBeTrue();
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
         [Fact]
         public void Dynamic_object_grouping_type_should_be_igrouping()
         {
-            ((DynamicObject)dynamicObject["Grouping"]).Type.Type.Implements(typeof(IGrouping<,>)).ShouldBeTrue();
+            ((DynamicObject)dynamicObject["Grouping"]).Type.ToType().Implements(typeof(IGrouping<,>)).ShouldBeTrue();
         }
     }
 }

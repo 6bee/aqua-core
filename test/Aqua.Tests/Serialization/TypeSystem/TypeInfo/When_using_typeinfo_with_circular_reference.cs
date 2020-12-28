@@ -36,7 +36,7 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 
         // XmlSerializer doesn't support circular references
         // protobuf-net doesn't support circular references
-#if NETFX
+#if NETFRAMEWORK
         public class NetDataContractSerializer : When_using_typeinfo_with_circular_reference
         {
             public NetDataContractSerializer()
@@ -44,7 +44,7 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
             {
             }
         }
-#endif // NETFX
+#endif // NETFRAMEWORK
 
         private class A
         {

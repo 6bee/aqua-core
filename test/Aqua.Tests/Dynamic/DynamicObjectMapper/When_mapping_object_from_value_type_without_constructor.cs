@@ -24,7 +24,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_type_should_be_custom_value_type()
         {
-            dynamicObject.Type.Type.ShouldBe(typeof(CustomValueType));
+            dynamicObject.Type.ToType().ShouldBe(typeof(CustomValueType));
         }
 
         [Fact]

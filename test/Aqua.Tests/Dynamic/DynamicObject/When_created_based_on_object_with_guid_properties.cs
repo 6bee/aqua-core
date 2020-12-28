@@ -37,7 +37,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Type_property_should_be_set_to_custom_class()
         {
-            dynamicObject.Type.Type.ShouldBe(typeof(ClassWithGuidProperties));
+            dynamicObject.Type.ToType().ShouldBe(typeof(ClassWithGuidProperties));
         }
 
         [Fact]

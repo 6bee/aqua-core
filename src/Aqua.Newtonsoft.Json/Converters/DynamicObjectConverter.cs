@@ -3,7 +3,7 @@
 namespace Aqua.Newtonsoft.Json.Converters
 {
     using Aqua.Dynamic;
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using Aqua.TypeSystem;
     using global::Newtonsoft.Json;
     using System;
@@ -58,7 +58,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                     throw reader.CreateException($"Expected array");
                 }
 
-                var elementType = TypeHelper.GetElementType(typeInfo?.Type) ?? typeof(object);
+                var elementType = TypeHelper.GetElementType(typeInfo?.ToType()) ?? typeof(object);
                 bool TryReadNextItem(out object? value)
                 {
                     if (!reader.TryRead(elementType, serializer, out value))
@@ -80,7 +80,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                     values.Add(item);
                 }
 
-                if (values.Any(x => x != null && (elementType == typeof(object) || !elementType.IsInstanceOfType(x))) &&
+                if (values.Any(x => x is not null && (elementType == typeof(object) || !elementType.IsInstanceOfType(x))) &&
                     values.All(x => x is null || x is string))
                 {
                     elementType = typeof(string);
@@ -151,11 +151,11 @@ namespace Aqua.Newtonsoft.Json.Converters
                 serializer.Serialize(writer, type);
 
                 writer.WritePropertyName(type.IsCollection() ? "Values" : "Value");
-                serializer.Serialize(writer, value, type?.Type);
+                serializer.Serialize(writer, value, type?.ToType());
             }
             else
             {
-                if (instanceType != null)
+                if (instanceType is not null)
                 {
                     writer.WritePropertyName(nameof(DynamicObject.Type));
                     serializer.Serialize(writer, instanceType);
@@ -199,7 +199,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             if (propertySet?.Count() == 1)
             {
                 var p = propertySet.First();
-                if (string.IsNullOrEmpty(p.Name) && p.Value != null)
+                if (string.IsNullOrEmpty(p.Name) && p.Value is not null)
                 {
                     value = p.Value;
                     return true;

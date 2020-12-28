@@ -38,12 +38,12 @@ namespace Aqua.Newtonsoft.Json.Converters
                 return false;
             }
 
-            if (type.IsArray && type.Type != typeof(byte[]))
+            if (type.IsArray && type.ToType() != typeof(byte[]))
             {
                 return true;
             }
 
-            if (type.IsGenericType && type.Type.GetGenericTypeDefinition() == typeof(List<>))
+            if (type.IsGenericType && type.ToType().GetGenericTypeDefinition() == typeof(List<>))
             {
                 return true;
             }
@@ -108,7 +108,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             reader.CheckNotNull(nameof(reader));
             serializer.CheckNotNull(nameof(serializer));
 
-            if (type != null && _typeReaders.TryGetValue(type, out var read))
+            if (type is not null && _typeReaders.TryGetValue(type, out var read))
             {
                 result = read(reader);
                 return reader.TokenType != JsonToken.EndArray
@@ -215,13 +215,13 @@ namespace Aqua.Newtonsoft.Json.Converters
                 .GetAssemblies()
                 .Where(x => !x.IsDynamic)
                 .Select(x => x.GetType(typeName))
-                .Where(x => x != null)
+                .Where(x => x is not null)
                 .FirstOrDefault();
         }
 
         private static Type? MapTypeInfo(this TypeInfo? type)
         {
-            var t = type?.Type;
+            var t = type?.ToType();
             return t == typeof(Type) ? typeof(TypeInfo) : t;
         }
     }

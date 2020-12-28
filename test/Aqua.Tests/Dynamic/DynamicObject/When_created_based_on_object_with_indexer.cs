@@ -71,7 +71,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         public void Type_property_should_be_set_to_type_of_source_object()
         {
             dynamicObject.Type.ShouldNotBeNull();
-            dynamicObject.Type.Type.ShouldBe(typeof(ClassWithIndexerAndItemProperty));
+            dynamicObject.Type.ToType().ShouldBe(typeof(ClassWithIndexerAndItemProperty));
         }
     }
 }

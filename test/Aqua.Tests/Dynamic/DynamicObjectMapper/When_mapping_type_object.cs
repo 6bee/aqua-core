@@ -22,7 +22,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_type_should_typeinfo()
         {
-            dynamicObject.Type.Type.ShouldBe(typeof(Type));
+            dynamicObject.Type.ToType().ShouldBe(typeof(Type));
         }
 
         [Fact]

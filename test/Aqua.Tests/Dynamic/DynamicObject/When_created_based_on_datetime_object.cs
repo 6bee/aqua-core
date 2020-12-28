@@ -22,7 +22,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Type_property_should_be_set_to_datetime()
         {
-            dynamicObject.Type.Type.ShouldBe(typeof(DateTime));
+            dynamicObject.Type.ToType().ShouldBe(typeof(DateTime));
         }
 
         [Fact]

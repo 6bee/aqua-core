@@ -60,7 +60,7 @@ namespace Aqua.Tests.TypeSystem.TypeInfo
         public void Type_info_should_contain_generic_property()
         {
             typeInfo.Properties.Single().Name.ShouldBe("Value");
-            typeInfo.Properties.Single().PropertyType.Type.ShouldBe(typeof(B));
+            typeInfo.Properties.Single().PropertyType.ToType().ShouldBe(typeof(B));
         }
 
         [Fact]

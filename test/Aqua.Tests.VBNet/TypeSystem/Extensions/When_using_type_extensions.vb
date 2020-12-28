@@ -1,4 +1,4 @@
-﻿Imports Aqua.TypeSystem.Extensions
+﻿Imports Aqua.TypeExtensions
 Imports Shouldly
 Imports Xunit
 

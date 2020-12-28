@@ -55,7 +55,7 @@ namespace Aqua.Tests.TypeSystem.TypeInfo
         public void Type_info_should_contain_property()
         {
             typeInfo.Properties.Single().Name.ShouldBe("Value");
-            typeInfo.Properties.Single().PropertyType.Type.IsGenericParameter.ShouldBeTrue();
+            typeInfo.Properties.Single().PropertyType.ToType().IsGenericParameter.ShouldBeTrue();
         }
 
         [Fact]

@@ -2,7 +2,7 @@
 
 namespace Aqua.Tests.TypeSystem.Extensions
 {
-    using Aqua.TypeSystem.Extensions;
+    using Aqua.TypeExtensions;
     using Shouldly;
     using Xunit;
 

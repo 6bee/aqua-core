@@ -1,11 +1,12 @@
-﻿<Project>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
 
-  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
+  <Import Project="$(MSBuildThisFileDirectory)../Directory.Build.props" />
 
   <PropertyGroup>
     <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>
     <Nullable>disable</Nullable>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)..\Style.Tests.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)../Style.Tests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   
 </Project>

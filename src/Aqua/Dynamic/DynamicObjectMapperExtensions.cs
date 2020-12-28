@@ -2,7 +2,7 @@
 
 namespace Aqua.Dynamic
 {
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using System;
     using System.Collections;
     using System.Collections.Generic;

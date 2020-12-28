@@ -50,7 +50,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             foreach (var dynamicObject in dynamicObjects)
             {
-                dynamicObject.Type.Type.ShouldBe(typeof(CustomReferenceType));
+                dynamicObject.Type.ToType().ShouldBe(typeof(CustomReferenceType));
             }
         }
 

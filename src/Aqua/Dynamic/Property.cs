@@ -29,7 +29,7 @@ namespace Aqua.Dynamic
 
         public Property(string name, object? value)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name.CheckNotNull(nameof(name));
             Value = value;
         }
 
@@ -39,7 +39,7 @@ namespace Aqua.Dynamic
         }
 
         internal protected Property(Property property)
-            : this(property.CheckNotNull(nameof(property)).Name, property.Value)
+            : this(property.CheckNotNull(nameof(property)).Name, property?.Value)
         {
         }
 

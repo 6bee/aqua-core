@@ -2,7 +2,7 @@
 
 namespace Aqua.TypeSystem
 {
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -66,12 +66,12 @@ namespace Aqua.TypeSystem
             }
 
             var interfaces = type.GetInterfaces();
-            if (interfaces != null && interfaces.Any())
+            if (interfaces is not null && interfaces.Any())
             {
                 foreach (var interfaceType in interfaces)
                 {
                     var enumerableType = FindIEnumerable(interfaceType);
-                    if (enumerableType != null)
+                    if (enumerableType is not null)
                     {
                         return enumerableType;
                     }
@@ -79,7 +79,7 @@ namespace Aqua.TypeSystem
             }
 
             var baseType = type.BaseType;
-            if (baseType != null && baseType != typeof(object))
+            if (baseType is not null && baseType != typeof(object))
             {
                 return FindIEnumerable(baseType);
             }
@@ -359,7 +359,7 @@ namespace Aqua.TypeSystem
         /// </summary>
         private static T? If<T>(this T t, Func<T, bool> predicate)
             where T : class
-            => t != null && predicate(t) ? t : default;
+            => t is not null && predicate(t) ? t : default;
 
         private static Type ResolveDeclaringType(this MemberInfo member, ITypeResolver typeResolver)
         {

@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if COREFX
+#if NETCOREAPP
 
 namespace Aqua.Tests.ProtoBuf
 {
     using Aqua.Dynamic;
-    using Aqua.Extensions;
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
     using Shouldly;
     using System;
@@ -33,7 +33,7 @@ namespace Aqua.Tests.ProtoBuf
 
             var property = new Property("p1", value);
             var model = ProtoBufTypeModel.ConfigureAquaTypes(configureDefaultSystemTypes: false)
-                .AddDynamicPropertyType(type, addCollectionSupport: false, addNullableSupport: type.IsNullable())
+                .AddDynamicPropertyType(type, addCollectionSupport: false, addNullableSupport: type.IsNullableType())
                 .Compile();
             var copy = property.Serialize(model);
 
@@ -51,7 +51,7 @@ namespace Aqua.Tests.ProtoBuf
 
             var property = new Property("p1", value);
             var model = ProtoBufTypeModel.ConfigureAquaTypes(configureDefaultSystemTypes: false)
-                .AddDynamicPropertyType(TypeHelper.GetElementType(type), addSingleValueSuppoort: false, addNullableSupport: type.IsNullable())
+                .AddDynamicPropertyType(TypeHelper.GetElementType(type), addSingleValueSuppoort: false, addNullableSupport: type.IsNullableType())
                 .Compile();
             var copy = property.Serialize(model);
 
@@ -318,4 +318,4 @@ namespace Aqua.Tests.ProtoBuf
     }
 }
 
-#endif // COREFX
+#endif // NETCOREAPP

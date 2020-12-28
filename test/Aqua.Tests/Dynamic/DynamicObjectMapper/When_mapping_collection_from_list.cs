@@ -33,7 +33,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         public void First_element_should_be_int32_value()
         {
             var element = dynamicObjects.ElementAt(0);
-            element.Type.Type.ShouldBe(typeof(int));
+            element.Type.ToType().ShouldBe(typeof(int));
             element[string.Empty].ShouldBe(1);
             var mapper = new DynamicObjectMapper();
             var value = dynamicObjects.Select(x => mapper.Map(x)).ElementAt(0);
@@ -54,7 +54,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         public void Third_element_should_be_string_value()
         {
             var element = dynamicObjects.ElementAt(2);
-            element.Type.Type.ShouldBe(typeof(string));
+            element.Type.ToType().ShouldBe(typeof(string));
             element[string.Empty].ShouldBe("test");
 
             var mapper = new DynamicObjectMapper();
@@ -66,7 +66,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         public void Fourth_element_should_be_dynamicobject_for_customtype()
         {
             var element = dynamicObjects.ElementAt(3);
-            element.Type.Type.ShouldBe(typeof(CustomType));
+            element.Type.ToType().ShouldBe(typeof(CustomType));
             element["Int64Property"].ShouldBe(42L);
 
             var mapper = new DynamicObjectMapper();

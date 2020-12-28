@@ -90,7 +90,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             var value = ((IEnumerable<object>)dynamicObject["Items"]).ElementAt(3);
             value.ShouldBeOfType<DynamicObject>();
-            ((DynamicObject)value).Type.Type.ShouldBe(typeof(CustomValueType));
+            ((DynamicObject)value).Type.ToType().ShouldBe(typeof(CustomValueType));
             ((DynamicObject)value)["Int64Property"].ShouldBe(42L);
         }
 
@@ -107,7 +107,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             var value = ((IEnumerable<object>)dynamicObject["Items"]).ElementAt(4);
             value.ShouldBeOfType<DynamicObject>();
-            ((DynamicObject)value).Type.Type.ShouldBe(typeof(CustomReferenceType));
+            ((DynamicObject)value).Type.ToType().ShouldBe(typeof(CustomReferenceType));
             ((DynamicObject)value)["StringProperty"].ShouldBe("S 2");
         }
 

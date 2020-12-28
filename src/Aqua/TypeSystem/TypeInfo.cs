@@ -3,8 +3,7 @@
 namespace Aqua.TypeSystem
 {
     using Aqua.Dynamic;
-    using Aqua.Extensions;
-    using Aqua.TypeSystem.Extensions;
+    using Aqua.TypeExtensions;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -128,7 +127,7 @@ namespace Aqua.TypeSystem
         public List<PropertyInfo>? Properties { get; set; }
 
         [Unmapped]
-        public bool IsNested => DeclaringType != null;
+        public bool IsNested => DeclaringType is not null;
 
         [Unmapped]
         public bool IsGenericTypeDefinition => IsGenericType && (!GenericArguments?.Any() ?? true);
@@ -139,7 +138,7 @@ namespace Aqua.TypeSystem
             get
             {
                 var name = Name;
-                return name != null && _arrayNameRegex.IsMatch(name);
+                return name is not null && _arrayNameRegex.IsMatch(name);
             }
         }
 
@@ -159,7 +158,7 @@ namespace Aqua.TypeSystem
         /// Gets <see cref="Type"/> by resolving this <see cref="TypeInfo"/> instance using the default <see cref="TypeResolver"/>.
         /// </summary>
         [Unmapped]
-        ////[Obsolete("User method ToType() instead, this method is being removed in a future version.", false)]
+        [Obsolete("Use method ToType() instead, this property is being removed in a future version.", false)]
         public Type Type => ToType();
 
         /// <summary>
@@ -169,15 +168,6 @@ namespace Aqua.TypeSystem
 
         public static explicit operator Type?(TypeInfo? type) => type?.ToType();
 
-        public override string ToString() => $"{FullName}{GetGenericArgumentsString()}";
-
-        internal string? GetGenericArgumentsString()
-        {
-            var genericArguments = GenericArguments;
-            var genericArgumentsString = IsGenericType && (genericArguments?.Any() ?? false)
-                ? $"[{genericArguments.StringJoin(",")}]"
-                : null;
-            return genericArgumentsString;
-        }
+        public override string ToString() => this.PrintFriendlyName();
     }
 }

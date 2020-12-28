@@ -8,10 +8,10 @@ namespace Aqua.TypeSystem.Extensions
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class BindingFlagsExtension
     {
-        public static bool Contains(this BindingFlags? flags, BindingFlags bindingFlags) => flags != null && (flags & bindingFlags) == bindingFlags;
+        public static bool Contains(this BindingFlags? flags, BindingFlags bindingFlags) => flags is not null && (flags & bindingFlags) == bindingFlags;
 
         public static bool MatchesExactly(this BindingFlags? flags, BindingFlags bindingFlags) => flags == bindingFlags;
 
-        public static bool MatchesPartly(this BindingFlags? flags, BindingFlags bindingFlags) => flags != null && (flags & bindingFlags) != 0;
+        public static bool MatchesPartly(this BindingFlags? flags, BindingFlags bindingFlags) => flags is not null && (flags & bindingFlags) != 0;
     }
 }

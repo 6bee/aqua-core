@@ -30,7 +30,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             foreach (var dynamicObject in dynamicObjects)
             {
-                dynamicObject.Type.Type.ShouldBe(typeof(string));
+                dynamicObject.Type.ToType().ShouldBe(typeof(string));
             }
         }
 

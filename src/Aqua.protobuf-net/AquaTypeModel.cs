@@ -3,7 +3,7 @@
 namespace Aqua.ProtoBuf
 {
     using Aqua.Dynamic;
-    using Aqua.Extensions;
+    using Aqua.TypeExtensions;
     using global::ProtoBuf.Meta;
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -94,7 +94,7 @@ namespace Aqua.ProtoBuf
                 throw new ArgumentNullException(nameof(propertyType));
             }
 
-            var isNullable = propertyType.IsNullable();
+            var isNullable = propertyType.IsNullableType();
             if (addSingleValueSuppoort)
             {
                 var singleValueType = typeof(Value<>).MakeGenericType(propertyType);

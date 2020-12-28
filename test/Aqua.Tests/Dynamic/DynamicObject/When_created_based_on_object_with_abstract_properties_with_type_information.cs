@@ -65,14 +65,14 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
             var refObj = dynamicObject["Ref"].ShouldBeOfType<DynamicObject>();
             refObj.PropertyCount.ShouldBe(0);
-            refObj.Type.Type.ShouldBe(typeof(A));
+            refObj.Type.ToType().ShouldBe(typeof(A));
 
             dynamicObject["Value1"].ShouldBe(obj.Value1);
             dynamicObject["Value2"].ShouldBe(obj.Value2);
 
             var value3 = dynamicObject["Value3"].ShouldBeOfType<DynamicObject>();
             value3.PropertyCount.ShouldBe(0);
-            value3.Type.Type.ShouldBe(typeof(object));
+            value3.Type.ToType().ShouldBe(typeof(object));
 
             var bytes = dynamicObject["Value4"].ShouldBeOfType<byte[]>();
             bytes.Length.ShouldBe(4);

@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Provides protobuf-net configuration for Aqua types.</Description>
@@ -11,10 +12,11 @@
 
   <ItemGroup>
     <PackageReference Include="protobuf-net" Version="2.4.6" />
-    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
+    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Aqua\Aqua.csproj" />
   </ItemGroup>
+
 </Project>

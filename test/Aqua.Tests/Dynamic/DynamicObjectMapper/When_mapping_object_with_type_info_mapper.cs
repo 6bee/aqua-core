@@ -32,7 +32,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_type_should_reflect_mapper_result()
         {
-            dynamicObject.Type.Type.ShouldBe(typeof(B));
+            dynamicObject.Type.ToType().ShouldBe(typeof(B));
         }
     }
 }

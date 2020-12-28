@@ -35,7 +35,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
             reader.Advance();
             var referenceResolver = serializer.ReferenceResolver;
-            if (reader.IsRefToken() && referenceResolver != null)
+            if (reader.IsRefToken() && referenceResolver is not null)
             {
                 var referenceId = reader.ReadAsString() ?? throw reader.CreateException($"{JsonConverterHelper.RefToken} must not be null");
                 reader.AssertEndObject();
@@ -65,7 +65,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             }
 
             var result = CreateObject(type) ?? throw reader.CreateException($"Failed create instance of type {type.FullName}");
-            if (!string.IsNullOrWhiteSpace(reference) && referenceResolver != null)
+            if (!string.IsNullOrWhiteSpace(reference) && referenceResolver is not null)
             {
                 referenceResolver.AddReference(serializer, reference!, result);
             }

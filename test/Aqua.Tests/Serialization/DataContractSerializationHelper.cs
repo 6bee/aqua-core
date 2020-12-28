@@ -17,7 +17,7 @@ namespace Aqua.Tests.Serialization
             public override Type ResolveName(string typeName, string typeNamespace, Type declaredType, DataContractResolver knownTypeResolver)
             {
                 var type = knownTypeResolver.ResolveName(typeName, typeNamespace, declaredType, knownTypeResolver);
-                if (type != null)
+                if (type is not null)
                 {
                     return type;
                 }
@@ -82,7 +82,7 @@ namespace Aqua.Tests.Serialization
                             return null;
                         }
                     })
-                    .Where(x => x != null)
+                    .Where(x => x is not null)
                     .FirstOrDefault();
                 if (isNullable)
                 {
@@ -109,7 +109,7 @@ namespace Aqua.Tests.Serialization
                     name = $"ListOf{type.GetGenericArguments().Single().FullName}";
                 }
 
-                if (name != null)
+                if (name is not null)
                 {
                     var dictionary = new XmlDictionary();
                     typeName = dictionary.Add(name);

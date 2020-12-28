@@ -36,7 +36,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
         // XML serialization doesn't support circular references
         // protobuf-net doesn't support circular references
-#if NETFX
+#if NETFRAMEWORK
         public class NetDataContractSerializer : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {
             public NetDataContractSerializer()
@@ -44,7 +44,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif
+#endif // NETFRAMEWORK
 
         private readonly DynamicObject dynamicObject;
         private readonly DynamicObject serializedDynamicObject;

@@ -34,7 +34,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
-#if NETFX
+#if NETFRAMEWORK
         public class NetDataContractSerializer : When_using_dynamic_object_for_typeinfo
         {
             public NetDataContractSerializer()
@@ -42,9 +42,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif // NETFX
+#endif // NETFRAMEWORK
 
-#if COREFX
+#if NETCOREAPP
         public class ProtobufNetSerializer : When_using_dynamic_object_for_typeinfo
         {
             public ProtobufNetSerializer()
@@ -52,7 +52,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif // COREFX
+#endif // NETCOREAPP
 
         public class XmlSerializer : When_using_dynamic_object_for_typeinfo
         {
@@ -78,7 +78,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             var serialized = _serialize(dynamicObject);
             var resurectedType = (Type)new DynamicObjectMapper().Map(serialized);
 
-            dynamicObject.Type.Type.ShouldBe(typeof(Type));
+            dynamicObject.Type.ToType().ShouldBe(typeof(Type));
             dynamicObject[nameof(TypeInfo.Name)].ShouldBe(type.Name);
             dynamicObject[nameof(TypeInfo.Namespace)].ShouldBe(type.Namespace);
 

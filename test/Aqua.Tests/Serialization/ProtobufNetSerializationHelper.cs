@@ -10,14 +10,14 @@ namespace Aqua.Tests.Serialization
 
     public static class ProtobufNetSerializationHelper
     {
-#if COREFX
+#if NETCOREAPP
         private static readonly global::ProtoBuf.Meta.TypeModel _configuration = ProtoBufTypeModel.ConfigureAquaTypes();
 
         public static T Serialize<T>(this T graph) => Serialize(graph, null);
 
         public static T Serialize<T>(this T graph, global::ProtoBuf.Meta.TypeModel model)
             => (T)(model ?? _configuration).DeepClone(graph);
-#endif // COREFX
+#endif // NETCOREAPP
 
         public static void SkipUnsupportedDataType(Type type, object value)
         {

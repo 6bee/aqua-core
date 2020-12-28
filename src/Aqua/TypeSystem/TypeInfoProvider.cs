@@ -60,7 +60,7 @@ namespace Aqua.TypeSystem
                 return typeInfo;
             }
 
-            if (_parent != null)
+            if (_parent is not null)
             {
                 return _parent.GetTypeInfo(type, includePropertyInfos, setMemberDeclaringTypes);
             }

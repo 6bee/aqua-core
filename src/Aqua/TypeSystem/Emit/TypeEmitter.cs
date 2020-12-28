@@ -2,7 +2,7 @@
 
 namespace Aqua.TypeSystem.Emit
 {
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using Aqua.Utils;
     using System;
     using System.Collections.Generic;
@@ -105,7 +105,7 @@ namespace Aqua.TypeSystem.Emit
             catch (Exception ex)
             {
                 var innerException = ex;
-                while (innerException != null)
+                while (innerException is not null)
                 {
                     if (innerException is TypeEmitterException typeEmitterException)
                     {

@@ -35,7 +35,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             foreach (var dynamicObject in dynamicObjects)
             {
-                dynamicObject.Type.Type.ShouldBe(typeof(KeyValuePair<string, string>));
+                dynamicObject.Type.ToType().ShouldBe(typeof(KeyValuePair<string, string>));
             }
         }
 

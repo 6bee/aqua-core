@@ -2,7 +2,7 @@
 
 namespace Aqua
 {
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
     using Aqua.ProtoBuf;
     using Aqua.ProtoBuf.Dynamic;
     using Aqua.ProtoBuf.TypeSystem;

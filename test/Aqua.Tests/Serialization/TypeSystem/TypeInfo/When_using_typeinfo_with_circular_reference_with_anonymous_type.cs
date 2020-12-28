@@ -33,7 +33,7 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
             }
         }
 
-#if NETFX
+#if NETFRAMEWORK
         public class NetDataContractSerializer : When_using_typeinfo_with_circular_reference_with_anonymous_type
         {
             public NetDataContractSerializer()
@@ -41,9 +41,9 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
             {
             }
         }
-#endif // NETFX
+#endif // NETFRAMEWORK
 
-#if COREFX
+#if NETCOREAPP
         public class ProtobufNetSerializer : When_using_typeinfo_with_circular_reference_with_anonymous_type
         {
             public ProtobufNetSerializer()
@@ -51,7 +51,7 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
             {
             }
         }
-#endif // COREFX
+#endif // NETCOREAPP
 
         public class XmlSerializer : When_using_typeinfo_with_circular_reference_with_anonymous_type
         {

@@ -38,7 +38,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
-#if NETFX
+#if NETFRAMEWORK
         public class NetDataContractSerializer : When_serializing_dynamic_object
         {
             public NetDataContractSerializer()
@@ -46,9 +46,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif
+#endif // NETFRAMEWORK
 
-#if COREFX
+#if NETCOREAPP
         public class ProtobufNetSerializer : When_serializing_dynamic_object
         {
             public ProtobufNetSerializer()
@@ -56,7 +56,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif // COREFX
+#endif // NETCOREAPP
 
         public class XmlSerializer : When_serializing_dynamic_object
         {
@@ -84,12 +84,12 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value(Type type, object value, CultureInfo culture)
         {
-#if COREFX
+#if NETCOREAPP
             if (this.TestIs<ProtobufNetSerializer>())
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
-#endif // COREFX
+#endif // NETCOREAPP
             Skip.If(this.TestIs<XmlSerializer>(), "XmlSerializer has limited type support.");
 
             using var cultureContext = culture.CreateContext();
@@ -104,12 +104,12 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value_when_using_string_formatting(Type type, object value, CultureInfo culture)
         {
-#if COREFX
+#if NETCOREAPP
             if (this.TestIs<ProtobufNetSerializer>())
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
-#endif // COREFX
+#endif // NETCOREAPP
             Skip.If(this.TestIs<XmlSerializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
 
             using var cultureContext = culture.CreateContext();
@@ -124,12 +124,12 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property(Type type, object value, CultureInfo culture)
         {
-#if COREFX
+#if NETCOREAPP
             if (this.TestIs<ProtobufNetSerializer>())
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
-#endif // COREFX
+#endif // NETCOREAPP
             Skip.If(this.TestIs<XmlSerializer>(), "XmlSerializer has limited type support.");
 
             using var cultureContext = culture.CreateContext();
@@ -155,9 +155,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [SkippableFact]
         public void Should_serialize_DateTimeOffset_as_property()
         {
-#if COREFX
+#if NETCOREAPP
             Skip.If(this.TestIs<ProtobufNetSerializer>(), "DateTimeOffset is not supported by XmlSerializer.");
-#endif // COREFX
+#endif // NETCOREAPP
             Skip.If(this.TestIs<XmlSerializer>(), "DateTimeOffset is not supported by XmlSerializer.");
 
             var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
@@ -273,7 +273,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var settings = new DynamicObjectMapperSettings { FormatNativeTypesAsString = formatValuesAsStrings };
             var dynamicObject = new DynamicObjectMapper(settings).MapObject(value);
-            if (dynamicObject != null && setTypeFromGenericArgument)
+            if (dynamicObject is not null && setTypeFromGenericArgument)
             {
                 dynamicObject.Type = new TypeInfo(typeof(TSource), false, false);
             }

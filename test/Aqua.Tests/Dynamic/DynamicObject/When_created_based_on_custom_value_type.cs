@@ -26,7 +26,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Type_property_should_be_set_to_custom_struct()
         {
-            dynamicObject.Type.Type.ShouldBe(typeof(CustomValue));
+            dynamicObject.Type.ToType().ShouldBe(typeof(CustomValue));
         }
 
         [Fact]

@@ -1,10 +1,11 @@
-﻿<Project>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
 
   <PropertyGroup>
     <MajorVersion>5</MajorVersion>
     <MinorVersion>0</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-017</PreReleaseLabel>
+    <PreReleaseLabel>alpha-025</PreReleaseLabel>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -40,45 +41,31 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <LangVersion Condition="'$(LangVersion)' == ''">9.0</LangVersion>
+    <GenerateDocumentationFile Condition="'$(GenerateDocumentationFile)' == ''">true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors Condition="'$(TreatWarningsAsErrors)' == ''">true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>
     <EnableStyleCopAnalyzers Condition="'$(EnableStyleCopAnalyzers)' == ''">true</EnableStyleCopAnalyzers>
-    <EnableFxCopAnalyzers Condition="'$(EnableFxCopAnalyzers)' == ''">true</EnableFxCopAnalyzers>
+    <EnableNETAnalyzers Condition="'$(EnableNETAnalyzers)' == ''">true</EnableNETAnalyzers>
     <EnableSonarAnalyzers Condition="'$(EnableSonarAnalyzers)' == ''">true</EnableSonarAnalyzers>
   </PropertyGroup>
-    
+
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)aqua-small.png" Pack="true" Visible="false" PackagePath=""/>
     <None Include="$(MSBuildThisFileDirectory)license.txt" Pack="true" Visible="false" PackagePath=""/>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" Condition="'$(IncludeGlobalAssemblyInfo)' == 'true'" />
+    <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties/GlobalAssemblyInfo.cs" Condition="'$(IncludeGlobalAssemblyInfo)' == 'true'" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <SignAssembly Condition="'$(SignAssembly)' == ''">true</SignAssembly>
-    <DelaySign>false</DelaySign>
-    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)key.snk</AssemblyOriginatorKeyFile>
-    <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
-  </PropertyGroup>
-
-  <PropertyGroup>
-  </PropertyGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" Condition="'$(EnableStyleCopAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0" Condition="'$(EnableFxCopAnalyzers)' == 'true'">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.7.0.17535" Condition="'$(EnableSonarAnalyzers)' == 'true'">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.15.0.24505" Condition="'$(EnableSonarAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

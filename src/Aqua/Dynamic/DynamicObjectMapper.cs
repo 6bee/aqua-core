@@ -2,9 +2,9 @@
 
 namespace Aqua.Dynamic
 {
-    using Aqua.Extensions;
+    using Aqua.EnumerableExtensions;
+    using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
-    using Aqua.TypeSystem.Extensions;
     using Aqua.Utils;
     using System;
     using System.Collections;
@@ -460,7 +460,6 @@ namespace Aqua.Dynamic
         /// <param name="obj"><see cref="DynamicObject"/> to be mapped.</param>
         /// <param name="targetType">Target type for mapping, set this parameter to null if type information included within <see cref="DynamicObject"/> should be used.</param>
         /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
-        [return: NotNullIfNotNull("obj")]
         public object? Map(DynamicObject? obj, Type? targetType = null)
         {
             if (obj is null)
@@ -483,7 +482,7 @@ namespace Aqua.Dynamic
         /// <typeparam name="T">The target type in which the <see cref="DynamicObject"/> have to be mapped to.</typeparam>
         /// <param name="obj"><see cref="DynamicObject"/> to be mapped.</param>
         /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
-        public T Map<T>(DynamicObject obj) => (T)Map(obj, typeof(T));
+        public T? Map<T>(DynamicObject obj) => (T?)Map(obj, typeof(T));
 
         /// <summary>
         /// Maps a collection of objects into a collection of <see cref="DynamicObject"/>.
@@ -535,7 +534,6 @@ namespace Aqua.Dynamic
         /// Maps an item of an object graph of <see cref="DynamicObject"/> back into its normal representation.
         /// May be overridden in a derived class to implement a customized mapping strategy.
         /// </summary>
-        [return: NotNullIfNotNull("obj")]
         protected virtual object? MapFromDynamicObjectGraph(object? obj, Type? targetType) => MapFromDynamicObjectIfRequired(obj, targetType);
 
         /// <summary>
@@ -552,7 +550,6 @@ namespace Aqua.Dynamic
         /// <returns>True if the collection should be mapped into a single <see cref="DynamicObject"/>, false if each element should be mapped separately. Default is false.</returns>
         protected virtual bool ShouldMapToDynamicObject(IEnumerable collection) => false;
 
-        [return: NotNullIfNotNull("obj")]
         private object? MapFromDynamicObjectIfRequired(object? obj, Type? targetType)
         {
             if (obj is null)
@@ -563,37 +560,45 @@ namespace Aqua.Dynamic
             var resultType = targetType;
             if (obj is DynamicObject dynamicObj)
             {
+                object? MapRequired(object? o, Type t) => MapFromDynamicObjectIfRequired(o, t);
+                TType? MapToTypeInfo<TType>() => (TType?)MapRequired(dynamicObj, typeof(TType));
+
                 var sourceType = dynamicObj.Type.ResolveType(_typeResolver);
-                if (sourceType != null)
+                if (sourceType is not null)
                 {
                     if ((resultType == typeof(Type) || resultType == typeof(TypeInfo)) &&
                         (sourceType == typeof(TypeSystem.TypeInfo) || sourceType == typeof(Type) || sourceType == typeof(TypeInfo)))
                     {
-                        var typeInfo = (TypeSystem.TypeInfo?)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.TypeInfo));
+                        var typeInfo = MapToTypeInfo<TypeSystem.TypeInfo>();
                         var t = typeInfo.ResolveType(_typeResolver);
                         return resultType == typeof(TypeInfo) ? t.GetTypeInfo() : t;
                     }
-                    else if (resultType == typeof(MethodInfo) && (sourceType == typeof(TypeSystem.MethodInfo) || sourceType == typeof(MethodInfo)))
+
+                    if (resultType == typeof(MethodInfo) && (sourceType == typeof(TypeSystem.MethodInfo) || sourceType == typeof(MethodInfo)))
                     {
-                        var methodInfo = (TypeSystem.MethodInfo?)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.MethodInfo));
+                        var methodInfo = MapToTypeInfo<TypeSystem.MethodInfo>();
                         return methodInfo.ResolveMemberInfo(_typeResolver);
                     }
-                    else if (resultType == typeof(PropertyInfo) && (sourceType == typeof(TypeSystem.PropertyInfo) || sourceType == typeof(PropertyInfo)))
+
+                    if (resultType == typeof(PropertyInfo) && (sourceType == typeof(TypeSystem.PropertyInfo) || sourceType == typeof(PropertyInfo)))
                     {
-                        var propertyInfo = (TypeSystem.PropertyInfo?)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.PropertyInfo));
+                        var propertyInfo = MapToTypeInfo<TypeSystem.PropertyInfo>();
                         return propertyInfo.ResolveMemberInfo(_typeResolver);
                     }
-                    else if (resultType == typeof(FieldInfo) && (sourceType == typeof(TypeSystem.FieldInfo) || sourceType == typeof(FieldInfo)))
+
+                    if (resultType == typeof(FieldInfo) && (sourceType == typeof(TypeSystem.FieldInfo) || sourceType == typeof(FieldInfo)))
                     {
-                        var fieldInfo = (TypeSystem.FieldInfo?)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.FieldInfo));
+                        var fieldInfo = MapToTypeInfo<TypeSystem.FieldInfo>();
                         return fieldInfo.ResolveMemberInfo(_typeResolver);
                     }
-                    else if (resultType == typeof(ConstructorInfo) && (sourceType == typeof(TypeSystem.ConstructorInfo) || sourceType == typeof(ConstructorInfo)))
+
+                    if (resultType == typeof(ConstructorInfo) && (sourceType == typeof(TypeSystem.ConstructorInfo) || sourceType == typeof(ConstructorInfo)))
                     {
-                        var constructorInfo = (TypeSystem.ConstructorInfo?)MapFromDynamicObjectIfRequired(obj, typeof(TypeSystem.ConstructorInfo));
+                        var constructorInfo = MapToTypeInfo<TypeSystem.ConstructorInfo>();
                         return constructorInfo.ResolveConstructor(_typeResolver);
                     }
-                    else if (resultType is null || resultType.IsAssignableFrom(sourceType))
+
+                    if (resultType is null || resultType.IsAssignableFrom(sourceType))
                     {
                         resultType = sourceType;
                     }
@@ -611,7 +616,7 @@ namespace Aqua.Dynamic
 
                 if (dynamicObj.IsSingleValueWrapper())
                 {
-                    return MapFromDynamicObjectIfRequired(dynamicObj.Values.Single(), resultType);
+                    return MapRequired(dynamicObj.Values.Single(), resultType);
                 }
 
                 return MapInternal(dynamicObj, sourceType, resultType);
@@ -640,7 +645,9 @@ namespace Aqua.Dynamic
 
             if (obj.IsCollection(out var collection))
             {
-                var elementType = TypeHelper.GetElementType(resultType) !;
+                var elementType = TypeHelper.GetElementType(resultType)
+                    ?? throw new DynamicObjectMapperException($"Failed to resolve element type of '{resultType}'");
+
                 var items = collection
                     .Cast<object>()
                     .Select(x => MapFromDynamicObjectGraph(x, elementType))
@@ -739,8 +746,8 @@ namespace Aqua.Dynamic
                     .Select(x => MapToDynamicObjectIfRequired(x, setTypeInformation))
                     .ToArray();
 
-                var elementType = TypeHelper.GetElementType(type) !;
-                if (elementType != typeof(object))
+                var elementType = TypeHelper.GetElementType(type);
+                if (elementType is not null && elementType != typeof(object))
                 {
                     if (elementType.IsEnum() || (_settings.FormatNativeTypesAsString && _isNativeType(elementType)))
                     {
@@ -955,9 +962,9 @@ namespace Aqua.Dynamic
                         };
                     })
                     .OrderByDescending(i => i.ParametersCount == 0 ? int.MaxValue : i.ParametersCount)
-                    .FirstOrDefault(i => i.Parameters.All(p => p.Property != null));
+                    .FirstOrDefault(i => i.Parameters.All(p => p.Property is not null));
 
-                if (constructor != null)
+                if (constructor is not null)
                 {
                     factory = (t, item) =>
                     {
