@@ -1,7 +1,7 @@
 # aqua-core
-| branch   | AppVeyor                         | Travis CI                      | Codecov.io         | Codacy                  | CodeFactor             | License                     |
-| ---      | ---                              | ---                            | ---                | ---                     | ---                    | ---                         |
-| `master` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
+| branch | AppVeyor                         | Travis CI                      | Codecov.io         | Codacy                  | CodeFactor             | License                     |
+| ---    | ---                              | ---                            | ---                | ---                     | ---                    | ---                         |
+| `main` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
 
 | package                     | nuget                           | myget                          |
 | ---                         | ---                             | ---                            |
@@ -52,13 +52,13 @@ DynamicObject dynamicObject = new DynamicObjectMapper().MapObject(blog);
 Blog restoredBlog = new DynamicObjectMapper().Map(dynamicObject) as Blog;
 ```
 
-[1]: https://ci.appveyor.com/api/projects/status/98rc3yav530hlw1c/branch/master?svg=true
+[1]: https://ci.appveyor.com/api/projects/status/98rc3yav530hlw1c/branch/main?svg=true
 [2]: https://ci.appveyor.com/project/6bee/aqua-core
 
-[3]: https://travis-ci.org/6bee/aqua-core.svg?branch=master
-[4]: https://travis-ci.org/6bee/aqua-core?branch=master
+[3]: https://travis-ci.org/6bee/aqua-core.svg?branch=main
+[4]: https://travis-ci.org/6bee/aqua-core?branch=main
 
-[5]: https://codecov.io/gh/6bee/aqua-core/branch/master/graph/badge.svg
+[5]: https://codecov.io/gh/6bee/aqua-core/branch/main/graph/badge.svg
 [6]: https://codecov.io/gh/6bee/aqua-core
 
 [7]: https://api.codacy.com/project/badge/Grade/92ef3842d8274d148b0af85aa5ec6acc
@@ -68,7 +68,7 @@ Blog restoredBlog = new DynamicObjectMapper().Map(dynamicObject) as Blog;
 [10]: https://www.codefactor.io/repository/github/6bee/aqua-core
 
 [11]: https://img.shields.io/github/license/6bee/aqua-core.svg
-[12]: https://github.com/6bee/aqua-core/blob/master/license.txt
+[12]: https://github.com/6bee/aqua-core/blob/main/license.txt
 
 [13]: https://buildstats.info/nuget/aqua-core
 [14]: https://www.nuget.org/packages/aqua-core
