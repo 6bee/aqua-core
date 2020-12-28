@@ -22,9 +22,9 @@ addons:
 matrix:
   include:
     - os: linux
-      env: FRAMEWORK_VERSION=3.1 CLI_VERSION=Latest CONFIGURATION=Release
+      env: CLI_VERSION=Latest CONFIGURATION=Release
     - os: osx
-      env: FRAMEWORK_VERSION=3.1 CLI_VERSION=Latest CONFIGURATION=Release
+      env: CLI_VERSION=Latest CONFIGURATION=Release
 
 install:
   - export DOTNET_INSTALL_DIR="$PWD/.dotnetcli"
@@ -36,4 +36,4 @@ before_script:
   - dotnet --info
 
 script:
-  - dotnet test ./test/Aqua.Tests/Aqua.Tests.csproj -c $CONFIGURATION -f "netcoreapp$FRAMEWORK_VERSION"
+  - dotnet test ./test/Aqua.Tests/Aqua.Tests.csproj -c $CONFIGURATION -f net5.0
