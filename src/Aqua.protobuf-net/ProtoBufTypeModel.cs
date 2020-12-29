@@ -8,13 +8,13 @@ namespace Aqua
     using Aqua.ProtoBuf.TypeSystem;
     using global::ProtoBuf.Meta;
     using System;
-    using System.Collections.Immutable;
+    using System.Collections.Generic;
     using System.ComponentModel;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class ProtoBufTypeModel
     {
-        private static readonly ImmutableArray<Type> _systemTypes = new[]
+        private static readonly IReadOnlyCollection<Type> _systemTypes = new[]
             {
                 typeof(string),
                 typeof(int),
@@ -33,8 +33,7 @@ namespace Aqua
                 typeof(ushort),
                 typeof(DateTime),
                 typeof(TimeSpan),
-            }
-            .ToImmutableArray();
+            };
 
         public static AquaTypeModel ConfigureAquaTypes(string? name = null, bool configureDefaultSystemTypes = true)
             => ConfigureAquaTypes(RuntimeTypeModel.Create(name), configureDefaultSystemTypes);

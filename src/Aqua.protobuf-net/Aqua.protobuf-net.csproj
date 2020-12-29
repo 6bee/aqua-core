@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <PackageReference Include="protobuf-net" Version="2.4.6" />
-    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
