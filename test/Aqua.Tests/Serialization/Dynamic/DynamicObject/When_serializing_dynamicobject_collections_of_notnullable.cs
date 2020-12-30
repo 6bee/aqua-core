@@ -46,7 +46,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 #endif // NETFRAMEWORK
 
-#if NETCOREAPP
         public class ProtobufNetSerializer : When_serializing_dynamicobject_collections_of_notnullable
         {
             public ProtobufNetSerializer()
@@ -54,7 +53,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif // NETCOREAPP
 
         public class XmlSerializer : When_serializing_dynamicobject_collections_of_notnullable
         {

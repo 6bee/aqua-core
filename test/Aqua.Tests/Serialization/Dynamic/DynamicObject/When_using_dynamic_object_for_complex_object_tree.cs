@@ -43,7 +43,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 #endif // NETFRAMEWORK
 
-#if NETCOREAPP
         public class ProtobufNetSerializer : When_using_dynamic_object_for_complex_object_tree
         {
             public ProtobufNetSerializer()
@@ -51,7 +50,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
             }
         }
-#endif // NETCOREAPP
 
         public class XmlSerializer : When_using_dynamic_object_for_complex_object_tree
         {

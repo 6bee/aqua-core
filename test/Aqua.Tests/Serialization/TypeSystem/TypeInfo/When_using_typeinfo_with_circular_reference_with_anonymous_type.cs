@@ -43,7 +43,6 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
         }
 #endif // NETFRAMEWORK
 
-#if NETCOREAPP
         public class ProtobufNetSerializer : When_using_typeinfo_with_circular_reference_with_anonymous_type
         {
             public ProtobufNetSerializer()
@@ -51,7 +50,6 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
             {
             }
         }
-#endif // NETCOREAPP
 
         public class XmlSerializer : When_using_typeinfo_with_circular_reference_with_anonymous_type
         {

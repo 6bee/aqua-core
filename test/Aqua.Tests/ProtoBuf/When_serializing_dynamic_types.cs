@@ -1,7 +1,5 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-#if NETCOREAPP
-
 namespace Aqua.Tests.ProtoBuf
 {
     using Aqua.Dynamic;
@@ -317,5 +315,3 @@ namespace Aqua.Tests.ProtoBuf
         }
     }
 }
-
-#endif // NETCOREAPP
