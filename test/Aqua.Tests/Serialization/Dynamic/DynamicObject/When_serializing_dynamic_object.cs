@@ -182,19 +182,45 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [Fact]
         public void List_of_nullable_int_should_serialize()
         {
-            Should.NotThrow(() => Serialize<IEnumerable<int?>>(new List<int?> { null, 1, 11 }));
+            var source = new List<int?> { null, 1, 11 };
+
+            var result = Should.NotThrow(() => Serialize(source));
+
+            result.ShouldNotBeSameAs(source);
+            result.SequenceShouldBeEqual(source);
+        }
+
+        [Fact]
+        public void List_of_nullable_int_should_serialize_as_ienumerable()
+        {
+            var source = new List<int?> { null, 1, 11 };
+
+            var result = Serialize<IEnumerable<int?>>(source);
+
+            result.ShouldNotBeSameAs(source);
+            result.SequenceShouldBeEqual(source);
         }
 
         [Fact]
         public void Array_of_int_should_serialize()
         {
-            Should.NotThrow(() => Serialize(new[] { 1, 11 }));
+            var source = new[] { 1, 11 };
+
+            var result = Should.NotThrow(() => Serialize(source));
+
+            result.ShouldNotBeSameAs(source);
+            result.SequenceShouldBeEqual(source);
         }
 
         [Fact]
         public void Array_of_nullable_int_should_serialize()
         {
-            Should.NotThrow(() => Serialize(new int?[] { null, 1, 11 }));
+            var source = new int?[] { null, 1, 11 };
+
+            var result = Should.NotThrow(() => Serialize(source));
+
+            result.ShouldNotBeSameAs(source);
+            result.SequenceShouldBeEqual(source);
         }
 
         [Fact]
@@ -221,7 +247,12 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [Fact]
         public void Array_of_char_should_serialize()
         {
-            Should.NotThrow(() => Serialize(new[] { 'h', 'e', 'l', 'l', 'o' }));
+            var source = new[] { 'h', 'e', 'l', 'l', 'o' };
+
+            var result = Should.NotThrow(() => Serialize(source));
+
+            result.ShouldNotBeSameAs(source);
+            result.SequenceShouldBeEqual(source);
         }
 
         [Fact]
@@ -240,6 +271,78 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             result.ShouldBe(0.1F);
         }
 
+        [Fact]
+        public void Custom_reference_type_should_serialize()
+        {
+            var source = new A<int> { Value = 1 };
+
+            var result = Serialize(source);
+
+            result.Value.ShouldBe(1);
+        }
+
+        [Fact]
+        public void Custom_reference_type_array_should_serialize()
+        {
+            var source = new[]
+            {
+                new A<int> { Value = 1 },
+                new A<int> { Value = 2 },
+            };
+
+            var result = Serialize(source);
+
+            result.SequenceShouldBeEqual(source, (x, y) => x.Value == y.Value);
+        }
+
+        [Fact]
+        public void Custom_reference_type_with_property_of_custom_reference_type_array_should_serialize()
+        {
+            var source = new A<A<int>[]>
+            {
+                Value = new[]
+                {
+                    new A<int> { Value = 1 },
+                    new A<int> { Value = 2 },
+                },
+            };
+
+            var result = Serialize(source);
+
+            result.Value.SequenceShouldBeEqual(source.Value, (x, y) => x.Value == y.Value);
+        }
+
+        [Fact]
+        public void List_of_custom_reference_type_with_property_of_custom_reference_type_array_should_serialize()
+        {
+            var source = new List<A<A<int>[]>>
+            {
+                new A<A<int>[]>
+                {
+                    Value = new[]
+                    {
+                        new A<int> { Value = 1 },
+                        new A<int> { Value = 2 },
+                    },
+                },
+                new A<A<int>[]>
+                {
+                    Value = new[]
+                    {
+                        new A<int> { Value = 3 },
+                    },
+                },
+            };
+
+            var result = Serialize(source);
+
+            result.SequenceShouldBeEqual(
+                source,
+                (x, y) => x.Value.SequenceEqual(
+                    y.Value,
+                    (x, y) => x.Value == y.Value));
+        }
+
         private object SerializeAsProperty(Type propertyTape, object propertyValue, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
         {
             var method = typeof(When_serializing_dynamic_object)
@@ -255,11 +358,11 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var method = typeof(When_serializing_dynamic_object)
                 .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
-                .Single(x => x.Name == nameof(Serialize) && x.IsGenericMethod && x.GetGenericArguments().Length == 1);
+                .Single(x => x.Name == nameof(Serialize) && x.IsGenericMethod && x.GetGenericArguments().Length == 1 && x.GetParameters().Length == 3);
             return method.MakeGenericMethod(type).Invoke(this, new[] { value, setTypeFromGenericArgument, formatValuesAsStrings });
         }
 
-        private T Serialize<T>(T value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
+        private T Serialize<T>(T value, bool setTypeFromGenericArgument, bool formatValuesAsStrings)
             => Serialize<T, T>(value, setTypeFromGenericArgument, formatValuesAsStrings);
 
         private TResult Serialize<TResult, TSource>(TSource value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
@@ -275,6 +378,21 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
             var resurectedValue = new DynamicObjectMapper().Map<TResult>(serializedDynamicObject);
             return resurectedValue;
+        }
+
+        private T Serialize<T>(T source)
+        {
+            var dynamicSourceObject = DynamicObject.Create(source);
+
+            var dynamicSourceResult = _serialize(dynamicSourceObject);
+
+            dynamicSourceResult.ShouldNotBeSameAs(dynamicSourceObject);
+
+            var result = dynamicSourceResult.CreateObject();
+
+            result.ShouldNotBeSameAs(source);
+            result.ShouldBeOfType(source.GetType());
+            return result.ShouldBeAssignableTo<T>();
         }
     }
 }

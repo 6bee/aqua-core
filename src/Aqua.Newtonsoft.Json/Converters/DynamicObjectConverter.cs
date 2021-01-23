@@ -13,6 +13,9 @@ namespace Aqua.Newtonsoft.Json.Converters
 
     public class DynamicObjectConverter : ObjectConverter<DynamicObject>
     {
+        private const string ValueProperty = "Value";
+        private const string ValuesProperty = "Values";
+
         protected override void ReadObjectProperties(JsonReader reader, DynamicObject result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {
             reader.CheckNotNull(nameof(reader)).Advance();
@@ -25,7 +28,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 reader.AssertEndObject();
 
                 result.Type = typeInfo;
-                if (properties?.Any() == true)
+                if (properties?.Any() is true)
                 {
                     result.Properties = new PropertySet(properties);
                 }
@@ -37,14 +40,34 @@ namespace Aqua.Newtonsoft.Json.Converters
                 reader.Advance();
             }
 
-            if (reader.IsProperty("Value"))
+            bool IsProperty(string property, out bool isDynamicValueType)
             {
-                var value = reader.Read(typeInfo, serializer);
+                isDynamicValueType = false;
+
+                if (reader.IsProperty(property))
+                {
+                    return true;
+                }
+
+                if (reader.IsProperty($"Dynamic{property}"))
+                {
+                    isDynamicValueType = true;
+                    return true;
+                }
+
+                return false;
+            }
+
+            if (IsProperty(ValueProperty, out var isDynamicValue))
+            {
+                var value = isDynamicValue
+                    ? reader.Read<DynamicObject>(serializer)
+                    : reader.Read(typeInfo, serializer);
                 SetResult(new[] { new DynamicProperty(string.Empty, value) });
                 return;
             }
 
-            if (reader.IsProperty("Values"))
+            if (IsProperty(ValuesProperty, out isDynamicValue))
             {
                 reader.Advance();
                 if (reader.TokenType == JsonToken.Null)
@@ -61,7 +84,8 @@ namespace Aqua.Newtonsoft.Json.Converters
                 var elementType = TypeHelper.GetElementType(typeInfo?.ToType()) ?? typeof(object);
                 bool TryReadNextItem(out object? value)
                 {
-                    if (!reader.TryRead(elementType, serializer, out value))
+                    var itemType = isDynamicValue ? typeof(DynamicObject) : elementType;
+                    if (!reader.TryRead(itemType, serializer, out value))
                     {
                         if (reader.TokenType == JsonToken.EndArray)
                         {
@@ -80,7 +104,11 @@ namespace Aqua.Newtonsoft.Json.Converters
                     values.Add(item);
                 }
 
-                if (values.Any(x => x is not null && (elementType == typeof(object) || !elementType.IsInstanceOfType(x))) &&
+                if (isDynamicValue)
+                {
+                    elementType = typeof(object);
+                }
+                else if (values.Any(x => x is not null && (elementType == typeof(object) || !elementType.IsInstanceOfType(x))) &&
                     values.All(x => x is null || x is string))
                 {
                     elementType = typeof(string);
@@ -150,7 +178,16 @@ namespace Aqua.Newtonsoft.Json.Converters
                 writer.WritePropertyName(nameof(DynamicObject.Type));
                 serializer.Serialize(writer, type);
 
-                writer.WritePropertyName(type.IsCollection() ? "Values" : "Value");
+                var propertyName = type.IsCollection() ? ValuesProperty : ValueProperty;
+                var isDynamicValue =
+                    value is DynamicObject ||
+                    (value is object[] objectArray && objectArray.Any(x => x is DynamicObject));
+                if (isDynamicValue)
+                {
+                    propertyName = $"Dynamic{propertyName}";
+                }
+
+                writer.WritePropertyName(propertyName);
                 serializer.Serialize(writer, value, type?.ToType());
             }
             else
@@ -161,7 +198,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                     serializer.Serialize(writer, instanceType);
                 }
 
-                if (dynamicProperties?.Any() == true)
+                if (dynamicProperties?.Any() is true)
                 {
                     writer.WritePropertyName(nameof(DynamicObject.Properties));
 
