@@ -8,15 +8,14 @@ namespace Aqua.Newtonsoft.Json.Converters
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Numerics;
 
-    internal sealed class KnowTypeInfoRegistry
+    internal sealed class KnowTypesRegistry
     {
         private static readonly Dictionary<Type, string> _keyLookup;
         private static readonly Dictionary<string, TypeInfo> _typeLookup;
 
 #pragma warning disable S3963 // "static" fields should be initialized inline
-        static KnowTypeInfoRegistry()
+        static KnowTypesRegistry()
         {
             _keyLookup = new[]
                 {
@@ -38,21 +37,45 @@ namespace Aqua.Newtonsoft.Json.Converters
                     typeof(DateTime),
                     typeof(TimeSpan),
                     typeof(DateTimeOffset),
-                    typeof(BigInteger),
-                    typeof(Complex),
                     typeof(TypeInfo),
                     typeof(DynamicObject),
                 }
-                .ToDictionary(x => x, x => x.Name.ToLower());
+                .Select(x =>
+                {
+                    var name = x switch
+                    {
+                        Type t when t == typeof(TypeInfo) => "type",
+                        Type t when t == typeof(DynamicObject) => "dynamic",
+                        _ => x.Name.ToLowerInvariant(),
+                    };
+
+                    return (Type: x, Key: name);
+                })
+                .SelectMany(x => new[]
+                    {
+                        x,
+                        (x.Item1.IsValueType ? (typeof(Nullable<>).MakeGenericType(x.Item1), x.Item2 + "?") : x),
+                        (x.Item1.MakeArrayType(), x.Item2 + "[]"),
+                    })
+                .Distinct()
+                .ToDictionary(x => x.Item1, x => x.Item2);
 
             _typeLookup = _keyLookup.ToDictionary(x => x.Value, x => new TypeInfo(x.Key, false, false));
         }
 #pragma warning restore S3963 // "static" fields should be initialized inline
 
-        public bool TryLookupTypeInfo(string key, [MaybeNullWhen(false)] out TypeInfo typeInfo) => _typeLookup.TryGetValue(key, out typeInfo);
+        public static KnowTypesRegistry Instance { get; } = new KnowTypesRegistry();
 
-        public bool TryLookupKnownTypeKey(TypeInfo type, [MaybeNullWhen(false)] out string typeKey) => TryLookupKnownTypeKey(type.ToType(), out typeKey);
+        public bool TryGetTypeInfo(string key, [MaybeNullWhen(false)] out TypeInfo typeInfo)
+        {
+            typeInfo = _typeLookup.TryGetValue(key, out var type)
+                ? new TypeInfo(type)
+                : null;
+            return typeInfo is not null;
+        }
 
-        public bool TryLookupKnownTypeKey(Type type, [MaybeNullWhen(false)] out string typeKey) => _keyLookup.TryGetValue(type, out typeKey);
+        public bool TryGetTypeKey(TypeInfo type, [MaybeNullWhen(false)] out string typeKey) => TryGetTypeKey(type.ToType(), out typeKey);
+
+        public bool TryGetTypeKey(Type type, [MaybeNullWhen(false)] out string typeKey) => _keyLookup.TryGetValue(type, out typeKey);
     }
 }

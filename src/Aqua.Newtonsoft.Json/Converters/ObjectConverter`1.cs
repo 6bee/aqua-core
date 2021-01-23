@@ -53,9 +53,11 @@ namespace Aqua.Newtonsoft.Json.Converters
             if (reader.IsProperty(TypeToke))
             {
                 var typeName = reader.ReadAsString();
-                if (!string.IsNullOrEmpty(typeName))
+                if (typeName is not null && typeName.Length > 0)
                 {
-                    type = ResolveType(typeName!) ?? throw reader.CreateException($"Failed to resolve type '{typeName}'");
+                    type = TryGetTypeInfo(typeName, out var typeInfo)
+                        ? typeInfo.ToType()
+                        : ResolveType(typeName) ?? throw reader.CreateException($"Failed to resolve type '{typeName}'");
                 }
             }
 
@@ -98,7 +100,10 @@ namespace Aqua.Newtonsoft.Json.Converters
                 var type = value.GetType();
 
                 writer.WritePropertyName(TypeToke);
-                serializer.Serialize(writer, $"{type.FullName}, {type.Assembly.GetName().Name}");
+                var typeName = TryGetTypeKey(type, out var typeKey)
+                    ? typeKey
+                    : $"{type.FullName}, {type.Assembly.GetName().Name}";
+                writer.WriteValue(typeName);
 
                 WriteObjectProperties(writer, value, GetProperties(type), serializer);
             }

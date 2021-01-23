@@ -184,7 +184,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var source = new List<int?> { null, 1, 11 };
 
-            var result = Should.NotThrow(() => Serialize(source));
+            var result = Serialize(source);
 
             result.ShouldNotBeSameAs(source);
             result.SequenceShouldBeEqual(source);
@@ -206,7 +206,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var source = new[] { 1, 11 };
 
-            var result = Should.NotThrow(() => Serialize(source));
+            var result = Serialize(source);
 
             result.ShouldNotBeSameAs(source);
             result.SequenceShouldBeEqual(source);
@@ -217,7 +217,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var source = new int?[] { null, 1, 11 };
 
-            var result = Should.NotThrow(() => Serialize(source));
+            var result = Serialize(source);
 
             result.ShouldNotBeSameAs(source);
             result.SequenceShouldBeEqual(source);
@@ -249,7 +249,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var source = new[] { 'h', 'e', 'l', 'l', 'o' };
 
-            var result = Should.NotThrow(() => Serialize(source));
+            var result = Serialize(source);
 
             result.ShouldNotBeSameAs(source);
             result.SequenceShouldBeEqual(source);

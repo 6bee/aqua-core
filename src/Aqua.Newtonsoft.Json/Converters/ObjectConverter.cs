@@ -9,9 +9,12 @@ namespace Aqua.Newtonsoft.Json.Converters
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
+    using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
     public abstract class ObjectConverter : JsonConverter
     {
+        private static readonly KnowTypesRegistry _knowTypes = KnowTypesRegistry.Instance;
+
         public static string TypeToke => "$type";
 
         [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Preferred name")]
@@ -48,7 +51,15 @@ namespace Aqua.Newtonsoft.Json.Converters
 
             public object? GetValue(object obj) => PropertyInfo.GetValue(obj);
 
-            public void SetValue(object obj, object? value) => PropertyInfo.SetValue(obj, value);
+            public void SetValue(object obj, object? value)
+            {
+                if (Type == typeof(TypeInfo) && value is string typeKey && _knowTypes.TryGetTypeInfo(typeKey, out var typeInfo))
+                {
+                    value = typeInfo;
+                }
+
+                PropertyInfo.SetValue(obj, value);
+            }
         }
 
         private static readonly Dictionary<Type, IReadOnlyCollection<Property>> _properties = new Dictionary<Type, IReadOnlyCollection<Property>>();
@@ -75,5 +86,11 @@ namespace Aqua.Newtonsoft.Json.Converters
                 return propertySet;
             }
         }
+
+        protected bool TryGetTypeInfo(string key, [MaybeNullWhen(false)] out TypeInfo typeInfo) => _knowTypes.TryGetTypeInfo(key, out typeInfo);
+
+        protected bool TryGetTypeKey(TypeInfo type, [MaybeNullWhen(false)] out string typeKey) => _knowTypes.TryGetTypeKey(type.ToType(), out typeKey);
+
+        protected bool TryGetTypeKey(Type type, [MaybeNullWhen(false)] out string typeKey) => _knowTypes.TryGetTypeKey(type, out typeKey);
     }
 }

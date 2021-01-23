@@ -4,6 +4,7 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
 {
     using Aqua.Dynamic;
     using Aqua.Newtonsoft.Json.Converters;
+    using Aqua.TypeSystem;
     using global::Newtonsoft.Json;
     using global::Newtonsoft.Json.Serialization;
     using System;
@@ -27,7 +28,7 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
         public override JsonContract ResolveContract(Type type)
         {
             type.CheckNotNull(nameof(type));
-            return _decorated is null || typeof(DynamicObject).IsAssignableFrom(type)
+            return _decorated is null || typeof(DynamicObject).IsAssignableFrom(type) || typeof(TypeInfo).IsAssignableFrom(type)
                 ? base.ResolveContract(type)
                 : _decorated.ResolveContract(type);
         }
@@ -51,7 +52,9 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
                 contract.ItemReferenceLoopHandling = ReferenceLoopHandling.Serialize;
                 contract.Converter = typeof(DynamicObject).IsAssignableFrom(objectType)
                     ? new DynamicObjectConverter()
-                    : CreateObjectConverter(objectType);
+                    : typeof(TypeInfo).IsAssignableFrom(objectType)
+                        ? new TypeInfoConveter()
+                        : CreateObjectConverter(objectType);
                 foreach (var property in contract.Properties.Where(x => !x.Writable || !x.Readable))
                 {
                     property.Ignored = true;

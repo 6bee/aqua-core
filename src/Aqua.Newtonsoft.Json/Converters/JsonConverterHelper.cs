@@ -120,11 +120,16 @@ namespace Aqua.Newtonsoft.Json.Converters
             switch (reader.TokenType)
             {
                 case JsonToken.String:
-                    var text = reader.Value as string;
-                    result = type == typeof(char) && text?.Length > 0
-                        ? (object)text[0]
-                        : text;
-                    return true;
+                    if (type != typeof(TypeInfo))
+                    {
+                        var text = reader.Value as string;
+                        result = type == typeof(char) && text?.Length > 0
+                            ? (object)text[0]
+                            : text;
+                        return true;
+                    }
+
+                    break;
 
                 case JsonToken.Null:
                     result = default;
