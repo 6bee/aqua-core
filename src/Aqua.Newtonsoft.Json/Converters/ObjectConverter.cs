@@ -23,7 +23,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 IsIgnored = propertyInfo.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Any();
                 DataMemberAttribute = (DataMemberAttribute?)propertyInfo.GetCustomAttributes(typeof(DataMemberAttribute), false)?.FirstOrDefault();
                 Name = string.IsNullOrWhiteSpace(DataMemberAttribute?.Name) ? propertyInfo.Name : DataMemberAttribute!.Name;
-                EmitDefaultValue = DataMemberAttribute?.EmitDefaultValue == true;
+                EmitDefaultValue = DataMemberAttribute?.EmitDefaultValue is true;
                 if (!EmitDefaultValue && propertyInfo.PropertyType.IsValueType)
                 {
                     DefaultValue = Activator.CreateInstance(propertyInfo.PropertyType);

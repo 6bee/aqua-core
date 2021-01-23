@@ -41,7 +41,7 @@ namespace Aqua.Dynamic
             {
                 var name = dynamicProperty.Name;
 
-                if (name is null || customPropertyNames?.ContainsKey(name) == false)
+                if (name is null || customPropertyNames?.ContainsKey(name) is false)
                 {
                     continue;
                 }
@@ -84,7 +84,7 @@ namespace Aqua.Dynamic
             for (int i = 0; i < members.Length; i++)
             {
                 var memberName = GetCleanMemberName(members[i]);
-                if (customPropertyNames?.ContainsKey(memberName) == false)
+                if (customPropertyNames?.ContainsKey(memberName) is false)
                 {
                     continue;
                 }

@@ -190,7 +190,7 @@ namespace Aqua.EnumerableExtensions
 
         public static IEnumerable<T> AsEmptyIfNull<T>(this IEnumerable<T>? source) => source ?? Enumerable.Empty<T>();
 
-        public static IEnumerable<T>? AsNullIfEmpty<T>(this IEnumerable<T>? source) => source?.Any() == true ? source : null;
+        public static IEnumerable<T>? AsNullIfEmpty<T>(this IEnumerable<T>? source) => source?.Any() is true ? source : null;
 
         [return: NotNullIfNotNull("source")]
         public static string? StringJoin<T>(this IEnumerable<T>? source, string separator) => source is null ? default : string.Join(separator, source);
@@ -233,7 +233,7 @@ namespace Aqua.EnumerableExtensions
             }
         }
 
-        public static bool Any(this IEnumerable? source) => source?.GetEnumerator().MoveNext() == true;
+        public static bool Any(this IEnumerable? source) => source?.GetEnumerator().MoveNext() is true;
 
         public static bool Any(this IEnumerable? source, Func<object, bool> predicate)
         {
