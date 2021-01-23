@@ -13,16 +13,15 @@ namespace Aqua.Newtonsoft.Json.Converters
 
     public abstract class ObjectConverter : JsonConverter
     {
-        private static readonly KnowTypesRegistry _knowTypes = KnowTypesRegistry.Instance;
-
-        public static string TypeToke => "$type";
-
         [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Preferred name")]
         protected sealed class Property
         {
-            public Property(PropertyInfo propertyInfo)
+            private readonly KnownTypesRegistry _knownTypes;
+
+            public Property(PropertyInfo propertyInfo, KnownTypesRegistry knownTypes)
             {
-                PropertyInfo = propertyInfo ?? throw new ArgumentNullException(nameof(propertyInfo));
+                PropertyInfo = propertyInfo.CheckNotNull(nameof(propertyInfo));
+                _knownTypes = knownTypes.CheckNotNull(nameof(knownTypes));
                 IsIgnored = propertyInfo.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Any();
                 DataMemberAttribute = (DataMemberAttribute?)propertyInfo.GetCustomAttributes(typeof(DataMemberAttribute), false)?.FirstOrDefault();
                 Name = string.IsNullOrWhiteSpace(DataMemberAttribute?.Name) ? propertyInfo.Name : DataMemberAttribute!.Name;
@@ -53,7 +52,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
             public void SetValue(object obj, object? value)
             {
-                if (Type == typeof(TypeInfo) && value is string typeKey && _knowTypes.TryGetTypeInfo(typeKey, out var typeInfo))
+                if (Type == typeof(TypeInfo) && value is string typeKey && _knownTypes.TryGetTypeInfo(typeKey, out var typeInfo))
                 {
                     value = typeInfo;
                 }
@@ -64,7 +63,16 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         private static readonly Dictionary<Type, IReadOnlyCollection<Property>> _properties = new Dictionary<Type, IReadOnlyCollection<Property>>();
 
-        protected static IReadOnlyCollection<Property> GetProperties(Type type)
+        protected ObjectConverter(KnownTypesRegistry knownTypes)
+        {
+            KnownTypesRegistry = knownTypes.CheckNotNull(nameof(knownTypes));
+        }
+
+        protected KnownTypesRegistry KnownTypesRegistry { get; }
+
+        public static string TypeToke => "$type";
+
+        protected IReadOnlyCollection<Property> GetProperties(Type type)
         {
             type.CheckNotNull(nameof(type));
             lock (_properties)
@@ -75,7 +83,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                         .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                         .Where(x => x.CanRead && x.CanWrite)
                         .Where(x => x.GetIndexParameters().Length == 0)
-                        .Select(x => new Property(x))
+                        .Select(x => new Property(x, KnownTypesRegistry))
                         .Where(x => !x.IsIgnored)
                         .OrderBy(x => x.SortOrder)
                         .ToList()
@@ -86,11 +94,5 @@ namespace Aqua.Newtonsoft.Json.Converters
                 return propertySet;
             }
         }
-
-        protected bool TryGetTypeInfo(string key, [MaybeNullWhen(false)] out TypeInfo typeInfo) => _knowTypes.TryGetTypeInfo(key, out typeInfo);
-
-        protected bool TryGetTypeKey(TypeInfo type, [MaybeNullWhen(false)] out string typeKey) => _knowTypes.TryGetTypeKey(type.ToType(), out typeKey);
-
-        protected bool TryGetTypeKey(Type type, [MaybeNullWhen(false)] out string typeKey) => _knowTypes.TryGetTypeKey(type, out typeKey);
     }
 }

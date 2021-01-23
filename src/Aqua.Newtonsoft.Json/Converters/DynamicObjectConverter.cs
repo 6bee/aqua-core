@@ -16,6 +16,11 @@ namespace Aqua.Newtonsoft.Json.Converters
         private const string ValueProperty = "Value";
         private const string ValuesProperty = "Values";
 
+        public DynamicObjectConverter(KnownTypesRegistry knownTypes)
+            : base(knownTypes)
+        {
+        }
+
         protected override void ReadObjectProperties(JsonReader reader, DynamicObject result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {
             reader.CheckNotNull(nameof(reader)).Advance();

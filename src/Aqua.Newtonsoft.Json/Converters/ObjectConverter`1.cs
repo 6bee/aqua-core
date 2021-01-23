@@ -11,6 +11,11 @@ namespace Aqua.Newtonsoft.Json.Converters
     public class ObjectConverter<T> : ObjectConverter
         where T : class
     {
+        public ObjectConverter(KnownTypesRegistry knownTypes)
+            : base(knownTypes)
+        {
+        }
+
         public Func<string, Type?>? DefaultTypeResolver { get; set; }
 
         public Func<Type, T>? DefaultObjectFactory { get; set; }
@@ -55,7 +60,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 var typeName = reader.ReadAsString();
                 if (typeName is not null && typeName.Length > 0)
                 {
-                    type = TryGetTypeInfo(typeName, out var typeInfo)
+                    type = KnownTypesRegistry.TryGetTypeInfo(typeName, out var typeInfo)
                         ? typeInfo.ToType()
                         : ResolveType(typeName) ?? throw reader.CreateException($"Failed to resolve type '{typeName}'");
                 }
@@ -100,7 +105,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 var type = value.GetType();
 
                 writer.WritePropertyName(TypeToke);
-                var typeName = TryGetTypeKey(type, out var typeKey)
+                var typeName = KnownTypesRegistry.TryGetTypeKey(type, out var typeKey)
                     ? typeKey
                     : $"{type.FullName}, {type.Assembly.GetName().Name}";
                 writer.WriteValue(typeName);

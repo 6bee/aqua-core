@@ -13,9 +13,10 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
 
     public sealed class AquaContractResolver : DefaultContractResolver
     {
+        private readonly KnownTypesRegistry _knownTypes;
         private readonly IContractResolver? _decorated;
 
-        public AquaContractResolver(IContractResolver? decorated = null)
+        public AquaContractResolver(IContractResolver? decorated = null, KnownTypesRegistry? knownTypes = null)
         {
             if (decorated is AquaContractResolver self)
             {
@@ -23,6 +24,7 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
             }
 
             _decorated = decorated?.GetType() == typeof(DefaultContractResolver) ? null : decorated;
+            _knownTypes = knownTypes ?? new KnownTypesRegistry();
         }
 
         public override JsonContract ResolveContract(Type type)
@@ -51,10 +53,10 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
                 contract.IsReference = true;
                 contract.ItemReferenceLoopHandling = ReferenceLoopHandling.Serialize;
                 contract.Converter = typeof(DynamicObject).IsAssignableFrom(objectType)
-                    ? new DynamicObjectConverter()
+                    ? new DynamicObjectConverter(_knownTypes)
                     : typeof(TypeInfo).IsAssignableFrom(objectType)
-                        ? new TypeInfoConveter()
-                        : CreateObjectConverter(objectType);
+                        ? new TypeInfoConveter(_knownTypes)
+                        : CreateObjectConverter(objectType, _knownTypes);
                 foreach (var property in contract.Properties.Where(x => !x.Writable || !x.Readable))
                 {
                     property.Ignored = true;
@@ -64,7 +66,7 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
             return contract;
         }
 
-        private static JsonConverter CreateObjectConverter(Type type)
-            => (JsonConverter)Activator.CreateInstance(typeof(ObjectConverter<>).MakeGenericType(type));
+        private static JsonConverter CreateObjectConverter(Type type, KnownTypesRegistry knownTypes)
+            => (JsonConverter)Activator.CreateInstance(typeof(ObjectConverter<>).MakeGenericType(type), knownTypes);
     }
 }

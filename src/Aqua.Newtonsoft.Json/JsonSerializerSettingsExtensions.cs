@@ -2,10 +2,10 @@
 
 namespace Aqua
 {
+    using Aqua.Newtonsoft.Json;
     using Aqua.Newtonsoft.Json.ContractResolvers;
     using global::Newtonsoft.Json;
     using global::Newtonsoft.Json.Serialization;
-    using System;
     using System.ComponentModel;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -15,21 +15,21 @@ namespace Aqua
         /// Sets the <see cref="AquaContractResolver"/> in <see cref="JsonSerializerSettings"/>,
         /// decorating a previousely set <see cref="IContractResolver"/> if required.
         /// </summary>
-        public static JsonSerializerSettings ConfigureAqua(this JsonSerializerSettings jsonSerializerSettings)
+        public static AquaJsonSerializerSettings ConfigureAqua(this JsonSerializerSettings jsonSerializerSettings)
         {
-            if (jsonSerializerSettings is null)
+            var knownTypesRegistry = new KnownTypesRegistry();
+
+            var aquaJsonSerializerSettings = new AquaJsonSerializerSettings(jsonSerializerSettings.CheckNotNull(nameof(jsonSerializerSettings)), knownTypesRegistry)
             {
-                throw new ArgumentNullException(nameof(jsonSerializerSettings));
+                TypeNameHandling = TypeNameHandling.None,
+            };
+
+            if (aquaJsonSerializerSettings.ContractResolver?.GetType() != typeof(AquaContractResolver))
+            {
+                aquaJsonSerializerSettings.ContractResolver = new AquaContractResolver(aquaJsonSerializerSettings.ContractResolver, knownTypesRegistry);
             }
 
-            jsonSerializerSettings.TypeNameHandling = TypeNameHandling.None;
-
-            if (jsonSerializerSettings.ContractResolver?.GetType() != typeof(AquaContractResolver))
-            {
-                jsonSerializerSettings.ContractResolver = new AquaContractResolver(jsonSerializerSettings.ContractResolver);
-            }
-
-            return jsonSerializerSettings;
+            return aquaJsonSerializerSettings;
         }
     }
 }

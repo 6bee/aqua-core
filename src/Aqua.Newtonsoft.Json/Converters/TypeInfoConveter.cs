@@ -8,6 +8,11 @@ namespace Aqua.Newtonsoft.Json.Converters
 
     public class TypeInfoConveter : ObjectConverter<TypeInfo>
     {
+        public TypeInfoConveter(KnownTypesRegistry knownTypes)
+            : base(knownTypes)
+        {
+        }
+
         public override TypeInfo? ReadJson(JsonReader reader, Type objectType, TypeInfo? existingValue, JsonSerializer serializer)
         {
             reader.CheckNotNull(nameof(reader));
@@ -15,7 +20,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
             if (reader.TokenType == JsonToken.String &&
                 reader.Value is string typeKey &&
-                TryGetTypeInfo(typeKey, out var typeInfo))
+                KnownTypesRegistry.TryGetTypeInfo(typeKey, out var typeInfo))
             {
                 return typeInfo;
             }
@@ -27,7 +32,7 @@ namespace Aqua.Newtonsoft.Json.Converters
         {
             writer.CheckNotNull(nameof(writer));
 
-            if (value is not null && TryGetTypeKey(value, out var typeKey))
+            if (value is not null && KnownTypesRegistry.TryGetTypeKey(value, out var typeKey))
             {
                 writer.WriteValue(typeKey);
             }
