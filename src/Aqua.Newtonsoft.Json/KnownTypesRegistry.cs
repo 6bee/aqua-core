@@ -73,7 +73,7 @@ namespace Aqua.Newtonsoft.Json
         public KnownTypesRegistry()
         {
             _keyLookup = _defaultTypes.ToDictionary(x => x.Type, x => x.Key);
-            _typeLookup = _defaultTypes.ToDictionary(x => x.Key, x => CreateTypeInfo(x.Type));
+            _typeLookup = _defaultTypes.ToDictionary(x => x.Key, x => CreateTypeInfo(x.Type), StringComparer.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
