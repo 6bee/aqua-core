@@ -49,9 +49,6 @@ namespace Aqua.ProtoBuf.Dynamic
         private static PropertySet Unwrap(Dictionary<string, Value?> properties)
             => new PropertySet(properties.Select(x => new Property(x.Key, x.Value?.ObjectValue)));
 
-        private static object? UnwrapSingle(Value? element)
-            => element?.ObjectValue;
-
         private static Dictionary<string, Value?> Map(DynamicObject source)
             => source.Properties.ToDictionary(
                 x => x.Name,
@@ -61,8 +58,10 @@ namespace Aqua.ProtoBuf.Dynamic
             => value is DynamicObject dynamicObject
             ? DynamicObjectSurrogate.Convert(dynamicObject)
             : value is DynamicObject?[] dynamicObjectArray
-            ? DynamicObjectArraySurrogate.Convert(dynamicObjectArray)
-            : Value.Wrap(value, RedirectTypeForStringFormattedValues(value, type?.ToType()));
+                ? DynamicObjectArraySurrogate.Convert(dynamicObjectArray)
+                : value is object?[] objectArray && objectArray.All(x => x is DynamicObject)
+                    ? DynamicObjectArraySurrogate.Convert(objectArray.Cast<DynamicObject?>().ToArray())
+                    : Value.Wrap(value, RedirectTypeForStringFormattedValues(value, type?.ToType()));
 
         private static Type? RedirectTypeForStringFormattedValues(object? value, Type? type)
         {
