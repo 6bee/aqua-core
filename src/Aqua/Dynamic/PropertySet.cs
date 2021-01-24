@@ -27,9 +27,9 @@ namespace Aqua.Dynamic
 
             public static readonly PropertyComparer Instance = new PropertyComparer();
 
-            public bool Equals(Property x, Property y)
+            public bool Equals(Property? x, Property? y)
                 => ReferenceEquals(x, y)
-                || string.Equals(x.Name, y.Name, StringComparison.Ordinal);
+                || string.Equals(x?.Name, y?.Name, StringComparison.Ordinal);
 
             [SuppressMessage("Globalization", "CA1307:Specify StringComparison", Justification = "Globalization issue with hash codes?")]
             public int GetHashCode(Property obj) => obj?.Name?.GetHashCode() ?? 0;

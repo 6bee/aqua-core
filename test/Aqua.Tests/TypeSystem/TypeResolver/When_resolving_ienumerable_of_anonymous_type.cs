@@ -11,6 +11,8 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
 
     public class When_resolving_ienumerable_of_anonymous_type
     {
+        private const BindingFlags AnyStatic = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
+
         private static void SayHello<T>(IEnumerable<T> param)
         {
             // empty
@@ -79,7 +81,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
             }
 
             System.Reflection.MethodInfo methodInfo = GetType()
-                .GetMethod(nameof(SayHello), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
+                .GetMethod(nameof(SayHello), AnyStatic)
                 .MakeGenericMethod(type1);
 
             System.Reflection.MethodInfo resolvedMethod =

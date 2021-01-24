@@ -56,7 +56,7 @@ namespace Aqua.TypeSystem
                     throw new ArgumentException("Type name is not in expected format for array type");
                 }
 
-                type = type.GetElementType();
+                type = type.GetElementType() !;
             }
 
             if (type.IsNested && !type.IsGenericParameter)

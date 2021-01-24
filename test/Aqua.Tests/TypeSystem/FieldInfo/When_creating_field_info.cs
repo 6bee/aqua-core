@@ -21,6 +21,9 @@ namespace Aqua.Tests.TypeSystem.FieldInfo
 #pragma warning restore CS0169 // The field is never used
         }
 
+        private const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;
+        private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
+
         [Fact]
         public void Should_throw_on_creating_by_memberinfo_with_null_parameter()
         {
@@ -30,14 +33,14 @@ namespace Aqua.Tests.TypeSystem.FieldInfo
         [Fact]
         public void Should_have_set_is_static_for_static_field_info_created_by_memberinfo()
         {
-            var field = typeof(A).GetField("staticField", BindingFlags.Static | BindingFlags.NonPublic);
+            var field = typeof(A).GetField("staticField", PrivateStatic);
             new FieldInfo(field).IsStatic.ShouldBe(true);
         }
 
         [Fact]
         public void Should_not_have_set_is_static_by_default_when_created_by_memberinfo()
         {
-            var field = typeof(A).GetField("field", BindingFlags.Instance | BindingFlags.NonPublic);
+            var field = typeof(A).GetField("field", PrivateInstance);
             new FieldInfo(field).IsStatic.ShouldBeNull();
         }
 

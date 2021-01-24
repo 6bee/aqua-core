@@ -50,7 +50,7 @@ namespace Aqua.TypeSystem
 
             if (type.IsArray)
             {
-                return typeof(IEnumerable<>).MakeGenericType(type.GetElementType());
+                return typeof(IEnumerable<>).MakeGenericType(type.GetElementType() !);
             }
 
             if (type.IsGenericType)
@@ -229,11 +229,11 @@ namespace Aqua.TypeSystem
         private static Func<BindingFlags, System.Reflection.FieldInfo?> CreateFieldResolver(FieldInfo field, ITypeResolver typeResolver)
         {
             var declaringType = field.ResolveDeclaringType(typeResolver);
-            var fieldName = field.Name;
+            var fieldName = field.Name ?? string.Empty;
             var isStatic = field.IsStatic ?? false;
             return bindingFlags => declaringType
                 .GetField(fieldName, bindingFlags)
-                .If(x => x.IsStatic == isStatic);
+                .If(x => x!.IsStatic == isStatic);
         }
 
         private static Func<BindingFlags, System.Reflection.MethodInfo?> CreateMethodResolver(MethodInfo method, ITypeResolver typeResolver)
@@ -295,8 +295,8 @@ namespace Aqua.TypeSystem
                 throw CreateException($"return type '{method.ReturnType}' could not be reconstructed", ex);
             }
 
-            int CountDeclarationDepth(System.Reflection.TypeInfo type, System.Reflection.TypeInfo methodDeclaringType, int i)
-                => type == methodDeclaringType
+            static int CountDeclarationDepth(System.Reflection.TypeInfo type, System.Reflection.TypeInfo? methodDeclaringType, int i)
+                => type == methodDeclaringType || type?.BaseType is null
                 ? i
                 : CountDeclarationDepth(type.BaseType.GetTypeInfo(), methodDeclaringType, i + 1);
 
@@ -310,7 +310,7 @@ namespace Aqua.TypeSystem
                     .Where(m => m.GetParameters().Length == parameterTypes.Length)
                     .Where(m => m.IsGenericMethod == isGenericMethod)
                     .Where(m => !m.IsGenericMethod || m.GetGenericArguments().Length == genericArguments!.Length)
-                    .Select(m => m.IsGenericMethod ? m.MakeGenericMethod(genericArguments) : m)
+                    .Select(m => m.IsGenericMethod && genericArguments is not null ? m.MakeGenericMethod(genericArguments) : m)
                     .Where(m =>
                     {
                         var paramTypes = m.GetParameters();
@@ -325,7 +325,7 @@ namespace Aqua.TypeSystem
                         return true;
                     })
                     .Where(m => returnType is null || m.ReturnType == returnType)
-                    .OrderBy(m => CountDeclarationDepth(declaringType.GetTypeInfo(), m.DeclaringType.GetTypeInfo(), 0))
+                    .OrderBy(m => CountDeclarationDepth(declaringType.GetTypeInfo(), m.DeclaringType?.GetTypeInfo(), 0))
                     .ToArray();
 
                 if (matches.Length == 0)
@@ -347,17 +347,17 @@ namespace Aqua.TypeSystem
         private static Func<BindingFlags, System.Reflection.PropertyInfo?> CreatePropertyResolver(PropertyInfo property, ITypeResolver typeResolver)
         {
             var declaringType = property.ResolveDeclaringType(typeResolver);
-            var propertyName = property.Name;
+            var propertyName = property.Name ?? string.Empty;
             var isStatic = property.IsStatic ?? false;
             return bindingFlags => declaringType
                 .GetProperty(propertyName, bindingFlags)
-                .If(x => (x.GetGetMethod(true) ?? x.GetSetMethod(true)).IsStatic == isStatic);
+                .If(x => (x!.GetGetMethod(true) ?? x!.GetSetMethod(true)) !.IsStatic == isStatic);
         }
 
         /// <summary>
         /// Returns null if the condition is not met, otherwise the actual value is returned.
         /// </summary>
-        private static T? If<T>(this T t, Func<T, bool> predicate)
+        private static T? If<T>(this T? t, Func<T, bool> predicate)
             where T : class
             => t is not null && predicate(t) ? t : default;
 

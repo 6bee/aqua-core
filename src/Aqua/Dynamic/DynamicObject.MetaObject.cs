@@ -12,6 +12,8 @@ namespace Aqua.Dynamic
 
     partial class DynamicObject : IDynamicMetaObjectProvider
     {
+        private const BindingFlags PublicInstance = BindingFlags.Public | BindingFlags.Instance;
+
         DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter)
             => new MetaObject(parameter, BindingRestrictions.GetInstanceRestriction(parameter, this), this);
 
@@ -20,11 +22,10 @@ namespace Aqua.Dynamic
             private static readonly Type _dynamicObjectType = typeof(DynamicObject);
 
             private static readonly MethodInfo _getMethod = typeof(DynamicObject)
-                .GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .GetMethods(PublicInstance)
                 .Single(m => m.Name == nameof(Get) && !m.IsGenericMethodDefinition);
 
-            private static readonly MethodInfo _setMethod = typeof(DynamicObject)
-                .GetMethod(nameof(Set), BindingFlags.Public | BindingFlags.Instance);
+            private static readonly MethodInfo _setMethod = typeof(DynamicObject).GetMethod(nameof(Set), PublicInstance) !;
 
             public MetaObject(Expression expression, BindingRestrictions restrictions, DynamicObject dynamicObject)
                 : base(expression, restrictions, dynamicObject)
@@ -49,10 +50,9 @@ namespace Aqua.Dynamic
             }
 
             public override IEnumerable<string> GetDynamicMemberNames()
-            {
-                var dynObj = (DynamicObject)Value;
-                return dynObj.PropertyNames;
-            }
+                => Value is DynamicObject dynamicObject
+                ? dynamicObject.PropertyNames
+                : Enumerable.Empty<string>();
         }
     }
 }

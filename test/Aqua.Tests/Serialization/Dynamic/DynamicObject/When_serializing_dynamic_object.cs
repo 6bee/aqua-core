@@ -69,6 +69,8 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             public T Value { get; set; }
         }
 
+        private const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;
+
         private readonly Func<DynamicObject, DynamicObject> _serialize;
 
         protected When_serializing_dynamic_object(Func<DynamicObject, DynamicObject> serialize)
@@ -346,7 +348,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         private object SerializeAsProperty(Type propertyTape, object propertyValue, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
         {
             var method = typeof(When_serializing_dynamic_object)
-              .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
+              .GetMethods(PrivateInstance)
               .Single(x => x.Name == nameof(SerializeAsProperty) && x.IsGenericMethod && x.GetGenericArguments().Length == 1);
             return method.MakeGenericMethod(propertyTape).Invoke(this, new[] { propertyValue, setTypeFromGenericArgument, formatValuesAsStrings });
         }
@@ -357,7 +359,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         private object Serialize(Type type, object value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
         {
             var method = typeof(When_serializing_dynamic_object)
-                .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetMethods(PrivateInstance)
                 .Single(x => x.Name == nameof(Serialize) && x.IsGenericMethod && x.GetGenericArguments().Length == 1 && x.GetParameters().Length == 3);
             return method.MakeGenericMethod(type).Invoke(this, new[] { value, setTypeFromGenericArgument, formatValuesAsStrings });
         }

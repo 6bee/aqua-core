@@ -13,6 +13,7 @@ namespace Aqua.Utils
     /// or transparently create the requested value if not contained in cache.
     /// </summary>
     public class TransparentCache<TKey, TValue>
+        where TKey : notnull
         where TValue : class
     {
         private readonly Dictionary<TKey, WeakReference> _cache;
@@ -52,7 +53,7 @@ namespace Aqua.Utils
                 // probe cache
                 if (_cache.TryGetValue(key, out var weakref))
                 {
-                    value = (TValue)weakref.Target;
+                    value = weakref.Target as TValue;
                     isReferenceAlive = weakref.IsAlive;
                 }
 

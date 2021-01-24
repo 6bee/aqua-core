@@ -64,6 +64,8 @@ namespace Aqua.Tests.TypeSystem.ConstructorInfo
             }
         }
 
+        private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
+
         [Fact]
         public void Should_throw_upon_casting_constructor_info_for_inexistent_constructor()
         {
@@ -76,7 +78,7 @@ namespace Aqua.Tests.TypeSystem.ConstructorInfo
         {
             var constructorInfo = new ConstructorInfo(".cctor", typeof(A));
             var constructor = (System.Reflection.ConstructorInfo)constructorInfo;
-            var expected = typeof(A).GetConstructors(BindingFlags.NonPublic | BindingFlags.Static).Single();
+            var expected = typeof(A).GetConstructors(PrivateStatic).Single();
             constructor.ShouldBeSameAs(expected);
         }
 

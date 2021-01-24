@@ -13,6 +13,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
 
     public class When_mapping_object_from_object_with_igrouping_members
     {
+        private const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;
+
         private class CustomClass
         {
             public IGrouping<string, int> Grouping { get; set; }
@@ -25,7 +27,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
                 if (obj is not null && obj.GetType().Implements(typeof(IGrouping<,>)))
                 {
                     var mappedGrouping = typeof(CustomDynamicObjectMapper)
-                        .GetMethod(nameof(MapGrouping), BindingFlags.NonPublic | BindingFlags.Instance)
+                        .GetMethod(nameof(MapGrouping), PrivateInstance)
                         .MakeGenericMethod(obj.GetType().GenericTypeArguments)
                         .Invoke(this, new[] { obj, setTypeInformation });
                     return (DynamicObject)mappedGrouping;

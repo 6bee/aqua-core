@@ -53,7 +53,7 @@ namespace Aqua.Dynamic
 
             public DynamicObject Value { get; }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
                 => obj is ReferenceMapKey other
                 && Equals(other);
 
@@ -166,6 +166,8 @@ namespace Aqua.Dynamic
 
             public void Recycle() => _referenceMap.Clear();
         }
+
+        private const BindingFlags PrivateStatic = BindingFlags.Static | BindingFlags.NonPublic;
 
         private const string NumericPattern = @"([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?";
 
@@ -407,8 +409,7 @@ namespace Aqua.Dynamic
                 },
             };
 
-        private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper)
-            .GetMethod(nameof(ToDictionary), BindingFlags.Static | BindingFlags.NonPublic);
+        private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper).GetMethod(nameof(ToDictionary), PrivateStatic) !;
 
         private readonly DynamicObjectMapperSettings _settings;
         private readonly FromContext _fromContext;
@@ -571,7 +572,7 @@ namespace Aqua.Dynamic
                     {
                         var typeInfo = MapToTypeInfo<TypeSystem.TypeInfo>();
                         var t = typeInfo.ResolveType(_typeResolver);
-                        return resultType == typeof(TypeInfo) ? t.GetTypeInfo() : t;
+                        return resultType == typeof(TypeInfo) ? t?.GetTypeInfo() : t;
                     }
 
                     if (resultType == typeof(MethodInfo) && (sourceType == typeof(TypeSystem.MethodInfo) || sourceType == typeof(MethodInfo)))
@@ -662,7 +663,7 @@ namespace Aqua.Dynamic
                 if (IsMatchingDictionary(resultType, elementType))
                 {
                     var targetTypeGenericArguments = resultType.GetGenericArguments();
-                    var method = ToDictionaryMethodInfo.MakeGenericMethod(targetTypeGenericArguments.ToArray());
+                    var method = ToDictionaryMethodInfo.MakeGenericMethod(targetTypeGenericArguments);
                     return method.Invoke(null, new[] { r1 });
                 }
 
@@ -736,7 +737,7 @@ namespace Aqua.Dynamic
 
             if (type.IsEnum())
             {
-                return obj.ToString();
+                return obj.ToString() ?? string.Empty;
             }
 
             if (obj is IEnumerable collection && !ShouldMapToDynamicObject(collection))
@@ -929,7 +930,7 @@ namespace Aqua.Dynamic
                         return method.CreateDelegate(t);
                     }
 
-                    var instance = Activator.CreateInstance(method.DeclaringType);
+                    var instance = Activator.CreateInstance(method.DeclaringType!);
                     return method.CreateDelegate(t, instance);
                 };
             }
@@ -978,7 +979,7 @@ namespace Aqua.Dynamic
                 }
                 else if (targetType.IsValueType)
                 {
-                    factory = (t, item) => Activator.CreateInstance(t);
+                    factory = (t, item) => Activator.CreateInstance(t) ?? throw new DynamicObjectMapperException($"Failed to create instance of type {t.FullName}");
                     initializer = InitializeProperties;
                 }
                 else
@@ -1173,9 +1174,8 @@ namespace Aqua.Dynamic
         }
 
         private static object ToDictionary<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> items)
-        {
-            return items.ToDictionary(x => x.Key, x => x.Value);
-        }
+            where TKey : notnull
+            => items.ToDictionary(x => x.Key, x => x.Value);
 
         private static bool IsAssignable(Type targetType, object? value)
         {
@@ -1303,7 +1303,7 @@ namespace Aqua.Dynamic
                 return Convert.ToBase64String((byte[])obj);
             }
 
-            return obj.ToString();
+            return obj.ToString() ?? string.Empty;
         }
 
         private T Wrap<T>(Func<T> func, IMappingContext mappingContext)

@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <Description>Transform any object-graph into a dynamic, composed dictionaries like structure, holding serializable values and type information.</Description>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
     <AssemblyName>Aqua</AssemblyName>
     <PackageId>aqua-core</PackageId>
     <PackageTags>type-info;dynamic-object;expando-object;object-mapping;object-mapper</PackageTags>

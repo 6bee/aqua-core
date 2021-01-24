@@ -55,7 +55,7 @@ namespace Aqua.TypeSystem
                 return null;
             }
 
-            if (_referenceTracker.TryGetValue(type, out TypeInfo typeInfo))
+            if (_referenceTracker.TryGetValue(type, out var typeInfo))
             {
                 return typeInfo;
             }
@@ -87,6 +87,7 @@ namespace Aqua.TypeSystem
             : new TypeInfo(type, this);
 
         private static Dictionary<T, TypeInfo> CreateReferenceTracker<T>()
+            where T : notnull
             => new Dictionary<T, TypeInfo>(ReferenceEqualityComparer<T>.Default);
     }
 }

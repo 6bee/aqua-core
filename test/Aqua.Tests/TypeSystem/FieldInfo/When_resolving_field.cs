@@ -20,6 +20,9 @@ namespace Aqua.Tests.TypeSystem.FieldInfo
 #pragma warning restore CS0169 // The field is never used
         }
 
+        private const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;
+        private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
+
         [Fact]
         public void Should_throw_upon_casting_field_info_for_inexistent_field()
         {
@@ -32,7 +35,7 @@ namespace Aqua.Tests.TypeSystem.FieldInfo
         {
             var fieldInfo = new FieldInfo("field", typeof(A));
             var field = (System.Reflection.FieldInfo)fieldInfo;
-            field.ShouldBeSameAs(typeof(A).GetField("field", BindingFlags.Instance | BindingFlags.NonPublic));
+            field.ShouldBeSameAs(typeof(A).GetField("field", PrivateInstance));
         }
 
         [Fact]
@@ -40,7 +43,7 @@ namespace Aqua.Tests.TypeSystem.FieldInfo
         {
             var fieldInfo = new FieldInfo("staticField", typeof(A)) { IsStatic = true };
             var field = (System.Reflection.FieldInfo)fieldInfo;
-            field.ShouldBeSameAs(typeof(A).GetField("staticField", BindingFlags.Static | BindingFlags.NonPublic));
+            field.ShouldBeSameAs(typeof(A).GetField("staticField", PrivateStatic));
         }
 
         [Fact]

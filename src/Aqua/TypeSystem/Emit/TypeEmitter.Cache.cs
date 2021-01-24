@@ -24,7 +24,7 @@ namespace Aqua.TypeSystem.Emit
                 _hash = new Lazy<int>(_properties.GetCollectionHashCode);
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (obj is null)
                 {
@@ -81,7 +81,7 @@ namespace Aqua.TypeSystem.Emit
 
             public string TypeFullName { get; private set; }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (obj is null)
                 {

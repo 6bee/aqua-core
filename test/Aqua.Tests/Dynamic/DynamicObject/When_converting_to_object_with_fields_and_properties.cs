@@ -25,6 +25,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             public string RedundantValue => StringValue;
         }
 
+        private const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;
         private const int Int32Value = 11;
         private const double DoubleValue = 12.3456789;
         private const string StringValue1 = "Foo";
@@ -94,13 +95,9 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         }
 
         private object GetFieldValue(string propertyName)
-        {
-            return typeof(CustomType).GetField(propertyName, BindingFlags.NonPublic | BindingFlags.Instance).GetValue(obj);
-        }
+            => typeof(CustomType).GetField(propertyName, PrivateInstance).GetValue(obj);
 
         private object GetPropertyValue(string propertyName)
-        {
-            return typeof(CustomType).GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Instance).GetValue(obj);
-        }
+            => typeof(CustomType).GetProperty(propertyName, PrivateInstance).GetValue(obj);
     }
 }

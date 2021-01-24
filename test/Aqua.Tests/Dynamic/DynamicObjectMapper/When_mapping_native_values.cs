@@ -16,11 +16,13 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             public T Value { get; set; }
         }
 
+        private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
+
         private static readonly MethodInfo MapAsValueMethod =
-            typeof(When_mapping_native_values).GetMethod(nameof(MapAsValue), BindingFlags.Static | BindingFlags.NonPublic);
+            typeof(When_mapping_native_values).GetMethod(nameof(MapAsValue), PrivateStatic);
 
         private static readonly MethodInfo MapAsPropertyMethod =
-            typeof(When_mapping_native_values).GetMethod(nameof(MapAsProperty), BindingFlags.Static | BindingFlags.NonPublic);
+            typeof(When_mapping_native_values).GetMethod(nameof(MapAsProperty), PrivateStatic);
 
         [Theory]
         [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]

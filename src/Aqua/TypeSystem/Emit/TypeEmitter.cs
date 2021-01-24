@@ -52,6 +52,9 @@ namespace Aqua.TypeSystem.Emit
             }
         }
 
+        private readonly ConstructorInfo _emittedTypeAttributeConstructorInfo = typeof(EmittedTypeAttribute).GetConstructor(Type.EmptyTypes) !;
+        private readonly ConstructorInfo _compilerGeneratedAttributeConstructorInfo = typeof(CompilerGeneratedAttribute).GetConstructor(Type.EmptyTypes) !;
+        private readonly ConstructorInfo _objectConstructorInfo = typeof(object).GetConstructor(Type.EmptyTypes) !;
         private readonly TypeCache _typeCache;
         private readonly AssemblyBuilder _assemblyBuilder;
         private readonly ModuleBuilder _module;
@@ -74,7 +77,7 @@ namespace Aqua.TypeSystem.Emit
                 _assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             }
 
-            _module = _assemblyBuilder.DefineDynamicModule(assemblyName.Name);
+            _module = _assemblyBuilder.DefineDynamicModule(assemblyName.Name!);
         }
 
         public Type EmitType(TypeInfo type)
@@ -135,8 +138,8 @@ namespace Aqua.TypeSystem.Emit
             // define type
             var type = _module.DefineType(fullName, TypeAttributes.Public | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.Sealed, typeof(object));
 
-            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(EmittedTypeAttribute).GetConstructor(Array.Empty<Type>()), Array.Empty<object>()));
-            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(CompilerGeneratedAttribute).GetConstructor(Array.Empty<Type>()), Array.Empty<object>()));
+            type.SetCustomAttribute(new CustomAttributeBuilder(_emittedTypeAttributeConstructorInfo, Array.Empty<object>()));
+            type.SetCustomAttribute(new CustomAttributeBuilder(_compilerGeneratedAttributeConstructorInfo, Array.Empty<object>()));
 
             // define fields
             var fields = propertyInfos
@@ -145,10 +148,9 @@ namespace Aqua.TypeSystem.Emit
 
             // define default constructor
             var constructor = type.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, null);
-            var objectCtor = typeof(object).GetConstructor(Type.EmptyTypes);
             var il = constructor.GetILGenerator();
             il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Call, objectCtor);
+            il.Emit(OpCodes.Call, _objectConstructorInfo);
             il.Emit(OpCodes.Ret);
 
             // define properties
@@ -191,8 +193,8 @@ namespace Aqua.TypeSystem.Emit
             // define type
             var type = _module.DefineType(fullName, TypeAttributes.Public | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.Sealed, typeof(object));
 
-            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(EmittedTypeAttribute).GetConstructor(Array.Empty<Type>()), Array.Empty<object>()));
-            type.SetCustomAttribute(new CustomAttributeBuilder(typeof(CompilerGeneratedAttribute).GetConstructor(Array.Empty<Type>()), Array.Empty<object>()));
+            type.SetCustomAttribute(new CustomAttributeBuilder(_emittedTypeAttributeConstructorInfo, Array.Empty<object>()));
+            type.SetCustomAttribute(new CustomAttributeBuilder(_compilerGeneratedAttributeConstructorInfo, Array.Empty<object>()));
 
             // define generic parameters
             var genericTypeParameterNames = propertyNames.Select((x, i) => $"T{i}").ToArray();
@@ -208,10 +210,9 @@ namespace Aqua.TypeSystem.Emit
 
             // define constructor
             var constructor = type.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard, genericTypeParameters.Cast<Type>().ToArray());
-            var objectCtor = typeof(object).GetConstructor(Type.EmptyTypes);
             var il = constructor.GetILGenerator();
             il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Call, objectCtor);
+            il.Emit(OpCodes.Call, _objectConstructorInfo);
             for (int i = 0; i < fields.Length; i++)
             {
                 il.Emit(OpCodes.Ldarg_0);

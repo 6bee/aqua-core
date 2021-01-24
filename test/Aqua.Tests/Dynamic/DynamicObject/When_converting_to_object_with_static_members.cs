@@ -48,6 +48,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 #pragma warning restore CS0414 // CS0414: The field is assigned but its value is never used
         }
 
+        private const BindingFlags Any = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
+
         private readonly CustomType obj;
 
         public When_converting_to_object_with_static_members()
@@ -118,12 +120,12 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         private object GetPropertyValue(string propertyName)
             => typeof(CustomType)
-                .GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+                .GetProperty(propertyName, Any)
                 .GetValue(obj);
 
         private object GetFieldValue(string propertyName)
             => typeof(CustomType)
-                .GetField(propertyName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+                .GetField(propertyName, Any)
                 .GetValue(obj);
     }
 }

@@ -20,6 +20,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             private string StringValue { get; set; }
         }
 
+        private const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;
         private const int Int32Value = 11;
         private const double DoubleValue = 12.3456789;
         private const string StringValue = "eleven";
@@ -66,8 +67,6 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         }
 
         private object GetPropertyValue(string propertyName)
-        {
-            return typeof(SerializableType).GetProperty(propertyName, BindingFlags.NonPublic | BindingFlags.Instance).GetValue(obj);
-        }
+            => typeof(SerializableType).GetProperty(propertyName, PrivateInstance).GetValue(obj);
     }
 }

@@ -10,6 +10,10 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
     public class When_created_based_on_typesystem
     {
+        private const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;
+        private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
+        private const BindingFlags PublicStatic = BindingFlags.Public | BindingFlags.Static;
+
         private static int _privateStaticField = 0;
         public static int PublicStaticField = 0;
 
@@ -35,7 +39,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_map_private_method_info()
         {
-            var m = GetType().GetMethod(nameof(PrivateMethod), BindingFlags.NonPublic | BindingFlags.Instance);
+            var m = GetType().GetMethod(nameof(PrivateMethod), PrivateInstance);
             var o = new DynamicObject(m);
             var r = new DynamicObjectMapper().Map<MethodInfo>(o);
             r.ShouldBeSameAs(m);
@@ -53,7 +57,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_map_private_static_method_info()
         {
-            var m = GetType().GetMethod(nameof(PrivateStaticMethod), BindingFlags.NonPublic | BindingFlags.Static);
+            var m = GetType().GetMethod(nameof(PrivateStaticMethod), PrivateStatic);
             var o = new DynamicObject(m);
             var r = new DynamicObjectMapper().Map<MethodInfo>(o);
             r.ShouldBeSameAs(m);
@@ -80,7 +84,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_map_private_property_info()
         {
-            var property = GetType().GetProperty(nameof(PrivateProperty), BindingFlags.NonPublic | BindingFlags.Instance);
+            var property = GetType().GetProperty(nameof(PrivateProperty), PrivateInstance);
             var o = new DynamicObject(property);
             var r = new DynamicObjectMapper().Map<PropertyInfo>(o);
             r.ShouldBeSameAs(property);
@@ -98,7 +102,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_map_private_static_property_info()
         {
-            var property = GetType().GetProperty(nameof(PrivateStaticProperty), BindingFlags.NonPublic | BindingFlags.Static);
+            var property = GetType().GetProperty(nameof(PrivateStaticProperty), PrivateStatic);
             var o = new DynamicObject(property);
             var r = new DynamicObjectMapper().Map<PropertyInfo>(o);
             r.ShouldBeSameAs(property);
@@ -107,7 +111,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_map_private_field_info()
         {
-            var field = GetType().GetField(nameof(_privateField), BindingFlags.NonPublic | BindingFlags.Instance);
+            var field = GetType().GetField(nameof(_privateField), PrivateInstance);
             var o = new DynamicObject(field);
             var r = new DynamicObjectMapper().Map<FieldInfo>(o);
             r.ShouldBeSameAs(field);
@@ -125,7 +129,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_map_private_static_field_info()
         {
-            var field = GetType().GetField(nameof(_privateStaticField), BindingFlags.NonPublic | BindingFlags.Static);
+            var field = GetType().GetField(nameof(_privateStaticField), PrivateStatic);
             var o = new DynamicObject(field);
             var r = new DynamicObjectMapper().Map<FieldInfo>(o);
             r.ShouldBeSameAs(field);
@@ -134,7 +138,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_map_public_static_field_info()
         {
-            var field = GetType().GetField(nameof(PublicStaticField), BindingFlags.Public | BindingFlags.Static);
+            var field = GetType().GetField(nameof(PublicStaticField), PublicStatic);
             var o = new DynamicObject(field);
             var r = new DynamicObjectMapper().Map<FieldInfo>(o);
             r.ShouldBeSameAs(field);
