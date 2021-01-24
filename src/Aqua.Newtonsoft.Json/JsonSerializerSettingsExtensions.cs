@@ -15,7 +15,28 @@ namespace Aqua
         /// Sets the <see cref="AquaContractResolver"/> in <see cref="JsonSerializerSettings"/>,
         /// decorating a previousely set <see cref="IContractResolver"/> if required.
         /// </summary>
-        public static AquaJsonSerializerSettings ConfigureAqua(this JsonSerializerSettings jsonSerializerSettings)
-            => new AquaJsonSerializerSettings(jsonSerializerSettings);
+        public static T ConfigureAqua<T>(this T settings, KnownTypesRegistry? knownTypesRegistry = null)
+            where T : JsonSerializerSettings
+        {
+            settings.CheckNotNull(nameof(settings));
+            knownTypesRegistry ??= new KnownTypesRegistry();
+
+            settings.TypeNameHandling = TypeNameHandling.None;
+            if (settings.ContractResolver is not AquaContractResolver)
+            {
+                settings.ContractResolver = new AquaContractResolver(knownTypesRegistry, settings.ContractResolver);
+            }
+
+            return settings;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="AquaJsonSerializerSettings"/> class, based on the <see cref="JsonSerializerSettings"/> specified.
+        /// </summary>
+        public static AquaJsonSerializerSettings CreateAquaConfiguration(this JsonSerializerSettings settings, KnownTypesRegistry? knownTypesRegistry = null)
+        {
+            var aquaSettings = new AquaJsonSerializerSettings(settings, knownTypesRegistry);
+            return aquaSettings.ConfigureAqua(aquaSettings.KnownTypesRegistry);
+        }
     }
 }

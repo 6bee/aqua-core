@@ -16,15 +16,15 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
         private readonly KnownTypesRegistry _knownTypes;
         private readonly IContractResolver? _decorated;
 
-        public AquaContractResolver(IContractResolver? decorated = null, KnownTypesRegistry? knownTypes = null)
+        public AquaContractResolver(KnownTypesRegistry knownTypes, IContractResolver? decorated = null)
         {
             if (decorated is AquaContractResolver self)
             {
                 decorated = self._decorated;
             }
 
+            _knownTypes = knownTypes.CheckNotNull(nameof(knownTypes));
             _decorated = decorated?.GetType() == typeof(DefaultContractResolver) ? null : decorated;
-            _knownTypes = knownTypes ?? new KnownTypesRegistry();
         }
 
         public override JsonContract ResolveContract(Type type)
