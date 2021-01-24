@@ -53,6 +53,7 @@ namespace Aqua.Newtonsoft.Json
                 {
                     Type t when t == typeof(TypeInfo) => "type",
                     Type t when t == typeof(DynamicObject) => "dynamic",
+                    Type t when t.Assembly == typeof(DynamicObject).Assembly => x.Name,
                     _ => x.Name.ToLowerInvariant(),
                 };
 
@@ -77,14 +78,14 @@ namespace Aqua.Newtonsoft.Json
         }
 
         /// <summary>
-        /// Registers specified <see cref="Type"/> as known type, unless <typeparamref name="T"/> or <paramref name="typeKey"/> have already been registered.
+        /// Register specified <see cref="Type"/> as known type, unless <typeparamref name="T"/> or <paramref name="typeKey"/> have already been registered.
         /// </summary>
         /// <returns><see langword="true"/> is type was successfully registered,
         /// <see langword="false"/> if either <typeparamref name="T"/> or <paramref name="typeKey"/> are already registered.</returns>
         public bool TryRegister<T>(string? typeKey = null) => TryRegister(typeof(T), typeKey);
 
         /// <summary>
-        /// Registers specified <see cref="Type"/> as known type, unless <paramref name="type"/> or <paramref name="typeKey"/> have already been registered.
+        /// Register specified <see cref="Type"/> as known type, unless <paramref name="type"/> or <paramref name="typeKey"/> have already been registered.
         /// </summary>
         /// <returns><see langword="true"/> is type was successfully registered,
         /// <see langword="false"/> if either <paramref name="type"/> or <paramref name="typeKey"/> are already registered.</returns>

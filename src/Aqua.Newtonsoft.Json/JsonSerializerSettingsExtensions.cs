@@ -16,20 +16,6 @@ namespace Aqua
         /// decorating a previousely set <see cref="IContractResolver"/> if required.
         /// </summary>
         public static AquaJsonSerializerSettings ConfigureAqua(this JsonSerializerSettings jsonSerializerSettings)
-        {
-            var knownTypesRegistry = new KnownTypesRegistry();
-
-            var aquaJsonSerializerSettings = new AquaJsonSerializerSettings(jsonSerializerSettings.CheckNotNull(nameof(jsonSerializerSettings)), knownTypesRegistry)
-            {
-                TypeNameHandling = TypeNameHandling.None,
-            };
-
-            if (aquaJsonSerializerSettings.ContractResolver?.GetType() != typeof(AquaContractResolver))
-            {
-                aquaJsonSerializerSettings.ContractResolver = new AquaContractResolver(aquaJsonSerializerSettings.ContractResolver, knownTypesRegistry);
-            }
-
-            return aquaJsonSerializerSettings;
-        }
+            => new AquaJsonSerializerSettings(jsonSerializerSettings);
     }
 }
