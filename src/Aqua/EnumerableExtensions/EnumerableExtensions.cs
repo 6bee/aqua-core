@@ -173,7 +173,7 @@ namespace Aqua.EnumerableExtensions
         /// </summary>
         public static bool IsCollection(this object? obj, [NotNullWhen(true)] out IEnumerable? enumerable)
         {
-            if (obj is IEnumerable x && !(obj is string))
+            if (obj is IEnumerable x && obj is not string)
             {
                 enumerable = x;
                 return true;
