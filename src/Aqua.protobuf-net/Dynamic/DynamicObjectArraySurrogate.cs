@@ -39,6 +39,8 @@ namespace Aqua.ProtoBuf.Dynamic
 #pragma warning restore SA1011 // Closing square brackets should be spaced correctly
             => surrogate is null
             ? null
+            : surrogate.Collection is null
+            ? Array.Empty<DynamicObject>()
             : surrogate.Collection.Select(DynamicObjectSurrogate.Convert).ToArray();
     }
 }
