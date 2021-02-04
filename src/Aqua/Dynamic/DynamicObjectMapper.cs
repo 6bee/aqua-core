@@ -646,8 +646,7 @@ namespace Aqua.Dynamic
 
             if (obj.IsCollection(out var collection))
             {
-                var elementType = TypeHelper.GetElementType(resultType)
-                    ?? throw new DynamicObjectMapperException($"Failed to resolve element type of '{resultType}'");
+                var elementType = TypeHelper.GetElementType(resultType);
 
                 var items = collection
                     .Cast<object>()
@@ -748,7 +747,7 @@ namespace Aqua.Dynamic
                     .ToArray();
 
                 var elementType = TypeHelper.GetElementType(type);
-                if (elementType is not null && elementType != typeof(object))
+                if (elementType != typeof(object))
                 {
                     if (elementType.IsEnum() || (_settings.FormatNativeTypesAsString && _isNativeType(elementType)))
                     {

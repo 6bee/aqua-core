@@ -2,6 +2,7 @@
 
 namespace Aqua
 {
+    using Aqua.EnumerableExtensions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -152,6 +153,6 @@ namespace Aqua
 
         private static MethodInfo GetMethod(Type type, string name, Type[] types)
             => type.GetMethod(name, types)
-            ?? throw new InvalidOperationException($"Type {type} does not declare public instance method '{name}({string.Join(", ", types.AsEnumerable())})'");
+            ?? throw new InvalidOperationException($"Type {type} does not declare public instance method '{name}({types.StringJoin(", ")})'");
     }
 }

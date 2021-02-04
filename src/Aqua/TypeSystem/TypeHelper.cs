@@ -19,7 +19,8 @@ namespace Aqua.TypeSystem
         /// Returns the element type of the collection type specified, except for typeof(string).
         /// </summary>
         /// <param name="type">The collection type.</param>
-        /// <returns>Null if string or not collection type, the element type otherwise.</returns>
+        /// <returns>Collection element type if <paramref name="type"/> is a collection type. If <paramref name="type"/> is a non-collection or string type, <paramref name="type"/> is returned.</returns>
+        [return: NotNullIfNotNull("type")]
         public static Type? GetElementType(Type? type)
         {
             if (type is null)
@@ -29,16 +30,16 @@ namespace Aqua.TypeSystem
 
             if (type.IsArray)
             {
-                return type.GetElementType();
+                return type.GetElementType() !;
             }
 
             var enumerableType = FindIEnumerable(type);
-            if (enumerableType is null)
+            if (enumerableType is not null)
             {
-                return type;
+                return enumerableType.GetGenericArguments().First();
             }
 
-            return enumerableType.GetGenericArguments().First();
+            return type;
         }
 
         private static Type? FindIEnumerable(Type? type)
