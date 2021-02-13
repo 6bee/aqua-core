@@ -967,8 +967,6 @@ namespace Aqua.Dynamic
             }
             else
             {
-                // `IsNull` property was checked before to verify `Properties` is not null.
-                var dynamicProperties = obj.Properties!.ToList();
                 var constructor = targetType.GetConstructors()
                     .Select(i =>
                     {
@@ -981,7 +979,7 @@ namespace Aqua.Dynamic
                                 .Select(parameter => new
                                 {
                                     Info = parameter,
-                                    Property = dynamicProperties
+                                    Property = obj.Properties?
                                         .Where(dynamicProperty => string.Equals(dynamicProperty.Name, parameter.Name, StringComparison.OrdinalIgnoreCase))
                                         .Select(dynamicProperty => new { dynamicProperty.Name, Value = MapFromDynamicObjectGraph(dynamicProperty.Value, parameter.ParameterType) })
                                         .SingleOrDefault(dynamicProperty => IsAssignable(parameter.ParameterType, dynamicProperty.Value)),

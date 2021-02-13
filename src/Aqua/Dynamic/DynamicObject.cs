@@ -13,7 +13,7 @@ namespace Aqua.Dynamic
 
     [Serializable]
     [DataContract(IsReference = true)]
-    [DebuggerDisplay("Count = {PropertyCount}")]
+    [DebuggerDisplay("{GetDebuggerDisplay(),nq}")]
     [KnownType(typeof(DynamicObject[])), XmlInclude(typeof(DynamicObject[]))]
     public partial class DynamicObject
     {
@@ -105,8 +105,10 @@ namespace Aqua.Dynamic
             var type = dynamicObject.CheckNotNull(nameof(dynamicObject)).Type;
             Type = type is null ? null : new TypeInfo(type);
 
-            var properties = dynamicObject.Properties ?? throw new ArgumentException($"Dynamic object must not have {nameof(Properties)} set to null.", nameof(dynamicObject));
-            Properties = deepCopy
+            var properties = dynamicObject.Properties;
+            Properties = properties is null
+                ? null
+                : deepCopy
                 ? new PropertySet(properties.Select(x => new Property(x)))
                 : new PropertySet(properties);
         }
@@ -227,19 +229,13 @@ namespace Aqua.Dynamic
         public bool Remove(string name)
         {
             var properties = Properties;
-            if (properties is null)
+            if (TryGetProperty(properties, name, out var property))
             {
-                return false;
+                properties!.Remove(property);
+                return true;
             }
 
-            var property = properties.SingleOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
-            if (property is null)
-            {
-                return false;
-            }
-
-            properties.Remove(property);
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -251,27 +247,20 @@ namespace Aqua.Dynamic
         /// <returns><see langword="true"/> is the dynamic object contains a member with the specified name; otherwise <see langword="false"/>.</returns>
         public bool TryGet(string name, out object? value)
         {
-            if (name is null)
+            if (TryGetProperty(Properties, name.CheckNotNull(nameof(name)), out var property))
             {
-                throw new ArgumentNullException(nameof(name));
+                value = property.Value;
+                return true;
             }
 
-            var properties = Properties;
-            if (properties is null)
-            {
-                value = null;
-                return false;
-            }
+            value = null;
+            return false;
+        }
 
-            var property = properties.SingleOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
-            if (property is null)
-            {
-                value = null;
-                return false;
-            }
-
-            value = property.Value;
-            return true;
+        private static bool TryGetProperty(PropertySet? properties, string name, [NotNullWhen(true)] out Property? property)
+        {
+            property = properties?.SingleOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
+            return property is not null;
         }
 
         private PropertySet GetOrCreatePropertSet()
@@ -284,5 +273,21 @@ namespace Aqua.Dynamic
         /// <param name="mapper">Optional instance of dynamic object mapper.</param>
         public static DynamicObject Create(object obj, IDynamicObjectMapper? mapper = null)
             => (mapper ?? new DynamicObjectMapper()).MapObject(obj);
+
+        private string GetDebuggerDisplay()
+        {
+            if (IsNull)
+            {
+                return $"default({Type})";
+            }
+
+            var type = default(string);
+            if (Type is TypeInfo t)
+            {
+                return $"{t}: ";
+            }
+
+            return $"{type}Count = {PropertyCount}";
+        }
     }
 }

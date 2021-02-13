@@ -11,7 +11,7 @@ namespace Aqua.Dynamic
 
     /// <summary>
     /// A set of properties where property names are considered as set keys.
-    /// However, since <see cref="Property" /> is not immutable a <see cref="PropertySet"/> may technically not be considered set
+    /// However, since <see cref="Property" /> is not immutable a <see cref="PropertySet"/> may technically not be considered a set
     /// and does not guarantee uniqueness of property names.
     /// </summary>
     [Serializable]
