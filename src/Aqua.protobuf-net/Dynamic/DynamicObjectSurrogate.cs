@@ -49,8 +49,8 @@ namespace Aqua.ProtoBuf.Dynamic
         private static PropertySet Unwrap(Dictionary<string, Value?> properties)
             => new PropertySet(properties.Select(x => new Property(x.Key, x.Value?.ObjectValue)));
 
-        private static Dictionary<string, Value?> Map(DynamicObject source)
-            => source.Properties.ToDictionary(
+        private static Dictionary<string, Value?>? Map(DynamicObject source)
+            => source.Properties?.ToDictionary(
                 x => x.Name,
                 x => WrapValue(x.Value, source.IsSingleValueWrapper() ? source.Type : null));
 

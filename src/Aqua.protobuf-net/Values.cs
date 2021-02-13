@@ -14,6 +14,6 @@ namespace Aqua.ProtoBuf
         public static Values? Wrap(IEnumerable? sequence, Type elementType)
             => sequence is null
             ? null
-            : (Values)Activator.CreateInstance(typeof(Values<>).MakeGenericType(elementType), new object?[] { sequence });
+            : (Values)Activator.CreateInstance(typeof(Values<>).MakeGenericType(elementType), new object?[] { sequence }) !;
     }
 }

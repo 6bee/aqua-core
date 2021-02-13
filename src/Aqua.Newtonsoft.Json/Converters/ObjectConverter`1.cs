@@ -18,7 +18,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public Func<string, Type?>? DefaultTypeResolver { get; set; }
 
-        public Func<Type, T>? DefaultObjectFactory { get; set; }
+        public Func<Type, T?>? DefaultObjectFactory { get; set; }
 
         public override bool CanConvert(Type objectType) => typeof(T).IsAssignableFrom(objectType);
 
@@ -159,8 +159,8 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         protected virtual Type? ResolveType(string typeName) => (DefaultTypeResolver ?? JsonConverterHelper.ResolveTypeName)(typeName);
 
-        protected virtual T CreateObject(Type type) => (DefaultObjectFactory ?? FallbackObjectFactory)(type);
+        protected virtual T? CreateObject(Type type) => (DefaultObjectFactory ?? FallbackObjectFactory)(type);
 
-        private static T FallbackObjectFactory(Type type) => (T)Activator.CreateInstance(type);
+        private static T? FallbackObjectFactory(Type type) => (T?)Activator.CreateInstance(type);
     }
 }

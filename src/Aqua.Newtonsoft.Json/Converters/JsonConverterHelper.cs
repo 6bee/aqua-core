@@ -208,7 +208,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             return exists;
         }
 
-        public static Type ResolveTypeName(string typeName)
+        public static Type? ResolveTypeName(string typeName)
         {
             if (string.IsNullOrWhiteSpace(typeName))
             {

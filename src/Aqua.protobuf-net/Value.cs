@@ -29,6 +29,6 @@ namespace Aqua.ProtoBuf
             ? v
             : value.IsCollection(out var collection)
             ? Values.Wrap(collection, TypeHelper.GetElementType(type) ?? TypeHelper.GetElementType(collection.GetType()))
-            : (Value)Activator.CreateInstance(typeof(Value<>).MakeGenericType(value.GetType()), new object[] { value });
+            : (Value)Activator.CreateInstance(typeof(Value<>).MakeGenericType(value.GetType()), new object[] { value }) !;
     }
 }
