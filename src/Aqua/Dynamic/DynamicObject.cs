@@ -85,7 +85,7 @@ namespace Aqua.Dynamic
         /// <param name="type">Optional type information to be stored. If this argument is <see langword="null"/>, The value's type is stored instead.</param>
         /// <param name="mapper">Optional instance of dynamic object mapper.</param>
         /// <exception cref="ArgumentNullException">The specified object is <see langword="null"/>.</exception>
-        public DynamicObject(object obj, Type? type = null, IDynamicObjectMapper? mapper = null)
+        public DynamicObject(object? obj, Type? type = null, IDynamicObjectMapper? mapper = null)
         {
             var dynamicObject = (mapper ?? new DynamicObjectMapper()).MapObject(obj);
             Type = type is null
