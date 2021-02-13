@@ -44,6 +44,8 @@ namespace Aqua.ProtoBuf.Dynamic
         public static DynamicObject? Convert(DynamicObjectSurrogate? surrogate)
             => surrogate is null
             ? null
+            : surrogate.Properties is null
+            ? new DynamicObject(surrogate.Type) { IsNull = true }
             : new DynamicObject(surrogate.Type, Unwrap(surrogate.Properties!));
 
         private static PropertySet Unwrap(Dictionary<string, Value?> properties)
