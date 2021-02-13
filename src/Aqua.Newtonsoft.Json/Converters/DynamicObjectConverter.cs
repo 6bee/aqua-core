@@ -238,7 +238,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         private static bool TryGetWrappedValue(PropertySet? propertySet, out object? value)
         {
-            if (propertySet?.Count() == 1)
+            if (propertySet?.Count == 1)
             {
                 var p = propertySet.First();
                 if (string.IsNullOrEmpty(p.Name) && p.Value is not null)

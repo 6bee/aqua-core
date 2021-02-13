@@ -10,13 +10,13 @@ namespace Aqua.Dynamic
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// A sorted collection of properties where property names are considered as set keys.
+    /// A set of properties where property names are considered as set keys.
     /// However, since <see cref="Property" /> is not immutable a <see cref="PropertySet"/> may technically not be considered set
     /// and does not guarantee uniqueness of property names.
     /// </summary>
     [Serializable]
     [CollectionDataContract]
-    public class PropertySet : IEnumerable<Property>
+    public class PropertySet : IReadOnlyCollection<Property>
     {
         [Serializable]
         private sealed class PropertyComparer : IEqualityComparer<Property>
