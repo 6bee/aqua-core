@@ -200,6 +200,9 @@ namespace Aqua.Dynamic
                 typeof(System.Numerics.BigInteger),
                 typeof(System.Numerics.Complex),
                 typeof(byte[]),
+#if NET5_0
+                typeof(Half),
+#endif // NET5_0
             }
             .SelectMany(x => x.IsValueType ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
             .ToHashSet().Contains;
@@ -407,6 +410,24 @@ namespace Aqua.Dynamic
                         },
                     }
                 },
+#if NET5_0
+                {
+                    typeof(Half), new Dictionary<Type, Func<object, object>>
+                    {
+                        { typeof(sbyte), x => checked((sbyte)(Half)x) },
+                        { typeof(byte), x => checked((byte)(Half)x) },
+                        { typeof(short), x => checked((short)(Half)x) },
+                        { typeof(ushort), x => checked((ushort)(Half)x) },
+                        { typeof(int), x => checked((int)(Half)x) },
+                        { typeof(uint), x => checked((uint)(Half)x) },
+                        { typeof(long), x => checked((long)(Half)x) },
+                        { typeof(ulong), x => checked((ulong)(Half)x) },
+                        { typeof(char), x => checked((char)(Half)x) },
+                        { typeof(float), x => checked((float)(Half)x) },
+                        { typeof(double), x => checked((double)(Half)x) },
+                    }
+                },
+#endif // NET5
             };
 
         private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper).GetMethod(nameof(ToDictionary), PrivateStatic) !;
@@ -1140,6 +1161,13 @@ namespace Aqua.Dynamic
                 return Convert.FromBase64String(value);
             }
 
+#if NET5_0
+            if (targetType == typeof(Half))
+            {
+                return Half.Parse(value, CultureInfo.InvariantCulture);
+            }
+#endif // NET5_0
+
             throw new DynamicObjectMapperException(new NotImplementedException($"string parser for type {targetType} is not implemented"));
         }
 
@@ -1301,6 +1329,13 @@ namespace Aqua.Dynamic
             {
                 return Convert.ToBase64String((byte[])obj);
             }
+
+#if NET5_0
+            if (type == typeof(Half))
+            {
+                return ((Half)obj).ToString(CultureInfo.InvariantCulture);
+            }
+#endif // NET5_0
 
             return obj.ToString() ?? string.Empty;
         }

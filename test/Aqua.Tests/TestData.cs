@@ -106,6 +106,12 @@ namespace Aqua.Tests
                 new Complex(-87654, 234),
                 new Complex(double.MinValue, double.MinValue),
                 new Complex(double.MaxValue, double.MaxValue),
+#if NET5_0
+                Half.MaxValue,
+                Half.Epsilon,
+                (Half)0f,
+                (Half).1f,
+#endif // NET5_0
                 (TestEnum)(-1),
                 TestEnum.Foo,
                 TestEnum.Bar,
