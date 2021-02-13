@@ -4,6 +4,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 {
     using Aqua.Dynamic;
     using Shouldly;
+    using System;
     using System.Linq;
     using Xunit;
 
@@ -117,6 +118,21 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             array[0].ShouldBeOfType<DynamicObject>();
             array[1].ShouldBeNull();
             array[2].ShouldBeOfType<DynamicObject>();
+        }
+
+        [Fact]
+        public void Map_null_to_nullable_valuetype_should_return_null()
+        {
+            int? result = new DynamicObjectMapper().Map<int?>(null);
+
+            result.ShouldBeNull();
+            result.HasValue.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Map_null_to_valuetype_should_throw()
+        {
+            Should.Throw<NullReferenceException>(() => _ = new DynamicObjectMapper().Map<int>(null));
         }
     }
 }

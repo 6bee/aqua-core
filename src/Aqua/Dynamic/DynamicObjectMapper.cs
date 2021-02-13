@@ -483,7 +483,7 @@ namespace Aqua.Dynamic
         /// <typeparam name="T">The target type in which the <see cref="DynamicObject"/> have to be mapped to.</typeparam>
         /// <param name="obj"><see cref="DynamicObject"/> to be mapped.</param>
         /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
-        public T? Map<T>(DynamicObject obj) => (T?)Map(obj, typeof(T));
+        public T Map<T>(DynamicObject? obj) => (T)Map(obj, typeof(T)) !;
 
         /// <summary>
         /// Maps a collection of objects into a collection of <see cref="DynamicObject"/>.
