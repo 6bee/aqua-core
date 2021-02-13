@@ -89,6 +89,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
 
+#if NET5_0
+            Skip.If(type.Is<Half>(), "Half type serialization is not supported.");
+#endif // NET5_0
             Skip.If(this.TestIs<XmlSerializer>(), "XmlSerializer has limited type support.");
 
             using var cultureContext = culture.CreateContext();
@@ -126,7 +129,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
-
+#if NET5_0
+            Skip.If(type.Is<Half>(), "Half type serialization is not supported.");
+#endif // NET5_0
             Skip.If(this.TestIs<XmlSerializer>(), "XmlSerializer has limited type support.");
 
             using var cultureContext = culture.CreateContext();

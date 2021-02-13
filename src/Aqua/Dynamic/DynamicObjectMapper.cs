@@ -431,6 +431,7 @@ namespace Aqua.Dynamic
             };
 
         private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper).GetMethod(nameof(ToDictionary), PrivateStatic) !;
+        private static readonly MethodInfo GetDefaultValueMethodInfo = typeof(DynamicObjectMapper).GetMethod(nameof(GetDefaultValue), PrivateStatic) !;
 
         private readonly DynamicObjectMapperSettings _settings;
         private readonly FromContext _fromContext;
@@ -629,6 +630,11 @@ namespace Aqua.Dynamic
                 if (resultType is null)
                 {
                     return dynamicObj;
+                }
+
+                if (dynamicObj.IsNull)
+                {
+                    return GetDefault(resultType);
                 }
 
                 if (resultType.IsAssignableFrom(typeof(DynamicObject)) && resultType != typeof(object))
@@ -961,7 +967,8 @@ namespace Aqua.Dynamic
             }
             else
             {
-                var dynamicProperties = obj.Properties.ToList();
+                // `IsNull` property was checked before to verify `Properties` is not null.
+                var dynamicProperties = obj.Properties!.ToList();
                 var constructor = targetType.GetConstructors()
                     .Select(i =>
                     {
@@ -1203,6 +1210,14 @@ namespace Aqua.Dynamic
         private static object ToDictionary<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> items)
             where TKey : notnull
             => items.ToDictionary(x => x.Key, x => x.Value);
+
+        private static object? GetDefault(Type type)
+            => GetDefaultValueMethodInfo
+            .MakeGenericMethod(type)
+            .Invoke(null, null);
+
+        private static object? GetDefaultValue<T>()
+            => default(T);
 
         private static bool IsAssignable(Type targetType, object? value)
         {

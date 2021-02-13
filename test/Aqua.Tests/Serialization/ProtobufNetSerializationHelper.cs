@@ -25,6 +25,9 @@ namespace Aqua.Tests.Serialization
             Skip.If(
                 type.IsCollection() && ((IEnumerable)value).Cast<object>().Any(x => x is null),
                 "protobuf-net doesn't support serialization of collection with null elements as the root object");
+#if NET5_0
+            Skip.If(type.Is<Half>(), "Half type serialization is not supported.");
+#endif // NET5_0
         }
     }
 }

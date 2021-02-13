@@ -30,17 +30,9 @@ namespace Aqua.Dynamic
         /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified type.
         /// </summary>
         /// <param name="type">The type to be set.</param>
-        public DynamicObject(Type? type)
-            : this(type is null ? null : new TypeInfo(type, false, false), default)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified type.
-        /// </summary>
-        /// <param name="type">The type to be set.</param>
-        public DynamicObject(TypeInfo? type)
-            : this(type, default)
+        /// <param name="propertySet">The property set representing this dynamic object's state.</param>
+        public DynamicObject(Type? type, PropertySet? propertySet = null)
+            : this(type is null ? null : new TypeInfo(type, false, false), propertySet)
         {
         }
 
@@ -49,8 +41,8 @@ namespace Aqua.Dynamic
         /// setting the specified <see cref="TypeInfo"/> and <see cref="PropertySet"/>.
         /// </summary>
         /// <param name="type">The type to be set.</param>
-        /// <param name="propertySet">The property set.</param>
-        public DynamicObject(TypeInfo? type, PropertySet? propertySet)
+        /// <param name="propertySet">The property set representing this dynamic object's state.</param>
+        public DynamicObject(TypeInfo? type, PropertySet? propertySet = null)
         {
             Type = type;
             Properties = propertySet ?? new PropertySet();
@@ -100,7 +92,7 @@ namespace Aqua.Dynamic
             Type = type is null
                 ? dynamicObject?.Type
                 : new TypeInfo(type, false, false);
-            Properties = dynamicObject?.Properties ?? new PropertySet();
+            Properties = dynamicObject?.Properties;
         }
 
         /// <summary>
@@ -130,8 +122,25 @@ namespace Aqua.Dynamic
         [DataMember(Order = 1)]
         public TypeInfo? Type { get; set; }
 
+        /// <summary>
+        /// Gets or sets the data members of this dynamic object instance.<br/>
+        /// This property may be <see langword="null"/> for the dynamic object represent a <see langword="default"/> value.
+        /// </summary>
         [DataMember(Order = 2)]
-        public PropertySet Properties { get; set; } = null!;
+        public PropertySet? Properties { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether target instance is <see langword="null"/>.
+        /// </summary>
+        /// <remarks>
+        /// Returns <see langword="true"/> if <see cref="Properties"/> has not been set, <see langword="false"/> otherwise.
+        /// </remarks>
+        [XmlIgnore]
+        public bool IsNull
+        {
+            get => Properties is null;
+            init => Properties = null;
+        }
 
         /// <summary>
         /// Gets the count of members (dynamically added properties) hold by this dynamic object.
@@ -263,7 +272,7 @@ namespace Aqua.Dynamic
                 return false;
             }
 
-            var property = Properties.SingleOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
+            var property = properties.SingleOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
             if (property is null)
             {
                 value = null;
