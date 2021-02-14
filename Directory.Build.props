@@ -62,6 +62,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="aqua.tool.Nullable" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.Validation" Version="1.0.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" Condition="'$(EnableStyleCopAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
