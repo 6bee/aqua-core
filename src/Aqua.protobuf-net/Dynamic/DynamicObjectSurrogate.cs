@@ -45,8 +45,8 @@ namespace Aqua.ProtoBuf.Dynamic
             => surrogate is null
             ? null
             : surrogate.Properties is null
-            ? new DynamicObject(surrogate.Type) { IsNull = true }
-            : new DynamicObject(surrogate.Type, Unwrap(surrogate.Properties!));
+                ? new DynamicObject(surrogate.Type) { IsNull = true }
+                : new DynamicObject(surrogate.Type, Unwrap(surrogate.Properties!));
 
         private static PropertySet Unwrap(Dictionary<string, Value?> properties)
             => new PropertySet(properties.Select(x => new Property(x.Key, x.Value?.ObjectValue)));
