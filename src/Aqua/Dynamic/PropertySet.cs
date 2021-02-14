@@ -5,6 +5,7 @@ namespace Aqua.Dynamic
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -48,14 +49,17 @@ namespace Aqua.Dynamic
         }
 
         public PropertySet(IEnumerable<KeyValuePair<string, object?>> properties)
-            : this(properties?.Select(x => new Property(x)).ToList() !)
+            : this(properties?.Select(Property.From) !)
+        {
+        }
+
+        public PropertySet(IEnumerable<(string name, object? value)> properties)
+            : this(properties?.Select(x => new Property(x.name, x.value)) !)
         {
         }
 
         private PropertySet(List<Property> properties)
-        {
-            _list = properties.CheckNotNull(nameof(properties));
-        }
+            => _list = properties.CheckNotNull(nameof(properties));
 
         public int Count => _list.Count;
 
@@ -126,13 +130,15 @@ namespace Aqua.Dynamic
         public static implicit operator Dictionary<string, object?>(PropertySet propertySet)
             => propertySet.CheckNotNull(nameof(propertySet)).ToDictionary();
 
-        public static implicit operator PropertySet(Dictionary<string, object?> dictionary)
-            => ToPropertySet(dictionary);
-
         public Dictionary<string, object?> ToDictionary()
             => _list.ToDictionary(x => x.Name ?? string.Empty, x => x.Value);
 
+        public static PropertySet From(Dictionary<string, object?> dictionary)
+            => new PropertySet(dictionary.CheckNotNull(nameof(dictionary)));
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Method was renamed to 'From'", true)]
         public static PropertySet ToPropertySet(Dictionary<string, object?> dictionary)
-            => new PropertySet(dictionary.CheckNotNull(nameof(dictionary)).Select(x => (Property)x));
+            => From(dictionary);
     }
 }

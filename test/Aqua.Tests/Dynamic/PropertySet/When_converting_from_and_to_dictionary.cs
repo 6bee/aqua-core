@@ -37,7 +37,7 @@ namespace Aqua.Tests.Dynamic.PropertySet
                 { "P3", null },
             };
 
-            PropertySet propertySet = dictionary;
+            var propertySet = PropertySet.From(dictionary);
 
             propertySet.Count.ShouldBe(3);
             propertySet["P1"].ShouldBe(1);

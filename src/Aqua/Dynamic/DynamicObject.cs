@@ -50,17 +50,18 @@ namespace Aqua.Dynamic
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified members.
         /// </summary>
-        /// <param name="properties">Initial collection of properties and values.</param>
+        /// <param name="properties">Initial collection of properties and their values.</param>
         /// <exception cref="ArgumentNullException">The specified members collection is <see langword="null"/>.</exception>
         public DynamicObject(IEnumerable<KeyValuePair<string, object?>> properties)
-        {
-            if (properties is null)
-            {
-                throw new ArgumentNullException(nameof(properties));
-            }
+            => Properties = new PropertySet(properties.CheckNotNull(nameof(properties)).Select(Property.From));
 
-            Properties = new PropertySet(properties.Select(x => new Property(x)));
-        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified members.
+        /// </summary>
+        /// <param name="properties">Initial collection of properties and their values.</param>
+        /// <exception cref="ArgumentNullException">The specified members collection is <see langword="null"/>.</exception>
+        public DynamicObject(IEnumerable<(string name, object? value)> properties)
+            => Properties = new PropertySet(properties.CheckNotNull(nameof(properties)));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified members.
@@ -68,14 +69,7 @@ namespace Aqua.Dynamic
         /// <param name="properties">Initial collection of properties and values.</param>
         /// <exception cref="ArgumentNullException">The specified members collection is <see langword="null"/>.</exception>
         public DynamicObject(IEnumerable<Property> properties)
-        {
-            if (properties is null)
-            {
-                throw new ArgumentNullException(nameof(properties));
-            }
-
-            Properties = new PropertySet(properties);
-        }
+            => Properties = new PropertySet(properties.CheckNotNull(nameof(properties)));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObject"/> class,
