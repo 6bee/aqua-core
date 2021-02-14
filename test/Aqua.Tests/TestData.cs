@@ -57,29 +57,7 @@ namespace Aqua.Tests
             Bar,
         }
 
-        public static IEnumerable<object[]> Types => new Type[]
-            {
-                typeof(byte),
-                typeof(int),
-                typeof(ulong),
-                typeof(string),
-                typeof(DateTime),
-                typeof(TestEnum),
-                new { Text = string.Empty, Timestamp = default(DateTime?) }.GetType(),
-            }
-            .SelectMany(x => new[]
-            {
-                x,
-                x.IsClass ? x : typeof(Nullable<>).MakeGenericType(x),
-            })
-            .SelectMany(x => new[]
-            {
-                x,
-                typeof(List<>).MakeGenericType(x),
-                x.MakeArrayType(),
-            })
-            .Distinct()
-            .Select(x => new[] { x });
+        private const BindingFlags PublicStatic = BindingFlags.Static | BindingFlags.Public;
 
         private static IEnumerable<(Type Type, object Value, CultureInfo Culture)> GenerateTestValueSet() => new object[]
             {
@@ -176,6 +154,12 @@ namespace Aqua.Tests
                 },
                 (x, c) => (x.Type, x.Value, c));
 
+        public static IEnumerable<object[]> TestTypes
+            => GenerateTestValueSet()
+            .Select(x => x.Type)
+            .Distinct()
+            .Select(x => new[] { x });
+
         public static IEnumerable<object[]> TestValues
             => GenerateTestValueSet()
             .Select(x => new object[] { x.Type, x.Value, x.Culture });
@@ -200,20 +184,20 @@ namespace Aqua.Tests
 
         private static object CreateArray(Type type, object item)
         {
-            var toArrayMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToArray), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
+            var toArrayMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToArray), PublicStatic).MakeGenericMethod(type);
             return toArrayMethod.Invoke(null, new[] { CreateEnumerable(type, item) });
         }
 
         private static object CreateList(Type type, object item)
         {
-            var toListMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
+            var toListMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.ToList), PublicStatic).MakeGenericMethod(type);
             return toListMethod.Invoke(null, new[] { CreateEnumerable(type, item) });
         }
 
         private static object CreateEnumerable(Type type, object item)
         {
             var array = new[] { item, item }.AsEnumerable();
-            var castMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(type);
+            var castMethod = typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), PublicStatic).MakeGenericMethod(type);
             return castMethod.Invoke(null, new object[] { array });
         }
     }

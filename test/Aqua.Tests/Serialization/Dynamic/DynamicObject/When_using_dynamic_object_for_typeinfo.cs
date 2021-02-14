@@ -63,12 +63,10 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         private readonly Func<DynamicObject, DynamicObject> _serialize;
 
         protected When_using_dynamic_object_for_typeinfo(Func<DynamicObject, DynamicObject> serialize)
-        {
-            _serialize = serialize;
-        }
+            => _serialize = serialize;
 
         [Theory]
-        [MemberData(nameof(TestData.Types), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestTypes), MemberType = typeof(TestData))]
         public void Should_map_type_to_dynamic_object_and_back(Type type)
         {
             var settings = new DynamicObjectMapperSettings { PassthroughAquaTypeSystemTypes = false };

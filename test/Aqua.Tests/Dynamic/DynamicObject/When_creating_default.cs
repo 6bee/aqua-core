@@ -14,7 +14,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         private static readonly MethodInfo _createDefaultMethodInfo = typeof(When_creating_default).GetMethod(nameof(CreateDefault), PrivateStatic);
 
         [Theory]
-        [MemberData(nameof(TestData.Types), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestTypes), MemberType = typeof(TestData))]
         public void Should_have_isnull_true(Type type)
         {
             var dynamicObject = DynamicObject.CreateDefault(type);
@@ -23,7 +23,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         }
 
         [Theory]
-        [MemberData(nameof(TestData.Types), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestTypes), MemberType = typeof(TestData))]
         public void Mapper_should_procude_expected_default(Type type)
         {
             var dynamicObject = DynamicObject.CreateDefault(type);
