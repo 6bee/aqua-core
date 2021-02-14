@@ -274,6 +274,20 @@ namespace Aqua.Dynamic
         public static DynamicObject Create(object obj, IDynamicObjectMapper? mapper = null)
             => (mapper ?? new DynamicObjectMapper()).MapObject(obj);
 
+        /// <summary>
+        /// Creates a dynamic objects representing the type's default value.
+        /// </summary>
+        /// <param name="type">The type to be set on the dynamic object for the default value to be represented.</param>
+        public static DynamicObject CreateDefault(Type? type)
+            => new DynamicObject(type) { IsNull = true };
+
+        /// <summary>
+        /// Creates a dynamic objects representing the type's default value.
+        /// </summary>
+        /// <param name="type">The type to be set on the dynamic object for the default value to be represented.</param>
+        public static DynamicObject CreateDefault(TypeInfo? type)
+            => new DynamicObject(type) { IsNull = true };
+
         private string GetDebuggerDisplay()
         {
             if (IsNull)
