@@ -22,7 +22,7 @@ namespace Aqua.Tests.ProtoBuf
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
         public void Should_serialize_scalar_property(Type type, object value, CultureInfo culture)
         {
             SkipUnsupportedDataType(type, value);
@@ -39,8 +39,8 @@ namespace Aqua.Tests.ProtoBuf
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_collection_property(Type type, object value, CultureInfo culture)
         {
             SkipUnsupportedDataType(type, value);
@@ -78,9 +78,9 @@ namespace Aqua.Tests.ProtoBuf
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_property_set(Type type, object value, CultureInfo culture)
         {
             SkipUnsupportedDataType(type, value);
@@ -101,7 +101,7 @@ namespace Aqua.Tests.ProtoBuf
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
         public void Should_serialize_dynamic_object(Type type, object value, CultureInfo culture)
         {
             SkipUnsupportedDataType(type, value);
@@ -118,8 +118,8 @@ namespace Aqua.Tests.ProtoBuf
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_dynamic_object_collection(Type type, IEnumerable value, CultureInfo culture)
         {
             SkipUnsupportedDataType(type, value);

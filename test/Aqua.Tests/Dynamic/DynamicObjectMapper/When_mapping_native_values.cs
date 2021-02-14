@@ -25,9 +25,9 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             typeof(When_mapping_native_values).GetMethod(nameof(MapAsProperty), PrivateStatic);
 
         [Theory]
-        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_map_native_value(Type type, object value, CultureInfo culture)
         {
             using var cultureContext = culture.CreateContext();
@@ -52,9 +52,9 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         }
 
         [Theory]
-        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_map_native_value_property(Type type, object value, CultureInfo culture)
         {
             using var cultureContext = culture.CreateContext();

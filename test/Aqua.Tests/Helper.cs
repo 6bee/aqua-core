@@ -28,6 +28,10 @@ namespace Aqua.Tests
             || typeof(ICollection<T>).IsAssignableFrom(type)
             || typeof(ICollection<T?>).IsAssignableFrom(type);
 
+        public static bool IsNotPublic(this Type type)
+            => type.IsNotPublic
+            || TypeHelper.GetElementType(type).IsNotPublic;
+
         public static bool IsEnum(this Type type)
         {
             if (type.IsEnum)

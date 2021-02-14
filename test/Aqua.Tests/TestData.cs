@@ -12,6 +12,45 @@ namespace Aqua.Tests
 
     public static class TestData
     {
+#pragma warning disable S1135 // Track uses of "TODO" tags
+
+        // TODO: Extend test data set with custom types
+#pragma warning restore S1135 // Track uses of "TODO" tags
+        public class GenericReferenceType<T>
+        {
+            public T Value { get; set; }
+        }
+
+        public class ReferenceType
+        {
+            public string Value { get; set; }
+        }
+
+        public sealed class ImmutableReferenceType
+        {
+            public string Value { get; init; }
+        }
+
+        public struct ValueType
+        {
+            public string Value { get; set; }
+        }
+
+        public readonly struct ImmutableValueType
+        {
+            public string Value { get; init; }
+        }
+
+        public record RecordType
+        {
+            public string Value { get; set; }
+        }
+
+        public sealed record ImmutableRecordType
+        {
+            public string Value { get; init; }
+        }
+
         public enum TestEnum
         {
             Foo,
@@ -115,6 +154,12 @@ namespace Aqua.Tests
                 (TestEnum)(-1),
                 TestEnum.Foo,
                 TestEnum.Bar,
+                new { Text = string.Empty, Timestamp = default(DateTime?) },
+#pragma warning disable S1135 // Track uses of "TODO" tags
+
+                // TODO: consider support for custom tuples
+                // (Name: "NegativePi", Value: -Math.PI),
+#pragma warning restore S1135 // Track uses of "TODO" tags
             }
             .SelectMany(x => new (Type Type, object Value)[]
             {
@@ -131,11 +176,11 @@ namespace Aqua.Tests
                 },
                 (x, c) => (x.Type, x.Value, c));
 
-        public static IEnumerable<object[]> NativeValues
+        public static IEnumerable<object[]> TestValues
             => GenerateTestValueSet()
             .Select(x => new object[] { x.Type, x.Value, x.Culture });
 
-        public static IEnumerable<object[]> NativeValueArrays
+        public static IEnumerable<object[]> TestValueArrays
             => GenerateTestValueSet()
             .Select(x => new[]
             {
@@ -144,7 +189,7 @@ namespace Aqua.Tests
                 x.Culture,
             });
 
-        public static IEnumerable<object[]> NativeValueLists
+        public static IEnumerable<object[]> TestValueLists
             => GenerateTestValueSet()
             .Select(x => new[]
             {

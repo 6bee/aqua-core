@@ -19,14 +19,15 @@ namespace Aqua.Tests.Serialization
 
         public static void SkipUnsupportedDataType(Type type, object value)
         {
-            Skip.If(type.Is<DateTimeOffset>(), "Data type not supported by out-of-the-box protobuf-net");
-            Skip.If(type.Is<BigInteger>(), "Data type not supported by out-of-the-box protobuf-net");
-            Skip.If(type.Is<Complex>(), "Data type not supported by out-of-the-box protobuf-net");
+            Skip.If(type.Is<DateTimeOffset>(), $"{type} not supported by out-of-the-box protobuf-net");
+            Skip.If(type.Is<BigInteger>(), $"{type} not supported by out-of-the-box protobuf-net");
+            Skip.If(type.Is<Complex>(), $"{type} not supported by out-of-the-box protobuf-net");
+            Skip.If(type.IsNotPublic(), $"Not-public {type} not supported protobuf-net");
             Skip.If(
                 type.IsCollection() && ((IEnumerable)value).Cast<object>().Any(x => x is null),
                 "protobuf-net doesn't support serialization of collection with null elements as the root object");
 #if NET5_0
-            Skip.If(type.Is<Half>(), "Half type serialization is not supported.");
+            Skip.If(type.Is<Half>(), $"{type} serialization is not supported.");
 #endif // NET5_0
         }
     }

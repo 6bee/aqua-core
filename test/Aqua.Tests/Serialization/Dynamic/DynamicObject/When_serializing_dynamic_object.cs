@@ -79,9 +79,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value(Type type, object value, CultureInfo culture)
         {
             if (this.TestIs<ProtobufNetSerializer>())
@@ -101,9 +101,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value_when_using_string_formatting(Type type, object value, CultureInfo culture)
         {
             if (this.TestIs<ProtobufNetSerializer>())
@@ -120,9 +120,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property(Type type, object value, CultureInfo culture)
         {
             if (this.TestIs<ProtobufNetSerializer>())
@@ -141,9 +141,9 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         [SkippableTheory]
-        [MemberData(nameof(TestData.NativeValues), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueArrays), MemberType = typeof(TestData))]
-        [MemberData(nameof(TestData.NativeValueLists), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
+        [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property_when_using_string_formatting(Type type, object value, CultureInfo culture)
         {
             Skip.If(this.TestIs<XmlSerializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
