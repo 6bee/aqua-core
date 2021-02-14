@@ -293,10 +293,10 @@ namespace Aqua.Dynamic
             var type = default(string);
             if (Type is TypeInfo t)
             {
-                return $"{t}: ";
+                type = $"{t} ";
             }
 
-            return $"{type}Count = {PropertyCount}";
+            return $"{type}[Count = {PropertyCount}]";
         }
     }
 }
