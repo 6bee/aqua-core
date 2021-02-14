@@ -44,7 +44,7 @@ namespace Aqua.TypeExtensions
             .Where(p => p.CanWrite && p.GetIndexParameters().Length == 0);
 
         /// <summary>
-        /// Returns <see langword="true" /> if the given <see cref="Type"/> is either a reference type or a <see cref="Nullable{T}"/> value type.
+        /// Returns <see langword="true"/> if the given <see cref="Type"/> is either a reference type or a <see cref="Nullable{T}"/> value type.
         /// </summary>
         public static bool IsNullableType(this Type type)
             => type.IsClass
@@ -93,7 +93,7 @@ namespace Aqua.TypeExtensions
         }
 
         /// <summary>
-        /// Returns <see langword="true" /> if the given <see cref="Type"/> is considered an anonymous type.
+        /// Returns <see langword="true"/> if the given <see cref="Type"/> is considered an anonymous type.
         /// </summary>
         public static bool IsAnonymousType(this Type type)
             => (type.CheckNotNull(nameof(type)).Name.Contains("AnonymousType", StringComparison.Ordinal)
@@ -106,7 +106,7 @@ namespace Aqua.TypeExtensions
 #endif // NETSTANDARD2_0
 
         /// <summary>
-        /// Returns <see langword="true" /> if the given <see cref="Type"/> is a dynamically emitted type.
+        /// Returns <see langword="true"/> if the given <see cref="Type"/> is a dynamically emitted type.
         /// </summary>
         public static bool IsEmittedType(this Type type) => type.IsDefined<EmittedTypeAttribute>();
 
@@ -122,7 +122,7 @@ namespace Aqua.TypeExtensions
         }
 
         /// <summary>
-        /// Returns <see langword="true" /> if the give <see cref="Type"/> is assignable to the interface type specified.
+        /// Returns <see langword="true"/> if the give <see cref="Type"/> is assignable to the interface type specified.
         /// </summary>
         /// <param name="type">The type to be examined.</param>
         /// <param name="interfaceType">The actualy type to be checked for.</param>
@@ -130,7 +130,7 @@ namespace Aqua.TypeExtensions
             => type.CheckNotNull(nameof(type)).Implements(interfaceType, new Type[1][]);
 
         /// <summary>
-        /// Returns <see langword="true" /> if the give <see cref="Type"/> is assignable to the interface type specified.
+        /// Returns <see langword="true"/> if the give <see cref="Type"/> is assignable to the interface type specified.
         /// </summary>
         /// <param name="type">The type to be examined.</param>
         /// <param name="interfaceType">The actualy type to be checked for.</param>
@@ -208,7 +208,7 @@ namespace Aqua.TypeExtensions
         }
 
         /// <summary>
-        /// Returns <see langword="true" /> if the give <see cref="Type"/> is an <c>enum</c>.
+        /// Returns <see langword="true"/> if the give <see cref="Type"/> is an <c>enum</c>.
         /// </summary>
         public static bool IsEnum(this Type type)
             => type.CheckNotNull(nameof(type)).AsNonNullableType().IsEnum;

@@ -76,7 +76,7 @@ namespace Aqua.Dynamic
         /// representing the object structure defined by the specified object.
         /// </summary>
         /// <param name="obj">The object to be represented by the new dynamic object.</param>
-        /// <param name="type">Optional type information to be stored. If this argument is <see langword="null"/>, The value's type is stored instead.</param>
+        /// <param name="type">Optional type information to be stored. If this argument is <see langword="null"/>, the value's type is stored instead.</param>
         /// <param name="mapper">Optional instance of dynamic object mapper.</param>
         /// <exception cref="ArgumentNullException">The specified object is <see langword="null"/>.</exception>
         public DynamicObject(object? obj, Type? type = null, IDynamicObjectMapper? mapper = null)
@@ -92,8 +92,9 @@ namespace Aqua.Dynamic
         /// Initializes a new instance of the <see cref="DynamicObject"/> class.
         /// </summary>
         /// <param name="dynamicObject">The instance to copy.</param>
-        /// <param name="deepCopy">If true re-creates <see cref="Property"/> instances, otherwise fills existing <see cref="Property"/> instances into a new <see cref="PropertySet"/>.</param>
-        /// <exception cref="ArgumentNullException">The specified members collection is null.</exception>
+        /// <param name="deepCopy">If <see langword="true"/> re-creates <see cref="Property"/> instances,
+        /// otherwise fills existing <see cref="Property"/> instances into a new <see cref="PropertySet"/>.</param>
+        /// <exception cref="ArgumentNullException">The specified members collection is <see langword="null"/>.</exception>
         internal protected DynamicObject(DynamicObject dynamicObject, bool deepCopy = true)
         {
             var type = dynamicObject.CheckNotNull(nameof(dynamicObject)).Type;
@@ -186,7 +187,7 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Gets a member's value or null if the specified member is unknown.
+        /// Gets a member's value or <see langword="null"/> if the specified member is unknown.
         /// </summary>
         /// <param name="name">Name of the member for the value to be returned.</param>
         /// <returns>The value assigned to the member specified, <see langword="null"/> if member is not set.</returns>

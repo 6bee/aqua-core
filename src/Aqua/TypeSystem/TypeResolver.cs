@@ -30,7 +30,7 @@ namespace Aqua.TypeSystem
         /// </summary>
         /// <remarks>
         /// Setting this property allows for registring a custom type resolver statically.
-        /// Setting this property to null makes it fall-back to the default resolver.
+        /// Setting this property to <see langword="null"/> makes it fall-back to the default resolver.
         /// </remarks>
         [AllowNull]
         public static ITypeResolver Instance

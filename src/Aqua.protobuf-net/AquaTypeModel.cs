@@ -71,7 +71,7 @@ namespace Aqua.ProtoBuf
         /// <typeparam name="T">The <see cref="Type"/> to be configured as dynamic payload.</typeparam>
         /// <param name="addSingleValueSuppoort">Indicated whether the specified <see cref="Type"/> should be supposted as single value.</param>
         /// <param name="addCollectionSupport">Indicated whether the specified <see cref="Type"/> should be supposted as collection.</param>
-        /// <param name="addNullableSupport">Indicates whether protobuf-net should suport null values for the specified <see cref="Type"/>.</param>
+        /// <param name="addNullableSupport">Indicates whether protobuf-net should suport <see langword="null"/> values for the specified <see cref="Type"/>.</param>
         /// <returns>The <see cref="AquaTypeModel"/> under configuration.</returns>
         public AquaTypeModel AddDynamicPropertyType<T>(bool addSingleValueSuppoort = true, bool addCollectionSupport = true, bool addNullableSupport = true)
             => AddDynamicPropertyType(true, typeof(T), addSingleValueSuppoort, addCollectionSupport, addNullableSupport);
@@ -82,7 +82,7 @@ namespace Aqua.ProtoBuf
         /// <param name="propertyType">The <see cref="Type"/> to be configured as dynamic payload.</param>
         /// <param name="addSingleValueSuppoort">Indicated whether the specified <see cref="Type"/> should be supposted as single value.</param>
         /// <param name="addCollectionSupport">Indicated whether the specified <see cref="Type"/> should be supposted as collection.</param>
-        /// <param name="addNullableSupport">Indicates whether protobuf-net should support null values for the specified <see cref="Type"/>.</param>
+        /// <param name="addNullableSupport">Indicates whether protobuf-net should support <see langword="null"/> values for the specified <see cref="Type"/>.</param>
         /// <returns>The <see cref="AquaTypeModel"/> under configuration.</returns>
         public AquaTypeModel AddDynamicPropertyType(Type propertyType, bool addSingleValueSuppoort = true, bool addCollectionSupport = true, bool addNullableSupport = true)
             => AddDynamicPropertyType(true, propertyType, addSingleValueSuppoort, addCollectionSupport, addNullableSupport);

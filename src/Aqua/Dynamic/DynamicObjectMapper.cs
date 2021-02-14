@@ -481,7 +481,7 @@ namespace Aqua.Dynamic
         /// Maps a <see cref="DynamicObject"/> into an instance of the actual type represented by the dynamic object.
         /// </summary>
         /// <param name="obj"><see cref="DynamicObject"/> to be mapped.</param>
-        /// <param name="targetType">Target type for mapping, set this parameter to null if type information included within <see cref="DynamicObject"/> should be used.</param>
+        /// <param name="targetType">Target type for mapping, set this parameter to <see langword="null"/> if type information included within <see cref="DynamicObject"/> should be used.</param>
         /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
         public object? Map(DynamicObject? obj, Type? targetType = null)
         {
@@ -511,7 +511,8 @@ namespace Aqua.Dynamic
         /// Maps a collection of objects into a collection of <see cref="DynamicObject"/>.
         /// </summary>
         /// <param name="objects">The object to be mapped.</param>
-        /// <param name="setTypeInformation">Set this parameter to true if type information should be included within the <see cref="DynamicObject"/>s, set it to false otherwise.</param>
+        /// <param name="setTypeInformation">Set this parameter to <see langword="true"/> if type information should be included within the <see cref="DynamicObject"/>s,
+        /// set it to <see langword="false"/> otherwise.</param>
         /// <returns>A collection of <see cref="DynamicObject"/> representing the objects specified.</returns>
         [return: NotNullIfNotNull("obj")]
         public IEnumerable<DynamicObject?>? MapCollection(object? objects, Func<Type, bool>? setTypeInformation = null)
@@ -547,7 +548,8 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <remarks>Null references and <see cref="DynamicObject"/> are not mapped.</remarks>
         /// <param name="obj">The instance to be mapped.</param>
-        /// <param name="setTypeInformation">Set this parameter to true if type information should be included within the <see cref="DynamicObject"/>, set it to false otherwise.</param>
+        /// <param name="setTypeInformation">Set this parameter to <see langword="true"/> if type information should be included within the <see cref="DynamicObject"/>,
+        /// set it to <see langword="false"/> otherwise.</param>
         /// <returns>An instance of <see cref="DynamicObject"/> representing the mapped instance.</returns>
         [return: NotNullIfNotNull("obj")]
         public DynamicObject? MapObject(object? obj, Func<Type, bool>? setTypeInformation = null)
@@ -568,9 +570,10 @@ namespace Aqua.Dynamic
 
         /// <summary>
         /// When overridden in a derived class, determines whether a collection should be mapped into a single <see cref="DynamicObject"/>,
-        /// rather than into a collection of <see cref="DynamicObject"/>s. Default is false.
+        /// rather than into a collection of <see cref="DynamicObject"/>s. Default is <see langword="false"/>.
         /// </summary>
-        /// <returns>True if the collection should be mapped into a single <see cref="DynamicObject"/>, false if each element should be mapped separately. Default is false.</returns>
+        /// <returns><see langword="true"/> if the collection should be mapped into a single <see cref="DynamicObject"/>,
+        /// <see langword="false"/> if each element should be mapped separately. Default is <see langword="false"/>.</returns>
         protected virtual bool ShouldMapToDynamicObject(IEnumerable collection) => false;
 
         private object? MapFromDynamicObjectIfRequired(object? obj, Type? targetType)
@@ -830,17 +833,17 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Can be overriden in a derived class to return a list of <see cref="PropertyInfo"/> for a given type or null if defaul behaviour should be applied.
+        /// Can be overriden in a derived class to return a list of <see cref="PropertyInfo"/> for a given type or <see langword="null"/> if defaul behaviour should be applied.
         /// </summary>
-        /// <returns>If overriden in a derived class, returns a list of <see cref="PropertyInfo"/> for a given type or null if defaul behaviour should be applied.</returns>
+        /// <returns>If overriden in a derived class, returns a list of <see cref="PropertyInfo"/> for a given type or <see langword="null"/> if defaul behaviour should be applied.</returns>
         [SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null", Justification = "Null has special meaning")]
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:Element parameters should be documented", Justification = "Null has special meaning")]
         protected virtual IEnumerable<PropertyInfo>? GetPropertiesForMapping(Type type) => null;
 
         /// <summary>
-        /// Can be overriden in a derived class to return a list of <see cref="FieldInfo"/> for a given type or null if defaul behaviour should be applied.
+        /// Can be overriden in a derived class to return a list of <see cref="FieldInfo"/> for a given type or <see langword="null"/> if defaul behaviour should be applied.
         /// </summary>
-        /// <returns>If overriden in a derived class, returns a list of <see cref="FieldInfo"/> for a given type or null if defaul behaviour should be applied.</returns>
+        /// <returns>If overriden in a derived class, returns a list of <see cref="FieldInfo"/> for a given type or <see langword="null"/> if defaul behaviour should be applied.</returns>
         [SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null", Justification = "Null has special meaning")]
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:Element parameters should be documented", Justification = "Null has special meaning")]
         protected virtual IEnumerable<FieldInfo>? GetFieldsForMapping(Type type) => null;

@@ -17,7 +17,7 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <param name="objectMapper">The <see cref="IDynamicObjectMapper"/> instance used to map the <see cref="DynamicObject"/>s.</param>
         /// <param name="objects">Collection of <see cref="DynamicObject" /> to be mapped.</param>
-        /// <param name="type">Target type for mapping, set this parameter to null if type information included within individual <see cref="DynamicObject" />s should be used.</param>
+        /// <param name="type">Target type for mapping, set this parameter to <see langword="null"/> if type information included within individual <see cref="DynamicObject" />s should be used.</param>
         /// <returns>Collection of objects created based on the <see cref="DynamicObject" />s specified.</returns>
         public static IEnumerable Map(this IDynamicObjectMapper objectMapper, IEnumerable<DynamicObject?> objects, Type? type = null)
         {

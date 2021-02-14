@@ -37,7 +37,7 @@ namespace Aqua.Dynamic
             => (mapper ?? new DynamicObjectMapper()).Map<T>(dynamicObject);
 
         /// <summary>
-        /// Returns <see langword="true" /> if this <see cref="DynamicObject"/> wraps a single value, <see langword="false" /> otherwise.
+        /// Returns <see langword="true"/> if this <see cref="DynamicObject"/> wraps a single value, <see langword="false"/> otherwise.
         /// </summary>
         public static bool IsSingleValueWrapper(this DynamicObject dynamicObject)
             => dynamicObject.CheckNotNull(nameof(dynamicObject)).PropertyCount == 1

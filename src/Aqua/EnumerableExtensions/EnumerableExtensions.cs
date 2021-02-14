@@ -74,13 +74,13 @@ namespace Aqua.EnumerableExtensions
         /// <summary>
         /// Compares two collections for equality considering the same number of equal elements regardles of the elements sort oders.
         /// </summary>
-        /// <returns>True if the collections are equal, false otherwise.</returns>
+        /// <returns><see langword="true"/> if the collections are equal, <see langword="false"/> otherwise.</returns>
         public static bool CollectionEquals<T>(this IEnumerable<T>? collection1, IEnumerable<T>? collection2) => CollectionEquals(collection1, collection2, null);
 
         /// <summary>
         /// Compares two collections for equality considering the same number of equal elements regardles of the elements sort oders.
         /// </summary>
-        /// <returns>True if the collections are equal, false otherwise.</returns>
+        /// <returns><see langword="true"/> if the collections are equal, <see langword="false"/> otherwise.</returns>
         public static bool CollectionEquals<T>(this IEnumerable<T>? collection1, IEnumerable<T>? collection2, IEqualityComparer<T>? comparer)
         {
             if (collection1 is null && collection2 is null)
@@ -169,7 +169,7 @@ namespace Aqua.EnumerableExtensions
         }
 
         /// <summary>
-        /// Returns true if the object is of type <see cref="IEnumerable"/> but not <see cref="string"/>.
+        /// Returns <see langword="true"/> if the object is of type <see cref="IEnumerable"/> but not <see cref="string"/>.
         /// </summary>
         public static bool IsCollection(this object? obj, [NotNullWhen(true)] out IEnumerable? enumerable)
         {

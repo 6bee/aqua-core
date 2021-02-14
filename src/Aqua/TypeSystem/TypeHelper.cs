@@ -356,7 +356,7 @@ namespace Aqua.TypeSystem
         }
 
         /// <summary>
-        /// Returns null if the condition is not met, otherwise the actual value is returned.
+        /// Returns <see langword="null"/> if the condition is not met, otherwise the actual value is returned.
         /// </summary>
         private static T? If<T>(this T? t, Func<T, bool> predicate)
             where T : class
