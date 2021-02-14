@@ -671,7 +671,15 @@ namespace Aqua.Dynamic
 
             if (_isNativeType(resultType))
             {
-                return obj is string str ? ParseToNativeType(resultType.AsNonNullableType(), str) : obj;
+                if (obj is string str)
+                {
+                    return ParseToNativeType(resultType.AsNonNullableType(), str);
+                }
+
+                if (objectType == resultType)
+                {
+                    return obj;
+                }
             }
 
             if (obj.IsCollection(out var collection))
