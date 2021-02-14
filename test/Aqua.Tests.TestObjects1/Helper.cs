@@ -8,28 +8,18 @@ namespace Aqua.Tests.TestObjects1
     public static class Helper
     {
         public static Type GetAnonymousType0<T1, T2>()
-        {
-            return new { P1 = default(T1), P2 = default(T2) }.GetType();
-        }
+            => new { P1 = default(T1), P2 = default(T2) }.GetType();
 
         public static Type GetAnonymousType1()
-        {
-            return new { Foo = 1 }.GetType();
-        }
+            => new { Foo = 1 }.GetType();
 
         public static Type GetAnonymousTypeXY()
-        {
-            return new { X = 1, Y = 2.0 }.GetType();
-        }
+            => new { X = 1, Y = 2.0 }.GetType();
 
         public static Type GetCustomType0()
-        {
-            return typeof(CustomType0);
-        }
+            => typeof(CustomType0);
 
         public static Type GetCustomType1()
-        {
-            return typeof(CustomType1);
-        }
+            => typeof(CustomType1);
     }
 }
