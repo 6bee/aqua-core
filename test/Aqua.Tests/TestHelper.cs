@@ -7,12 +7,10 @@ namespace Aqua.Tests
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Globalization;
     using System.Linq;
 
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class Helper
+    public static class TestHelper
     {
         public static bool TestIs<T>(this object test)
             where T : class
