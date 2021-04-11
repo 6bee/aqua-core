@@ -13,6 +13,7 @@ namespace Aqua.Dynamic
     [Serializable]
     [DataContract(IsReference = true)]
     [DebuggerDisplay("Count = {PropertyCount}")]
+    [KnownType(typeof(DynamicObject))] // required hint for serializer
     public partial class DynamicObject : INotifyPropertyChanging, INotifyPropertyChanged
     {
         /// <summary>
