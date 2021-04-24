@@ -6,7 +6,6 @@ namespace Aqua.Newtonsoft.Json.Converters
     using global::Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     public static class JsonConverterHelper
@@ -79,9 +78,8 @@ namespace Aqua.Newtonsoft.Json.Converters
             }
         }
 
-        [return: MaybeNull]
-        public static T Read<T>(this JsonReader reader, JsonSerializer serializer)
-            => reader.CheckNotNull(nameof(reader)).TryRead(serializer, out T result)
+        public static T? Read<T>(this JsonReader reader, JsonSerializer serializer)
+            => reader.CheckNotNull(nameof(reader)).TryRead(serializer, out T? result)
             ? result
             : throw reader.CreateException("Unexpected token structure.");
 
@@ -93,7 +91,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             ? result
             : throw reader.CreateException("Unexpected token structure.");
 
-        public static bool TryRead<T>(this JsonReader reader, JsonSerializer serializer, [MaybeNull] out T value)
+        public static bool TryRead<T>(this JsonReader reader, JsonSerializer serializer, out T? value)
         {
             var result = TryRead(reader, typeof(T), serializer, out var v);
             value = result && v is T x ? x : default;

@@ -1006,7 +1006,7 @@ namespace Aqua.Dynamic
                     factory = (t, item) =>
                     {
                         var arguments = constructor.Parameters
-                            .Select(x => x.Property.Value)
+                            .Select(x => x.Property?.Value)
                             .ToArray();
                         var instance = constructor.Info.Invoke(arguments);
                         return instance;

@@ -5,6 +5,7 @@ namespace Aqua.Dynamic
     using Aqua.TypeSystem;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -17,6 +18,8 @@ namespace Aqua.Dynamic
     [KnownType(typeof(DynamicObject[])), XmlInclude(typeof(DynamicObject[]))]
     public partial class DynamicObject
     {
+        private const string ObsoleteConstructor = "This contructor overload will be removed in a future version.";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObject"/> class.
         /// </summary>
@@ -52,24 +55,40 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <param name="properties">Initial collection of properties and their values.</param>
         /// <exception cref="ArgumentNullException">The specified members collection is <see langword="null"/>.</exception>
-        public DynamicObject(IEnumerable<KeyValuePair<string, object?>> properties)
-            => Properties = new PropertySet(properties.CheckNotNull(nameof(properties)).Select(Property.From));
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete(ObsoleteConstructor, false)]
+        public DynamicObject(IEnumerable<KeyValuePair<string, object?>>? properties)
+            => Properties = properties is null
+            ? null
+            : new PropertySet(properties.CheckNotNull(nameof(properties)).Select(Property.From));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified members.
         /// </summary>
         /// <param name="properties">Initial collection of properties and their values.</param>
         /// <exception cref="ArgumentNullException">The specified members collection is <see langword="null"/>.</exception>
-        public DynamicObject(IEnumerable<(string name, object? value)> properties)
-            => Properties = new PropertySet(properties.CheckNotNull(nameof(properties)));
+        public DynamicObject(IEnumerable<(string name, object? value)>? properties)
+            => Properties = properties is null
+            ? null
+            : new PropertySet(properties.CheckNotNull(nameof(properties)));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified members.
         /// </summary>
         /// <param name="properties">Initial collection of properties and values.</param>
         /// <exception cref="ArgumentNullException">The specified members collection is <see langword="null"/>.</exception>
-        public DynamicObject(IEnumerable<Property> properties)
-            => Properties = new PropertySet(properties.CheckNotNull(nameof(properties)));
+        public DynamicObject(IEnumerable<Property>? properties)
+            => Properties = properties is null
+            ? null
+            : new PropertySet(properties.CheckNotNull(nameof(properties)));
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DynamicObject"/> class with the given <see cref="PropertySet"/>.
+        /// </summary>
+        /// <param name="propertySet">Initial collection of properties and values.</param>
+        /// <exception cref="ArgumentNullException">The specified members collection is <see langword="null"/>.</exception>
+        public DynamicObject(PropertySet? propertySet)
+            => Properties = propertySet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObject"/> class,
@@ -104,8 +123,8 @@ namespace Aqua.Dynamic
             Properties = properties is null
                 ? null
                 : deepCopy
-                ? new PropertySet(properties.Select(x => new Property(x)))
-                : new PropertySet(properties);
+                    ? new PropertySet(properties.Select(x => new Property(x)))
+                    : new PropertySet(properties);
         }
 
         /// <summary>
@@ -200,12 +219,10 @@ namespace Aqua.Dynamic
         /// Gets a member's value or <c>default(T)</c> if the specified member is <see langword="null"/> or unknown.
         /// </summary>
         /// <returns>The value assigned to the member specified, <c>default(T)</c> if member is <see langword="null"/> or not set.</returns>
-        [return: MaybeNull]
-        public T Get<T>(string name = "")
-        {
-            var value = Get(name);
-            return value is T t ? t : default;
-        }
+        public T? Get<T>(string name = "")
+            => Get(name) is T t
+                ? t
+                : default;
 
         /// <summary>
         /// Adds a property and it's value.
