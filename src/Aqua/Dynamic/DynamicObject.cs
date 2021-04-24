@@ -15,7 +15,7 @@ namespace Aqua.Dynamic
     [Serializable]
     [DataContract(IsReference = true)]
     [DebuggerDisplay("{GetDebuggerDisplay(),nq}")]
-    [KnownType(typeof(DynamicObject))] // required hint for serializer
+    [KnownType(typeof(DynamicObject)), XmlInclude(typeof(DynamicObject))]
     [KnownType(typeof(DynamicObject[])), XmlInclude(typeof(DynamicObject[]))]
     public partial class DynamicObject
     {
