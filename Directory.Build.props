@@ -3,8 +3,8 @@
   <PropertyGroup>
     <MajorVersion>4</MajorVersion>
     <MinorVersion>6</MinorVersion>
-    <PatchVersion>4</PatchVersion>
-    <PreReleaseLabel></PreReleaseLabel>
+    <PatchVersion>5</PatchVersion>
+    <PreReleaseLabel>beta-001</PreReleaseLabel>
   </PropertyGroup>
 
   <PropertyGroup>

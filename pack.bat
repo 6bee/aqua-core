@@ -1,5 +1,5 @@
 @echo off
-set configuration=Release
+set configuration=Debug
 clean ^
   && dotnet restore ^
   && dotnet build src\Aqua                                            --configuration %configuration% ^
