@@ -466,12 +466,12 @@ namespace Aqua.Dynamic
 
             _fromContext = new FromContext();
 
-            _toContext = new ToContext(typeMapper is null ? default(Func<Type, Type>) : typeMapper.MapType);
+            _toContext = new ToContext(typeMapper is null ? default : typeMapper.MapType);
 
             _typeResolver = typeResolver ?? TypeResolver.Instance;
 
             _isKnownType = isKnownTypeProvider is null
-                ? (Func<Type, bool>)(t => false)
+                ? _ => false
                 : isKnownTypeProvider.IsKnownType;
 
             _createDynamicObject = (dynamicObjectFactory ?? new InternalDynamicObjectFactory(null)).CreateDynamicObject;
