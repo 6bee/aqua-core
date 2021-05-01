@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Description>VB.Net Tests for aqua-core</Description>
     <RootNamespace>Aqua.Tests</RootNamespace>
-    <TargetFrameworks>net48;net5.0;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net48;net5.0</TargetFrameworks>
     <ProjectType>VB_NET</ProjectType>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
