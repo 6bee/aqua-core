@@ -6,6 +6,10 @@ namespace Aqua.Dynamic
 
     public interface IIsKnownTypeProvider
     {
+        /// <summary>
+        /// Returns a boolean value indicating whether the type specified is known.
+        /// </summary>
+        /// <param name="type">The type to be examined.</param>
         bool IsKnownType(Type type);
     }
 }

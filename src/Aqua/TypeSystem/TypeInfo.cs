@@ -41,48 +41,51 @@ namespace Aqua.TypeSystem
 
         internal TypeInfo(Type type, TypeInfoProvider typeInfoProvider)
         {
-            typeInfoProvider.RegisterReference(type, this);
-
-            _type = type;
-
-            Name = type.Name;
-
-            Namespace = type.Namespace;
-
-            if (type.IsArray)
+            lock (typeInfoProvider.SyncRoot)
             {
-                if (!IsArray)
+                typeInfoProvider.RegisterReference(type, this);
+
+                _type = type;
+
+                Name = type.Name;
+
+                Namespace = type.Namespace;
+
+                if (type.IsArray)
                 {
-                    throw new ArgumentException("Type name is not in expected format for array type");
+                    if (!IsArray)
+                    {
+                        throw new ArgumentException("Type name is not in expected format for array type");
+                    }
+
+                    type = type.GetElementType() !;
                 }
 
-                type = type.GetElementType() !;
-            }
+                if (type.IsNested && !type.IsGenericParameter)
+                {
+                    DeclaringType = typeInfoProvider.GetTypeInfo(type.DeclaringType, false, false);
+                }
 
-            if (type.IsNested && !type.IsGenericParameter)
-            {
-                DeclaringType = typeInfoProvider.GetTypeInfo(type.DeclaringType, false, false);
-            }
+                IsGenericType = type.IsGenericType;
 
-            IsGenericType = type.IsGenericType;
+                if (IsGenericType && !type.GetTypeInfo().IsGenericTypeDefinition)
+                {
+                    GenericArguments = type
+                        .GetGenericArguments()
+                        .Select(x => typeInfoProvider.GetTypeInfo(x))
+                        .ToList();
+                }
 
-            if (IsGenericType && !type.GetTypeInfo().IsGenericTypeDefinition)
-            {
-                GenericArguments = type
-                    .GetGenericArguments()
-                    .Select(x => typeInfoProvider.GetTypeInfo(x))
-                    .ToList();
-            }
+                IsAnonymousType = type.IsAnonymousType();
 
-            IsAnonymousType = type.IsAnonymousType();
-
-            if (IsAnonymousType || typeInfoProvider.IncludePropertyInfos)
-            {
-                Properties = type
-                    .GetProperties()
-                    .OrderBy(x => x.MetadataToken)
-                    .Select(x => new PropertyInfo(x.Name, typeInfoProvider.GetTypeInfo(x.PropertyType), typeInfoProvider.SetMemberDeclaringTypes ? this : null))
-                    .ToList();
+                if (IsAnonymousType || typeInfoProvider.IncludePropertyInfos)
+                {
+                    Properties = type
+                        .GetProperties()
+                        .OrderBy(x => x.MetadataToken)
+                        .Select(x => new PropertyInfo(x.Name, typeInfoProvider.GetTypeInfo(x.PropertyType), typeInfoProvider.SetMemberDeclaringTypes ? this : null))
+                        .ToList();
+                }
             }
         }
 
@@ -93,16 +96,19 @@ namespace Aqua.TypeSystem
 
         internal TypeInfo(TypeInfo typeInfo, TypeInfoProvider typeInfoProvider)
         {
-            typeInfoProvider.RegisterReference(typeInfo, this);
+            lock (typeInfoProvider.SyncRoot)
+            {
+                typeInfoProvider.RegisterReference(typeInfo, this);
 
-            Name = typeInfo.Name;
-            Namespace = typeInfo.Namespace;
-            DeclaringType = typeInfo.DeclaringType is null ? null : typeInfoProvider.Get(typeInfo.DeclaringType);
-            GenericArguments = typeInfo.GenericArguments?.Select(x => typeInfoProvider.Get(x)).ToList();
-            IsGenericType = typeInfo.IsGenericType;
-            IsAnonymousType = typeInfo.IsAnonymousType;
-            Properties = typeInfo.Properties?.Select(x => new PropertyInfo(x, typeInfoProvider)).ToList();
-            _type = typeInfo._type;
+                Name = typeInfo.Name;
+                Namespace = typeInfo.Namespace;
+                DeclaringType = typeInfo.DeclaringType is null ? null : typeInfoProvider.Get(typeInfo.DeclaringType);
+                GenericArguments = typeInfo.GenericArguments?.Select(x => typeInfoProvider.Get(x)).ToList();
+                IsGenericType = typeInfo.IsGenericType;
+                IsAnonymousType = typeInfo.IsAnonymousType;
+                Properties = typeInfo.Properties?.Select(x => new PropertyInfo(x, typeInfoProvider)).ToList();
+                _type = typeInfo._type;
+            }
         }
 
         [DataMember(Order = 1, EmitDefaultValue = false)]

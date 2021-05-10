@@ -13,6 +13,8 @@ namespace Aqua.TypeSystem
         private readonly Dictionary<TypeInfo, TypeInfo> _typeInfoReferenceTracker;
         private readonly ITypeInfoProvider? _parent;
 
+        public object SyncRoot => this;
+
         public TypeInfoProvider(bool includePropertyInfos = false, bool setMemberDeclaringTypes = false)
             : this(includePropertyInfos, setMemberDeclaringTypes, null, null)
         {
@@ -55,36 +57,44 @@ namespace Aqua.TypeSystem
                 return null;
             }
 
-            if (_referenceTracker.TryGetValue(type, out var typeInfo))
+            lock (SyncRoot)
             {
-                return typeInfo;
-            }
+                if (_referenceTracker.TryGetValue(type, out var typeInfo))
+                {
+                    return typeInfo;
+                }
 
-            if (_parent is not null)
-            {
-                return _parent.GetTypeInfo(type, includePropertyInfos, setMemberDeclaringTypes);
-            }
+                if (_parent is not null)
+                {
+                    return _parent.GetTypeInfo(type, includePropertyInfos, setMemberDeclaringTypes);
+                }
 
-            var context = this;
-            if ((includePropertyInfos.HasValue && includePropertyInfos != IncludePropertyInfos) ||
-                (setMemberDeclaringTypes.HasValue && setMemberDeclaringTypes != SetMemberDeclaringTypes))
-            {
-                context = new TypeInfoProvider(
-                    includePropertyInfos ?? IncludePropertyInfos,
-                    setMemberDeclaringTypes ?? SetMemberDeclaringTypes,
-                    this);
-            }
+                var context = this;
+                if ((includePropertyInfos.HasValue && includePropertyInfos != IncludePropertyInfos) ||
+                    (setMemberDeclaringTypes.HasValue && setMemberDeclaringTypes != SetMemberDeclaringTypes))
+                {
+                    context = new TypeInfoProvider(
+                        includePropertyInfos ?? IncludePropertyInfos,
+                        setMemberDeclaringTypes ?? SetMemberDeclaringTypes,
+                        this);
+                }
 
-            return new TypeInfo(type, context);
+                return new TypeInfo(type, context);
+            }
         }
 
         [return: NotNullIfNotNull("type")]
         internal TypeInfo? Get(TypeInfo? type)
-            => type is null
-            ? null
-            : _typeInfoReferenceTracker.TryGetValue(type, out var typeInfo)
-            ? typeInfo
-            : new TypeInfo(type, this);
+        {
+            lock (SyncRoot)
+            {
+                return type is null
+                    ? null
+                    : _typeInfoReferenceTracker.TryGetValue(type, out var typeInfo)
+                    ? typeInfo
+                    : new TypeInfo(type, this);
+            }
+        }
 
         private static Dictionary<T, TypeInfo> CreateReferenceTracker<T>()
             where T : notnull

@@ -123,7 +123,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Map_null_to_nullable_valuetype_should_return_null()
         {
-            int? result = new DynamicObjectMapper().Map<int?>(null);
+            int? result = new DynamicObjectMapper().Map<int?>((DynamicObject)null);
 
             result.ShouldBeNull();
             result.HasValue.ShouldBeFalse();
@@ -132,7 +132,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Map_null_to_valuetype_should_throw()
         {
-            Should.Throw<NullReferenceException>(() => _ = new DynamicObjectMapper().Map<int>(null));
+            Should.Throw<NullReferenceException>(() => _ = new DynamicObjectMapper().Map<int>((DynamicObject)null));
         }
     }
 }

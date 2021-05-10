@@ -81,12 +81,11 @@ namespace Aqua.Dynamic
         private sealed class ToContext : IMappingContext
         {
             private readonly Func<Type, Type> _dynamicObjectTypeInfoMapper;
-
             private readonly Dictionary<object, DynamicObject> _referenceMap;
 
-            public ToContext(Func<Type, Type>? dynamicObjectTypeMapper = null)
+            public ToContext(ITypeMapper? typeMapper)
             {
-                _dynamicObjectTypeInfoMapper = dynamicObjectTypeMapper ?? (t => t);
+                _dynamicObjectTypeInfoMapper = typeMapper is null ? (t => t) : typeMapper.MapType;
                 _referenceMap = new Dictionary<object, DynamicObject>(ReferenceEqualityComparer<object>.Default);
             }
 
@@ -129,10 +128,14 @@ namespace Aqua.Dynamic
         private sealed class FromContext : IMappingContext
         {
             private readonly Dictionary<ReferenceMapKey, object> _referenceMap;
+            private readonly HashSet<Type> _safeTypes;
+            private readonly ITypeSafetyChecker? _typeSafetyChecker;
 
-            public FromContext()
+            public FromContext(ITypeSafetyChecker? typeSafetyChecker)
             {
                 _referenceMap = new Dictionary<ReferenceMapKey, object>();
+                _safeTypes = new HashSet<Type>();
+                _typeSafetyChecker = typeSafetyChecker;
             }
 
             /// <summary>
@@ -143,6 +146,12 @@ namespace Aqua.Dynamic
                 var key = new ReferenceMapKey(targetType, from);
                 if (!_referenceMap.TryGetValue(key, out var to))
                 {
+                    if (_typeSafetyChecker is not null && !_safeTypes.Contains(targetType))
+                    {
+                        _typeSafetyChecker.AssertTypeSafety(targetType);
+                        _safeTypes.Add(targetType);
+                    }
+
                     to = factory(targetType, from);
 
                     try
@@ -427,7 +436,7 @@ namespace Aqua.Dynamic
                         { typeof(double), x => checked((double)(Half)x) },
                     }
                 },
-#endif // NET5
+#endif // NET5_0
             };
 
         private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper).GetMethod(nameof(ToDictionary), PrivateStatic) !;
@@ -446,9 +455,10 @@ namespace Aqua.Dynamic
         /// <param name="typeResolver">Provides a hook for custom logic for type resolution when mapping from <see cref="DynamicObject"/>.</param>
         /// <param name="typeInfoProvider">Provides a hook for mapping type information when mapping to <see cref="DynamicObject"/>.</param>
         /// <param name="settings">Optional settings for dynamic object mapping.</param>
-        /// <param name="isKnownTypeProvider">Optional instance to decide whether a type requires to be mapped into a <see cref="DynamicObject"/>, know types do not get mapped.</param>
-        public DynamicObjectMapper(ITypeResolver? typeResolver, ITypeInfoProvider? typeInfoProvider, DynamicObjectMapperSettings? settings = null, IIsKnownTypeProvider? isKnownTypeProvider = null)
-            : this(settings, typeResolver, null, new InternalDynamicObjectFactory(typeInfoProvider), isKnownTypeProvider)
+        /// <param name="isKnownTypeProvider">Optional instance to decide whether a type requires to be mapped into a <see cref="DynamicObject"/>, known types do not get mapped.</param>
+        /// <param name="typeSafetyChecker">Optional instance to check types prior instance creation.</param>
+        public DynamicObjectMapper(ITypeResolver? typeResolver, ITypeInfoProvider? typeInfoProvider, DynamicObjectMapperSettings? settings = null, IIsKnownTypeProvider? isKnownTypeProvider = null, ITypeSafetyChecker? typeSafetyChecker = null)
+            : this(settings, typeResolver, null, new InternalDynamicObjectFactory(typeInfoProvider), isKnownTypeProvider, typeSafetyChecker)
         {
         }
 
@@ -459,14 +469,15 @@ namespace Aqua.Dynamic
         /// <param name="typeResolver">Optional instance to be used to resolve types.</param>
         /// <param name="typeMapper">This optional parameter allows mapping type information which get set into the <see cref="DynamicObject"/>s upon their creation.</param>
         /// <param name="dynamicObjectFactory">This optional parameter allows injection of a custom factory for <see cref="DynamicObject"/>.</param>
-        /// <param name="isKnownTypeProvider">Optional instance to decide whether a type requires to be mapped into a <see cref="DynamicObject"/>, know types do not get mapped.</param>
-        public DynamicObjectMapper(DynamicObjectMapperSettings? settings = null, ITypeResolver? typeResolver = null, ITypeMapper? typeMapper = null, IDynamicObjectFactory? dynamicObjectFactory = null, IIsKnownTypeProvider? isKnownTypeProvider = null)
+        /// <param name="isKnownTypeProvider">Optional instance to decide whether a type requires to be mapped into a <see cref="DynamicObject"/>, known types do not get mapped.</param>
+        /// <param name="typeSafetyChecker">Optional instance to check types prior instance creation.</param>
+        public DynamicObjectMapper(DynamicObjectMapperSettings? settings = null, ITypeResolver? typeResolver = null, ITypeMapper? typeMapper = null, IDynamicObjectFactory? dynamicObjectFactory = null, IIsKnownTypeProvider? isKnownTypeProvider = null, ITypeSafetyChecker? typeSafetyChecker = null)
         {
             _settings = settings?.Copy() ?? new DynamicObjectMapperSettings();
 
-            _fromContext = new FromContext();
+            _fromContext = new FromContext(typeSafetyChecker);
 
-            _toContext = new ToContext(typeMapper is null ? default : typeMapper.MapType);
+            _toContext = new ToContext(typeMapper);
 
             _typeResolver = typeResolver ?? TypeResolver.Instance;
 
@@ -498,14 +509,6 @@ namespace Aqua.Dynamic
 
             return Wrap(() => MapFromDynamicObjectGraph(obj, targetType), _fromContext);
         }
-
-        /// <summary>
-        /// Maps a <see cref="DynamicObject"/> into an instance of <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The target type in which the <see cref="DynamicObject"/> have to be mapped to.</typeparam>
-        /// <param name="obj"><see cref="DynamicObject"/> to be mapped.</param>
-        /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
-        public T Map<T>(DynamicObject? obj) => (T)Map(obj, typeof(T)) !;
 
         /// <summary>
         /// Maps a collection of objects into a collection of <see cref="DynamicObject"/>.
@@ -664,7 +667,24 @@ namespace Aqua.Dynamic
                 return obj;
             }
 
-            if (_isKnownType(objectType))
+            if (resultType.IsEnum())
+            {
+                if (resultType.IsAssignableFrom(objectType))
+                {
+                    return obj;
+                }
+
+                var targetEnumType = resultType.AsNonNullableType();
+
+                if (obj is string str)
+                {
+                    return Enum.Parse(targetEnumType, str, true);
+                }
+
+                return Enum.ToObject(targetEnumType, obj);
+            }
+
+            if (resultType.IsAssignableFrom(objectType) && _isKnownType(objectType))
             {
                 return obj;
             }
@@ -725,23 +745,6 @@ namespace Aqua.Dynamic
                 return ctor is null
                     ? throw new DynamicObjectMapperException($"Failed to project collection with element type '{elementType?.AssemblyQualifiedName}' into type '{resultType?.AssemblyQualifiedName}'")
                     : ctor.Invoke(new[] { r1 });
-            }
-
-            if (resultType.IsEnum())
-            {
-                if (resultType.IsAssignableFrom(objectType))
-                {
-                    return obj;
-                }
-
-                var targetEnumType = resultType.AsNonNullableType();
-
-                if (obj is string str)
-                {
-                    return Enum.Parse(targetEnumType, str, true);
-                }
-
-                return Enum.ToObject(targetEnumType, obj);
             }
 
             return obj;
@@ -1013,7 +1016,11 @@ namespace Aqua.Dynamic
                     };
                     initializer = InitializeProperties;
                 }
+#if NETSTANDARD2_0
                 else if (targetType.IsValueType)
+#else
+                else if (targetType.IsValueType && targetType.GetCustomAttribute<System.Runtime.CompilerServices.IsReadOnlyAttribute>() is null)
+#endif // NETSTANDARD2_0
                 {
                     factory = (t, item) => Activator.CreateInstance(t) ?? throw new DynamicObjectMapperException($"Failed to create instance of type {t.FullName}");
                     initializer = InitializeProperties;
