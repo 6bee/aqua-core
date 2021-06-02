@@ -16,7 +16,7 @@ namespace Aqua.ProtoBuf
     public abstract class Value
     {
         [ProtoIgnore]
-        public virtual object ObjectValue { get; set; } = null!;
+        public virtual object? ObjectValue { get; set; }
 
         [return: NotNullIfNotNull("value")]
         public static Value? Wrap(object? value) => Wrap(value, null);
@@ -28,7 +28,14 @@ namespace Aqua.ProtoBuf
             : value is Value v
             ? v
             : value.IsCollection(out var collection)
-            ? Values.Wrap(collection, TypeHelper.GetElementType(type) ?? TypeHelper.GetElementType(collection.GetType()))
-            : (Value)Activator.CreateInstance(typeof(Value<>).MakeGenericType(value.GetType()), new object[] { value }) !;
+            ? Values.Wrap(collection!, TypeHelper.GetElementType(type) ?? TypeHelper.GetElementType(collection.GetType()))
+            : (Value?)Activator.CreateInstance(typeof(Value<>).MakeGenericType(value.GetType()), new object[] { value });
+
+        public static object? Unwrap(Value? value)
+            => value is null
+            ? null
+            : value is Values values
+            ? Values.Unwrap(values)
+            : value.ObjectValue;
     }
 }

@@ -21,8 +21,8 @@ namespace Aqua.ProtoBuf
         [NotNull]
         public T TypedValue
         {
-            get => (T)ObjectValue;
-            set => ObjectValue = value!;
+            get => (T)ObjectValue!;
+            set => ObjectValue = value;
         }
     }
 }

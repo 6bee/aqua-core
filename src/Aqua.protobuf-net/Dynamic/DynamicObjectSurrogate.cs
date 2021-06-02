@@ -15,7 +15,7 @@ namespace Aqua.ProtoBuf.Dynamic
     public class DynamicObjectSurrogate : Value
     {
         [ProtoIgnore]
-        public override object ObjectValue
+        public override object? ObjectValue
         {
             get => Convert(this);
             set => throw new InvalidOperationException("Read-only property may not be set.");
@@ -29,10 +29,9 @@ namespace Aqua.ProtoBuf.Dynamic
         public Dictionary<string, Value?>? Properties { get; set; }
 
         [ProtoConverter]
-        [return: NotNullIfNotNull("source")]
-        public static DynamicObjectSurrogate? Convert(DynamicObject? source)
+        public static DynamicObjectSurrogate Convert(DynamicObject? source)
             => source is null
-            ? null
+            ? new DynamicObjectSurrogate()
             : new DynamicObjectSurrogate
             {
                 Type = source.Type,
@@ -49,7 +48,7 @@ namespace Aqua.ProtoBuf.Dynamic
                 : new DynamicObject(surrogate.Type, Unwrap(surrogate.Properties));
 
         private static PropertySet Unwrap(Dictionary<string, Value?> properties)
-            => new PropertySet(properties.Select(x => new Property(x.Key, x.Value?.ObjectValue)));
+            => new PropertySet(properties.Select(x => new Property(x.Key, Value.Unwrap(x.Value))));
 
         private static Dictionary<string, Value?>? Map(DynamicObject source)
             => source.Properties?.ToDictionary(

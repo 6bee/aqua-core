@@ -298,7 +298,7 @@ namespace Aqua.Dynamic
         /// Creates a dynamic objects representing the type's default value.
         /// </summary>
         /// <param name="type">The type to be set on the dynamic object for the default value to be represented.</param>
-        public static DynamicObject CreateDefault(TypeInfo? type)
+        public static DynamicObject CreateDefault(TypeInfo? type = null)
             => new DynamicObject(type) { IsNull = true };
 
         private string GetDebuggerDisplay()

@@ -12,7 +12,7 @@ namespace Aqua.ProtoBuf.Dynamic
     public class DynamicObjectArraySurrogate : Value
     {
         [ProtoIgnore]
-        public override object ObjectValue
+        public override object? ObjectValue
         {
             get => Convert(this);
             set => throw new InvalidOperationException("Read-only property may not be set.");
@@ -20,17 +20,16 @@ namespace Aqua.ProtoBuf.Dynamic
 
         [ProtoMember(1, IsRequired = true, OverwriteList = true)]
         [SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "Required for serialization")]
-        public DynamicObjectSurrogate?[] Collection { get; set; } = null!;
-
-        [return: NotNullIfNotNull("source")]
 #pragma warning disable SA1011 // Closing square brackets should be spaced correctly
-        public static DynamicObjectArraySurrogate? Convert(DynamicObject?[]? source)
+        public DynamicObjectSurrogate[]? Collection { get; set; }
 #pragma warning restore SA1011 // Closing square brackets should be spaced correctly
-            => source is null
-            ? null
-            : new DynamicObjectArraySurrogate
+
+#pragma warning disable SA1011 // Closing square brackets should be spaced correctly
+        public static DynamicObjectArraySurrogate Convert(DynamicObject?[] source)
+#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
+            => new DynamicObjectArraySurrogate
             {
-                Collection = source.Select(DynamicObjectSurrogate.Convert).ToArray(),
+                Collection = source?.Select(DynamicObjectSurrogate.Convert).ToArray(),
             };
 
         [return: NotNullIfNotNull("surrogate")]

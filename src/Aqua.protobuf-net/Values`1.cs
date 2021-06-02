@@ -3,12 +3,10 @@
 namespace Aqua.ProtoBuf
 {
     using global::ProtoBuf;
-    using System;
     using System.Collections;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-#nullable disable
     [ProtoContract]
     public sealed class Values<T> : Values
     {
@@ -18,35 +16,32 @@ namespace Aqua.ProtoBuf
 
         public Values(IEnumerable array)
         {
-            if (array is null)
-            {
-                throw new ArgumentNullException(nameof(array));
-            }
+            array.AssertNotNull(nameof(array));
 
-            if (array is T[] typedArray)
+            if (array is not T[] typedArray)
             {
-                ObjectValue = typedArray;
-            }
-            else
-            {
-                ObjectValue = array
+                typedArray = array
                     .Cast<T>()
                     .ToArray();
             }
+
+            Array = typedArray;
         }
 
         public Values(T[] array)
         {
-            Array = array ?? throw new ArgumentNullException(nameof(array));
+            Array = array.CheckNotNull(nameof(array));
         }
 
         [ProtoMember(1, IsRequired = true, OverwriteList = true)]
         [SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "Property used as serialization contract")]
         public T[] Array
         {
-            get => (T[])ObjectValue;
+            get => (T[])ObjectValue!;
             set => ObjectValue = value;
         }
+
+        protected override IEnumerable GetEnumerable()
+            => Array;
     }
-#nullable restore
 }

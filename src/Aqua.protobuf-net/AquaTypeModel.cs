@@ -87,7 +87,7 @@ namespace Aqua.ProtoBuf
         public AquaTypeModel AddDynamicPropertyType(Type propertyType, bool addSingleValueSuppoort = true, bool addCollectionSupport = true, bool addNullableSupport = true)
             => AddDynamicPropertyType(true, propertyType, addSingleValueSuppoort, addCollectionSupport, addNullableSupport);
 
-        private AquaTypeModel AddDynamicPropertyType(bool flag, Type propertyType, bool addSingleValueSuppoort = true, bool addCollectionSupport = true, bool addNullableSupport = true)
+        private AquaTypeModel AddDynamicPropertyType(bool flag, Type propertyType, bool addSingleValueSuppoort, bool addCollectionSupport, bool addNullableSupport)
         {
             if (propertyType is null)
             {
@@ -99,10 +99,6 @@ namespace Aqua.ProtoBuf
             {
                 var singleValueType = typeof(Value<>).MakeGenericType(propertyType);
                 AddSubType<Value>(singleValueType);
-                if (isNullable && addNullableSupport)
-                {
-                    GetType(singleValueType)[1].SupportNull = true;
-                }
             }
 
             if (addCollectionSupport)
@@ -111,7 +107,8 @@ namespace Aqua.ProtoBuf
                 AddSubType<Values>(collectionType);
                 if (isNullable && addNullableSupport)
                 {
-                    GetType(collectionType)[1].SupportNull = true;
+                    var nullableCollectionType = typeof(NullableValues<>).MakeGenericType(propertyType);
+                    AddSubType<Values>(nullableCollectionType);
                 }
             }
 
