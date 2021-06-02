@@ -10,36 +10,36 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_serializing_dynamicobject_for_typeinfo_of_typeinfo
     {
-        public class BinaryFormatter : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
+        // XML serialization doesn't support circular references
+        // protobuf-net doesn't support circular references
+        public class With_binary_formatter : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {
-            public BinaryFormatter()
+            public With_binary_formatter()
                 : base(BinarySerializationHelper.Serialize)
             {
             }
         }
 
-        public class DataContractSerializer : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
+        public class With_data_contract_serializer : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {
-            public DataContractSerializer()
+            public With_data_contract_serializer()
                 : base(DataContractSerializationHelper.Serialize)
             {
             }
         }
 
-        public class JsonSerializer : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
+        public class With_json_serializer : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {
-            public JsonSerializer()
+            public With_json_serializer()
                 : base(JsonSerializationHelper.Serialize)
             {
             }
         }
 
-        // XML serialization doesn't support circular references
-        // protobuf-net doesn't support circular references
 #if NETFRAMEWORK
-        public class NetDataContractSerializer : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
+        public class With_net_data_contract_serializer : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {
-            public NetDataContractSerializer()
+            public With_net_data_contract_serializer()
                 : base(NetDataContractSerializationHelper.Serialize)
             {
             }

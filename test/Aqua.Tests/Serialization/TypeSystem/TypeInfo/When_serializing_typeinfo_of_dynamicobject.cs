@@ -10,36 +10,36 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
 
     public abstract partial class When_serializing_typeinfo_of_dynamicobject
     {
-        public class BinaryFormatter : When_serializing_typeinfo_of_dynamicobject
+        // XmlSerializer doesn't support circular references
+        // protobuf-net doesn't support circular references
+        public class With_binary_formatter : When_serializing_typeinfo_of_dynamicobject
         {
-            public BinaryFormatter()
+            public With_binary_formatter()
                 : base(BinarySerializationHelper.Serialize)
             {
             }
         }
 
-        public class DataContractSerializer : When_serializing_typeinfo_of_dynamicobject
+        public class With_data_contract_serializer : When_serializing_typeinfo_of_dynamicobject
         {
-            public DataContractSerializer()
+            public With_data_contract_serializer()
                 : base(DataContractSerializationHelper.Serialize)
             {
             }
         }
 
-        public class JsonSerializer : When_serializing_typeinfo_of_dynamicobject
+        public class With_json_serializer : When_serializing_typeinfo_of_dynamicobject
         {
-            public JsonSerializer()
+            public With_json_serializer()
                 : base(JsonSerializationHelper.Serialize)
             {
             }
         }
 
-        // XmlSerializer doesn't support circular references
-        // protobuf-net doesn't support circular references
 #if NETFRAMEWORK
-        public class NetDataContractSerializer : When_serializing_typeinfo_of_dynamicobject
+        public class With_net_data_contract_serializer : When_serializing_typeinfo_of_dynamicobject
         {
-            public NetDataContractSerializer()
+            public With_net_data_contract_serializer()
                 : base(NetDataContractSerializationHelper.Serialize)
             {
             }

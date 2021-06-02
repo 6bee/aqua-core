@@ -13,51 +13,51 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_serializing_dynamicobject_for_collections_of_notnullable
     {
-        public class BinaryFormatter : When_serializing_dynamicobject_for_collections_of_notnullable
+        public class With_binary_formatter : When_serializing_dynamicobject_for_collections_of_notnullable
         {
-            public BinaryFormatter()
+            public With_binary_formatter()
                 : base(BinarySerializationHelper.Serialize)
             {
             }
         }
 
-        public class DataContractSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
+        public class With_data_contract_serializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {
-            public DataContractSerializer()
+            public With_data_contract_serializer()
                 : base(DataContractSerializationHelper.Serialize)
             {
             }
         }
 
-        public class JsonSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
+        public class With_json_serializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {
-            public JsonSerializer()
+            public With_json_serializer()
                 : base(JsonSerializationHelper.Serialize)
             {
             }
         }
 
 #if NETFRAMEWORK
-        public class NetDataContractSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
+        public class With_net_data_contract_serializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {
-            public NetDataContractSerializer()
+            public With_net_data_contract_serializer()
                 : base(NetDataContractSerializationHelper.Serialize)
             {
             }
         }
 #endif // NETFRAMEWORK
 
-        public class ProtobufNetSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
+        public class With_protobuf_net_serializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {
-            public ProtobufNetSerializer()
+            public With_protobuf_net_serializer()
                 : base(ProtobufNetSerializationHelper.Serialize)
             {
             }
         }
 
-        public class XmlSerializer : When_serializing_dynamicobject_for_collections_of_notnullable
+        public class With_xml_serializer : When_serializing_dynamicobject_for_collections_of_notnullable
         {
-            public XmlSerializer()
+            public With_xml_serializer()
                 : base(XmlSerializationHelper.Serialize)
             {
             }

@@ -13,43 +13,43 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
     public abstract class When_serializing_dynamicobject_collections_of_nullable
     {
         // protobuf-net doesn't support serialization of collection with null elements as the root object
-        public class BinaryFormatter : When_serializing_dynamicobject_collections_of_nullable
+        public class With_binary_formatter : When_serializing_dynamicobject_collections_of_nullable
         {
-            public BinaryFormatter()
+            public With_binary_formatter()
                 : base(BinarySerializationHelper.Serialize)
             {
             }
         }
 
-        public class DataContractSerializer : When_serializing_dynamicobject_collections_of_nullable
+        public class With_data_contract_serializer : When_serializing_dynamicobject_collections_of_nullable
         {
-            public DataContractSerializer()
+            public With_data_contract_serializer()
                 : base(DataContractSerializationHelper.Serialize)
             {
             }
         }
 
-        public class JsonSerializer : When_serializing_dynamicobject_collections_of_nullable
+        public class With_json_serializer : When_serializing_dynamicobject_collections_of_nullable
         {
-            public JsonSerializer()
+            public With_json_serializer()
                 : base(JsonSerializationHelper.Serialize)
             {
             }
         }
 
 #if NETFRAMEWORK
-        public class NetDataContractSerializer : When_serializing_dynamicobject_collections_of_nullable
+        public class With_net_data_contract_serializer : When_serializing_dynamicobject_collections_of_nullable
         {
-            public NetDataContractSerializer()
+            public With_net_data_contract_serializer()
                 : base(NetDataContractSerializationHelper.Serialize)
             {
             }
         }
 #endif // NETFRAMEWORK
 
-        public class XmlSerializer : When_serializing_dynamicobject_collections_of_nullable
+        public class With_xml_serializer : When_serializing_dynamicobject_collections_of_nullable
         {
-            public XmlSerializer()
+            public With_xml_serializer()
                 : base(x => XmlSerializationHelper.Serialize(x.ToArray()))
             {
             }

@@ -14,51 +14,51 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_serializing_dynamic_object
     {
-        public class JsonSerializer : When_serializing_dynamic_object
+        public class With_json_serializer : When_serializing_dynamic_object
         {
-            public JsonSerializer()
+            public With_json_serializer()
                 : base(JsonSerializationHelper.Serialize)
             {
             }
         }
 
-        public class DataContractSerializer : When_serializing_dynamic_object
+        public class With_data_contract_serializer : When_serializing_dynamic_object
         {
-            public DataContractSerializer()
+            public With_data_contract_serializer()
                 : base(DataContractSerializationHelper.Serialize)
             {
             }
         }
 
-        public class BinaryFormatter : When_serializing_dynamic_object
+        public class With_binary_formatter : When_serializing_dynamic_object
         {
-            public BinaryFormatter()
+            public With_binary_formatter()
                 : base(BinarySerializationHelper.Serialize)
             {
             }
         }
 
 #if NETFRAMEWORK
-        public class NetDataContractSerializer : When_serializing_dynamic_object
+        public class With_net_data_contract_serializer : When_serializing_dynamic_object
         {
-            public NetDataContractSerializer()
+            public With_net_data_contract_serializer()
                 : base(NetDataContractSerializationHelper.Serialize)
             {
             }
         }
 #endif // NETFRAMEWORK
 
-        public class ProtobufNetSerializer : When_serializing_dynamic_object
+        public class With_protobuf_net_serializer : When_serializing_dynamic_object
         {
-            public ProtobufNetSerializer()
+            public With_protobuf_net_serializer()
                 : base(ProtobufNetSerializationHelper.Serialize)
             {
             }
         }
 
-        public class XmlSerializer : When_serializing_dynamic_object
+        public class With_xml_serializer : When_serializing_dynamic_object
         {
-            public XmlSerializer()
+            public With_xml_serializer()
                 : base(XmlSerializationHelper.Serialize)
             {
             }
@@ -84,7 +84,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value(Type type, object value, CultureInfo culture)
         {
-            if (this.TestIs<ProtobufNetSerializer>())
+            if (this.TestIs<With_protobuf_net_serializer>())
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
@@ -92,7 +92,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 #if NET5_0
             Skip.If(type.Is<Half>(), "Half type serialization is not supported.");
 #endif // NET5_0
-            Skip.If(this.TestIs<XmlSerializer>(), "XmlSerializer has limited type support.");
+            Skip.If(this.TestIs<With_xml_serializer>(), "XmlSerializer has limited type support.");
 
             using var cultureContext = culture.CreateContext();
 
@@ -106,12 +106,12 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value_when_using_string_formatting(Type type, object value, CultureInfo culture)
         {
-            if (this.TestIs<ProtobufNetSerializer>())
+            if (this.TestIs<With_protobuf_net_serializer>())
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
 
-            Skip.If(this.TestIs<XmlSerializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
 
             using var cultureContext = culture.CreateContext();
 
@@ -125,14 +125,14 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property(Type type, object value, CultureInfo culture)
         {
-            if (this.TestIs<ProtobufNetSerializer>())
+            if (this.TestIs<With_protobuf_net_serializer>())
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
 #if NET5_0
             Skip.If(type.Is<Half>(), "Half type serialization is not supported.");
 #endif // NET5_0
-            Skip.If(this.TestIs<XmlSerializer>(), "XmlSerializer has limited type support.");
+            Skip.If(this.TestIs<With_xml_serializer>(), "XmlSerializer has limited type support.");
 
             using var cultureContext = culture.CreateContext();
 
@@ -146,7 +146,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
         public void Should_serialize_value_as_property_when_using_string_formatting(Type type, object value, CultureInfo culture)
         {
-            Skip.If(this.TestIs<XmlSerializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
+            Skip.If(this.TestIs<With_xml_serializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
 
             using var cultureContext = culture.CreateContext();
 
@@ -157,8 +157,8 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         [SkippableFact]
         public void Should_serialize_DateTimeOffset_as_property()
         {
-            Skip.If(this.TestIs<ProtobufNetSerializer>(), "DateTimeOffset is not supported by XmlSerializer.");
-            Skip.If(this.TestIs<XmlSerializer>(), "DateTimeOffset is not supported by XmlSerializer.");
+            Skip.If(this.TestIs<With_protobuf_net_serializer>(), "DateTimeOffset is not supported by XmlSerializer.");
+            Skip.If(this.TestIs<With_xml_serializer>(), "DateTimeOffset is not supported by XmlSerializer.");
 
             var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
             var result = SerializeAsProperty(value.GetType(), value, true, false);
