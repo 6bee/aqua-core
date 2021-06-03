@@ -4,6 +4,7 @@ namespace Aqua.ProtoBuf
 {
     using global::ProtoBuf;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
@@ -14,18 +15,23 @@ namespace Aqua.ProtoBuf
         {
         }
 
-        public Values(IEnumerable array)
+        public Values(IEnumerable items)
         {
-            array.AssertNotNull(nameof(array));
+            items.AssertNotNull(nameof(items));
 
-            if (array is not T[] typedArray)
+            if (items is not T[] typedArray)
             {
-                typedArray = array
+                typedArray = items
                     .Cast<T>()
                     .ToArray();
             }
 
             Array = typedArray;
+        }
+
+        public Values(IEnumerable<T> items)
+        {
+            Array = items.CheckNotNull(nameof(items)).ToArray();
         }
 
         public Values(T[] array)

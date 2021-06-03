@@ -12,7 +12,7 @@ namespace Aqua.ProtoBuf
     {
         internal AquaTypeModel(RuntimeTypeModel typeModel)
         {
-            Model = typeModel ?? throw new ArgumentNullException(nameof(typeModel));
+            Model = typeModel.CheckNotNull(nameof(typeModel));
 
             typeModel.AutoAddMissingTypes = true;
             typeModel.AllowParseableTypes = false;

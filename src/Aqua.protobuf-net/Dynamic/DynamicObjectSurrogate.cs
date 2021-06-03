@@ -48,7 +48,14 @@ namespace Aqua.ProtoBuf.Dynamic
                 : new DynamicObject(surrogate.Type, Unwrap(surrogate.Properties));
 
         private static PropertySet Unwrap(Dictionary<string, Value?> properties)
-            => new PropertySet(properties.Select(x => new Property(x.Key, Value.Unwrap(x.Value))));
+            => new PropertySet(properties.Select(x => new Property(x.Key, Unwrap(x.Value))));
+
+        private static new object? Unwrap(Value? value)
+            => value is DynamicObjectSurrogate surrogate
+            ? Convert(surrogate)
+            : value is Values<DynamicObjectSurrogate> surrogates
+                ? surrogates.Array.Select(Convert).ToArray()
+                : Value.Unwrap(value);
 
         private static Dictionary<string, Value?>? Map(DynamicObject source)
             => source.Properties?.ToDictionary(
@@ -59,9 +66,9 @@ namespace Aqua.ProtoBuf.Dynamic
             => value is DynamicObject dynamicObject
             ? DynamicObjectSurrogate.Convert(dynamicObject)
             : value is DynamicObject?[] dynamicObjectArray
-                ? DynamicObjectArraySurrogate.Convert(dynamicObjectArray)
+                ? new Values<DynamicObjectSurrogate>(dynamicObjectArray.Select(Convert))
                 : value is object?[] objectArray && objectArray.All(x => x is DynamicObject)
-                    ? DynamicObjectArraySurrogate.Convert(objectArray.Cast<DynamicObject?>().ToArray())
+                    ? new Values<DynamicObjectSurrogate>(objectArray.Cast<DynamicObject?>().Select(Convert))
                     : Value.Wrap(value, RedirectTypeForStringFormattedValues(value, type?.ToType()));
 
         private static Type? RedirectTypeForStringFormattedValues(object? value, Type? type)

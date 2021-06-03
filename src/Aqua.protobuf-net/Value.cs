@@ -12,7 +12,6 @@ namespace Aqua.ProtoBuf
     [ProtoContract]
     [ProtoInclude(1, typeof(Values))]
     [ProtoInclude(2, typeof(DynamicObjectSurrogate))]
-    [ProtoInclude(3, typeof(DynamicObjectArraySurrogate))]
     public abstract class Value
     {
         [ProtoIgnore]
@@ -31,6 +30,7 @@ namespace Aqua.ProtoBuf
             ? Values.Wrap(collection!, TypeHelper.GetElementType(type) ?? TypeHelper.GetElementType(collection.GetType()))
             : (Value?)Activator.CreateInstance(typeof(Value<>).MakeGenericType(value.GetType()), new object[] { value });
 
+        [return: NotNullIfNotNull("value")]
         public static object? Unwrap(Value? value)
             => value is null
             ? null

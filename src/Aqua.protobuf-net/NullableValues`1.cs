@@ -4,6 +4,7 @@ namespace Aqua.ProtoBuf
 {
     using global::ProtoBuf;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
@@ -44,6 +45,11 @@ namespace Aqua.ProtoBuf
             }
 
             Array = typedArray;
+        }
+
+        public NullableValues(IEnumerable<Value<T?>> items)
+        {
+            Array = items.CheckNotNull(nameof(items)).ToArray();
         }
 
         public NullableValues(Value<T?>[] array)
