@@ -12,13 +12,13 @@ namespace Aqua.ProtoBuf.Dynamic
     using System.Linq;
 
     [ProtoContract(Name = nameof(DynamicObject))]
-    public class DynamicObjectSurrogate : Value
+    public sealed class DynamicObjectSurrogate : Value
     {
         [ProtoIgnore]
         public override object? ObjectValue
         {
             get => Convert(this);
-            set => throw new InvalidOperationException("Read-only property may not be set.");
+            protected set => throw new InvalidOperationException("Read-only property may not be set.");
         }
 
         [ProtoMember(1)]

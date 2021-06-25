@@ -6,7 +6,7 @@ namespace Aqua.ProtoBuf.Dynamic
     using global::ProtoBuf;
 
     [ProtoContract(Name = nameof(Property))]
-    public class PropertySurrogate
+    public sealed class PropertySurrogate
     {
         [ProtoMember(1)]
         public string Name { get; set; } = null!;

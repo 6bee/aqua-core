@@ -15,7 +15,7 @@ namespace Aqua.ProtoBuf
     public abstract class Value
     {
         [ProtoIgnore]
-        public virtual object? ObjectValue { get; set; }
+        public virtual object? ObjectValue { get; protected set; }
 
         [return: NotNullIfNotNull("value")]
         public static Value? Wrap(object? value) => Wrap(value, null);

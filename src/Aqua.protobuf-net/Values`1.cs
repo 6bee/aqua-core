@@ -3,6 +3,7 @@
 namespace Aqua.ProtoBuf
 {
     using global::ProtoBuf;
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -39,12 +40,19 @@ namespace Aqua.ProtoBuf
             Array = array.CheckNotNull(nameof(array));
         }
 
+        [ProtoIgnore]
+        public override object? ObjectValue
+        {
+            get => Array;
+            protected set => throw new NotSupportedException($"Items must be set via {nameof(Array)} property");
+        }
+
         [ProtoMember(1, IsRequired = true, OverwriteList = true)]
         [SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "Property used as serialization contract")]
         public T[] Array
         {
-            get => ObjectValue is T[] array ? array : System.Array.Empty<T>();
-            set => ObjectValue = value;
+            get => (T[])(base.ObjectValue ?? System.Array.Empty<T>());
+            set => base.ObjectValue = value;
         }
 
         protected override IEnumerable GetEnumerable()
