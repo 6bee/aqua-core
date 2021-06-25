@@ -35,9 +35,9 @@ namespace Aqua.Newtonsoft.Json
                 typeof(DateTime),
                 typeof(TimeSpan),
                 typeof(DateTimeOffset),
-#if NET5_0
+#if !NETSTANDARD
                 typeof(Half),
-#endif // NET5_0
+#endif // NETSTANDARD
                 typeof(DynamicObject),
                 typeof(Property),
                 typeof(PropertySet),
