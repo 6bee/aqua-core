@@ -142,6 +142,7 @@ namespace Aqua.Tests
             .SelectMany(x => new (Type Type, object Value)[]
             {
                 (x.GetType(), x),
+                (x.GetType(), CreateDefault(x.GetType())),
                 (x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
                 (x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), null),
             })
@@ -153,6 +154,15 @@ namespace Aqua.Tests
                     CultureInfo.GetCultureInfo("de"),
                 },
                 (x, c) => (x.Type, x.Value, c));
+
+        private static object CreateDefault(Type t)
+            => typeof(TestData).GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+            .Single(x => string.Equals(x.Name, nameof(CreateDefault), StringComparison.Ordinal) && x.IsGenericMethodDefinition)
+            .MakeGenericMethod(t)
+            .Invoke(null, null);
+
+        private static object CreateDefault<T>()
+            => default(T);
 
         public static IEnumerable<object[]> TestTypes
             => GenerateTestValueSet()
