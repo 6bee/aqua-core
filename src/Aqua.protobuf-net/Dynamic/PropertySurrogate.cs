@@ -15,9 +15,9 @@ namespace Aqua.ProtoBuf.Dynamic
         public Value? Value { get; set; }
 
         [ProtoConverter]
-        public static PropertySurrogate? Convert(Property? source)
+        public static PropertySurrogate Convert(Property? source)
             => source is null
-            ? null
+            ? new PropertySurrogate()
             : new PropertySurrogate
             {
                 Name = source.Name,
@@ -26,8 +26,8 @@ namespace Aqua.ProtoBuf.Dynamic
 
         [ProtoConverter]
         public static Property? Convert(PropertySurrogate? surrogate)
-            => surrogate is null
+            => surrogate?.Name is null && surrogate?.Value is null
             ? null
-            : new Property(surrogate.Name, surrogate.Value?.ObjectValue);
+            : new Property(surrogate.Name ?? string.Empty, Value.Unwrap(surrogate.Value));
     }
 }

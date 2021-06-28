@@ -94,6 +94,11 @@ namespace Aqua.ProtoBuf
                 throw new ArgumentNullException(nameof(propertyType));
             }
 
+            if (!Model.CanSerialize(propertyType))
+            {
+                AddType(propertyType);
+            }
+
             var isNullable = propertyType.IsNullableType();
             if (addSingleValueSuppoort)
             {
