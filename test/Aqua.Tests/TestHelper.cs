@@ -20,11 +20,25 @@ namespace Aqua.Tests
             => value?.GetType() == type;
 
         public static bool Is<T>(this Type type)
-            where T : struct
-            => type == typeof(T)
-            || type == typeof(T?)
-            || typeof(ICollection<T>).IsAssignableFrom(type)
-            || typeof(ICollection<T?>).IsAssignableFrom(type);
+        {
+            if (type == typeof(T) ||
+                typeof(ICollection<T>).IsAssignableFrom(type))
+            {
+                return true;
+            }
+
+            if (typeof(T).IsValueType)
+            {
+                var nullableType = typeof(Nullable<>).MakeGenericType(typeof(T));
+                if (type == nullableType ||
+                    typeof(ICollection<>).MakeGenericType(nullableType).IsAssignableFrom(type))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         public static bool IsNotPublic(this Type type)
             => type.IsNotPublic
