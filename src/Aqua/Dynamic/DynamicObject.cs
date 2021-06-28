@@ -314,7 +314,7 @@ namespace Aqua.Dynamic
                 type = $"{t} ";
             }
 
-            return $"{type}[Count = {PropertyCount}]";
+            return $"{nameof(DynamicObject)}( {type}[Count = {PropertyCount}] )";
         }
     }
 }
