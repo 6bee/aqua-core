@@ -15,7 +15,12 @@ namespace Aqua.TypeSystem
             var typeName = includeNamespance
                 ? typeInfo.FullName
                 : typeInfo.NameWithoutNameSpace;
-            return $"{typeName}{genericArgumentsString}";
+            if (typeInfo.IsArray)
+            {
+                typeName = typeName.Substring(0, typeName.Length - 2);
+            }
+
+            return $"{typeName}{genericArgumentsString}{(typeInfo.IsArray ? "[]" : null)}";
         }
 
         private static string? GetGenericArgumentsString(this TypeInfo typeInfo)
