@@ -25,10 +25,16 @@ namespace Aqua.TypeSystem
         {
             Name = member.CheckNotNull(nameof(member)).Name;
             DeclaringType = typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).GetTypeInfo(member.DeclaringType, false, false);
-            if (member.GetBindingFlags().Contains(System.Reflection.BindingFlags.Static))
+            var isStatic = member switch
             {
-                IsStatic = true;
-            }
+                System.Reflection.MethodBase method => method.IsStatic,
+                System.Reflection.PropertyInfo property => (property.GetMethod ?? property.SetMethod)?.IsStatic,
+                System.Reflection.FieldInfo field => field.IsStatic,
+                _ => member.GetBindingFlags().Contains(System.Reflection.BindingFlags.Static)
+            };
+            IsStatic = isStatic is true
+                ? true
+                : default(bool?);
         }
 
         protected MemberInfo(string name, TypeInfo? declaringType)
