@@ -69,7 +69,7 @@ namespace Aqua.ProtoBuf
         [SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "Property used as serialization contract")]
         public Value<T?>[] Array
         {
-            get => (Value<T?>[])(base.ObjectValue ?? System.Array.Empty<T>());
+            get => (Value<T?>[])(base.ObjectValue ?? System.Array.Empty<Value<T?>>());
             set => base.ObjectValue = value;
         }
 

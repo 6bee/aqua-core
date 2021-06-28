@@ -2,6 +2,7 @@
 
 namespace Aqua.ProtoBuf
 {
+    using Aqua.Dynamic;
     using Aqua.EnumerableExtensions;
     using Aqua.ProtoBuf.Dynamic;
     using Aqua.TypeSystem;
@@ -11,7 +12,7 @@ namespace Aqua.ProtoBuf
 
     [ProtoContract]
     [ProtoInclude(1, typeof(Values))]
-    [ProtoInclude(2, typeof(DynamicObjectSurrogate))]
+    [ProtoInclude(2, typeof(NullValue))]
     public abstract class Value
     {
         [ProtoIgnore]
@@ -26,14 +27,18 @@ namespace Aqua.ProtoBuf
             ? null
             : value is Value v
             ? v
+            : value is DynamicObject dynamicObject
+            ? new Value<DynamicObjectSurrogate>(DynamicObjectSurrogate.Convert(dynamicObject))
             : value.IsCollection(out var collection)
             ? Values.Wrap(collection!, TypeHelper.GetElementType(type) ?? TypeHelper.GetElementType(collection.GetType()))
             : (Value?)Activator.CreateInstance(typeof(Value<>).MakeGenericType(value.GetType()), new object[] { value });
 
         [return: NotNullIfNotNull("value")]
         public static object? Unwrap(Value? value)
-            => value is null
+            => value is null || value is NullValue
             ? null
+            : value is Value<DynamicObjectSurrogate> dynamicObject
+            ? DynamicObjectSurrogate.Convert(dynamicObject.TypedValue)
             : value is Values values
             ? Values.Unwrap(values)
             : value.ObjectValue;

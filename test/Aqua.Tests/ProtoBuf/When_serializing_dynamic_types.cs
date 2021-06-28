@@ -66,7 +66,9 @@ namespace Aqua.Tests.ProtoBuf
                 { "p3", 1 },
             };
 
-            var copy = propertySet.Serialize();
+            // NOTE: PropertySet type cannot be serialized by protobuf-net 3.0.x
+            //       as it doesn't implement ICollection<> and no surrogate can be registered.
+            var copy = new DynamicObject(propertySet).Serialize();
 
             copy["p1"].ShouldBe(propertySet["p1"]);
             copy["p2"].ShouldBe(propertySet["p2"]);
@@ -95,7 +97,10 @@ namespace Aqua.Tests.ProtoBuf
             var config = ProtoBufTypeModel.ConfigureAquaTypes(configureDefaultSystemTypes: false)
                 .AddDynamicPropertyType(TypeHelper.GetElementType(type) ?? type)
                 .Compile();
-            var copy = propertySet.Serialize(config);
+
+            // NOTE: PropertySet type cannot be serialized by protobuf-net 3.0.x
+            //       as it doesn't implement ICollection<> and no surrogate can be registered.
+            var copy = new DynamicObject(propertySet).Serialize(config);
 
             copy["p1"].ShouldBe(value);
         }
@@ -109,6 +114,7 @@ namespace Aqua.Tests.ProtoBuf
             using var cultureContext = culture.CreateContext();
 
             var dynamicObject = new DynamicObjectMapper().MapObject(value);
+
             var copy = dynamicObject.Serialize();
 
             copy?.Get().ShouldBe(dynamicObject?.Get(), $"type: {type} value: {value}");

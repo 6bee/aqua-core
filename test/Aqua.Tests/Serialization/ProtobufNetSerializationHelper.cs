@@ -15,7 +15,7 @@ namespace Aqua.Tests.Serialization
         public static T Serialize<T>(this T graph) => Serialize(graph, null);
 
         public static T Serialize<T>(this T graph, global::ProtoBuf.Meta.TypeModel model)
-            => (T)(model ?? _configuration).DeepClone(graph);
+            => (model ?? _configuration).DeepClone(graph);
 
         public static void SkipUnsupportedDataType(Type type, object value)
         {
