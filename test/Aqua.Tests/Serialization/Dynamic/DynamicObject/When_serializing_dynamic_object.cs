@@ -22,6 +22,14 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
+        public class With_messagepack_serializer : When_serializing_dynamic_object
+        {
+            public With_messagepack_serializer()
+                : base(MessagePackSerializationHelper.Serialize)
+            {
+            }
+        }
+
         public class With_data_contract_serializer : When_serializing_dynamic_object
         {
             public With_data_contract_serializer()
