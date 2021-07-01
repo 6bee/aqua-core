@@ -2,12 +2,10 @@
 
 namespace Aqua.Dynamic
 {
-    using System;
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
     using MethodInfo = System.Reflection.MethodInfo;
 
     partial class DynamicObject : IDynamicMetaObjectProvider
@@ -17,15 +15,16 @@ namespace Aqua.Dynamic
 
         private sealed class MetaObject : DynamicMetaObject
         {
-            private const BindingFlags PublicInstance = BindingFlags.Public | BindingFlags.Instance;
+            private static readonly MethodInfo _getMethod = MethodInfos.GetMethod(
+                typeof(DynamicObject),
+                nameof(Get),
+                typeof(string));
 
-            private static readonly Type _dynamicObjectType = typeof(DynamicObject);
-
-            private static readonly MethodInfo _getMethod = typeof(DynamicObject)
-                .GetMethods(PublicInstance)
-                .Single(m => m.Name == nameof(Get) && !m.IsGenericMethodDefinition);
-
-            private static readonly MethodInfo _setMethod = typeof(DynamicObject).GetMethod(nameof(Set), PublicInstance) !;
+            private static readonly MethodInfo _setMethod = MethodInfos.GetMethod(
+                typeof(DynamicObject),
+                nameof(Set),
+                typeof(string),
+                typeof(object));
 
             public MetaObject(Expression expression, BindingRestrictions restrictions, DynamicObject dynamicObject)
                 : base(expression, restrictions, dynamicObject)
@@ -36,8 +35,9 @@ namespace Aqua.Dynamic
             {
                 var self = Expression;
                 var keyExpr = Expression.Constant(binder.Name);
-                var target = Expression.Call(Expression.Convert(self, _dynamicObjectType), _getMethod, keyExpr);
-                return new DynamicMetaObject(target, BindingRestrictions.GetTypeRestriction(self, _dynamicObjectType));
+                var targetType = _getMethod.DeclaringType!;
+                var target = Expression.Call(Expression.Convert(self, targetType), _getMethod, keyExpr);
+                return new DynamicMetaObject(target, BindingRestrictions.GetTypeRestriction(self, targetType));
             }
 
             public override DynamicMetaObject BindSetMember(SetMemberBinder binder, DynamicMetaObject value)
@@ -45,8 +45,9 @@ namespace Aqua.Dynamic
                 var self = Expression;
                 var keyExpr = Expression.Constant(binder.Name);
                 var valueExpr = Expression.Convert(value.Expression, typeof(object));
-                var target = Expression.Call(Expression.Convert(self, _dynamicObjectType), _setMethod, keyExpr, valueExpr);
-                return new DynamicMetaObject(target, BindingRestrictions.GetTypeRestriction(self, _dynamicObjectType));
+                var targetType = _setMethod.DeclaringType!;
+                var target = Expression.Call(Expression.Convert(self, targetType), _setMethod, keyExpr, valueExpr);
+                return new DynamicMetaObject(target, BindingRestrictions.GetTypeRestriction(self, targetType));
             }
 
             public override IEnumerable<string> GetDynamicMemberNames()

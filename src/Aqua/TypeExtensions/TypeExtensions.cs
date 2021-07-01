@@ -65,10 +65,12 @@ namespace Aqua.TypeExtensions
                 throw new ArgumentNullException(nameof(value));
             }
 
+            const BindingFlags PublicStatic = BindingFlags.Static | BindingFlags.Public;
+
             var sourceType = value.GetType();
             var methodCandidates =
-                sourceType.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .Union(targetType.GetMethods(BindingFlags.Static | BindingFlags.Public))
+                sourceType.GetMethods(PublicStatic)
+                .Union(targetType.GetMethods(PublicStatic))
                 .Where(x => x.ReturnType == targetType)
                 .Where(x =>
                 {

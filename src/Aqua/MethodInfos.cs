@@ -2,10 +2,12 @@
 
 namespace Aqua
 {
-    using Aqua.EnumerableExtensions;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Linq.Expressions;
     using BindingFlags = System.Reflection.BindingFlags;
     using MethodInfo = System.Reflection.MethodInfo;
 
@@ -13,146 +15,283 @@ namespace Aqua
     {
         internal static class Enumerable
         {
-            internal static readonly MethodInfo Cast = GetPublicStaticMethod(typeof(System.Linq.Enumerable), nameof(System.Linq.Enumerable.Cast));
-
-            internal static readonly MethodInfo OfType = GetPublicStaticMethod(typeof(System.Linq.Enumerable), nameof(System.Linq.Enumerable.OfType));
-
-            internal static readonly MethodInfo ToArray = GetPublicStaticMethod(typeof(System.Linq.Enumerable), nameof(System.Linq.Enumerable.ToArray));
-
-            internal static readonly MethodInfo ToList = GetPublicStaticMethod(typeof(System.Linq.Enumerable), nameof(System.Linq.Enumerable.ToList));
-
-            internal static readonly MethodInfo Contains = typeof(System.Linq.Enumerable)
-                .GetMethods(PublicStatic)
-                .Single(m => m.Name == nameof(System.Linq.Enumerable.Contains) && m.GetParameters().Length == 2);
-
-            internal static readonly MethodInfo Single = typeof(System.Linq.Enumerable)
-                .GetMethods(PublicStatic)
-                .Where(x => x.Name == nameof(System.Linq.Enumerable.Single))
-                .Where(x =>
+            /// <summary>
+            /// Type definition used in generic type filters.
+            /// </summary>
+            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+            private sealed class TSource
+            {
+                private TSource()
                 {
-                    var parameters = x.GetParameters();
-                    return parameters.Length == 1
-                        && parameters[0].ParameterType.IsGenericType
-                        && parameters[0].ParameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>);
-                })
-                .Single();
+                }
+            }
 
-            internal static readonly MethodInfo SingleOrDefault = typeof(System.Linq.Enumerable)
-                .GetMethods(PublicStatic)
-                .Where(x => x.Name == nameof(System.Linq.Enumerable.SingleOrDefault))
-                .Where(x =>
+            /// <summary>
+            /// Type definition used in generic type filters.
+            /// </summary>
+            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+            private sealed class TResult
+            {
+                private TResult()
                 {
-                    var parameters = x.GetParameters();
-                    return parameters.Length == 1
-                        && parameters[0].ParameterType.IsGenericType
-                        && parameters[0].ParameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>);
-                })
-                .Single();
+                }
+            }
+
+            internal static readonly MethodInfo Cast = GetStaticMethod(
+                typeof(System.Linq.Enumerable),
+                nameof(System.Linq.Enumerable.Cast),
+                new[] { typeof(TResult) },
+                typeof(IEnumerable));
+
+            internal static readonly MethodInfo OfType = GetStaticMethod(
+                typeof(System.Linq.Enumerable),
+                nameof(System.Linq.Enumerable.OfType),
+                new[] { typeof(TResult) },
+                typeof(IEnumerable));
+
+            internal static readonly MethodInfo ToArray = GetStaticMethod(
+                typeof(System.Linq.Enumerable),
+                nameof(System.Linq.Enumerable.ToArray),
+                new[] { typeof(TSource) },
+                typeof(IEnumerable<TSource>));
+
+            internal static readonly MethodInfo ToList = GetStaticMethod(
+                typeof(System.Linq.Enumerable),
+                nameof(System.Linq.Enumerable.ToList),
+                new[] { typeof(TSource) },
+                typeof(IEnumerable<TSource>));
+
+            internal static readonly MethodInfo Contains = GetStaticMethod(
+                typeof(System.Linq.Enumerable),
+                nameof(System.Linq.Enumerable.Contains),
+                new[] { typeof(TSource) },
+                typeof(IEnumerable<TSource>),
+                typeof(TSource));
+
+            internal static readonly MethodInfo Single = GetStaticMethod(
+                typeof(System.Linq.Enumerable),
+                nameof(System.Linq.Enumerable.Single),
+                new[] { typeof(TSource) },
+                typeof(IEnumerable<TSource>));
+
+            internal static readonly MethodInfo SingleOrDefault = GetStaticMethod(
+                typeof(System.Linq.Enumerable),
+                nameof(System.Linq.Enumerable.SingleOrDefault),
+                new[] { typeof(TSource) },
+                typeof(IEnumerable<TSource>));
         }
 
         internal static class Expression
         {
-            internal static readonly MethodInfo Lambda = typeof(System.Linq.Expressions.Expression)
-                .GetMethods(PublicStatic)
-                .Single(m =>
-                    m.Name == nameof(System.Linq.Expressions.Expression.Lambda) &&
-                    m.IsGenericMethod &&
-                    m.GetParameters().Length == 2 &&
-                    m.GetParameters()[1].ParameterType == typeof(System.Linq.Expressions.ParameterExpression[]));
+            /// <summary>
+            /// Type definition used in generic type filters.
+            /// </summary>
+            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+            private sealed class TDelegate
+            {
+                private TDelegate()
+                {
+                }
+            }
+
+            internal static readonly MethodInfo Lambda = GetStaticMethod(
+                typeof(System.Linq.Expressions.Expression),
+                nameof(System.Linq.Expressions.Expression.Lambda),
+                new[] { typeof(TDelegate) },
+                typeof(Expression),
+                typeof(ParameterExpression[]));
         }
 
         internal static class Queryable
         {
-            internal static readonly MethodInfo AsQueryable = typeof(System.Linq.Queryable)
-                .GetMethods(PublicStatic)
-                .Single(m =>
-                    m.Name == nameof(System.Linq.Queryable.AsQueryable) &&
-                    m.IsGenericMethod &&
-                    m.GetParameters().Length == 1);
-
-            internal static readonly MethodInfo OrderBy = typeof(System.Linq.Queryable)
-                .GetMethods(PublicStatic)
-                .Single(m =>
-                    m.Name == nameof(System.Linq.Queryable.OrderBy) &&
-                    m.IsGenericMethod &&
-                    m.GetParameters().Length == 2);
-
-            internal static readonly MethodInfo OrderByDescending = typeof(System.Linq.Queryable)
-                .GetMethods(PublicStatic)
-                .Single(m =>
-                    m.Name == nameof(System.Linq.Queryable.OrderByDescending) &&
-                    m.IsGenericMethod &&
-                    m.GetParameters().Length == 2);
-
-            internal static readonly MethodInfo ThenBy = typeof(System.Linq.Queryable)
-                .GetMethods(PublicStatic)
-                .Single(m =>
-                    m.Name == nameof(System.Linq.Queryable.ThenBy) &&
-                    m.IsGenericMethod &&
-                    m.GetParameters().Length == 2);
-
-            internal static readonly MethodInfo ThenByDescending = typeof(System.Linq.Queryable)
-                .GetMethods(PublicStatic)
-                .Single(m =>
-                    m.Name == nameof(System.Linq.Queryable.ThenByDescending) &&
-                    m.IsGenericMethod &&
-                    m.GetParameters().Length == 2);
-
-            internal static readonly MethodInfo Select = typeof(System.Linq.Queryable)
-                .GetMethods(PublicStatic)
-                .Where(i => i.Name == nameof(System.Linq.Queryable.Select))
-                .Where(i => i.IsGenericMethod)
-                .Single(i =>
+            /// <summary>
+            /// Type definition used in generic type filters.
+            /// </summary>
+            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+            private sealed class TElement
+            {
+                private TElement()
                 {
-                    var parameters = i.GetParameters();
-                    if (parameters.Length != 2)
-                    {
-                        return false;
-                    }
+                }
+            }
 
-                    var expressionParamType = parameters[1].ParameterType;
-                    if (!expressionParamType.IsGenericType)
-                    {
-                        return false;
-                    }
+            /// <summary>
+            /// Type definition used in generic type filters.
+            /// </summary>
+            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+            private sealed class TSource
+            {
+                private TSource()
+                {
+                }
+            }
 
-                    var genericArguments = expressionParamType.GetGenericArguments().ToArray();
-                    if (genericArguments.Length != 1)
-                    {
-                        return false;
-                    }
+            /// <summary>
+            /// Type definition used in generic type filters.
+            /// </summary>
+            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+            private sealed class TKey
+            {
+                private TKey()
+                {
+                }
+            }
 
-                    if (!genericArguments.Single().IsGenericType)
-                    {
-                        return false;
-                    }
+            /// <summary>
+            /// Type definition used in generic type filters.
+            /// </summary>
+            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+            private sealed class TResult
+            {
+                private TResult()
+                {
+                }
+            }
 
-                    if (genericArguments.Single().GetGenericArguments().Length != 2)
-                    {
-                        return false;
-                    }
+            internal static readonly MethodInfo AsQueryable = GetStaticMethod(
+                typeof(System.Linq.Queryable),
+                nameof(System.Linq.Queryable.AsQueryable),
+                new[] { typeof(TElement) },
+                typeof(IEnumerable<TElement>));
 
-                    return true;
-                });
+            internal static readonly MethodInfo OrderBy = GetStaticMethod(
+                typeof(System.Linq.Queryable),
+                nameof(System.Linq.Queryable.OrderBy),
+                new[] { typeof(TSource), typeof(TKey) },
+                typeof(IQueryable<TSource>),
+                typeof(Expression<Func<TSource, TKey>>));
+
+            internal static readonly MethodInfo OrderByDescending = GetStaticMethod(
+                typeof(System.Linq.Queryable),
+                nameof(System.Linq.Queryable.OrderByDescending),
+                new[] { typeof(TSource), typeof(TKey) },
+                typeof(IQueryable<TSource>),
+                typeof(Expression<Func<TSource, TKey>>));
+
+            internal static readonly MethodInfo ThenBy = GetStaticMethod(
+                typeof(System.Linq.Queryable),
+                nameof(System.Linq.Queryable.ThenBy),
+                new[] { typeof(TSource), typeof(TKey) },
+                typeof(IOrderedQueryable<TSource>),
+                typeof(Expression<Func<TSource, TKey>>));
+
+            internal static readonly MethodInfo ThenByDescending = GetStaticMethod(
+                typeof(System.Linq.Queryable),
+                nameof(System.Linq.Queryable.ThenByDescending),
+                new[] { typeof(TSource), typeof(TKey) },
+                typeof(IOrderedQueryable<TSource>),
+                typeof(Expression<Func<TSource, TKey>>));
+
+            internal static readonly MethodInfo Select = GetStaticMethod(
+                typeof(System.Linq.Queryable),
+                nameof(System.Linq.Queryable.Select),
+                new[] { typeof(TSource), typeof(TResult) },
+                typeof(IOrderedQueryable<TSource>),
+                typeof(Expression<Func<TSource, TResult>>));
         }
 
         internal static class String
         {
-            internal static readonly MethodInfo StartsWith = GetMethod(typeof(string), nameof(string.StartsWith), new[] { typeof(string) });
+            internal static readonly MethodInfo StartsWith = GetMethod(
+                typeof(string),
+                nameof(string.StartsWith),
+                typeof(string));
 
-            internal static readonly MethodInfo EndsWith = GetMethod(typeof(string), nameof(string.EndsWith), new[] { typeof(string) });
+            internal static readonly MethodInfo EndsWith = GetMethod(
+                typeof(string),
+                nameof(string.EndsWith),
+                typeof(string));
 
-            internal static readonly MethodInfo Contains = GetMethod(typeof(string), nameof(string.Contains), new[] { typeof(string) });
+            internal static readonly MethodInfo Contains = GetMethod(
+                typeof(string),
+                nameof(string.Contains),
+                typeof(string));
         }
 
         private const BindingFlags PublicStatic = BindingFlags.Public | BindingFlags.Static;
+        private const BindingFlags PublicInstance = BindingFlags.Public | BindingFlags.Instance;
 
-        private static MethodInfo GetPublicStaticMethod(Type type, string name)
-            => type.GetMethod(name, PublicStatic)
-            ?? throw new InvalidOperationException($"Type {type} does not declare public static method '{name}'");
+        /// <summary>
+        /// Get <see cref="MethodInfo"/> using reflection.
+        /// </summary>
+        internal static MethodInfo GetMethod(Type declaringType, string name, params Type[] parameters)
+            => GetMethodCore(declaringType, name, x => ParametersMatch(x, Array.Empty<Type>(), parameters), PublicInstance);
 
-        private static MethodInfo GetMethod(Type type, string name, Type[] types)
-            => type.GetMethod(name, types)
-            ?? throw new InvalidOperationException($"Type {type} does not declare public instance method '{name}({types.StringJoin(", ")})'");
+        /// <summary>
+        /// Get <see cref="MethodInfo"/> using reflection.
+        /// </summary>
+        internal static MethodInfo GetMethod(Type declaringType, string name, Type[] genericArguments, params Type[] parameters)
+            => GetMethodCore(declaringType, name, x => ParametersMatch(x, genericArguments, parameters), PublicInstance);
+
+        /// <summary>
+        /// Get <see cref="MethodInfo"/> using reflection.
+        /// </summary>
+        internal static MethodInfo GetStaticMethod(Type declaringType, string name, params Type[] parameters)
+            => GetMethodCore(declaringType, name, x => ParametersMatch(x, Array.Empty<Type>(), parameters), PublicStatic);
+
+        /// <summary>
+        /// Get <see cref="MethodInfo"/> using reflection.
+        /// </summary>
+        internal static MethodInfo GetStaticMethod(Type declaringType, string name, Type[] genericArguments, params Type[] parameters)
+            => GetMethodCore(declaringType, name, x => ParametersMatch(x, genericArguments, parameters), PublicStatic);
+
+        private static MethodInfo GetMethodCore(Type declaringType, string name, Func<MethodInfo, bool> filter, BindingFlags bindingFlags)
+        {
+            try
+            {
+                return GetMethodsCore(declaringType, name, filter, bindingFlags).Single();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to get MethodInfo '{bindingFlags} {declaringType}.{name}()'", ex);
+            }
+        }
+
+        private static IEnumerable<MethodInfo> GetMethodsCore(Type declaringType, string name, Func<MethodInfo, bool> filter, BindingFlags bindingFlags)
+            => declaringType
+            .GetMethods(bindingFlags)
+            .Where(x => string.Equals(x.Name, name, StringComparison.Ordinal) && filter(x));
+
+        private static bool ParametersMatch(MethodInfo method, Type[] genericArgumentTypes, Type[] parameterTypes)
+        {
+            method.AssertNotNull(nameof(method));
+            genericArgumentTypes ??= Array.Empty<Type>();
+            parameterTypes ??= Array.Empty<Type>();
+
+            genericArgumentTypes.AssertItemsNotNull(nameof(genericArgumentTypes));
+            parameterTypes.AssertItemsNotNull(nameof(parameterTypes));
+
+            if (method.IsGenericMethod)
+            {
+                if (method.GetGenericArguments().Length != genericArgumentTypes.Length)
+                {
+                    return false;
+                }
+
+                method = method.MakeGenericMethod(genericArgumentTypes);
+            }
+            else if (genericArgumentTypes.Length > 0)
+            {
+                return false;
+            }
+
+            var parameters = method.GetParameters();
+            if (parameters?.Length != parameterTypes.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                var parameterType = parameters[i].ParameterType;
+                var expectedType = parameterTypes[i];
+                if (parameterType != expectedType)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
