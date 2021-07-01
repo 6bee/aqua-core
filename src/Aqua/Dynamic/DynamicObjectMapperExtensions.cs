@@ -65,7 +65,7 @@ namespace Aqua.Dynamic
         /// <param name="setTypeInformation">Set this parameter to <see langword="true"/> if type information should be included within the <see cref="DynamicObject"/>s,
         /// set it to <see langword="false"/> otherwise.</param>
         /// <returns>A collection of <see cref="DynamicObject"/> representing the objects specified.</returns>
-        [return: NotNullIfNotNull("obj")]
+        [return: NotNullIfNotNull("objects")]
         public static IReadOnlyList<DynamicObject?>? MapCollection(this IDynamicObjectMapper objectMapper, object? objects, Func<Type, bool>? setTypeInformation = null)
         {
             objectMapper.AssertNotNull(nameof(objectMapper));
