@@ -511,42 +511,6 @@ namespace Aqua.Dynamic
         }
 
         /// <summary>
-        /// Maps a collection of objects into a collection of <see cref="DynamicObject"/>.
-        /// </summary>
-        /// <param name="objects">The object to be mapped.</param>
-        /// <param name="setTypeInformation">Set this parameter to <see langword="true"/> if type information should be included within the <see cref="DynamicObject"/>s,
-        /// set it to <see langword="false"/> otherwise.</param>
-        /// <returns>A collection of <see cref="DynamicObject"/> representing the objects specified.</returns>
-        [return: NotNullIfNotNull("obj")]
-        public IEnumerable<DynamicObject?>? MapCollection(object? objects, Func<Type, bool>? setTypeInformation = null)
-        {
-            IEnumerable<DynamicObject?>? enumerable;
-            if (objects is null)
-            {
-                enumerable = null;
-            }
-            else if (objects is IEnumerable<DynamicObject> x)
-            {
-                // cast
-                enumerable = x;
-            }
-            else if (objects.IsCollection(out var collection))
-            {
-                enumerable = collection
-                    .Cast<object>()
-                    .Select(x => MapObject(x, setTypeInformation));
-            }
-            else
-            {
-                // put single object into dynamic object
-                var value = MapObject(objects, setTypeInformation);
-                enumerable = new[] { value };
-            }
-
-            return enumerable?.ToList();
-        }
-
-        /// <summary>
         /// Mapps the specified instance into a <see cref="DynamicObject"/>.
         /// </summary>
         /// <remarks>Null references and <see cref="DynamicObject"/> are not mapped.</remarks>
@@ -757,8 +721,14 @@ namespace Aqua.Dynamic
         [return: NotNullIfNotNull("obj")]
         private object? MapToDynamicObjectIfRequired(object? obj, Func<Type, bool> setTypeInformation)
         {
-            if (obj is null ||
-                obj is DynamicObject ||
+            if (obj is null)
+            {
+                return _settings.WrapNullAsDynamicObject
+                    ? DynamicObject.CreateDefault()
+                    : null;
+            }
+
+            if (obj is DynamicObject ||
                 obj is string)
             {
                 return obj;
@@ -868,7 +838,9 @@ namespace Aqua.Dynamic
         {
             if (obj is null)
             {
-                return null;
+                return _settings.WrapNullAsDynamicObject
+                    ? DynamicObject.CreateDefault()
+                    : null;
             }
 
             if (obj is DynamicObject dynamicObject)

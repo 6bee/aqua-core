@@ -45,7 +45,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
             {
                 var mappedGrouping = new DynamicObject(grouping.GetType());
                 mappedGrouping.Add("Key", MapToDynamicObjectGraph(grouping.Key, setTypeInformation));
-                mappedGrouping.Add("Elements", MapCollection(grouping, setTypeInformation).ToArray());
+                mappedGrouping.Add("Elements", this.MapCollection(grouping, setTypeInformation).ToArray());
                 return mappedGrouping;
             }
         }
