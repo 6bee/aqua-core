@@ -115,7 +115,10 @@ namespace Aqua.TypeExtensions
             where T : Attribute
             => type.IsDefined(typeof(T));
 
-        internal static Type AsNonNullableType(this Type type)
+        /// <summary>
+        /// Returns the non-nullable value type, or the type itself if <paramref name="type"/> is not of type <see cref="Nullable{T}"/>.
+        /// </summary>
+        public static Type AsNonNullableType(this Type type)
         {
             var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
             return isNullable ? type.GetGenericArguments()[0] : type;
@@ -169,9 +172,21 @@ namespace Aqua.TypeExtensions
             return i =>
             {
                 var genericArguments = i.GenericTypeArguments;
-                var isAssignable = i.IsGenericType
-                    && genericArguments.Length == genericArgumentsCount
-                    && interfaceTypeInfo.MakeGenericType(genericArguments).IsAssignableFrom(i);
+                var isAssignable = i.IsGenericType && genericArguments.Length == genericArgumentsCount;
+                if (isAssignable)
+                {
+                    try
+                    {
+                        isAssignable = interfaceTypeInfo.MakeGenericType(genericArguments).IsAssignableFrom(i);
+                    }
+                    catch (ArgumentException)
+                    {
+                        // justification:
+                        // https://stackoverflow.com/questions/4864496/checking-if-an-object-meets-a-generic-parameter-constraint/4864565#4864565
+                        isAssignable = false;
+                    }
+                }
+
                 if (isAssignable)
                 {
                     typeArgs[0] = genericArguments;

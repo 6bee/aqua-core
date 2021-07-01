@@ -69,9 +69,19 @@ namespace Aqua.ProtoBuf
         [SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "Property used as serialization contract")]
         public Value<T?>[] Array
         {
-            get => (Value<T?>[])(base.ObjectValue ?? System.Array.Empty<Value<T?>>());
-            set => base.ObjectValue = value;
+            get => MapInternal((object[])base.ObjectValue!);
+            set => base.ObjectValue = MapInternal(value);
         }
+
+        private static Value<T?>[] MapInternal(object[] array)
+            => (array ?? System.Array.Empty<object>())
+            .Select(x => x is null || x is NullValue ? new Value<T?>(default) : (Value<T?>)x)
+            .ToArray();
+
+        private static object[] MapInternal(Value<T?>[] array)
+            => array
+            .Select(x => x?.ObjectValue is null ? NullValue.Instance : (Value)x)
+            .ToArray();
 
         protected override IEnumerable GetEnumerable()
             => Array
