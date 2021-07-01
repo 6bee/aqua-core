@@ -132,7 +132,7 @@ namespace Aqua.Tests.ProtoBuf
 
             using var cultureContext = culture.CreateContext();
 
-            var dynamicObjects = new DynamicObjectMapper().MapCollection(value);
+            var dynamicObjects = new DynamicObjectMapper(new DynamicObjectMapperSettings { WrapNullAsDynamicObject = true }).MapCollection(value);
             var copy = dynamicObjects.Serialize();
 
             var dynamicObjectsCount = dynamicObjects?.Count() ?? 0;

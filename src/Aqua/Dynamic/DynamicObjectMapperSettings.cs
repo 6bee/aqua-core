@@ -42,6 +42,12 @@ namespace Aqua.Dynamic
         /// The default value is <see langword="false"/>.
         /// </summary>
         public bool PreserveMappingCache { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether null values should be wrapped as <see cref="DynamicObject"/>.
+        /// The default value is <see langword="false"/>.
+        /// </summary>
+        public bool WrapNullAsDynamicObject { get; set; }
 #pragma warning restore SA1629 // Documentation text should end with a periods
 
         internal DynamicObjectMapperSettings Copy() => (DynamicObjectMapperSettings)MemberwiseClone();
