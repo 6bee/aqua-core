@@ -92,7 +92,17 @@ namespace Aqua.Dynamic
 
         public void Add(string name, object? value) => Add(new Property(name, value));
 
-        public void Add(Property property) => _list.Add(property);
+        public void Add(Property property)
+        {
+            property.AssertNotNull(nameof(property));
+
+            if (Contains(property))
+            {
+                throw new InvalidOperationException($"Property '{property.Name}' already contained.");
+            }
+
+            _list.Add(property);
+        }
 
         public bool Remove(Property property) => _list.RemoveAll(CreatePredicate(property)) > 0;
 
@@ -102,9 +112,9 @@ namespace Aqua.Dynamic
 
         IEnumerator IEnumerable.GetEnumerator() => _list.GetEnumerator();
 
-        private IEnumerable<Property> FindAll(string name) => FindAll(new Property(name, null));
+        internal IEnumerable<Property> FindAll(string name) => FindAll(new Property(name, null));
 
-        private IEnumerable<Property> FindAll(Property property)
+        internal IEnumerable<Property> FindAll(Property property)
         {
             var match = CreatePredicate(property);
             var count = Count;

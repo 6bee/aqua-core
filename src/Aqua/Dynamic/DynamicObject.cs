@@ -187,8 +187,8 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <param name="name">Name of the member to be assigned.</param>
         /// <param name="value">The value to be set.</param>
-        /// <returns>The value specified.</returns>
-        public object? Set(string name, object? value)
+        /// <returns>The property that was either added or updated.</returns>
+        public Property Set(string name, object? value)
         {
             var properties = GetOrCreatePropertSet();
             var property = properties.SingleOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
@@ -203,7 +203,24 @@ namespace Aqua.Dynamic
                 property.Value = value;
             }
 
-            return value;
+            return property;
+        }
+
+        /// <summary>
+        /// Sets a member.
+        /// </summary>
+        /// <param name="property">Property to be set.</param>
+        public void Set(Property property)
+        {
+            property.AssertNotNull(nameof(property));
+            var properties = GetOrCreatePropertSet();
+
+            if (properties.SingleOrDefault(x => string.Equals(x.Name, property.Name, StringComparison.Ordinal)) is Property existing)
+            {
+                properties.Remove(property);
+            }
+
+            properties.Add(property);
         }
 
         /// <summary>
@@ -244,7 +261,7 @@ namespace Aqua.Dynamic
             var properties = Properties;
             if (TryGetProperty(properties, name, out var property))
             {
-                properties!.Remove(property);
+                properties.Remove(property);
                 return true;
             }
 
@@ -270,7 +287,7 @@ namespace Aqua.Dynamic
             return false;
         }
 
-        private static bool TryGetProperty(PropertySet? properties, string name, [NotNullWhen(true)] out Property? property)
+        private static bool TryGetProperty([NotNullWhen(true)] PropertySet? properties, string name, [NotNullWhen(true)] out Property? property)
         {
             property = properties?.SingleOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
             return property is not null;
