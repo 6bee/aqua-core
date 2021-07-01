@@ -115,7 +115,7 @@ namespace Aqua.Dynamic
         /// <param name="deepCopy">If <see langword="true"/> re-creates <see cref="Property"/> instances,
         /// otherwise fills existing <see cref="Property"/> instances into a new <see cref="PropertySet"/>.</param>
         /// <exception cref="ArgumentNullException">The specified members collection is <see langword="null"/>.</exception>
-        internal protected DynamicObject(DynamicObject dynamicObject, bool deepCopy = true)
+        public DynamicObject(DynamicObject dynamicObject, bool deepCopy = true)
         {
             var type = dynamicObject.CheckNotNull(nameof(dynamicObject)).Type;
             Type = type is null ? null : new TypeInfo(type);
