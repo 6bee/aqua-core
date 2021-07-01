@@ -18,13 +18,11 @@ namespace Aqua.TypeSystem.Emit
     {
         private sealed class TypeResolverScope : ITypeResolver
         {
-            private readonly HashSet<TypeInfo> _references = new HashSet<TypeInfo>(ReferenceEqualityComparer<TypeInfo>.Default);
+            private readonly HashSet<TypeInfo> _references = new (ReferenceEqualityComparer<TypeInfo>.Default);
             private readonly ITypeResolver _typeResolver;
 
             public TypeResolverScope(ITypeResolver typeResolver)
-            {
-                _typeResolver = typeResolver;
-            }
+                => _typeResolver = typeResolver;
 
             Type? ITypeResolver.ResolveType(TypeInfo? type)
             {

@@ -170,7 +170,7 @@ namespace Aqua.TypeSystem
         /// <summary>
         /// Returns the <see cref="Type"/> represented by this <see cref="TypeInfo"/> instance by resolving it using the default <see cref="TypeResolver"/>.
         /// </summary>
-        public Type ToType() => _type ?? (_type = this.ResolveType(TypeResolver.Instance));
+        public Type ToType() => _type ??= this.ResolveType(TypeResolver.Instance);
 
         public static explicit operator Type?(TypeInfo? type) => type?.ToType();
 

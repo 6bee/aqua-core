@@ -12,10 +12,7 @@ namespace Aqua.Tests
 
     public static class TestData
     {
-#pragma warning disable S1135 // Track uses of "TODO" tags
-
         // TODO: Extend test data set with custom types
-#pragma warning restore S1135 // Track uses of "TODO" tags
         public class GenericReferenceType<T>
         {
             public T Value { get; set; }
@@ -133,11 +130,9 @@ namespace Aqua.Tests
                 TestEnum.Foo,
                 TestEnum.Bar,
                 new { Text = string.Empty, Timestamp = default(DateTime?) },
-#pragma warning disable S1135 // Track uses of "TODO" tags
 
                 // TODO: consider support for custom tuples
                 // (Name: "NegativePi", Value: -Math.PI),
-#pragma warning restore S1135 // Track uses of "TODO" tags
             }
             .SelectMany(x => new (Type Type, object Value)[]
             {

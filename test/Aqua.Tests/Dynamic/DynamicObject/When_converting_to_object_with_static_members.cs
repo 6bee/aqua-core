@@ -44,9 +44,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
             public string ReadonlyProperty { get; } = "DefaultReadonlyPropertyValue";
 
-#pragma warning disable S2376 // S2376: Write-only properties should not be used
             public string WriteonlyProperty { set => WriteonlyPropertyBackingField = value; }
-#pragma warning restore S2376 // S2376: Write-only properties should not be used
 #pragma warning restore CS0414 // CS0414: The field is assigned but its value is never used
         }
 

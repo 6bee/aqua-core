@@ -56,7 +56,7 @@ namespace Aqua.TypeSystem
             => field.CheckNotNull(nameof(field)).ToFieldInfo();
 
         public System.Reflection.FieldInfo ToFieldInfo()
-            => _field ?? (_field = this.ResolveField(TypeResolver.Instance))
+            => _field ??= this.ResolveField(TypeResolver.Instance)
             ?? throw new TypeResolverException($"Failed to resolve field, consider using extension method to specify {nameof(ITypeResolver)}.");
     }
 }

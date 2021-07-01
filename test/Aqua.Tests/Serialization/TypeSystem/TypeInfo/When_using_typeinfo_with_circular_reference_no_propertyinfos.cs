@@ -7,7 +7,7 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
     using System;
     using Xunit;
 
-    public abstract partial class When_using_typeinfo_with_circular_reference_no_propertyinfos
+    public abstract class When_using_typeinfo_with_circular_reference_no_propertyinfos
     {
         public class With_binary_formatter : When_using_typeinfo_with_circular_reference_no_propertyinfos
         {

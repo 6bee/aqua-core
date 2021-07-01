@@ -277,7 +277,7 @@ namespace Aqua.Dynamic
         }
 
         private PropertySet GetOrCreatePropertSet()
-            => Properties ?? (Properties = new PropertySet());
+            => Properties ??= new PropertySet();
 
         /// <summary>
         /// Creates a dynamic objects representing the object structure defined by the specified object.

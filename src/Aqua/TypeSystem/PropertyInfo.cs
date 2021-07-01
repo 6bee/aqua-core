@@ -73,7 +73,7 @@ namespace Aqua.TypeSystem
             => proeprty.CheckNotNull(nameof(proeprty)).ToPropertyInfo();
 
         public System.Reflection.PropertyInfo ToPropertyInfo()
-            => _property ?? (_property = this.ResolveProperty(TypeResolver.Instance))
+            => _property ??= this.ResolveProperty(TypeResolver.Instance)
             ?? throw new TypeResolverException($"Failed to resolve property, consider using extension method to specify {nameof(ITypeResolver)}.");
     }
 }

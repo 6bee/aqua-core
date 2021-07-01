@@ -139,7 +139,9 @@ namespace Aqua.TypeExtensions
         /// <param name="interfaceType">The actualy type to be checked for.</param>
         /// <param name="genericTypeArguments">Out parameter with array of generic argument types, in case <paramref name="interfaceType"/> is an open generic type.</param>
 #pragma warning disable SA1011 // Closing square brackets should be spaced correctly
+#pragma warning disable S3874 // SonarCSharp_S3874: "out" and "ref" parameters should not be used
         public static bool Implements(this Type type, Type interfaceType, [NotNullWhen(true)] out Type[]? genericTypeArguments)
+#pragma warning restore S3874 // SonarCSharp_S3874: "out" and "ref" parameters should not be used
 #pragma warning restore SA1011 // Closing square brackets should be spaced correctly
         {
             var typeArgs = new Type[1][];

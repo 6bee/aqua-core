@@ -171,6 +171,7 @@ namespace Aqua.EnumerableExtensions
         /// <summary>
         /// Returns <see langword="true"/> if the object is of type <see cref="IEnumerable"/> but not <see cref="string"/>.
         /// </summary>
+#pragma warning disable S3874 // SonarCSharp_S3874: "out" and "ref" parameters should not be used
         public static bool IsCollection(this object? obj, [NotNullWhen(true)] out IEnumerable? enumerable)
         {
             if (obj is IEnumerable x && obj is not string)
@@ -182,6 +183,7 @@ namespace Aqua.EnumerableExtensions
             enumerable = null;
             return false;
         }
+#pragma warning restore S3874 // SonarCSharp_S3874: "out" and "ref" parameters should not be used
 
         public static IEnumerable CastCollectionToArrayOfType(this IEnumerable items, Type elementType)
         {

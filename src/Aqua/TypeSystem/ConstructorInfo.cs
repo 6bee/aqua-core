@@ -55,7 +55,7 @@ namespace Aqua.TypeSystem
             => constructor.CheckNotNull(nameof(constructor)).ToConstructorInfo();
 
         public System.Reflection.ConstructorInfo ToConstructorInfo()
-            => _constructor ?? (_constructor = this.ResolveConstructor(TypeResolver.Instance))
+            => _constructor ??= this.ResolveConstructor(TypeResolver.Instance)
             ?? throw new TypeResolverException($"Failed to resolve constructor, consider using extension method to specify {nameof(ITypeResolver)}.");
     }
 }

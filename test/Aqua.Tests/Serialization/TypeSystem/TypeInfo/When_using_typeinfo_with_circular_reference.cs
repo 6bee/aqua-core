@@ -8,7 +8,7 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
     using System.Linq;
     using Xunit;
 
-    public abstract partial class When_using_typeinfo_with_circular_reference
+    public abstract class When_using_typeinfo_with_circular_reference
     {
         // XmlSerializer doesn't support circular references
         // protobuf-net doesn't support circular references

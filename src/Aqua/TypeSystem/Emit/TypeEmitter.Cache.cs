@@ -145,9 +145,7 @@ namespace Aqua.TypeSystem.Emit
             private readonly ITypeResolver _typeResolver;
 
             public TypeCache(ITypeResolver typeResolver)
-            {
-                _typeResolver = typeResolver;
-            }
+                => _typeResolver = typeResolver;
 
             internal Type GetOrCreate(IEnumerable<string> properties, Func<IEnumerable<string>, Type> factory)
             {
