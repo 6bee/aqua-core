@@ -13,15 +13,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             private readonly int _id;
 
             public Data(int id)
-            {
-                _id = id;
-            }
+                => _id = id;
 
             public int Id => _id;
 
-            public double DoubleValue { get; set; }
+            public double DoubleProperty { get; set; }
 
-            public string StringValue { get; set; }
+            public string StringProperty { get; set; }
         }
 
         private const int Int32Value = 11;
@@ -36,9 +34,9 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 Properties = new PropertySet
                 {
-                    { "Id", Int32Value },
-                    { "DoubleValue", DoubleValue },
-                    { "StringValue", StringValue },
+                    { nameof(Data.Id), Int32Value },
+                    { nameof(Data.DoubleProperty), DoubleValue },
+                    { nameof(Data.StringProperty), StringValue },
                 },
             };
 
@@ -60,13 +58,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_populate_double_property()
         {
-            obj.DoubleValue.ShouldBe(DoubleValue);
+            obj.DoubleProperty.ShouldBe(DoubleValue);
         }
 
         [Fact]
         public void Should_populate_string_property()
         {
-            obj.StringValue.ShouldBe(StringValue);
+            obj.StringProperty.ShouldBe(StringValue);
         }
     }
 }

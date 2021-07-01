@@ -11,11 +11,11 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     {
         private class CustomType
         {
-            public int Int32Value { get; set; }
+            public int Int32Property { get; set; }
 
-            private double DoubleValue { get; set; }
+            private double DoubleProperty { get; set; }
 
-            private string StringValue { get; set; }
+            private string StringProperty { get; set; }
         }
 
         private const int Int32Value = 11;
@@ -30,9 +30,9 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 Properties = new PropertySet
                 {
-                    { "Int32Value", Int32Value },
-                    { "DoubleValue", DoubleValue },
-                    { "StringValue", StringValue },
+                    { nameof(CustomType.Int32Property), Int32Value },
+                    { "DoubleProperty", DoubleValue },
+                    { "StringProperty", StringValue },
                 },
             };
 
@@ -48,19 +48,19 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_the_int_property_set()
         {
-            obj.Int32Value.ShouldBe(Int32Value);
+            obj.Int32Property.ShouldBe(Int32Value);
         }
 
         [Fact]
         public void Should_have_the_double_property_not_set()
         {
-            GetPropertyValue("DoubleValue").ShouldBe(default(double));
+            GetPropertyValue("DoubleProperty").ShouldBe(default(double));
         }
 
         [Fact]
         public void Should_have_the_string_property_not_set()
         {
-            GetPropertyValue("StringValue").ShouldBeNull();
+            GetPropertyValue("StringProperty").ShouldBeNull();
         }
 
         private object GetPropertyValue(string propertyName)

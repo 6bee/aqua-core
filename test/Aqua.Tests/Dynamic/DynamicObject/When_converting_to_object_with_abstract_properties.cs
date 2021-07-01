@@ -29,21 +29,19 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             public object Value4 { get; set; }
         }
 
-        private readonly DynamicObject dynamicObject;
-
         private readonly object obj;
 
         public When_converting_to_object_with_abstract_properties()
         {
-            dynamicObject = new DynamicObject
+            var dynamicObject = new DynamicObject
             {
                 Properties = new PropertySet
                 {
-                    { "Ref", new DynamicObject(typeof(A)) },
-                    { "Value1", "the value's pay load" },
-                    { "Value2", 222 },
-                    { "Value3", null },
-                    { "Value4", new DynamicObject(typeof(object)) },
+                    { nameof(ClassWithAbstractProperties.Ref), new DynamicObject(typeof(A)) },
+                    { nameof(ClassWithAbstractProperties.Value1), "the value's pay load" },
+                    { nameof(ClassWithAbstractProperties.Value2), 222 },
+                    { nameof(ClassWithAbstractProperties.Value3), null },
+                    { nameof(ClassWithAbstractProperties.Value4), new DynamicObject(typeof(object)) },
                 },
             };
 
@@ -53,10 +51,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_converto_to_object_with_original_values()
         {
-            obj.ShouldNotBeNull();
-            obj.ShouldBeOfType<ClassWithAbstractProperties>();
-
-            var instance = (ClassWithAbstractProperties)obj;
+            var instance = obj.ShouldBeOfType<ClassWithAbstractProperties>();
             instance.Ref.ShouldBeOfType<A>();
             instance.Value1.ShouldBe("the value's pay load");
             instance.Value2.ShouldBe(222);

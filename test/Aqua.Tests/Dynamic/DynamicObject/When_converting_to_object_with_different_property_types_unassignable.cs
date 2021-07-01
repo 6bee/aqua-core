@@ -37,11 +37,11 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         private class CustomType
         {
-            public int Int32Value { get; set; }
+            public int Int32Property { get; set; }
 
-            public double? NullableDoubleValue { get; set; }
+            public double? NullableDoubleProperty { get; set; }
 
-            public string StringValue { get; set; }
+            public string StringProperty { get; set; }
 
             public B BProperty { get; set; }
 
@@ -52,6 +52,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         private const long Longvalue = 12345L;
         private const double DoubleValue = 12.3456789;
+        private const int IntValue = (int)DoubleValue;
         private const string StringValue = "eleven";
 
         private readonly CustomType obj;
@@ -62,12 +63,12 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 Properties = new PropertySet
                 {
-                    { "NumericValue", DoubleValue },
-                    { "NullableDoubleValue", Longvalue },
-                    { "StringValue", StringValue },
-                    { "BProperty", new A() },
-                    { "CProperty", new A() },
-                    { "DProperty", new A() },
+                    { nameof(CustomType.Int32Property), DoubleValue },
+                    { nameof(CustomType.NullableDoubleProperty), Longvalue },
+                    { nameof(CustomType.StringProperty), StringValue },
+                    { nameof(CustomType.BProperty), new A() },
+                    { nameof(CustomType.CProperty), new A() },
+                    { nameof(CustomType.DProperty), new A() },
                 },
             };
 
@@ -83,19 +84,19 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_the_int_property_not_set()
         {
-            obj.Int32Value.ShouldBe(default(int)); // double cannot be automatically converted into int
+            obj.Int32Property.ShouldBe(IntValue); // double automatically converted into int
         }
 
         [Fact]
         public void Should_have_the_nullabledouble_property_not_set()
         {
-            obj.NullableDoubleValue.ShouldBeNull(); // long cannot be automatically converted into Nullable<double>
+            obj.NullableDoubleProperty.ShouldBeNull(); // long cannot be automatically converted into Nullable<double>
         }
 
         [Fact]
         public void Should_have_the_string_property_set()
         {
-            obj.StringValue.ShouldBe(StringValue);
+            obj.StringProperty.ShouldBe(StringValue);
         }
 
         [Fact]
@@ -107,13 +108,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_the_property_of_type_C()
         {
-            obj.CProperty.ShouldBeOfType<C>();
+            obj.CProperty.ShouldBeOfType<C>(); // created C using explicit conversion
         }
 
         [Fact]
         public void Should_have_the_property_of_type_D()
         {
-            obj.DProperty.ShouldBeOfType<D>();
+            obj.DProperty.ShouldBeOfType<D>(); // created D using implicit conversion
         }
     }
 }

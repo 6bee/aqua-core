@@ -96,7 +96,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
             using var cultureContext = culture.CreateContext();
 
-            var result = Serialize(type, value, true, false);
+            var result = Serialize(type, value);
             result.ShouldBe(value, $"type: {type.FullName}");
         }
 
@@ -115,7 +115,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
             using var cultureContext = culture.CreateContext();
 
-            var result = Serialize(type, value, true, true);
+            var result = Serialize(type, value, formatValuesAsStrings: true);
             result.ShouldBe(value, $"type: {type.FullName}");
         }
 
@@ -136,7 +136,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
             using var cultureContext = culture.CreateContext();
 
-            var result = SerializeAsProperty(type, value, true, false);
+            var result = SerializeAsProperty(type, value);
             result.ShouldBe(value, $"type: {type.FullName}");
         }
 
@@ -150,7 +150,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
             using var cultureContext = culture.CreateContext();
 
-            var result = SerializeAsProperty(type, value, true, true);
+            var result = SerializeAsProperty(type, value, formatValuesAsStrings: true);
             result.ShouldBe(value, $"type: {type.FullName}  ({value})");
         }
 
@@ -161,7 +161,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             Skip.If(this.TestIs<With_xml_serializer>(), "DateTimeOffset is not supported by XmlSerializer.");
 
             var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
-            var result = SerializeAsProperty(value.GetType(), value, true, false);
+            var result = SerializeAsProperty(value.GetType(), value);
             result.ShouldBe(value);
         }
 
@@ -169,7 +169,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         public void Should_serialize_DateTimeOffset_as_property_when_using_string_formatting()
         {
             var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
-            var result = SerializeAsProperty(value.GetType(), value, true, true);
+            var result = SerializeAsProperty(value.GetType(), value, formatValuesAsStrings: true);
             result.ShouldBe(value);
         }
 

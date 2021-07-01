@@ -11,13 +11,13 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     {
         private class CustomType
         {
-            public int Int32Value { get; set; }
+            public int Int32Proeprty { get; set; }
 
-            public double DoubleValue { get; set; }
+            public double DoubleProperty { get; set; }
 
-            public DateTime? NullableDateTime { get; set; }
+            public DateTime? NullableDateTimeProperty { get; set; }
 
-            public string StringValue { get; set; }
+            public string StringProperty { get; set; }
         }
 
         private const int Int32Value = 11;
@@ -31,8 +31,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 Properties = new PropertySet
                 {
-                    { "Int32Value", Int32Value },
-                    { "StringValue", StringValue },
+                    { nameof(CustomType.Int32Proeprty), Int32Value },
+                    { nameof(CustomType.StringProperty), StringValue },
                 },
             };
 
@@ -48,25 +48,25 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_the_int_property_set()
         {
-            obj.Int32Value.ShouldBe(Int32Value);
+            obj.Int32Proeprty.ShouldBe(Int32Value);
         }
 
         [Fact]
         public void Should_have_the_double_property_not_set()
         {
-            obj.DoubleValue.ShouldBe(default(double));
+            obj.DoubleProperty.ShouldBe(default(double));
         }
 
         [Fact]
         public void Should_have_the_date_property_not_set()
         {
-            obj.NullableDateTime.ShouldBeNull();
+            obj.NullableDateTimeProperty.ShouldBeNull();
         }
 
         [Fact]
         public void Should_have_the_string_property_set()
         {
-            obj.StringValue.ShouldBe(StringValue);
+            obj.StringProperty.ShouldBe(StringValue);
         }
     }
 }

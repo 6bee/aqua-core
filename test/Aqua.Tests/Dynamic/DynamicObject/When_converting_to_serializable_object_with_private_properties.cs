@@ -13,11 +13,11 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Serializable]
         private class SerializableType
         {
-            public int Int32Value { get; set; }
+            public int Int32Property { get; set; }
 
-            private double DoubleValue { get; set; }
+            private double DoubleProperty { get; set; }
 
-            private string StringValue { get; set; }
+            private string StringProperty { get; set; }
         }
 
         private const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;
@@ -33,9 +33,9 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 Properties = new PropertySet
                 {
-                    { "Int32Value", Int32Value },
-                    { "DoubleValue", DoubleValue },
-                    { "StringValue", StringValue },
+                    { nameof(SerializableType.Int32Property), Int32Value },
+                    { "DoubleProperty", DoubleValue },
+                    { "StringProperty", StringValue },
                 },
             };
 
@@ -51,19 +51,19 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_the_int_property_set()
         {
-            obj.Int32Value.ShouldBe(Int32Value);
+            obj.Int32Property.ShouldBe(Int32Value);
         }
 
         [Fact]
         public void Should_have_the_private_double_property_set()
         {
-            GetPropertyValue("DoubleValue").ShouldBe(DoubleValue);
+            GetPropertyValue("DoubleProperty").ShouldBe(DoubleValue);
         }
 
         [Fact]
         public void Should_have_the_private_string_property_set()
         {
-            GetPropertyValue("StringValue").ShouldBe(StringValue);
+            GetPropertyValue("StringProperty").ShouldBe(StringValue);
         }
 
         private object GetPropertyValue(string propertyName)

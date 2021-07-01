@@ -10,7 +10,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     {
         private class CustomType
         {
-            public string StringValue { get; set; }
+            public string StringProperty { get; set; }
         }
 
         private const string StringValue = "eleven";
@@ -23,7 +23,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 Properties = new PropertySet
                 {
-                    { "StringValue", StringValue },
+                    { nameof(CustomType.StringProperty), StringValue },
                 },
             };
 
@@ -39,7 +39,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_the_string_property_set()
         {
-            obj.StringValue.ShouldBe(StringValue);
+            obj.StringProperty.ShouldBe(StringValue);
         }
     }
 }

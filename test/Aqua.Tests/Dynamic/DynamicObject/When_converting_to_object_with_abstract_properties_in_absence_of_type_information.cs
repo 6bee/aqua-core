@@ -51,11 +51,11 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 Properties = new PropertySet
                 {
-                    { "Ref", new DynamicObject() },
-                    { "Value1", "the value's pay load" },
-                    { "Value2", 222 },
-                    { "Value3", null },
-                    { "Value4", new DynamicObject() },
+                    { nameof(ClassWithAbstractProperties.Ref), new DynamicObject() },
+                    { nameof(ClassWithAbstractProperties.Value1), "the value's pay load" },
+                    { nameof(ClassWithAbstractProperties.Value2), 222 },
+                    { nameof(ClassWithAbstractProperties.Value3), null },
+                    { nameof(ClassWithAbstractProperties.Value4), new DynamicObject() },
                 },
             };
 
@@ -67,10 +67,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_recreate_object_with_original_values()
         {
-            obj.ShouldNotBeNull();
-            obj.ShouldBeOfType<ClassWithAbstractProperties>();
-
-            var instance = (ClassWithAbstractProperties)obj;
+            var instance = obj.ShouldBeOfType<ClassWithAbstractProperties>();
             instance.Ref.ShouldBeOfType<A>();
             instance.Value1.ShouldBe("the value's pay load");
             instance.Value2.ShouldBe(222);

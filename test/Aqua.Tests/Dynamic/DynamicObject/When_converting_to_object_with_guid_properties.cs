@@ -34,9 +34,9 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 Properties = new PropertySet
                 {
-                    { "Guid1", guid1String },
-                    { "Guid2", guid2String },
-                    { "Guid3", null },
+                    { nameof(ClassWithGuidProperties.Guid1), guid1String },
+                    { nameof(ClassWithGuidProperties.Guid2), guid2String },
+                    { nameof(ClassWithGuidProperties.Guid3), null },
                 },
             };
 

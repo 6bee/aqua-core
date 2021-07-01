@@ -13,28 +13,28 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             public CustomType(string s1, string s2, int i, double d)
             {
-                StringValue = s1;
-                PrivateStringValue = s2;
-                Int32Value = i;
-                DoubleValue = d;
+                ReadonlyStringField = s1;
+                PrivateStringField = s2;
+                Int32Property = i;
+                DoubleProperty = d;
             }
 
-            public readonly string StringValue = null;
-            private string PrivateStringValue;
-            public DateTime Date;
+            public readonly string ReadonlyStringField;
+            private string PrivateStringField;
+            public DateTime DataField;
 
-            private double DoubleValue { get; }
+            private double DoubleProperty { get; }
 
-            public int Int32Value { get; }
+            public int Int32Property { get; }
 
-            public string RedundantValue => StringValue;
+            public string RedundantProperty => ReadonlyStringField;
         }
 
         private const int Int32Value = 11;
         private const double DoubleValue = 12.3456789;
         private const string StringValue1 = "Foo";
         private const string StringValue2 = "Bar";
-        private static readonly DateTime Date = new DateTime(2002, 2, 13);
+        private static readonly DateTime DateValue = new DateTime(2002, 2, 13);
 
         private readonly DynamicObject dynamicObject;
 
@@ -42,7 +42,7 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         {
             var source = new CustomType(StringValue1, StringValue2, Int32Value, DoubleValue)
             {
-                Date = Date,
+                DataField = DateValue,
             };
 
             dynamicObject = new DynamicObject(source);
@@ -57,25 +57,25 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_the_string_set_from_public_readonly_filed()
         {
-            dynamicObject["StringValue"].ShouldBe(StringValue1);
+            dynamicObject[nameof(CustomType.ReadonlyStringField)].ShouldBe(StringValue1);
         }
 
         [Fact]
         public void Should_have_the_date_value_set_from_public_field()
         {
-            dynamicObject["Date"].ShouldBe(Date);
+            dynamicObject[nameof(CustomType.DataField)].ShouldBe(DateValue);
         }
 
         [Fact]
         public void Should_have_the_int_value_set_from_public_readonly__property()
         {
-            dynamicObject["Int32Value"].ShouldBe(Int32Value);
+            dynamicObject[nameof(CustomType.Int32Property)].ShouldBe(Int32Value);
         }
 
         [Fact]
         public void Should_have_the_string_value_set_from_readonly_property()
         {
-            dynamicObject["RedundantValue"].ShouldBe(StringValue1);
+            dynamicObject[nameof(CustomType.RedundantProperty)].ShouldBe(StringValue1);
         }
     }
 }

@@ -88,9 +88,19 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         }
 
         [Fact]
-        public void Should_map_delegate2()
+        public void Should_map_local_function()
         {
             int F() => 1;
+            var o = new DynamicObject((Func<int>)F);
+            var r = new DynamicObjectMapper().Map<F0>(o);
+            var x = r();
+            x.ShouldBe(1);
+        }
+
+        [Fact]
+        public void Should_map_static_local_function()
+        {
+            static int F() => 1;
             var o = new DynamicObject((Func<int>)F);
             var r = new DynamicObjectMapper().Map<F0>(o);
             var x = r();

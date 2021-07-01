@@ -14,18 +14,18 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     {
         private class CustomType
         {
-            public double DoubleValue { get; set; }
+            public double DoubleProperty { get; set; }
 
-            public int? NullableIntValue { get; set; }
+            public int? NullableInt32Property { get; set; }
 
-            public object Timestamp { get; set; }
+            public object ObjectProperty { get; set; }
 
-            public string StringValue { get; set; }
+            public string StringProperty { get; set; }
         }
 
         private const int Int32Value = 11;
         private const string StringValue = "eleven";
-        private readonly DateTime _timestamp = DateTime.Now;
+        private readonly DateTime DateTimeValue = DateTime.Now;
 
         private readonly CustomType obj;
 
@@ -35,10 +35,10 @@ namespace Aqua.Tests.Dynamic.DynamicObject
             {
                 Properties = new PropertySet
                 {
-                    { "DoubleValue", Int32Value },
-                    { "NullableIntValue", Int32Value },
-                    { "Timestamp", _timestamp },
-                    { "StringValue", StringValue },
+                    { nameof(CustomType.DoubleProperty), Int32Value },
+                    { nameof(CustomType.NullableInt32Property), Int32Value },
+                    { nameof(CustomType.ObjectProperty), DateTimeValue },
+                    { nameof(CustomType.StringProperty), StringValue },
                 },
             };
 
@@ -54,25 +54,25 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Should_have_the_double_property_set()
         {
-            obj.DoubleValue.ShouldBe(Int32Value);
+            obj.DoubleProperty.ShouldBe(Int32Value);
         }
 
         [Fact]
         public void Should_have_the_nullableint_property_set()
         {
-            obj.NullableIntValue.ShouldBe(Int32Value);
+            obj.NullableInt32Property.ShouldBe(Int32Value);
         }
 
         [Fact]
         public void Should_have_the_object_property_set()
         {
-            obj.Timestamp.ShouldBe(_timestamp);
+            obj.ObjectProperty.ShouldBe(DateTimeValue);
         }
 
         [Fact]
         public void Should_have_the_string_property_set()
         {
-            obj.StringValue.ShouldBe(StringValue);
+            obj.StringProperty.ShouldBe(StringValue);
         }
     }
 }

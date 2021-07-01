@@ -74,7 +74,7 @@ namespace Aqua.TypeSystem
             => method.CheckNotNull(nameof(method)).ToMethodInfo();
 
         public System.Reflection.MethodInfo ToMethodInfo()
-            => _method ?? (_method = this.ResolveMethod(TypeResolver.Instance))
+            => _method ??= this.ResolveMethod(TypeResolver.Instance)
             ?? throw new TypeResolverException($"Failed to resolve method, consider using extension method to specify {nameof(ITypeResolver)}.");
     }
 }

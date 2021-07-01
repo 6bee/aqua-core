@@ -8,7 +8,7 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
     using System;
     using Xunit;
 
-    public abstract partial class When_serializing_typeinfo_of_dynamicobject
+    public abstract class When_serializing_typeinfo_of_dynamicobject
     {
         // XmlSerializer doesn't support circular references
         // protobuf-net doesn't support circular references

@@ -11,12 +11,11 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     {
         private readonly DateTime sourceValue;
         private readonly DateTime? value;
-        private readonly DynamicObject dynamicObject;
 
         public When_converting_to_datetime_object()
         {
             sourceValue = DateTime.Now;
-            dynamicObject = new DynamicObject(typeof(DateTime))
+            var dynamicObject = new DynamicObject(typeof(DateTime))
             {
                 Properties = new PropertySet
                 {

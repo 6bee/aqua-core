@@ -59,15 +59,15 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_type_should_contain_readable_instance_properties()
         {
-            dynamicObject["Property"].ShouldBe("PropertyValue");
-            dynamicObject["ReadonlyProperty"].ShouldBe("ReadonlyPropertyValue");
+            dynamicObject[nameof(CustomType.Property)].ShouldBe("PropertyValue");
+            dynamicObject[nameof(CustomType.ReadonlyProperty)].ShouldBe("ReadonlyPropertyValue");
         }
 
         [Fact]
         public void Dynamic_object_type_should_contain_readable_instance_fields()
         {
-            dynamicObject["Field"].ShouldBe("FieldValue");
-            dynamicObject["ReadonlyField"].ShouldBe("ReadonlyFieldValue");
+            dynamicObject[nameof(CustomType.Field)].ShouldBe("FieldValue");
+            dynamicObject[nameof(CustomType.ReadonlyField)].ShouldBe("ReadonlyFieldValue");
         }
     }
 }

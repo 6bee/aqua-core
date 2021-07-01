@@ -11,9 +11,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         private struct CustomValueType
         {
             public CustomValueType(long int64Property)
-            {
-                Int64Property = int64Property;
-            }
+                => Int64Property = int64Property;
 
             public long Int64Property { get; }
         }
@@ -35,7 +33,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_property_should_hold_long_value()
         {
-            dynamicObject["Int64Property"].ShouldBe(42L);
+            dynamicObject[nameof(CustomValueType.Int64Property)].ShouldBe(42L);
         }
 
         [Fact]
