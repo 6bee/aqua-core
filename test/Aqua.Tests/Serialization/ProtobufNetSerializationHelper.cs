@@ -23,7 +23,6 @@ namespace Aqua.Tests.Serialization
                 .Select(x => (Type)x[0])
                 .Select(x => x.AsNonNullableType())
                 .Distinct()
-                .Where(x => x.IsPublic)
                 .ToArray();
             testdatatypes.ForEach(x => configuration.AddDynamicPropertyType(x));
 
