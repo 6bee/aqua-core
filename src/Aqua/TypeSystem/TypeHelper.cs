@@ -374,7 +374,12 @@ namespace Aqua.TypeSystem
 
             try
             {
-                return typeResolver.ResolveType(member.DeclaringType);
+                return typeResolver.ResolveType(member.DeclaringType)
+                    ?? throw CreateException($"Declaring type '{member.DeclaringType}' could not be resolved");
+            }
+            catch (TypeResolverException)
+            {
+                throw;
             }
             catch (Exception ex)
             {

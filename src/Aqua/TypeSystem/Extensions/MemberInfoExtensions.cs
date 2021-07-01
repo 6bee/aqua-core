@@ -18,7 +18,7 @@ namespace Aqua.TypeSystem.Extensions
         public static Aqua.TypeSystem.MemberTypes? GetMemberType(this MemberInfo? member) => (Aqua.TypeSystem.MemberTypes?)member?.MemberType;
 
         [return: NotNullIfNotNull("member")]
-        public static BindingFlags? GetBindingFlags(this MemberInfo? member)
+        internal static BindingFlags? GetBindingFlags(this MemberInfo? member)
         {
             if (member is null)
             {

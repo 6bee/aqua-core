@@ -78,7 +78,7 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" Condition="'$(EnableStyleCopAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.15.0.24505" Condition="'$(EnableSonarAnalyzers)' == 'true'">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.25.0.33663" Condition="'$(EnableSonarAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

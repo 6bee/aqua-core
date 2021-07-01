@@ -31,7 +31,7 @@ namespace Aqua.ProtoBuf
             ? new Value<DynamicObjectSurrogate>(DynamicObjectSurrogate.Convert(dynamicObject))
             : value.IsCollection(out var collection)
             ? Values.Wrap(collection!, TypeHelper.GetElementType(type) ?? TypeHelper.GetElementType(collection.GetType()))
-            : (Value?)Activator.CreateInstance(typeof(Value<>).MakeGenericType(value.GetType()), new object[] { value });
+            : (Value?)Activator.CreateInstance(typeof(Value<>).MakeGenericType(value.GetType()), new[] { value });
 
         [return: NotNullIfNotNull("value")]
         public static object? Unwrap(Value? value)
