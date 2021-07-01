@@ -12,13 +12,13 @@ namespace Aqua.Dynamic
 
     partial class DynamicObject : IDynamicMetaObjectProvider
     {
-        private const BindingFlags PublicInstance = BindingFlags.Public | BindingFlags.Instance;
-
         DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter)
             => new MetaObject(parameter, BindingRestrictions.GetInstanceRestriction(parameter, this), this);
 
         private sealed class MetaObject : DynamicMetaObject
         {
+            private const BindingFlags PublicInstance = BindingFlags.Public | BindingFlags.Instance;
+
             private static readonly Type _dynamicObjectType = typeof(DynamicObject);
 
             private static readonly MethodInfo _getMethod = typeof(DynamicObject)
