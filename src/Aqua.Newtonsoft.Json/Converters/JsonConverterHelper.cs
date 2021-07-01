@@ -115,7 +115,6 @@ namespace Aqua.Newtonsoft.Json.Converters
 
             reader.Advance($"Expected token object of type '{type}'.");
 
-#pragma warning disable S0131 // SonarCSharp_S131: switch statements should contain a default clauses
             switch (reader.TokenType)
             {
                 case JsonToken.String:
@@ -123,7 +122,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                     {
                         var text = reader.Value as string;
                         result = type == typeof(char) && text?.Length > 0
-                            ? (object)text[0]
+                            ? text[0]
                             : text;
                         return true;
                     }
@@ -138,8 +137,10 @@ namespace Aqua.Newtonsoft.Json.Converters
                 case JsonToken.EndObject:
                     result = default;
                     return false;
+
+                default:
+                    break;
             }
-#pragma warning restore S0131 // SonarCSharp_S131: switch statements should contain a default clauses
 
             result = serializer.Deserialize(reader, type);
             return true;
