@@ -41,7 +41,7 @@ namespace Aqua.Dynamic
         }
 
         [DebuggerDisplay("{Type} {Value}")]
-        private struct ReferenceMapKey : IEquatable<ReferenceMapKey>
+        private readonly struct ReferenceMapKey : IEquatable<ReferenceMapKey>
         {
             public ReferenceMapKey(Type type, DynamicObject value)
             {
@@ -214,7 +214,8 @@ namespace Aqua.Dynamic
 #endif // NETSTANDARD
             }
             .SelectMany(x => x.IsValueType ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
-            .ToHashSet().Contains;
+            .ToHashSet()
+            .Contains;
 
         private static readonly Dictionary<Type, HashSet<Type>> _implicitNumericConversionsTable =
             new Dictionary<Type, Type[]>
