@@ -15,17 +15,16 @@ environment:
 
 before_build:
   - dotnet --info
-  - dotnet restore
   - dotnet tool install --global codecov.tool
+  - dotnet restore
 
 build_script:
   - dotnet build src\Aqua -c Release
   - dotnet build src\Aqua.Newtonsoft.Json -c Release
 
 test_script:
-  - dotnet test test\Aqua.Tests
+  - dotnet test test\Aqua.Tests --settings coverlet.runsettings
   - dotnet test test\Aqua.Tests.VBNet
 
 after_test:
-  - dotnet test test\Aqua.Tests -f netcoreapp3.1 --collect:"XPlat Code Coverage" --settings coverlet.runsettings --results-directory .\TestResults
   - codecov -f **\coverage.cobertura.xml
