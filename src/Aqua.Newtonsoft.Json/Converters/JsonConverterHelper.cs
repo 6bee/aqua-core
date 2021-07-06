@@ -137,9 +137,6 @@ namespace Aqua.Newtonsoft.Json.Converters
                 case JsonToken.EndObject:
                     result = default;
                     return false;
-
-                default:
-                    break;
             }
 
             result = serializer.Deserialize(reader, type);
