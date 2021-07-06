@@ -72,13 +72,13 @@ namespace Aqua.EnumerableExtensions
                 (x, y) => resultSelector(y, x.Key));
 
         /// <summary>
-        /// Compares two collections for equality considering the same number of equal elements regardles of the elements sort oders.
+        /// Compares two collections for equality considering the same number of equal elements regardles of the elements sort order.
         /// </summary>
         /// <returns><see langword="true"/> if the collections are equal, <see langword="false"/> otherwise.</returns>
         public static bool CollectionEquals<T>(this IEnumerable<T>? collection1, IEnumerable<T>? collection2) => CollectionEquals(collection1, collection2, null);
 
         /// <summary>
-        /// Compares two collections for equality considering the same number of equal elements regardles of the elements sort oders.
+        /// Compares two collections for equality considering the same number of equal elements regardles of the elements sort order.
         /// </summary>
         /// <returns><see langword="true"/> if the collections are equal, <see langword="false"/> otherwise.</returns>
         public static bool CollectionEquals<T>(this IEnumerable<T>? collection1, IEnumerable<T>? collection2, IEqualityComparer<T>? comparer)
