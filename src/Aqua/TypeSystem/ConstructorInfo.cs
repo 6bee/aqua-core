@@ -2,8 +2,10 @@
 
 namespace Aqua.TypeSystem
 {
+    using Aqua.Dynamic;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Runtime.Serialization;
 
@@ -14,7 +16,9 @@ namespace Aqua.TypeSystem
     {
         private const string DefaultStaticConstructorName = ".cctor";
 
+        [Unmapped]
         [NonSerialized]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private System.Reflection.ConstructorInfo? _constructor;
 
         public ConstructorInfo()
@@ -48,11 +52,13 @@ namespace Aqua.TypeSystem
 
         public override MemberTypes MemberType => MemberTypes.Constructor;
 
+        [Unmapped]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Use method ToConstructorInfo() instead", true)]
         public System.Reflection.ConstructorInfo Constructor => ToConstructorInfo();
 
-        public static explicit operator System.Reflection.ConstructorInfo(ConstructorInfo constructor)
-            => constructor.CheckNotNull(nameof(constructor)).ToConstructorInfo();
+        public static explicit operator System.Reflection.ConstructorInfo?(ConstructorInfo? constructor)
+            => constructor?.ToConstructorInfo();
 
         public System.Reflection.ConstructorInfo ToConstructorInfo()
             => _constructor ??= this.ResolveConstructor(TypeResolver.Instance)

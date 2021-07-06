@@ -4,6 +4,7 @@ namespace Aqua.TypeSystem
 {
     using Aqua.Dynamic;
     using System;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Runtime.Serialization;
 
@@ -12,8 +13,9 @@ namespace Aqua.TypeSystem
     [DebuggerDisplay("Property: {Name,nq}")]
     public class PropertyInfo : MemberInfo
     {
-        [NonSerialized]
         [Unmapped]
+        [NonSerialized]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private System.Reflection.PropertyInfo? _property;
 
         public PropertyInfo()
@@ -66,11 +68,12 @@ namespace Aqua.TypeSystem
         public TypeInfo? PropertyType { get; set; }
 
         [Unmapped]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Use method ToPropertyInfo() instead", true)]
         public System.Reflection.PropertyInfo Property => ToPropertyInfo();
 
-        public static explicit operator System.Reflection.PropertyInfo(PropertyInfo proeprty)
-            => proeprty.CheckNotNull(nameof(proeprty)).ToPropertyInfo();
+        public static explicit operator System.Reflection.PropertyInfo?(PropertyInfo? proeprty)
+            => proeprty?.ToPropertyInfo();
 
         public System.Reflection.PropertyInfo ToPropertyInfo()
             => _property ??= this.ResolveProperty(TypeResolver.Instance)

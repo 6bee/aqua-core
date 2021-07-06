@@ -4,6 +4,7 @@ namespace Aqua.TypeSystem
 {
     using Aqua.Dynamic;
     using System;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Runtime.Serialization;
 
@@ -12,8 +13,9 @@ namespace Aqua.TypeSystem
     [DebuggerDisplay("Field: {Name,nq}")]
     public class FieldInfo : MemberInfo
     {
-        [NonSerialized]
         [Unmapped]
+        [NonSerialized]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private System.Reflection.FieldInfo? _field;
 
         public FieldInfo()
@@ -49,11 +51,12 @@ namespace Aqua.TypeSystem
         public override MemberTypes MemberType => MemberTypes.Field;
 
         [Unmapped]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Use method ToFieldInfo() instead", true)]
         public System.Reflection.FieldInfo Field => ToFieldInfo();
 
-        public static explicit operator System.Reflection.FieldInfo(FieldInfo field)
-            => field.CheckNotNull(nameof(field)).ToFieldInfo();
+        public static explicit operator System.Reflection.FieldInfo?(FieldInfo? field)
+            => field?.ToFieldInfo();
 
         public System.Reflection.FieldInfo ToFieldInfo()
             => _field ??= this.ResolveField(TypeResolver.Instance)

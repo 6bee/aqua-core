@@ -5,6 +5,7 @@ namespace Aqua.TypeSystem
     using Aqua.Dynamic;
     using Aqua.TypeSystem.Extensions;
     using System;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
     using System.Xml.Serialization;
@@ -17,12 +18,18 @@ namespace Aqua.TypeSystem
     [KnownType(typeof(PropertyInfo)), XmlInclude(typeof(PropertyInfo))]
     public abstract class MemberInfo
     {
+        [Unmapped]
+        [NonSerialized]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private System.Reflection.MemberInfo? _member;
+
         protected MemberInfo()
         {
         }
 
         protected MemberInfo(System.Reflection.MemberInfo member, TypeInfoProvider typeInfoProvider)
         {
+            _member = member;
             Name = member.CheckNotNull(nameof(member)).Name;
             DeclaringType = typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).GetTypeInfo(member.DeclaringType, false, false);
             var isStatic = member switch
@@ -61,11 +68,12 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 3, EmitDefaultValue = false)]
         public bool? IsStatic { get; set; }
 
-        public static explicit operator System.Reflection.MemberInfo(MemberInfo member)
-            => member.CheckNotNull(nameof(member)).ToMemberInfo();
+        public static explicit operator System.Reflection.MemberInfo?(MemberInfo? member)
+            => member?.ToMemberInfo();
 
         public System.Reflection.MemberInfo ToMemberInfo()
-            => this.ResolveMemberInfo(TypeResolver.Instance);
+            => _member ??= this.ResolveMemberInfo(TypeResolver.Instance)
+            ?? throw new TypeResolverException($"Failed to resolve member, consider using extension method to specify {nameof(ITypeResolver)}.");
 
         public override string ToString() => $"{DeclaringType}.{Name}";
 

@@ -5,6 +5,7 @@ namespace Aqua.TypeSystem
     using Aqua.Dynamic;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Runtime.Serialization;
 
@@ -13,8 +14,9 @@ namespace Aqua.TypeSystem
     [DebuggerDisplay("Method: {Name,nq}")]
     public class MethodInfo : MethodBaseInfo
     {
-        [NonSerialized]
         [Unmapped]
+        [NonSerialized]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private System.Reflection.MethodInfo? _method;
 
         public MethodInfo()
@@ -65,13 +67,16 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo? ReturnType { get; set; }
 
+        [Unmapped]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Use method ToMethodInfo() instead", true)]
         public System.Reflection.MethodInfo Method => ToMethodInfo();
 
-        public override string ToString() => $"{ReturnType} {base.ToString()}".Trim();
+        public override string ToString()
+            => $"{ReturnType} {base.ToString()}".Trim();
 
-        public static explicit operator System.Reflection.MethodInfo(MethodInfo method)
-            => method.CheckNotNull(nameof(method)).ToMethodInfo();
+        public static explicit operator System.Reflection.MethodInfo?(MethodInfo? method)
+            => method?.ToMethodInfo();
 
         public System.Reflection.MethodInfo ToMethodInfo()
             => _method ??= this.ResolveMethod(TypeResolver.Instance)

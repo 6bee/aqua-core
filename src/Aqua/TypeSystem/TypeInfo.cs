@@ -23,8 +23,9 @@ namespace Aqua.TypeSystem
     {
         private static readonly Regex _arrayNameRegex = new Regex(@"^.*\[,*\]$");
 
-        [NonSerialized]
         [Unmapped]
+        [NonSerialized]
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Type? _type;
 
         public TypeInfo()
