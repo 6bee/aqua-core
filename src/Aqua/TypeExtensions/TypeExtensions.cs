@@ -231,5 +231,16 @@ namespace Aqua.TypeExtensions
         /// </summary>
         public static bool IsEnum(this Type type)
             => type.CheckNotNull(nameof(type)).AsNonNullableType().IsEnum;
+
+        /// <summary>
+        /// Returns a formatted string for the given <see cref="Type"/>.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="includeNamespance"><see langword="true"/> is fullname should be included, <see langword="false"/> otherwise.</param>
+        /// <param name="includeDeclaringType">Can be set <see langword="false"/> for nested types to supress name of declaring type.
+        /// This has no effect for non-nested types or if <paramref name="includeNamespance"/> is <see langword="true"/>.</param>
+        /// <returns>Formatted string for the given <see cref="Type"/>.</returns>
+        public static string PrintFriendlyName(this Type type, bool includeNamespance = true, bool includeDeclaringType = true)
+            => new TypeSystem.TypeInfo(type.CheckNotNull(nameof(type)), false, false).PrintFriendlyName(includeNamespance, includeDeclaringType);
     }
 }

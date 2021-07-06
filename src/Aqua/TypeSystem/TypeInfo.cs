@@ -3,9 +3,11 @@
 namespace Aqua.TypeSystem
 {
     using Aqua.Dynamic;
+    using Aqua.EnumerableExtensions;
     using Aqua.TypeExtensions;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
@@ -164,16 +166,54 @@ namespace Aqua.TypeSystem
         /// Gets <see cref="Type"/> by resolving this <see cref="TypeInfo"/> instance using the default <see cref="TypeResolver"/>.
         /// </summary>
         [Unmapped]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Use method ToType() instead, this property is being removed in a future version.", false)]
         public Type Type => ToType();
 
         /// <summary>
         /// Returns the <see cref="Type"/> represented by this <see cref="TypeInfo"/> instance by resolving it using the default <see cref="TypeResolver"/>.
         /// </summary>
-        public Type ToType() => _type ??= this.ResolveType(TypeResolver.Instance);
+        public Type ToType()
+            => _type ??= this.ResolveType(TypeResolver.Instance)
+            ?? throw new TypeResolverException($"Failed to resolve type, consider using extension method to specify {nameof(ITypeResolver)}.");
 
-        public static explicit operator Type?(TypeInfo? type) => type?.ToType();
+        public static explicit operator Type?(TypeInfo? type)
+            => type?.ToType();
 
-        public override string ToString() => this.PrintFriendlyName();
+        public override string ToString()
+            => PrintFriendlyName();
+
+        /// <summary>
+        /// Returns a formatted string for the given <see cref="TypeInfo"/>.
+        /// </summary>
+        /// <param name="includeNamespance"><see langword="true"/> is fullname should be included, <see langword="false"/> otherwise.</param>
+        /// <param name="includeDeclaringType">Can be set <see langword="false"/> for nested types to supress name of declaring type.
+        /// This has no effect for non-nested types or if <paramref name="includeNamespance"/> is <see langword="true"/>.</param>
+        /// <returns>Formatted string for the given <see cref="TypeInfo"/>.</returns>
+        public string PrintFriendlyName(bool includeNamespance = true, bool includeDeclaringType = true)
+        {
+            var genericArgumentsString = GetGenericArgumentsString();
+            var typeName = includeNamespance
+                ? FullName
+                : includeDeclaringType
+                ? NameWithoutNameSpace
+                : Name;
+
+            if (typeName?.Length > 2 && IsArray)
+            {
+                typeName = typeName.Substring(0, typeName.Length - 2);
+            }
+
+            return $"{typeName}{genericArgumentsString}{(IsArray ? "[]" : null)}";
+
+            string? GetGenericArgumentsString()
+            {
+                var genericArguments = GenericArguments;
+                var genericArgumentsString = IsGenericType && (genericArguments?.Any() ?? false)
+                    ? $"[{genericArguments.Select(x => x.PrintFriendlyName(includeNamespance, includeDeclaringType)).StringJoin(",")}]"
+                    : null;
+                return genericArgumentsString;
+            }
+        }
     }
 }
