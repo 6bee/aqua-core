@@ -3,6 +3,7 @@
 namespace Aqua.TypeSystem
 {
     using Aqua.EnumerableExtensions;
+    using Aqua.TypeExtensions;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -12,9 +13,6 @@ namespace Aqua.TypeSystem
 
     public static class TypeHelper
     {
-        private const BindingFlags PublicInstance = BindingFlags.Public | BindingFlags.Instance;
-        private const BindingFlags Any = PublicInstance | BindingFlags.NonPublic | BindingFlags.Static;
-
         /// <summary>
         /// Returns the element type of the collection type specified, except for typeof(string).
         /// </summary>
@@ -107,7 +105,7 @@ namespace Aqua.TypeSystem
         public static System.Reflection.ConstructorInfo? ResolveConstructor(this ConstructorInfo? constructor, ITypeResolver typeResolver)
             => constructor is null
             ? null
-            : CreateConstructorResolver(constructor, typeResolver.CheckNotNull(nameof(typeResolver)))(Any);
+            : CreateConstructorResolver(constructor, typeResolver.CheckNotNull(nameof(typeResolver)))(ReflectionBinding.Any);
 
         public static System.Reflection.ConstructorInfo? ResolveConstructor(this ConstructorInfo? constructor, ITypeResolver typeResolver, BindingFlags bindingFlags)
             => constructor is null
@@ -122,8 +120,8 @@ namespace Aqua.TypeSystem
             }
 
             var fieldResolver = CreateFieldResolver(field, typeResolver);
-            return fieldResolver(Any | BindingFlags.DeclaredOnly)
-                ?? fieldResolver(Any);
+            return fieldResolver(ReflectionBinding.Any | BindingFlags.DeclaredOnly)
+                ?? fieldResolver(ReflectionBinding.Any);
         }
 
         public static System.Reflection.FieldInfo? ResolveField(this FieldInfo? field, ITypeResolver typeResolver, BindingFlags bindingAttr)
@@ -139,8 +137,8 @@ namespace Aqua.TypeSystem
             }
 
             var methodResolver = CreateMethodResolver(method, typeResolver.CheckNotNull(nameof(typeResolver)));
-            return methodResolver(Any | BindingFlags.DeclaredOnly)
-                ?? methodResolver(Any);
+            return methodResolver(ReflectionBinding.Any | BindingFlags.DeclaredOnly)
+                ?? methodResolver(ReflectionBinding.Any);
         }
 
         public static System.Reflection.MethodInfo? ResolveMethod(this MethodInfo? method, ITypeResolver typeResolver, BindingFlags bindingflags)
@@ -156,8 +154,8 @@ namespace Aqua.TypeSystem
             }
 
             var propertyResolver = CreatePropertyResolver(property, typeResolver);
-            return propertyResolver(Any | BindingFlags.DeclaredOnly)
-                ?? propertyResolver(Any);
+            return propertyResolver(ReflectionBinding.Any | BindingFlags.DeclaredOnly)
+                ?? propertyResolver(ReflectionBinding.Any);
         }
 
         public static System.Reflection.PropertyInfo? ResolveProperty(this PropertyInfo? property, ITypeResolver typeResolver, BindingFlags bindingAttr)

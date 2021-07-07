@@ -176,8 +176,6 @@ namespace Aqua.Dynamic
             public void Recycle() => _referenceMap.Clear();
         }
 
-        private const BindingFlags PrivateStatic = BindingFlags.Static | BindingFlags.NonPublic;
-
         private const string NumericPattern = @"([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?";
 
         private static readonly string ComplexNumberParserRegexPattern = $"^(?<Re>[+-]?({NumericPattern}))(?<Sign>[+-])[iI](?<Im>{NumericPattern})$";
@@ -440,8 +438,8 @@ namespace Aqua.Dynamic
 #endif // NETSTANDARD
             };
 
-        private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper).GetMethod(nameof(ToDictionary), PrivateStatic) !;
-        private static readonly MethodInfo GetDefaultValueMethodInfo = typeof(DynamicObjectMapper).GetMethod(nameof(GetDefaultValue), PrivateStatic) !;
+        private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper).GetMethodEx(nameof(ToDictionary));
+        private static readonly MethodInfo GetDefaultValueMethodInfo = typeof(DynamicObjectMapper).GetMethodEx(nameof(GetDefaultValue));
 
         private readonly DynamicObjectMapperSettings _settings;
         private readonly FromContext _fromContext;

@@ -2,6 +2,7 @@
 
 namespace Aqua.TypeSystem.Extensions
 {
+    using Aqua.TypeExtensions;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
@@ -10,8 +11,6 @@ namespace Aqua.TypeSystem.Extensions
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class MemberInfoExtensions
     {
-        private const BindingFlags PrivateInstance = BindingFlags.Instance | BindingFlags.NonPublic;
-
         private static readonly Dictionary<MemberInfo, BindingFlags> _bindingFlagsCache = new Dictionary<MemberInfo, BindingFlags>();
 
         [return: NotNullIfNotNull("member")]
@@ -30,7 +29,7 @@ namespace Aqua.TypeSystem.Extensions
                 if (!_bindingFlagsCache.TryGetValue(member, out var bindingFlags))
                 {
                     bindingFlags = (BindingFlags?)member.GetType()
-                        .GetProperty("BindingFlags", PrivateInstance)
+                        .GetProperty("BindingFlags", ReflectionBinding.PrivateInstance)
                         ?.GetValue(member)
                         ?? BindingFlags.Default;
                     _bindingFlagsCache.Add(member, bindingFlags);

@@ -14,33 +14,31 @@ namespace Aqua.TypeExtensions
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static class TypeExtensions
     {
-        private const BindingFlags PublicInstance = BindingFlags.Public | BindingFlags.Instance;
-
         /// <summary>
         /// Gets the public instance fields for the given <see cref="Type"/>.
         /// </summary>
         public static IEnumerable<FieldInfo> GetDefaultFieldsForSerialization(this Type type)
-            => type.GetFields(PublicInstance);
+            => type.GetFields(ReflectionBinding.PublicInstance);
 
         /// <summary>
         /// Gets the public instance fields for the give <see cref="Type"/> which are not read-only.
         /// </summary>
         public static IEnumerable<FieldInfo> GetDefaultFieldsForDeserialization(this Type type)
-            => type.GetFields(PublicInstance)
+            => type.GetFields(ReflectionBinding.PublicInstance)
             .Where(x => !x.IsInitOnly);
 
         /// <summary>
         /// Gets the public instance properties for the given <see cref="Type"/> which have a setter.
         /// </summary>
         public static IEnumerable<PropertyInfo> GetDefaultPropertiesForSerialization(this Type type)
-            => type.GetProperties(PublicInstance)
+            => type.GetProperties(ReflectionBinding.PublicInstance)
             .Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
 
         /// <summary>
         /// Gets the public instance properties for the given <see cref="Type"/> which have a getter.
         /// </summary>
         public static IEnumerable<PropertyInfo> GetDefaultPropertiesForDeserialization(this Type type)
-            => type.GetProperties(PublicInstance)
+            => type.GetProperties(ReflectionBinding.PublicInstance)
             .Where(p => p.CanWrite && p.GetIndexParameters().Length == 0);
 
         /// <summary>
@@ -65,12 +63,10 @@ namespace Aqua.TypeExtensions
                 throw new ArgumentNullException(nameof(value));
             }
 
-            const BindingFlags PublicStatic = BindingFlags.Static | BindingFlags.Public;
-
             var sourceType = value.GetType();
             var methodCandidates =
-                sourceType.GetMethods(PublicStatic)
-                .Union(targetType.GetMethods(PublicStatic))
+                sourceType.GetMethods(ReflectionBinding.PublicStatic)
+                .Union(targetType.GetMethods(ReflectionBinding.PublicStatic))
                 .Where(x => x.ReturnType == targetType)
                 .Where(x =>
                 {

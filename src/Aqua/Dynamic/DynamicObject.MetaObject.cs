@@ -2,6 +2,7 @@
 
 namespace Aqua.Dynamic
 {
+    using Aqua.TypeExtensions;
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
@@ -15,13 +16,11 @@ namespace Aqua.Dynamic
 
         private sealed class MetaObject : DynamicMetaObject
         {
-            private static readonly MethodInfo _getMethod = MethodInfos.GetMethod(
-                typeof(DynamicObject),
+            private static readonly MethodInfo _getMethod = typeof(DynamicObject).GetMethodEx(
                 nameof(Get),
                 typeof(string));
 
-            private static readonly MethodInfo _setMethod = MethodInfos.GetMethod(
-                typeof(DynamicObject),
+            private static readonly MethodInfo _setMethod = typeof(DynamicObject).GetMethodEx(
                 nameof(Set),
                 typeof(string),
                 typeof(object));
