@@ -18,6 +18,7 @@ namespace Aqua.TypeSystem
     [KnownType(typeof(PropertyInfo)), XmlInclude(typeof(PropertyInfo))]
     public abstract class MemberInfo
     {
+        [IgnoreDataMember]
         [Unmapped]
         [NonSerialized]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -56,6 +57,7 @@ namespace Aqua.TypeSystem
             DeclaringType = typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).Get(member.DeclaringType);
         }
 
+        [IgnoreDataMember]
         [Unmapped]
         public abstract MemberTypes MemberType { get; }
 

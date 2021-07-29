@@ -5,7 +5,7 @@ namespace Aqua.Tests.Serialization
     using global::Newtonsoft.Json;
     using System.Diagnostics.CodeAnalysis;
 
-    public static class JsonSerializationHelper
+    public static class NewtonsoftJsonSerializationHelper
     {
         private static readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings { Formatting = Formatting.Indented }.ConfigureAqua();
 

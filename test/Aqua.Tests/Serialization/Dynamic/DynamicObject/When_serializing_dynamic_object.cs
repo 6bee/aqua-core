@@ -14,10 +14,18 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
     public abstract class When_serializing_dynamic_object
     {
-        public class With_json_serializer : When_serializing_dynamic_object
+        public class With_newtonsoft_json_serializer : When_serializing_dynamic_object
         {
-            public With_json_serializer()
-                : base(JsonSerializationHelper.Serialize)
+            public With_newtonsoft_json_serializer()
+                : base(NewtonsoftJsonSerializationHelper.Serialize)
+            {
+            }
+        }
+
+        public class With_system_text_json_serializer : When_serializing_dynamic_object
+        {
+            public With_system_text_json_serializer()
+                : base(SystemTextJsonSerializationHelper.Serialize)
             {
             }
         }
@@ -89,6 +97,11 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
 
+            if (this.TestIs<With_system_text_json_serializer>())
+            {
+                SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
+
 #if !NET48
             Skip.If(type.Is<Half>(), "Half type serialization is not supported.");
 #endif // NET48
@@ -111,6 +124,11 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
 
+            if (this.TestIs<With_system_text_json_serializer>())
+            {
+                SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
+
             Skip.If(this.TestIs<With_xml_serializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
 
             using var cultureContext = culture.CreateContext();
@@ -129,6 +147,12 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             {
                 ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
             }
+
+            if (this.TestIs<With_system_text_json_serializer>())
+            {
+                SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
+            }
+
 #if !NET48
             Skip.If(type.Is<Half>(), "Half type serialization is not supported.");
 #endif // NET48
@@ -184,6 +208,17 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             var dto2 = mapper.Map<DateTimeOffset>(dtoDynamic);
 
             dto2.ShouldBe(dto1);
+        }
+
+        [Fact]
+        public void List_of_int_should_serialize()
+        {
+            var source = new List<int> { 1, 11 };
+
+            var result = Serialize(source);
+
+            result.ShouldNotBeSameAs(source);
+            result.SequenceShouldBeEqual(source);
         }
 
         [Fact]
@@ -247,7 +282,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             };
 #pragma warning restore SA1500 // Braces for multi-line statements should not share line
 
-            var result = Serialize<int?[], int?[,,]>(array);
+            var result = Serialize<int?[,,], int?[]>(array);
             result.Length.ShouldBe(60);
         }
 
@@ -372,7 +407,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         private T Serialize<T>(T value, bool setTypeFromGenericArgument, bool formatValuesAsStrings)
             => Serialize<T, T>(value, setTypeFromGenericArgument, formatValuesAsStrings);
 
-        private TResult Serialize<TResult, TSource>(TSource value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
+        private TResult Serialize<TSource, TResult>(TSource value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
         {
             var settings = new DynamicObjectMapperSettings { FormatNativeTypesAsString = formatValuesAsStrings };
             var dynamicObject = new DynamicObjectMapper(settings).MapObject(value);

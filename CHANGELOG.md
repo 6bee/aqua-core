@@ -5,10 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [Unreleased 5.0.0][Unreleased]
+## [Unreleased 5.0.0][unreleased]
 
 ### Added
 - Added support for [protobuf-net v2][protobuf-net-v2] serialization.
+- Added support for _System.Text.Json_ serialization.
 - Added _GetMethodEx_ extension methods for method reflection by exact signature.
 
 ### Changed
@@ -30,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced `KnownTypesRegistry` to control types for deserialization with [Json.NET][json-net].
 
 
-[Unreleased]: https://github.com/6bee/aqua-core/compare/4.6.5...main
+[unreleased]: https://github.com/6bee/aqua-core/compare/4.6.5...main
 
 [issue#36]: https://github.com/6bee/aqua-core/issues/36
 

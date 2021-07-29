@@ -6,8 +6,6 @@ namespace Aqua.Tests.Serialization
     using Aqua.TypeExtensions;
     using System;
     using System.Linq;
-    ////using System.Collections;
-    ////using System.Linq;
     using System.Numerics;
     using Xunit;
 

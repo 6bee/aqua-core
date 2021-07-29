@@ -9,7 +9,7 @@ namespace Aqua
     using System.ComponentModel;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class JsonSerializerSettingsExtensions
+    public static class JsonNetSerializerSettingsExtensions
     {
         /// <summary>
         /// Sets the <see cref="AquaContractResolver"/> in <see cref="JsonSerializerSettings"/>,
@@ -18,7 +18,7 @@ namespace Aqua
         public static T ConfigureAqua<T>(this T settings, KnownTypesRegistry? knownTypesRegistry = null)
             where T : JsonSerializerSettings
         {
-            settings.CheckNotNull(nameof(settings));
+            settings.AssertNotNull(nameof(settings));
             knownTypesRegistry ??= new KnownTypesRegistry();
 
             settings.TypeNameHandling = TypeNameHandling.None;

@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.Newtonsoft.Json.Converters
+namespace Aqua.Text.Json.Converters
 {
     using Aqua.Dynamic;
     using Aqua.EnumerableExtensions;
     using Aqua.TypeSystem;
-    using global::Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Text.Json;
     using DynamicProperty = Aqua.Dynamic.Property;
 
     public class DynamicObjectConverter : ObjectConverter<DynamicObject>
@@ -21,14 +22,11 @@ namespace Aqua.Newtonsoft.Json.Converters
         {
         }
 
-        protected override void ReadObjectProperties(JsonReader reader, DynamicObject result, Dictionary<string, Property> properties, JsonSerializer serializer)
+        protected override void ReadObjectProperties(ref Utf8JsonReader reader, DynamicObject result, Dictionary<string, Property> properties, JsonSerializerOptions options)
         {
-            reader.CheckNotNull(nameof(reader)).Advance();
-            result.AssertNotNull(nameof(result));
-            serializer.AssertNotNull(nameof(serializer));
-
+            reader.Advance();
             TypeInfo? typeInfo = null;
-            void SetResult(IEnumerable<DynamicProperty>? properties = null)
+            void SetResult(ref Utf8JsonReader reader, IEnumerable<DynamicProperty>? properties = null)
             {
                 reader.AssertEndObject();
 
@@ -41,11 +39,11 @@ namespace Aqua.Newtonsoft.Json.Converters
 
             if (reader.IsProperty(nameof(DynamicObject.Type)))
             {
-                typeInfo = reader.Read<TypeInfo?>(serializer);
+                typeInfo = reader.Read<TypeInfo?>(options);
                 reader.Advance();
             }
 
-            bool IsProperty(string property, out bool isDynamicValueType)
+            static bool IsProperty(ref Utf8JsonReader reader, string property, out bool isDynamicValueType)
             {
                 isDynamicValueType = false;
 
@@ -63,36 +61,84 @@ namespace Aqua.Newtonsoft.Json.Converters
                 return false;
             }
 
-            if (IsProperty(ValueProperty, out var isDynamicValue))
+            static JsonTokenType PeekTokenType(Utf8JsonReader r)
             {
-                var value = isDynamicValue
-                    ? reader.Read<DynamicObject>(serializer)
-                    : reader.Read(typeInfo, serializer);
-                SetResult(new[] { new DynamicProperty(string.Empty, value) });
+                r.Advance();
+                return r.TokenType;
+            }
+
+            if (IsProperty(ref reader, ValueProperty, out var isDynamicValue))
+            {
+                object? value;
+                if (isDynamicValue)
+                {
+                    value = reader.Read<DynamicObject>(options);
+                }
+                else if (PeekTokenType(reader) == JsonTokenType.String)
+                {
+                    value = reader.Read(typeof(string), options);
+                }
+                else
+                {
+                    value = reader.Read(typeInfo, options);
+                }
+
+                SetResult(ref reader, new[] { new DynamicProperty(string.Empty, value) });
                 return;
             }
 
-            if (IsProperty(ValuesProperty, out isDynamicValue))
+            if (IsProperty(ref reader, ValuesProperty, out isDynamicValue))
             {
                 reader.Advance();
-                if (reader.TokenType == JsonToken.Null)
+                if (reader.TokenType == JsonTokenType.Null)
                 {
-                    SetResult();
+                    SetResult(ref reader);
                     return;
                 }
 
-                if (reader.TokenType != JsonToken.StartArray)
+                var referenceResolver = options.ReferenceHandler?.CreateResolver();
+                var reference = default(string);
+                if (reader.TokenType == JsonTokenType.StartObject)
+                {
+                    reader.Advance();
+                    if (reader.IsRefToken())
+                    {
+                        if (referenceResolver is null)
+                        {
+                            throw reader.CreateException($"Cannot handle {JsonMetadata.RefToken} without reference resolver.");
+                        }
+
+                        var referenceId = reader.ReadString() ?? throw reader.CreateException($"{JsonMetadata.RefToken} must not be null");
+                        reader.AssertEndObject();
+                        var cachedArray = referenceResolver.ResolveReference(referenceId);
+                        SetResult(ref reader, new[] { new DynamicProperty(string.Empty, cachedArray) });
+                        return;
+                    }
+
+                    reader.AssertIdToken();
+
+                    reference = reader.ReadString();
+                    reader.Advance();
+
+                    reader.AssertValuesToken();
+                    reader.Advance();
+                }
+
+                if (reader.TokenType != JsonTokenType.StartArray)
                 {
                     throw reader.CreateException($"Expected array");
                 }
 
                 var elementType = TypeHelper.GetElementType(typeInfo?.ToType()) ?? typeof(object);
                 var itemType = isDynamicValue ? typeof(DynamicObject) : elementType;
-                bool TryReadNextItem(out object? value)
+                bool TryReadNextItem(ref Utf8JsonReader reader, out object? value)
                 {
-                    if (!reader.TryRead(itemType, serializer, out value))
+                    var localItemType = PeekTokenType(reader) == JsonTokenType.String
+                        ? typeof(string)
+                        : itemType;
+                    if (!reader.TryRead(localItemType, options, out value))
                     {
-                        if (reader.TokenType == JsonToken.EndArray)
+                        if (reader.TokenType == JsonTokenType.EndArray)
                         {
                             return false;
                         }
@@ -104,7 +150,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 }
 
                 var values = new List<object?>();
-                while (TryReadNextItem(out var item))
+                while (TryReadNextItem(ref reader, out var item))
                 {
                     values.Add(item);
                 }
@@ -120,89 +166,99 @@ namespace Aqua.Newtonsoft.Json.Converters
                 }
 
                 var valueArray = values.CastCollectionToArrayOfType(elementType);
-                SetResult(new[] { new DynamicProperty(string.Empty, valueArray) });
+
+                if (!string.IsNullOrWhiteSpace(reference))
+                {
+                    if (referenceResolver is not null)
+                    {
+                        referenceResolver.AddReference(reference!, valueArray);
+                    }
+
+                    reader.AssertEndObject();
+                }
+
+                SetResult(ref reader, new[] { new DynamicProperty(string.Empty, valueArray) });
                 return;
             }
 
             if (reader.IsProperty(nameof(DynamicObject.Properties)))
             {
                 reader.Advance();
-                if (reader.TokenType == JsonToken.Null)
+                if (reader.TokenType == JsonTokenType.Null)
                 {
-                    SetResult();
+                    SetResult(ref reader);
                     return;
                 }
 
-                if (reader.TokenType != JsonToken.StartArray)
+                if (reader.TokenType != JsonTokenType.StartArray)
                 {
                     throw reader.CreateException("Expected array");
                 }
 
                 var propertySet = new List<DynamicProperty>();
 
-                bool NextItem()
+                static bool NextItem(ref Utf8JsonReader reader)
                 {
                     reader.Advance();
-                    return reader.TokenType != JsonToken.EndArray;
+                    return reader.TokenType != JsonTokenType.EndArray;
                 }
 
-                while (NextItem())
+                while (NextItem(ref reader))
                 {
                     reader.AssertStartObject(false);
 
                     reader.AssertProperty(nameof(DynamicProperty.Name));
-                    var name = reader.ReadAsString() ?? throw reader.CreateException("Property name must not be null");
+                    var name = reader.ReadString() ?? throw reader.CreateException("Property name must not be null");
 
                     reader.AssertProperty(nameof(Type));
-                    var type = reader.Read<TypeInfo?>(serializer);
+                    var type = reader.Read<TypeInfo?>(options);
 
                     reader.AssertProperty(nameof(DynamicProperty.Value));
-                    var value = reader.Read(type, serializer);
+                    var value = reader.Read(type, options);
 
                     reader.AssertEndObject();
                     propertySet.Add(new DynamicProperty(name, value));
                 }
 
-                SetResult(propertySet);
+                SetResult(ref reader, propertySet);
                 return;
             }
 
             throw reader.CreateException($"Unexpected token {reader.TokenType}");
         }
 
-        protected override void WriteObjectProperties(JsonWriter writer, DynamicObject instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
+        protected override void WriteObjectProperties(Utf8JsonWriter writer, DynamicObject instance, IReadOnlyCollection<Property> properties, JsonSerializerOptions options)
         {
-            writer.AssertNotNull(nameof(writer));
-            serializer.AssertNotNull(nameof(serializer));
-            var instanceType = instance.CheckNotNull(nameof(instance)).Type;
+            var instanceType = instance.Type;
             var dynamicProperties = instance.Properties;
             if (TryGetWrappedValue(dynamicProperties, out var value))
             {
                 var type = instanceType ?? CreateTypeInfo(value);
 
                 writer.WritePropertyName(nameof(DynamicObject.Type));
-                serializer.Serialize(writer, type);
+                writer.Serialize(type, options);
 
                 var propertyName = type.IsCollection() || value is object[]
                     ? ValuesProperty
                     : ValueProperty;
                 var isDynamicValue =
                     value is DynamicObject ||
-                    (value is object[] objectArray && objectArray.Any(x => x is DynamicObject));
+                    (value is object[] objectArray && objectArray.All(x => x is null || x is DynamicObject) && objectArray.Any(x => x is not null));
                 if (isDynamicValue)
                 {
                     propertyName = $"Dynamic{propertyName}";
                 }
 
                 writer.WritePropertyName(propertyName);
-                serializer.Serialize(writer, value, type?.ToType());
+
+                writer.Serialize(value, options);
             }
             else
             {
                 if (instanceType is not null)
                 {
                     writer.WritePropertyName(nameof(DynamicObject.Type));
-                    serializer.Serialize(writer, instanceType);
+                    writer.Serialize(instanceType, options);
                 }
 
                 if (dynamicProperties?.Any() is true)
@@ -214,20 +270,19 @@ namespace Aqua.Newtonsoft.Json.Converters
                     {
                         writer.WriteStartObject();
 
-                        writer.WritePropertyName(nameof(DynamicProperty.Name));
-                        writer.WriteValue(property.Name);
+                        writer.WriteString(nameof(DynamicProperty.Name), property.Name);
 
                         writer.WritePropertyName(nameof(Type));
-                        serializer.Serialize(writer, CreateTypeInfo(property.Value));
+                        writer.Serialize(CreateTypeInfo(property.Value), options);
 
                         writer.WritePropertyName(nameof(DynamicProperty.Value));
                         if (property.Value is null)
                         {
-                            writer.WriteNull();
+                            writer.WriteNullValue();
                         }
                         else
                         {
-                            serializer.Serialize(writer, property.Value);
+                            writer.Serialize(property.Value, options);
                         }
 
                         writer.WriteEndObject();
@@ -238,14 +293,14 @@ namespace Aqua.Newtonsoft.Json.Converters
             }
         }
 
-        private static bool TryGetWrappedValue(PropertySet? propertySet, out object? value)
+        private static bool TryGetWrappedValue(PropertySet? propertySet, [NotNullWhen(true)] out object? value)
         {
             if (propertySet?.Count == 1)
             {
                 var p = propertySet.First();
-                if (string.IsNullOrEmpty(p.Name) && p.Value is not null)
+                if (string.IsNullOrEmpty(p.Name) && p.Value is object v)
                 {
-                    value = p.Value;
+                    value = v;
                     return true;
                 }
             }
@@ -254,6 +309,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             return false;
         }
 
+        [return: NotNullIfNotNull("value")]
         private static TypeInfo? CreateTypeInfo(object? value)
             => value is null
             ? null

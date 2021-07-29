@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.Newtonsoft.Json
+namespace Aqua.Text.Json
 {
     using Aqua.Dynamic;
     using Aqua.TypeSystem;
@@ -74,10 +74,15 @@ namespace Aqua.Newtonsoft.Json
         private readonly Dictionary<Type, string> _keyLookup;
         private readonly Dictionary<string, TypeInfo> _typeLookup;
 
-        public KnownTypesRegistry()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KnownTypesRegistry"/> class.
+        /// </summary>
+        private KnownTypesRegistry(Dictionary<Type, string> keyLookup, Dictionary<string, TypeInfo> typeLookup)
         {
-            _keyLookup = _defaultTypes.ToDictionary(x => x.Type, x => x.Key);
-            _typeLookup = _defaultTypes.ToDictionary(x => x.Key, x => CreateTypeInfo(x.Type), StringComparer.InvariantCultureIgnoreCase);
+            keyLookup.AssertNotNull(nameof(keyLookup));
+            typeLookup.AssertNotNull(nameof(typeLookup));
+            _keyLookup = keyLookup;
+            _typeLookup = typeLookup;
         }
 
         /// <summary>
@@ -124,5 +129,21 @@ namespace Aqua.Newtonsoft.Json
         public bool TryGetTypeKey(Type type, [MaybeNullWhen(false)] out string typeKey) => _keyLookup.TryGetValue(type, out typeKey);
 
         private static TypeInfo CreateTypeInfo(Type type) => new TypeInfo(type, false, false);
+
+        /// <summary>
+        /// Gets a new instance of the <see cref="KnownTypesRegistry"/> class with the default set of know types.
+        /// </summary>
+        public static KnownTypesRegistry Default
+            => new KnownTypesRegistry(
+                _defaultTypes.ToDictionary(x => x.Type, x => x.Key),
+                _defaultTypes.ToDictionary(x => x.Key, x => CreateTypeInfo(x.Type), StringComparer.InvariantCultureIgnoreCase));
+
+        /// <summary>
+        /// Gets a new instance of the <see cref="KnownTypesRegistry"/> class.
+        /// </summary>
+        public static KnownTypesRegistry Empty
+            => new KnownTypesRegistry(
+                new Dictionary<Type, string>(),
+                new Dictionary<string, TypeInfo>());
     }
 }

@@ -2,7 +2,7 @@ image: Visual Studio 2019
 
 branches:
   except:
-  - /experimental.*/
+  - /^experimental.*$/
 
 init:
   - git config --global core.autocrlf true
@@ -16,11 +16,9 @@ environment:
 before_build:
   - dotnet --info
   - dotnet tool install --global codecov.tool
-  - dotnet restore
 
 build_script:
-  - dotnet build src\Aqua -c Release
-  - dotnet build src\Aqua.Newtonsoft.Json -c Release
+  - dotnet build Aqua.sln
 
 test_script:
   - dotnet test test\Aqua.Tests --settings coverlet.runsettings

@@ -70,11 +70,9 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         protected KnownTypesRegistry KnownTypesRegistry { get; }
 
-        public static string TypeToke => "$type";
-
         protected IReadOnlyCollection<Property> GetProperties(Type type)
         {
-            type.CheckNotNull(nameof(type));
+            type.AssertNotNull(nameof(type));
             lock (_properties)
             {
                 if (!_properties.TryGetValue(type, out var propertySet))

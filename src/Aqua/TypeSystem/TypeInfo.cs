@@ -23,6 +23,7 @@ namespace Aqua.TypeSystem
     {
         private static readonly Regex _arrayNameRegex = new Regex(@"^.*\[,*\]$");
 
+        [IgnoreDataMember]
         [Unmapped]
         [NonSerialized]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -135,12 +136,15 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
         public List<PropertyInfo>? Properties { get; set; }
 
+        [IgnoreDataMember]
         [Unmapped]
         public bool IsNested => DeclaringType is not null;
 
+        [IgnoreDataMember]
         [Unmapped]
         public bool IsGenericTypeDefinition => IsGenericType && (!GenericArguments?.Any() ?? true);
 
+        [IgnoreDataMember]
         [Unmapped]
         public bool IsArray
         {
@@ -151,12 +155,14 @@ namespace Aqua.TypeSystem
             }
         }
 
+        [IgnoreDataMember]
         [Unmapped]
         public string FullName
             => IsNested
                 ? $"{DeclaringType!.FullName}+{Name}"
                 : $"{Namespace}{(string.IsNullOrEmpty(Namespace) ? null : ".")}{Name}";
 
+        [IgnoreDataMember]
         [Unmapped]
         internal string NameWithoutNameSpace
             => IsNested
@@ -166,6 +172,7 @@ namespace Aqua.TypeSystem
         /// <summary>
         /// Gets <see cref="Type"/> by resolving this <see cref="TypeInfo"/> instance using the default <see cref="TypeResolver"/>.
         /// </summary>
+        [IgnoreDataMember]
         [Unmapped]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Use method ToType() instead, this property is being removed in a future version.", false)]

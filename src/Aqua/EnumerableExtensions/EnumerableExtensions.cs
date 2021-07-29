@@ -192,6 +192,13 @@ namespace Aqua.EnumerableExtensions
             return (IEnumerable)array!;
         }
 
+        public static IEnumerable CastCollectionToListOfType(this IEnumerable items, Type elementType)
+        {
+            var castedItems = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
+            var list = MethodInfos.Enumerable.ToList.MakeGenericMethod(elementType).Invoke(null, new[] { castedItems });
+            return (IEnumerable)list!;
+        }
+
         public static IEnumerable<T> AsEmptyIfNull<T>(this IEnumerable<T>? source) => source ?? Enumerable.Empty<T>();
 
         public static IEnumerable<T>? AsNullIfEmpty<T>(this IEnumerable<T>? source) => source?.Any() is true ? source : null;

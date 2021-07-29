@@ -29,10 +29,18 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             }
         }
 
-        public class With_json_serializer : When_serializing_dynamicobject_collections_of_nullable
+        public class With_newtown_json_serializer : When_serializing_dynamicobject_collections_of_nullable
         {
-            public With_json_serializer()
-                : base(JsonSerializationHelper.Serialize)
+            public With_newtown_json_serializer()
+                : base(NewtonsoftJsonSerializationHelper.Serialize)
+            {
+            }
+        }
+
+        public class With_system_text_json_serializer : When_serializing_dynamicobject_collections_of_nullable
+        {
+            public With_system_text_json_serializer()
+                : base(SystemTextJsonSerializationHelper.Serialize)
             {
             }
         }

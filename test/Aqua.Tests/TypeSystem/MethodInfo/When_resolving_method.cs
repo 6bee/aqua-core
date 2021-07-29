@@ -154,7 +154,7 @@ namespace Aqua.Tests.TypeSystem.MethodInfo
 
             var methodInfo = new MethodInfo(expected);
 
-            var methodInfo2 = JsonSerializationHelper.Serialize(methodInfo);
+            var methodInfo2 = NewtonsoftJsonSerializationHelper.Serialize(methodInfo);
 
             methodInfo2.ToMethodInfo().ShouldBeSameAs(expected);
         }

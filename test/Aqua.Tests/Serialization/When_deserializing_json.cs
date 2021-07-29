@@ -3,12 +3,32 @@
 namespace Aqua.Tests.Serialization
 {
     using Aqua.TypeSystem;
-    using global::Newtonsoft.Json;
     using Shouldly;
+    using System;
     using Xunit;
 
-    public class When_deserializing_json
+    public abstract class When_deserializing_json
     {
+        public class With_system_text_json_serializer : When_deserializing_json
+        {
+            protected override T Deserialize<T>(string json)
+            {
+                var serializerOptions = new System.Text.Json.JsonSerializerOptions()
+                    .AddConverter(new Aqua.Text.Json.Converters.TimeSpanConverter())
+                    .ConfigureAqua();
+                return System.Text.Json.JsonSerializer.Deserialize<T>(json, serializerOptions);
+            }
+        }
+
+        public class With_newtonsoft_json_serializer : When_deserializing_json
+        {
+            protected override T Deserialize<T>(string json)
+            {
+                var serializerSettings = new global::Newtonsoft.Json.JsonSerializerSettings().ConfigureAqua();
+                return global::Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json, serializerSettings);
+            }
+        }
+
         [Fact]
         public void Type_should_deserialize_with_id_and_type()
         {
@@ -69,10 +89,17 @@ namespace Aqua.Tests.Serialization
             typeInfo.Namespace.ShouldBe("Name.Space");
         }
 
-        private static T Deserialize<T>(string json)
+        [Fact]
+        public void Should_deserialize_timespan()
         {
-            var serializerSettings = new JsonSerializerSettings().ConfigureAqua();
-            return JsonConvert.DeserializeObject<T>(json, serializerSettings);
+            var timestamp = DateTime.Now - new DateTime(DateTime.Now.Year, 1, 1);
+
+            var json = @$"""{timestamp:c}""";
+
+            var copy = Deserialize<TimeSpan>(json);
+            copy.ShouldBe(timestamp);
         }
+
+        protected abstract T Deserialize<T>(string json);
     }
 }

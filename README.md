@@ -8,6 +8,7 @@
 | `aqua-core`                 | [![NuGet Badge][13]][14]        | [![MyGet Pre Release][15]][16] |
 | `aqua-core-newtonsoft-json` | [![NuGet Badge][17]][18]        | [![MyGet Pre Release][19]][20] |
 | `aqua-core-protobuf-net`    | <!--[![NuGet Badge][21]][22]--> | [![MyGet Pre Release][23]][24] |
+| `aqua-core-text-json`       | <!--[![NuGet Badge][25]][26]--> | [![MyGet Pre Release][27]][28] |
 
 Transform any object-graph into a dynamic, composed dictionaries like structure, holding serializable values and type information.
 
@@ -84,3 +85,8 @@ Blog restoredBlog = new DynamicObjectMapper().Map(dynamicObject) as Blog;
 [22]: https://www.nuget.org/packages/aqua-core-protobuf-net
 [23]: https://img.shields.io/myget/aqua/vpre/aqua-core-protobuf-net.svg?style=flat-square&label=myget
 [24]: https://www.myget.org/feed/aqua/package/nuget/aqua-core-protobuf-net
+
+[25]: https://buildstats.info/nuget/aqua-core-text-json
+[26]: https://www.nuget.org/packages/aqua-core-text-json
+[27]: https://img.shields.io/myget/aqua/vpre/aqua-core-text-json.svg?style=flat-square&label=myget
+[28]: https://www.myget.org/feed/aqua/package/nuget/aqua-core-text-json

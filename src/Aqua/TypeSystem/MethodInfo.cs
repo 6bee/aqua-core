@@ -14,6 +14,7 @@ namespace Aqua.TypeSystem
     [DebuggerDisplay("Method: {Name,nq}")]
     public class MethodInfo : MethodBaseInfo
     {
+        [IgnoreDataMember]
         [Unmapped]
         [NonSerialized]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -67,6 +68,7 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo? ReturnType { get; set; }
 
+        [IgnoreDataMember]
         [Unmapped]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Use method ToMethodInfo() instead", true)]

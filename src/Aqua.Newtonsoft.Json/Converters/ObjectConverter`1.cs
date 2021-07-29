@@ -27,9 +27,9 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public virtual T? ReadJson(JsonReader reader, Type objectType, T? existingValue, JsonSerializer serializer)
         {
-            reader.CheckNotNull(nameof(reader));
-            objectType.CheckNotNull(nameof(objectType));
-            serializer.CheckNotNull(nameof(serializer));
+            reader.AssertNotNull(nameof(reader));
+            objectType.AssertNotNull(nameof(objectType));
+            serializer.AssertNotNull(nameof(serializer));
 
             if (reader.TokenType == JsonToken.Null)
             {
@@ -55,7 +55,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             }
 
             Type? type = null;
-            if (reader.IsProperty(TypeToke))
+            if (reader.IsProperty(JsonConverterHelper.TypeToken))
             {
                 var typeName = reader.ReadAsString();
                 if (typeName is not null && typeName.Length > 0)
@@ -90,21 +90,21 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public virtual void WriteJson(JsonWriter writer, T? value, JsonSerializer serializer)
         {
-            writer.CheckNotNull(nameof(writer));
+            writer.AssertNotNull(nameof(writer));
             if (value is null)
             {
                 writer.WriteNull();
                 return;
             }
 
-            serializer.CheckNotNull(nameof(serializer));
+            serializer.AssertNotNull(nameof(serializer));
             writer.WriteStartObject();
 
             if (!writer.TryWriteReference(serializer, value))
             {
                 var type = value.GetType();
 
-                writer.WritePropertyName(TypeToke);
+                writer.WritePropertyName(JsonConverterHelper.TypeToken);
                 var typeName = KnownTypesRegistry.TryGetTypeKey(type, out var typeKey)
                     ? typeKey
                     : $"{type.FullName}, {type.Assembly.GetName().Name}";
@@ -118,9 +118,9 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         protected virtual void ReadObjectProperties(JsonReader reader, [DisallowNull] T result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {
-            reader.CheckNotNull(nameof(reader));
-            properties.CheckNotNull(nameof(properties));
-            serializer.CheckNotNull(nameof(serializer));
+            reader.AssertNotNull(nameof(reader));
+            properties.AssertNotNull(nameof(properties));
+            serializer.AssertNotNull(nameof(serializer));
             while (reader.TokenType != JsonToken.EndObject)
             {
                 if (reader.TokenType == JsonToken.PropertyName)
@@ -143,10 +143,11 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         protected virtual void WriteObjectProperties(JsonWriter writer, T instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
         {
-            writer.CheckNotNull(nameof(writer));
-            instance.CheckNotNull(nameof(instance));
-            serializer.CheckNotNull(nameof(serializer));
-            foreach (var property in properties.CheckNotNull(nameof(properties)))
+            writer.AssertNotNull(nameof(writer));
+            instance.AssertNotNull(nameof(instance));
+            serializer.AssertNotNull(nameof(serializer));
+            properties.AssertNotNull(nameof(properties));
+            foreach (var property in properties)
             {
                 var value = property.GetValue(instance);
                 if (property.EmitDefaultValue || !Equals(value, property.DefaultValue))

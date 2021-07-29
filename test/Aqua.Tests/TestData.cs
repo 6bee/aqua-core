@@ -112,7 +112,6 @@ namespace Aqua.Tests
                 DateTimeOffset.MaxValue,
                 new DateTimeOffset(new DateTime(2012, 12, 12), new TimeSpan(12, 12, 0)),
                 default(BigInteger),
-                default(BigInteger),
                 new BigInteger(ulong.MinValue) - 1,
                 new BigInteger(ulong.MaxValue) + 1,
                 default(Complex),

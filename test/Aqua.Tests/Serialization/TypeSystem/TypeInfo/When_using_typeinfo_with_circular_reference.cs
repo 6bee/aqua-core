@@ -28,10 +28,26 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo
             }
         }
 
+        public class With_newtown_json_serializer : When_using_typeinfo_with_circular_reference
+        {
+            public With_newtown_json_serializer()
+                : base(NewtonsoftJsonSerializationHelper.Serialize)
+            {
+            }
+        }
+
+        public class With_system_text_json_serializer : When_using_typeinfo_with_circular_reference
+        {
+            public With_system_text_json_serializer()
+                : base(SystemTextJsonSerializationHelper.Serialize)
+            {
+            }
+        }
+
         public class With_json_serializer : When_using_typeinfo_with_circular_reference
         {
             public With_json_serializer()
-                : base(JsonSerializationHelper.Serialize)
+                : base(SystemTextJsonSerializationHelper.Serialize)
             {
             }
         }

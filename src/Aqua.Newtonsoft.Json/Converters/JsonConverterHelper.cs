@@ -30,6 +30,8 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public static string RefToken => "$ref";
 
+        public static string TypeToken => "$type";
+
         public static bool IsCollection(this TypeInfo? type)
         {
             if (type is null)
@@ -57,8 +59,8 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public static void Advance(this JsonReader reader, string? errorMessage = null)
         {
-            reader.CheckNotNull(nameof(reader));
-            if (!reader.CheckNotNull(nameof(reader)).Read())
+            reader.AssertNotNull(nameof(reader));
+            if (!reader.Read())
             {
                 throw reader.CreateException(errorMessage ?? "Unexpected token structure.");
             }
@@ -66,7 +68,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public static void AssertProperty(this JsonReader reader, string propertyName, bool advance = true)
         {
-            reader.CheckNotNull(nameof(reader));
+            reader.AssertNotNull(nameof(reader));
             if (advance)
             {
                 reader.Advance();
@@ -103,8 +105,8 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public static bool TryRead(this JsonReader reader, Type? type, JsonSerializer serializer, out object? result)
         {
-            reader.CheckNotNull(nameof(reader));
-            serializer.CheckNotNull(nameof(serializer));
+            reader.AssertNotNull(nameof(reader));
+            serializer.AssertNotNull(nameof(serializer));
 
             if (type is not null && _typeReaders.TryGetValue(type, out var read))
             {
@@ -145,7 +147,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public static void AssertStartObject(this JsonReader reader, bool advance = true)
         {
-            reader.CheckNotNull(nameof(reader));
+            reader.AssertNotNull(nameof(reader));
             if (advance && !reader.Read())
             {
                 throw reader.CreateException($"Expected start object.");
@@ -159,7 +161,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public static void AssertEndObject(this JsonReader reader, bool advance = true)
         {
-            reader.CheckNotNull(nameof(reader));
+            reader.AssertNotNull(nameof(reader));
             if (advance)
             {
                 reader.Advance();
@@ -183,7 +185,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public static bool TryWriteReference(this JsonWriter writer, JsonSerializer serializer, object value)
         {
-            writer.CheckNotNull(nameof(writer));
+            writer.AssertNotNull(nameof(writer));
             var referenceResolver = serializer.CheckNotNull(nameof(serializer)).ReferenceResolver;
             if (referenceResolver is null)
             {

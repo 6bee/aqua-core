@@ -13,6 +13,7 @@ namespace Aqua.TypeSystem
     [DebuggerDisplay("Property: {Name,nq}")]
     public class PropertyInfo : MemberInfo
     {
+        [IgnoreDataMember]
         [Unmapped]
         [NonSerialized]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -67,6 +68,7 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo? PropertyType { get; set; }
 
+        [IgnoreDataMember]
         [Unmapped]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Use method ToPropertyInfo() instead", true)]

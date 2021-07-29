@@ -13,6 +13,7 @@ namespace Aqua.TypeSystem
     [DebuggerDisplay("Field: {Name,nq}")]
     public class FieldInfo : MemberInfo
     {
+        [IgnoreDataMember]
         [Unmapped]
         [NonSerialized]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -50,6 +51,7 @@ namespace Aqua.TypeSystem
 
         public override MemberTypes MemberType => MemberTypes.Field;
 
+        [IgnoreDataMember]
         [Unmapped]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Use method ToFieldInfo() instead", true)]

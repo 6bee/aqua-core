@@ -6,17 +6,17 @@ namespace Aqua.Newtonsoft.Json.Converters
     using global::Newtonsoft.Json;
     using System;
 
-    public class TypeInfoConveter : ObjectConverter<TypeInfo>
+    public class TypeInfoConverter : ObjectConverter<TypeInfo>
     {
-        public TypeInfoConveter(KnownTypesRegistry knownTypes)
+        public TypeInfoConverter(KnownTypesRegistry knownTypes)
             : base(knownTypes)
         {
         }
 
         public override TypeInfo? ReadJson(JsonReader reader, Type objectType, TypeInfo? existingValue, JsonSerializer serializer)
         {
-            reader.CheckNotNull(nameof(reader));
-            serializer.CheckNotNull(nameof(serializer));
+            reader.AssertNotNull(nameof(reader));
+            serializer.AssertNotNull(nameof(serializer));
 
             if (reader.TokenType == JsonToken.String &&
                 reader.Value is string typeKey &&
@@ -30,7 +30,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public override void WriteJson(JsonWriter writer, TypeInfo? value, JsonSerializer serializer)
         {
-            writer.CheckNotNull(nameof(writer));
+            writer.AssertNotNull(nameof(writer));
 
             if (value is not null && KnownTypesRegistry.TryGetTypeKey(value, out var typeKey))
             {

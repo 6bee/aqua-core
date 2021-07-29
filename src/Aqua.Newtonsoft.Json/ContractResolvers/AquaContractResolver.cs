@@ -29,7 +29,7 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
 
         public override JsonContract ResolveContract(Type type)
         {
-            type.CheckNotNull(nameof(type));
+            type.AssertNotNull(nameof(type));
             return _decorated is null || typeof(DynamicObject).IsAssignableFrom(type) || typeof(TypeInfo).IsAssignableFrom(type)
                 ? base.ResolveContract(type)
                 : _decorated.ResolveContract(type);
@@ -55,7 +55,7 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
                 contract.Converter = typeof(DynamicObject).IsAssignableFrom(objectType)
                     ? new DynamicObjectConverter(_knownTypes)
                     : typeof(TypeInfo).IsAssignableFrom(objectType)
-                        ? new TypeInfoConveter(_knownTypes)
+                        ? new TypeInfoConverter(_knownTypes)
                         : CreateObjectConverter(objectType, _knownTypes);
                 foreach (var property in contract.Properties.Where(x => !x.Writable || !x.Readable))
                 {

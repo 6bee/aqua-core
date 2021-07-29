@@ -16,6 +16,7 @@ namespace Aqua.TypeSystem
     {
         private const string DefaultStaticConstructorName = ".cctor";
 
+        [IgnoreDataMember]
         [Unmapped]
         [NonSerialized]
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -52,6 +53,7 @@ namespace Aqua.TypeSystem
 
         public override MemberTypes MemberType => MemberTypes.Constructor;
 
+        [IgnoreDataMember]
         [Unmapped]
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Use method ToConstructorInfo() instead", true)]
