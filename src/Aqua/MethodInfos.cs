@@ -13,30 +13,63 @@ namespace Aqua
 
     internal static class MethodInfos
     {
+        /// <summary>
+        /// Type definition used in generic type filters.
+        /// </summary>
+        [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+        private sealed class TElement
+        {
+            private TElement()
+            {
+            }
+        }
+
+        /// <summary>
+        /// Type definition used in generic type filters.
+        /// </summary>
+        [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+        private sealed class TDelegate
+        {
+            private TDelegate()
+            {
+            }
+        }
+
+        /// <summary>
+        /// Type definition used in generic type filters.
+        /// </summary>
+        [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+        private sealed class TKey
+        {
+            private TKey()
+            {
+            }
+        }
+
+        /// <summary>
+        /// Type definition used in generic type filters.
+        /// </summary>
+        [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+        private sealed class TResult
+        {
+            private TResult()
+            {
+            }
+        }
+
+        /// <summary>
+        /// Type definition used in generic type filters.
+        /// </summary>
+        [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
+        private sealed class TSource
+        {
+            private TSource()
+            {
+            }
+        }
+
         internal static class Enumerable
         {
-            /// <summary>
-            /// Type definition used in generic type filters.
-            /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TSource
-            {
-                private TSource()
-                {
-                }
-            }
-
-            /// <summary>
-            /// Type definition used in generic type filters.
-            /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TResult
-            {
-                private TResult()
-                {
-                }
-            }
-
             internal static readonly MethodInfo Cast = typeof(System.Linq.Enumerable).GetMethodEx(
                 nameof(System.Linq.Enumerable.Cast),
                 new[] { typeof(TResult) },
@@ -76,17 +109,6 @@ namespace Aqua
 
         internal static class Expression
         {
-            /// <summary>
-            /// Type definition used in generic type filters.
-            /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TDelegate
-            {
-                private TDelegate()
-                {
-                }
-            }
-
             internal static readonly MethodInfo Lambda = typeof(System.Linq.Expressions.Expression).GetMethodEx(
                 nameof(System.Linq.Expressions.Expression.Lambda),
                 new[] { typeof(TDelegate) },
@@ -96,50 +118,6 @@ namespace Aqua
 
         internal static class Queryable
         {
-            /// <summary>
-            /// Type definition used in generic type filters.
-            /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TElement
-            {
-                private TElement()
-                {
-                }
-            }
-
-            /// <summary>
-            /// Type definition used in generic type filters.
-            /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TSource
-            {
-                private TSource()
-                {
-                }
-            }
-
-            /// <summary>
-            /// Type definition used in generic type filters.
-            /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TKey
-            {
-                private TKey()
-                {
-                }
-            }
-
-            /// <summary>
-            /// Type definition used in generic type filters.
-            /// </summary>
-            [SuppressMessage("Major Bug", "S3453:Classes should not have only \"private\" constructors", Justification = "For reflection only")]
-            private sealed class TResult
-            {
-                private TResult()
-                {
-                }
-            }
-
             internal static readonly MethodInfo AsQueryable = typeof(System.Linq.Queryable).GetMethodEx(
                 nameof(System.Linq.Queryable.AsQueryable),
                 new[] { typeof(TElement) },

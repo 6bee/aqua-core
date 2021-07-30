@@ -189,7 +189,7 @@ namespace Aqua.TypeSystem
             => type?.ToType();
 
         public override string ToString()
-            => PrintFriendlyName();
+            => GetFriendlyName();
 
         /// <summary>
         /// Returns a formatted string for the given <see cref="TypeInfo"/>.
@@ -198,7 +198,7 @@ namespace Aqua.TypeSystem
         /// <param name="includeDeclaringType">Can be set <see langword="false"/> for nested types to supress name of declaring type.
         /// This has no effect for non-nested types or if <paramref name="includeNamespance"/> is <see langword="true"/>.</param>
         /// <returns>Formatted string for the given <see cref="TypeInfo"/>.</returns>
-        public string PrintFriendlyName(bool includeNamespance = true, bool includeDeclaringType = true)
+        public string GetFriendlyName(bool includeNamespance = true, bool includeDeclaringType = true)
         {
             var genericArgumentsString = GetGenericArgumentsString();
             var typeName = includeNamespance
@@ -218,7 +218,7 @@ namespace Aqua.TypeSystem
             {
                 var genericArguments = GenericArguments;
                 var genericArgumentsString = IsGenericType && (genericArguments?.Any() ?? false)
-                    ? $"[{genericArguments.Select(x => x.PrintFriendlyName(includeNamespance, includeDeclaringType)).StringJoin(",")}]"
+                    ? $"[{genericArguments.Select(x => x.GetFriendlyName(includeNamespance, includeDeclaringType)).StringJoin(",")}]"
                     : null;
                 return genericArgumentsString;
             }

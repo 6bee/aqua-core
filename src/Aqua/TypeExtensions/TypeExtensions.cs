@@ -53,15 +53,8 @@ namespace Aqua.TypeExtensions
         /// </summary>
         internal static bool TryDynamicCast(this Type targetType, object value, out object? result)
         {
-            if (targetType is null)
-            {
-                throw new ArgumentNullException(nameof(targetType));
-            }
-
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            targetType.AssertNotNull(nameof(targetType));
+            value.AssertNotNull(nameof(value));
 
             var sourceType = value.GetType();
             var methodCandidates =
@@ -128,7 +121,10 @@ namespace Aqua.TypeExtensions
         /// <param name="type">The type to be examined.</param>
         /// <param name="interfaceType">The actualy type to be checked for.</param>
         public static bool Implements(this Type type, Type interfaceType)
-            => type.CheckNotNull(nameof(type)).Implements(interfaceType, new Type[1][]);
+        {
+            type.AssertNotNull(nameof(type));
+            return type.Implements(interfaceType, new Type[1][]);
+        }
 
         /// <summary>
         /// Returns <see langword="true"/> if the give <see cref="Type"/> is assignable to the interface type specified.
@@ -136,14 +132,12 @@ namespace Aqua.TypeExtensions
         /// <param name="type">The type to be examined.</param>
         /// <param name="interfaceType">The actualy type to be checked for.</param>
         /// <param name="genericTypeArguments">Out parameter with array of generic argument types, in case <paramref name="interfaceType"/> is an open generic type.</param>
-#pragma warning disable SA1011 // Closing square brackets should be spaced correctly
-#pragma warning disable S3874 // SonarCSharp_S3874: "out" and "ref" parameters should not be used
+        [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1011:Closing square brackets should be spaced correctly", Justification = "False positive")]
         public static bool Implements(this Type type, Type interfaceType, [NotNullWhen(true)] out Type[]? genericTypeArguments)
-#pragma warning restore S3874 // SonarCSharp_S3874: "out" and "ref" parameters should not be used
-#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
         {
+            type.AssertNotNull(nameof(type));
             var typeArgs = new Type[1][];
-            if (type.CheckNotNull(nameof(type)).Implements(interfaceType, typeArgs))
+            if (type.Implements(interfaceType, typeArgs))
             {
                 genericTypeArguments = typeArgs[0];
                 return true;
@@ -155,7 +149,8 @@ namespace Aqua.TypeExtensions
 
         private static bool Implements(this Type type, Type interfaceType, Type[][] typeArgs)
         {
-            var isAssignableFromSpecifiedInterface = interfaceType.CheckNotNull(nameof(interfaceType)).IsGenericTypeDefinition
+            interfaceType.AssertNotNull(nameof(interfaceType));
+            var isAssignableFromSpecifiedInterface = interfaceType.IsGenericTypeDefinition
                 ? IsAssignableToGenericTypeDefinition(interfaceType, typeArgs)
                 : interfaceType.IsGenericType
                 ? IsAssignableToGenericType(interfaceType, typeArgs)
@@ -236,7 +231,7 @@ namespace Aqua.TypeExtensions
         /// <param name="includeDeclaringType">Can be set <see langword="false"/> for nested types to supress name of declaring type.
         /// This has no effect for non-nested types or if <paramref name="includeNamespance"/> is <see langword="true"/>.</param>
         /// <returns>Formatted string for the given <see cref="Type"/>.</returns>
-        public static string PrintFriendlyName(this Type type, bool includeNamespance = true, bool includeDeclaringType = true)
-            => new TypeSystem.TypeInfo(type.CheckNotNull(nameof(type)), false, false).PrintFriendlyName(includeNamespance, includeDeclaringType);
+        public static string GetFriendlyName(this Type type, bool includeNamespance = true, bool includeDeclaringType = true)
+            => new TypeSystem.TypeInfo(type.CheckNotNull(nameof(type)), false, false).GetFriendlyName(includeNamespance, includeDeclaringType);
     }
 }

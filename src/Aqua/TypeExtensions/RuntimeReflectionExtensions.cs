@@ -57,7 +57,7 @@ namespace Aqua.TypeExtensions
             }
             catch (Exception ex)
             {
-                static string TypesToString(Type[] types) => string.Join(", ", types.Select(x => x.PrintFriendlyName(false, false)));
+                static string TypesToString(Type[] types) => string.Join(", ", types.Select(x => x.GetFriendlyName(false, false)));
 
                 var genericArgumentString = TypesToString(genericArguments);
                 if (!string.IsNullOrEmpty(genericArgumentString))
