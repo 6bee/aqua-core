@@ -64,14 +64,23 @@ namespace Aqua.Text.Json.Converters
             }
         }
 
-#pragma warning disable S2743 // Static fields should not be used in generic types
+        [SuppressMessage("Major Code Smell", "S2743:Static fields should not be used in generic types", Justification = "Static field is specific for generic type")]
+        private static readonly Dictionary<Type, IReadOnlyCollection<Property>> _properties
+            = new Dictionary<Type, IReadOnlyCollection<Property>>();
 
-        private static readonly Dictionary<Type, IReadOnlyCollection<Property>> _properties = new Dictionary<Type, IReadOnlyCollection<Property>>();
-
-#pragma warning restore S2743 // Static fields should not be used in generic types
+        private readonly bool _handleSubtypes;
 
         public ObjectConverter(KnownTypesRegistry knownTypes)
-            => KnownTypesRegistry = knownTypes.CheckNotNull(nameof(knownTypes));
+            : this(knownTypes, false)
+        {
+        }
+
+        public ObjectConverter(KnownTypesRegistry knownTypes, bool handleSubtypes)
+        {
+            knownTypes.AssertNotNull(nameof(knownTypes));
+            KnownTypesRegistry = knownTypes;
+            _handleSubtypes = handleSubtypes;
+        }
 
         protected KnownTypesRegistry KnownTypesRegistry { get; }
 
@@ -103,7 +112,9 @@ namespace Aqua.Text.Json.Converters
         public Func<Type, T?>? DefaultObjectFactory { get; set; }
 
         public override bool CanConvert(Type typeToConvert)
-            => typeToConvert == typeof(T);
+            => _handleSubtypes
+            ? typeof(T).IsAssignableFrom(typeToConvert)
+            : typeToConvert == typeof(T);
 
         public sealed override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
