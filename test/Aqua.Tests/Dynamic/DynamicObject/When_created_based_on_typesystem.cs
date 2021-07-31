@@ -5,22 +5,22 @@ namespace Aqua.Tests.Dynamic.DynamicObject
     using Aqua.Dynamic;
     using Shouldly;
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
     using Xunit;
 
+    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Public fields required by test scenario")]
     public class When_created_based_on_typesystem
     {
         private const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;
         private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
         private const BindingFlags PublicStatic = BindingFlags.Public | BindingFlags.Static;
 
-#pragma warning disable SA1401 // Fields should be private
         private static int _privateStaticField = 0;
         public static int PublicStaticField = 0;
 
         private int _privateField = 0;
         public int PublicField = 0;
-#pragma warning restore SA1401 // Fields should be private
 
         private int PrivateProperty { get; set; }
 

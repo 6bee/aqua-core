@@ -75,7 +75,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
         protected When_using_dynamic_object_for_complex_object_tree(Func<DynamicObject, DynamicObject> serialize)
         {
-            var originalObject = new DynamicObject()
+            var originalObject = new DynamicObject
             {
                 Properties = new PropertySet
                 {

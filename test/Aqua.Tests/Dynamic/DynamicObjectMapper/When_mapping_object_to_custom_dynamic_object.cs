@@ -13,9 +13,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             public DynamicObjectWithRefToSource(Type type, object source)
                 : base(type)
-            {
-                Source = source;
-            }
+                => Source = source;
 
             public object Source { get; }
         }
@@ -28,21 +26,21 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
         private class A
         {
-            public B B { get; set; }
+            public B BRef { get; set; }
         }
 
         private class B
         {
-            public A A { get; set; }
+            public A ARef { get; set; }
 
-            public C C { get; set; }
+            public C CRef { get; set; }
         }
 
         private class C
         {
-            public A A { get; set; }
+            public A ARef { get; set; }
 
-            public int Int32Value { get; set; }
+            public int Int32Property { get; set; }
         }
 
         private const int Int32Value = -1234;
@@ -55,17 +53,17 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             source = new A
             {
-                B = new B
+                BRef = new B
                 {
-                    C = new C
+                    CRef = new C
                     {
-                        Int32Value = Int32Value,
+                        Int32Property = Int32Value,
                     },
                 },
             };
 
-            source.B.A = source;
-            source.B.C.A = source;
+            source.BRef.ARef = source;
+            source.BRef.CRef.ARef = source;
 
             var mapper = new DynamicObjectMapper(dynamicObjectFactory: new DynamicObjectFactory());
 
@@ -75,35 +73,34 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         [Fact]
         public void Dynamic_object_should_be_custom_type_with_reference_to_source()
         {
-            dynamicObject.ShouldBeOfType<DynamicObjectWithRefToSource>();
+            var obj = dynamicObject.ShouldBeOfType<DynamicObjectWithRefToSource>();
 
-            ((DynamicObjectWithRefToSource)dynamicObject).Source.ShouldBeSameAs(source);
+            obj.Source.ShouldBeSameAs(source);
         }
 
         [Fact]
         public void Dynamic_object_nested_reference_should_be_custom_type()
         {
-            dynamicObject["B"].ShouldBeOfType<DynamicObjectWithRefToSource>();
+            var obj = dynamicObject[nameof(A.BRef)].ShouldBeOfType<DynamicObjectWithRefToSource>();
 
-            ((DynamicObjectWithRefToSource)dynamicObject["B"]).Source.ShouldBeSameAs(source.B);
+            obj.Source.ShouldBeSameAs(source.BRef);
         }
 
         [Fact]
         public void Dynamic_object_nested_reference_on_sublevel_should_be_custom_type()
         {
-            var dynamicB = (DynamicObject)dynamicObject["B"];
+            var ab = dynamicObject[nameof(A.BRef)].ShouldBeOfType<DynamicObjectWithRefToSource>();
 
-            dynamicB["A"].ShouldBeOfType<DynamicObjectWithRefToSource>();
-            dynamicB["C"].ShouldBeOfType<DynamicObjectWithRefToSource>();
+            var ba = ab[nameof(B.ARef)].ShouldBeOfType<DynamicObjectWithRefToSource>();
+            var bc = ab[nameof(B.CRef)].ShouldBeOfType<DynamicObjectWithRefToSource>();
 
-            dynamicB["A"].ShouldBeSameAs(dynamicObject);
-            ((DynamicObjectWithRefToSource)dynamicB["A"]).Source.ShouldBeSameAs(source);
-            ((DynamicObjectWithRefToSource)dynamicB["C"]).Source.ShouldBeSameAs(source.B.C);
+            ba.ShouldBeSameAs(dynamicObject);
+            ba.Source.ShouldBeSameAs(source);
+            bc.Source.ShouldBeSameAs(source.BRef.CRef);
 
-            var dynamicC = (DynamicObject)dynamicB["C"];
-            dynamicC["Int32Value"].ShouldBe(Int32Value);
-            dynamicC["A"].ShouldBeSameAs(dynamicObject);
-            ((DynamicObjectWithRefToSource)dynamicC["A"]).Source.ShouldBeSameAs(source);
+            bc[nameof(C.Int32Property)].ShouldBe(Int32Value);
+            bc[nameof(C.ARef)].ShouldBeSameAs(dynamicObject);
+            bc[nameof(C.ARef)].ShouldBeOfType<DynamicObjectWithRefToSource>().Source.ShouldBeSameAs(source);
         }
     }
 }

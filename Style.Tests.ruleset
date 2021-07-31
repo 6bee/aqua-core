@@ -38,6 +38,7 @@
     <Rule Id="S2344" Action="Info" />
     <Rule Id="S2376" Action="Info" />
     <Rule Id="S2933" Action="Info" />
+    <Rule Id="S3052" Action="None" />
     <Rule Id="S3218" Action="Info" />
     <Rule Id="S3459" Action="None" />
     <Rule Id="S3898" Action="None" />

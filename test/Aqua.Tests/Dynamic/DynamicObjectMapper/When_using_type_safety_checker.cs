@@ -28,7 +28,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
                 if (typeof(UnsafeType).IsAssignableFrom(type))
                 {
-                    throw new Exception("Unsafe type detected.");
+                    throw new TestException("Unsafe type detected.");
                 }
             }
         }
@@ -39,7 +39,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             var mapper = CreateMapper();
             var dynamicObject = mapper.MapObject(new UnsafeType());
 
-            var ex = Should.Throw<Exception>(() => mapper.Map(dynamicObject));
+            var ex = Should.Throw<TestException>(() => mapper.Map(dynamicObject));
             ex.Message.ShouldBe("Unsafe type detected.");
         }
 
