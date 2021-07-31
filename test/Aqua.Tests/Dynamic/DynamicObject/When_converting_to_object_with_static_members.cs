@@ -12,7 +12,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
     public class When_converting_to_object_with_static_members
     {
-        [SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "Some fields are used via reflection only")]
+        [SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "Fields are used via reflection only")]
+        [SuppressMessage("Major Code Smell", "S2933:Fields that are only assigned in the constructor should be \"readonly\"", Justification = "Fields are used via reflection only")]
         [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Public fields required by test scenario")]
         private class TestType
         {
