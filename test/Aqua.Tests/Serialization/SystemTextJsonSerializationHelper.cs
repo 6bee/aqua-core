@@ -11,17 +11,15 @@ namespace Aqua.Tests.Serialization
 
     public static class SystemTextJsonSerializationHelper
     {
-        private static readonly JsonSerializerOptions _serializerSettings = new JsonSerializerOptions { WriteIndented = true }
+        private static JsonSerializerOptions SerializerOptions => new JsonSerializerOptions { WriteIndented = true }
             .AddConverter(new TimeSpanConverter())
             .ConfigureAqua();
 
         [SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out", Justification = "Debugging purpose")]
         public static T Serialize<T>(this T graph)
         {
-            var json = JsonSerializer.Serialize(graph, _serializerSettings);
-
-            // File.AppendAllText($"Dump-{graph?.GetType().Name}-JsonConvert-{Guid.NewGuid()}.json", json);
-            return JsonSerializer.Deserialize<T>(json, _serializerSettings);
+            var json = JsonSerializer.Serialize(graph, SerializerOptions);
+            return JsonSerializer.Deserialize<T>(json, SerializerOptions);
         }
 
         public static void SkipUnsupportedDataType(Type type, object value)
