@@ -4,12 +4,17 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
     using Shouldly;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using Xunit;
 
     public class When_converting_to_object_with_static_members
     {
-        private class CustomType
+        [SuppressMessage("Major Code Smell", "S1144:Unused private types or members should be removed", Justification = "Some fields are used via reflection only")]
+        [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Public fields required by test scenario")]
+        private class TestType
         {
 #pragma warning disable CS0414 // CS0414: The field is assigned but its value is never used
             private const string PrivateConstString = "DefaultPrivateConstStringValue";
@@ -50,34 +55,18 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         private const BindingFlags Any = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
 
-        private readonly CustomType obj;
+        private readonly TestType obj;
 
         public When_converting_to_object_with_static_members()
         {
-            var dynamicObject = new DynamicObject
-            {
-                Properties = new PropertySet
-                 {
-                     { "PrivateConstString", "PrivateConstStringValue" },
-                     { "ConstString", "ConstStringValue" },
-                     { "PrivateStaticReadonlyField", "PrivateStaticReadonlyFieldValue" },
-                     { "StaticReadonlyField", "StaticReadonlyFieldValue" },
-                     { "PrivateStaticField", "PrivateStaticFieldValue" },
-                     { "StaticField", "StaticFieldValue" },
-                     { "PrivateReadonlyField", "PrivateReadonlyFieldValue" },
-                     { "ReadonlyField", "ReadonlyFieldValue" },
-                     { "PrivateField", "PrivateFieldValue" },
-                     { "Field", "FieldValue" },
-                     { "PrivateStaticProperty", "PrivateStaticPropertyValue" },
-                     { "StaticProperty", "StaticPropertyValue" },
-                     { "PrivateProperty", "PrivatePropertyValue" },
-                     { "Property", "PropertyValue" },
-                     { "ReadonlyProperty", "ReadonlyPropertyValue" },
-                     { "WriteonlyProperty", "WriteonlyPropertyValue" },
-                 },
-            };
-
-            obj = dynamicObject.CreateObject<CustomType>();
+            var properties = typeof(TestType)
+                .GetMembers(Any)
+                .Where(x => x is FieldInfo || x is PropertyInfo)
+                .Where(x => x.GetCustomAttribute<CompilerGeneratedAttribute>() is null)
+                .Select(x => x.Name)
+                .Select(x => new Property(x, $"{x.Replace("BackingField", null)}Value"));
+            var dynamicObject = new DynamicObject { Properties = new PropertySet(properties) };
+            obj = dynamicObject.CreateObject<TestType>();
         }
 
         [Fact]
@@ -119,12 +108,12 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         }
 
         private object GetPropertyValue(string propertyName)
-            => typeof(CustomType)
+            => typeof(TestType)
                 .GetProperty(propertyName, Any)
                 .GetValue(obj);
 
         private object GetFieldValue(string propertyName)
-            => typeof(CustomType)
+            => typeof(TestType)
                 .GetField(propertyName, Any)
                 .GetValue(obj);
     }

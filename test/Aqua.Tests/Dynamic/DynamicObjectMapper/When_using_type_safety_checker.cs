@@ -39,7 +39,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             var mapper = CreateMapper();
             var dynamicObject = mapper.MapObject(new UnsafeType());
 
-            var ex = Should.Throw<TestException>(() => mapper.Map(dynamicObject));
+            var ex = Should.Throw<DynamicObjectMapperException>(() => mapper.Map(dynamicObject));
             ex.Message.ShouldBe("Unsafe type detected.");
         }
 
