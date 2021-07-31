@@ -28,7 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 - Introduced `ITypeSafetyChecker` to enable type checking before instantiation by `DynamicObjectMapper`.
-- Introduced `KnownTypesRegistry` to control types for deserialization with [Json.NET][json-net].
 
 
 [5.0.0-unreleased]: https://github.com/6bee/aqua-core/compare/4.6.5...main
