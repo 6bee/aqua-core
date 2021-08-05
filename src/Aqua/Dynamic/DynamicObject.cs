@@ -151,7 +151,13 @@ namespace Aqua.Dynamic
         public bool IsNull
         {
             get => Properties is null;
-            init => Properties = null;
+            init
+            {
+                if (value)
+                {
+                    Properties = null;
+                }
+            }
         }
 
         /// <summary>
