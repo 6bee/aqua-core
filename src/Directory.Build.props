@@ -4,6 +4,7 @@
   <Import Project="$(MSBuildThisFileDirectory)../$(MSBuildThisFile)" />
 
   <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly Condition="'$(SignAssembly)' == ''">true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)../key.snk</AssemblyOriginatorKeyFile>
