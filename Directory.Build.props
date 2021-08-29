@@ -19,8 +19,9 @@
     <Copyright>Copyright © Christof Senn 2013-$(CopyrightYear)</Copyright>
     <Authors>Christof Senn</Authors>
     <PackageIcon>aqua-small.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/6bee/aqua-core</PackageProjectUrl>
     <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/6bee/aqua-core</PackageProjectUrl>
+    <PackageReleaseNotes>$(PackageProjectUrl)/blob/main/CHANGELOG.md</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/6bee/aqua-core.git</RepositoryUrl>
     <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
@@ -69,8 +70,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="1.0.0" PrivateAssets="all" />
-    <PackageReference Include="aqua.tool.Validation" Version="1.1.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="1.1.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.Validation" Version="1.4.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -78,7 +79,7 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" Condition="'$(EnableStyleCopAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.26.0.34506" Condition="'$(EnableSonarAnalyzers)' == 'true'">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.27.0.35380" Condition="'$(EnableSonarAnalyzers)' == 'true'">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
