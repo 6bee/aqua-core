@@ -207,9 +207,9 @@ namespace Aqua.Dynamic
                 typeof(System.Numerics.BigInteger),
                 typeof(System.Numerics.Complex),
                 typeof(byte[]),
-#if !NETSTANDARD
+#if NET5_0_OR_GREATER
                 typeof(Half),
-#endif // NETSTANDARD
+#endif // NET5_0_OR_GREATER
             }
             .SelectMany(x => x.IsValueType ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
             .ToHashSet()
@@ -418,7 +418,7 @@ namespace Aqua.Dynamic
                         },
                     }
                 },
-#if !NETSTANDARD
+#if NET5_0_OR_GREATER
                 {
                     typeof(Half), new Dictionary<Type, Func<object, object>>
                     {
@@ -435,7 +435,7 @@ namespace Aqua.Dynamic
                         { typeof(double), x => checked((double)(Half)x) },
                     }
                 },
-#endif // NETSTANDARD
+#endif // NET5_0_OR_GREATER
             };
 
         private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper).GetMethodEx(nameof(ToDictionary));
@@ -987,11 +987,11 @@ namespace Aqua.Dynamic
                     };
                     initializer = InitializeProperties;
                 }
-#if NETSTANDARD2_0
-                else if (targetType.IsValueType)
-#else
+#if NET5_0_OR_GREATER
                 else if (targetType.IsValueType && targetType.GetCustomAttribute<System.Runtime.CompilerServices.IsReadOnlyAttribute>() is null)
-#endif // NETSTANDARD2_0
+#else
+                else if (targetType.IsValueType)
+#endif // NET5_0_OR_GREATER
                 {
                     factory = (t, item) => Activator.CreateInstance(t) ?? throw new DynamicObjectMapperException($"Failed to create instance of type {t.FullName}");
                     initializer = InitializeProperties;
@@ -1155,12 +1155,12 @@ namespace Aqua.Dynamic
                 return Convert.FromBase64String(value);
             }
 
-#if !NETSTANDARD
+#if NET5_0_OR_GREATER
             if (targetType == typeof(Half))
             {
                 return Half.Parse(value, CultureInfo.InvariantCulture);
             }
-#endif // NETSTANDARD
+#endif // NET5_0_OR_GREATER
 
             throw new DynamicObjectMapperException(new NotImplementedException($"string parser for type {targetType} is not implemented"));
         }
@@ -1332,12 +1332,12 @@ namespace Aqua.Dynamic
                 return Convert.ToBase64String((byte[])obj);
             }
 
-#if !NETSTANDARD
+#if NET5_0_OR_GREATER
             if (type == typeof(Half))
             {
                 return ((Half)obj).ToString(CultureInfo.InvariantCulture);
             }
-#endif // NETSTANDARD
+#endif // NET5_0_OR_GREATER
 
             return obj.ToString() ?? string.Empty;
         }

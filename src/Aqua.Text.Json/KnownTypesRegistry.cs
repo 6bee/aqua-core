@@ -35,9 +35,9 @@ namespace Aqua.Text.Json
                 typeof(DateTime),
                 typeof(TimeSpan),
                 typeof(DateTimeOffset),
-#if !NETSTANDARD
+#if NET5_0_OR_GREATER
                 typeof(Half),
-#endif // NETSTANDARD
+#endif // NET5_0_OR_GREATER
                 typeof(DynamicObject),
                 typeof(Property),
                 typeof(PropertySet),
