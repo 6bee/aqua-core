@@ -206,6 +206,22 @@ namespace Aqua.Tests.ProtoBuf
         }
 
         [Fact]
+        public void Should_serialize_dynamic_object_for_empty_array()
+        {
+            var emptyCollection = new DynamicObjectMapper().MapObject(new ProductEntity[0]);
+
+            emptyCollection.IsNull.ShouldBeFalse();
+            emptyCollection.Properties.ShouldHaveSingleItem().Name.ShouldBeEmpty();
+            emptyCollection.Values.ShouldHaveSingleItem().ShouldBeOfType<object[]>().ShouldBeEmpty();
+
+            var copy = emptyCollection.Serialize();
+
+            copy.IsNull.ShouldBeFalse();
+            copy.Properties.ShouldHaveSingleItem().Name.ShouldBeEmpty();
+            copy.Values.ShouldHaveSingleItem().ShouldBeOfType<object[]>().ShouldBeEmpty();
+        }
+
+        [Fact]
         public void Should_serialize_dynamic_object_for_entity_set()
         {
             var entity = new DynamicObjectMapper().MapCollection(new List<ProductEntity>

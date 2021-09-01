@@ -13,6 +13,7 @@ namespace Aqua.ProtoBuf
     [ProtoContract]
     [ProtoInclude(1, typeof(Values))]
     [ProtoInclude(2, typeof(NullValue))]
+    [ProtoInclude(3, typeof(EmptyArray))]
     public abstract class Value
     {
         [ProtoIgnore]
@@ -37,6 +38,8 @@ namespace Aqua.ProtoBuf
         public static object? Unwrap(Value? value)
             => value is null || value is NullValue
             ? null
+            : value is EmptyArray
+            ? Array.Empty<object>()
             : value is Value<DynamicObjectSurrogate> dynamicObject
             ? DynamicObjectSurrogate.Convert(dynamicObject.TypedValue)
             : value is Values values

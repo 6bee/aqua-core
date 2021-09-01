@@ -178,6 +178,44 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             result.ShouldBe(value, $"type: {type.FullName}  ({value})");
         }
 
+        [Fact]
+        public void Should_serialize_array_as_property()
+        {
+            var value = new[] { new TestData.RecordType { Value = "test" } };
+            var result = SerializeAsProperty(value.GetType(), value);
+            result
+                .ShouldBeOfType<TestData.RecordType[]>()
+                .ShouldHaveSingleItem()
+                .Value.ShouldBe("test");
+        }
+
+        [Fact]
+        public void Should_serialize_array()
+        {
+            var value = new[] { new TestData.RecordType { Value = "test" } };
+            var result = Serialize(value.GetType(), value);
+            result
+                .ShouldBeOfType<TestData.RecordType[]>()
+                .ShouldHaveSingleItem()
+                .Value.ShouldBe("test");
+        }
+
+        [Fact]
+        public void Should_serialize_empty_array_as_property()
+        {
+            var value = new TestData.RecordType[0];
+            var result = SerializeAsProperty(value.GetType(), value);
+            result.ShouldBe(value);
+        }
+
+        [Fact]
+        public void Should_serialize_empty_array()
+        {
+            var value = new TestData.RecordType[0];
+            var result = Serialize(value.GetType(), value);
+            result.ShouldBe(value);
+        }
+
         [SkippableFact]
         public void Should_serialize_DateTimeOffset_as_property()
         {

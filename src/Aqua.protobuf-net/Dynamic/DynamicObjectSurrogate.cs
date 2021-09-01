@@ -81,6 +81,11 @@ namespace Aqua.ProtoBuf.Dynamic
         {
             if (value.IsCollection(out var collection))
             {
+                if (!collection.Any())
+                {
+                    return EmptyArray.Instance;
+                }
+
                 IEnumerable? TryCast(Type elementType, bool needAny = true)
                 {
                     if (elementType == typeof(object))
