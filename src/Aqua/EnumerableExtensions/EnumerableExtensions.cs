@@ -244,9 +244,9 @@ namespace Aqua.EnumerableExtensions
             }
         }
 
-        public static bool Any(this IEnumerable? source) => source?.GetEnumerator().MoveNext() is true;
+        public static bool Any([NotNullWhen(true)] this IEnumerable? source) => source?.GetEnumerator().MoveNext() is true;
 
-        public static bool Any(this IEnumerable? source, Func<object, bool> predicate)
+        public static bool Any([NotNullWhen(true)] this IEnumerable? source, Func<object, bool> predicate)
         {
             if (source is null)
             {
