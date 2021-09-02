@@ -16,6 +16,7 @@ namespace Aqua.Text.Json.Converters
     {
         private const string ValueProperty = "Value";
         private const string ValuesProperty = "Values";
+        private const string ItemsProperty = "Items";
 
         public DynamicObjectConverter(KnownTypesRegistry knownTypes)
             : base(knownTypes)
@@ -87,7 +88,7 @@ namespace Aqua.Text.Json.Converters
                 return;
             }
 
-            if (IsProperty(ref reader, ValuesProperty, out isDynamicValue))
+            if (IsProperty(ref reader, ItemsProperty, out isDynamicValue) || IsProperty(ref reader, ValuesProperty, out isDynamicValue))
             {
                 reader.Advance();
                 if (reader.TokenType == JsonTokenType.Null)
@@ -239,7 +240,7 @@ namespace Aqua.Text.Json.Converters
                 writer.Serialize(type, options);
 
                 var propertyName = type.IsCollection() || value is object[]
-                    ? ValuesProperty
+                    ? ItemsProperty
                     : ValueProperty;
                 var isDynamicValue =
                     value is DynamicObject ||
