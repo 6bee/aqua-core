@@ -7,7 +7,7 @@ namespace Aqua.Tests.Serialization
 
     public static class BinarySerializationHelper
     {
-        public static T Serialize<T>(this T graph)
+        public static T Clone<T>(this T graph)
         {
             if (graph is null)
             {

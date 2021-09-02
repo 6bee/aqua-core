@@ -3,6 +3,7 @@
 namespace Aqua.Tests.ProtoBuf
 {
     using Aqua.Dynamic;
+    using Aqua.ProtoBuf;
     using Aqua.TypeExtensions;
     using Aqua.TypeSystem;
     using Shouldly;
@@ -33,7 +34,7 @@ namespace Aqua.Tests.ProtoBuf
             var model = ProtoBufTypeModel.ConfigureAquaTypes(configureDefaultSystemTypes: false)
                 .AddDynamicPropertyType(type, addCollectionSupport: false, addNullableSupport: type.IsNullableType())
                 .Compile();
-            var copy = property.Serialize(model);
+            var copy = property.Clone(model);
 
             copy.Value.ShouldBe(value);
         }
@@ -51,7 +52,7 @@ namespace Aqua.Tests.ProtoBuf
             var model = ProtoBufTypeModel.ConfigureAquaTypes(configureDefaultSystemTypes: false)
                 .AddDynamicPropertyType(TypeHelper.GetElementType(type), addSingleValueSuppoort: false, addNullableSupport: type.IsNullableType())
                 .Compile();
-            var copy = property.Serialize(model);
+            var copy = property.Clone(model);
 
             copy.Value.ShouldBe(value);
         }
@@ -68,7 +69,7 @@ namespace Aqua.Tests.ProtoBuf
 
             // NOTE: PropertySet type cannot be serialized by protobuf-net 3.0.x
             //       as it doesn't implement ICollection<> and no surrogate can be registered.
-            var copy = new DynamicObject(propertySet).Serialize();
+            var copy = new DynamicObject(propertySet).Clone();
 
             copy["p1"].ShouldBe(propertySet["p1"]);
             copy["p2"].ShouldBe(propertySet["p2"]);
@@ -100,7 +101,7 @@ namespace Aqua.Tests.ProtoBuf
 
             // NOTE: PropertySet type cannot be serialized by protobuf-net 3.0.x
             //       as it doesn't implement ICollection<> and no surrogate can be registered.
-            var copy = new DynamicObject(propertySet).Serialize(config);
+            var copy = new DynamicObject(propertySet).Clone(config);
 
             copy["p1"].ShouldBe(value);
         }
@@ -115,7 +116,7 @@ namespace Aqua.Tests.ProtoBuf
 
             var dynamicObject = new DynamicObjectMapper().MapObject(value);
 
-            var copy = dynamicObject.Serialize();
+            var copy = dynamicObject.Clone();
 
             copy?.Get().ShouldBe(dynamicObject?.Get(), $"type: {type} value: {value}");
 
@@ -133,7 +134,7 @@ namespace Aqua.Tests.ProtoBuf
             using var cultureContext = culture.CreateContext();
 
             var dynamicObjects = new DynamicObjectMapper(new DynamicObjectMapperSettings { WrapNullAsDynamicObject = true }).MapCollection(value);
-            var copy = dynamicObjects.Serialize();
+            var copy = dynamicObjects.Clone();
 
             var dynamicObjectsCount = dynamicObjects?.Count() ?? 0;
             var copyCount = copy?.Count() ?? 0;
@@ -198,7 +199,7 @@ namespace Aqua.Tests.ProtoBuf
                 Price = 1234.56m,
             });
 
-            var copy = entity.Serialize();
+            var copy = entity.Clone();
 
             copy["Id"].ShouldBe(1);
             copy["Name"].ShouldBe("Product E. Name");
@@ -214,7 +215,7 @@ namespace Aqua.Tests.ProtoBuf
             emptyCollection.Properties.ShouldHaveSingleItem().Name.ShouldBeEmpty();
             emptyCollection.Values.ShouldHaveSingleItem().ShouldBeOfType<object[]>().ShouldBeEmpty();
 
-            var copy = emptyCollection.Serialize();
+            var copy = emptyCollection.Clone();
 
             copy.IsNull.ShouldBeFalse();
             copy.Properties.ShouldHaveSingleItem().Name.ShouldBeEmpty();
@@ -240,7 +241,7 @@ namespace Aqua.Tests.ProtoBuf
                 },
             });
 
-            var copy = entity.Serialize();
+            var copy = entity.Clone();
 
             var item0 = copy.ElementAt(0);
             item0["Id"].ShouldBe(1);
@@ -268,7 +269,7 @@ namespace Aqua.Tests.ProtoBuf
                 },
             });
 
-            var copy = entity.Serialize();
+            var copy = entity.Clone();
 
             copy["ProductId"].ShouldBe(1);
             copy["Quantity"].ShouldBe(2u);
@@ -311,7 +312,7 @@ namespace Aqua.Tests.ProtoBuf
                 },
             });
 
-            var copy = entity.Serialize();
+            var copy = entity.Clone();
 
             copy["Id"].ShouldBe(1);
             var items = copy["Items"].ShouldBeAssignableTo<ICollection<DynamicObject>>();
@@ -328,7 +329,7 @@ namespace Aqua.Tests.ProtoBuf
 
             var entity = new DynamicObjectMapper().MapObject(a);
 
-            var copy = entity.Serialize();
+            var copy = entity.Clone();
 
             copy.ShouldBeOfType<DynamicObject>()[
                 nameof(a.Reference)].ShouldBeOfType<DynamicObject>()[

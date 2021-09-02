@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua
+namespace Aqua.ProtoBuf
 {
     using Aqua.EnumerableExtensions;
-    using Aqua.ProtoBuf;
     using Aqua.ProtoBuf.Dynamic;
     using Aqua.ProtoBuf.TypeSystem;
     using global::ProtoBuf.Meta;

@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua
+namespace Aqua.Text.Json
 {
     using Aqua.Dynamic;
     using Aqua.EnumerableExtensions;
-    using Aqua.Text.Json;
     using Aqua.Text.Json.Converters;
     using Aqua.TypeSystem;
     using System;

@@ -11,13 +11,13 @@ namespace Aqua.Tests.Serialization
         public class With_system_text_json_serializer : When_serializing
         {
             protected override T Serialize<T>(T value)
-                => SystemTextJsonSerializationHelper.Serialize(value);
+                => SystemTextJsonSerializationHelper.Clone(value);
         }
 
         public class With_newtonsoft_json_serializer : When_serializing
         {
             protected override T Serialize<T>(T value)
-                => NewtonsoftJsonSerializationHelper.Serialize(value);
+                => NewtonsoftJsonSerializationHelper.Clone(value);
         }
 
         [Fact]

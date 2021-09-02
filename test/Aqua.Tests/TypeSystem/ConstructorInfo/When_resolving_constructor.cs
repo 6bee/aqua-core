@@ -114,7 +114,7 @@ namespace Aqua.Tests.TypeSystem.ConstructorInfo
         {
             var expected = typeof(Overload).GetConstructor(Array.Empty<Type>());
             var ctor = new ConstructorInfo(expected);
-            var ctor2 = NewtonsoftJsonSerializationHelper.Serialize(ctor);
+            var ctor2 = NewtonsoftJsonSerializationHelper.Clone(ctor);
             ctor2.ToConstructorInfo().ShouldBeSameAs(expected);
         }
 

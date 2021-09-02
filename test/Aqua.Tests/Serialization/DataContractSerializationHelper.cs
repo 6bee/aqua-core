@@ -121,10 +121,10 @@ namespace Aqua.Tests.Serialization
             }
         }
 
-        public static T Serialize<T>(this T graph) => Serialize(graph, null);
+        public static T Clone<T>(this T graph) => Clone(graph, null);
 
         [SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out", Justification = "Debugging purpose")]
-        public static T Serialize<T>(this T graph, Type[] knownTypes)
+        public static T Clone<T>(this T graph, Type[] knownTypes)
         {
             var serializer = new DataContractSerializer(typeof(T), new DataContractSerializerSettings
             {

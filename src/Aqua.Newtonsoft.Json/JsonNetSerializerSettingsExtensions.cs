@@ -1,8 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua
+namespace Aqua.Newtonsoft.Json
 {
-    using Aqua.Newtonsoft.Json;
     using Aqua.Newtonsoft.Json.ContractResolvers;
     using global::Newtonsoft.Json;
     using global::Newtonsoft.Json.Serialization;

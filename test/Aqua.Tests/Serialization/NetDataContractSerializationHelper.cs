@@ -10,7 +10,7 @@ namespace Aqua.Tests.Serialization
 
     public static class NetDataContractSerializationHelper
     {
-        public static T Serialize<T>(this T graph)
+        public static T Clone<T>(this T graph)
         {
             var serializer = new NetDataContractSerializer();
 

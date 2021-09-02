@@ -3,6 +3,7 @@
 namespace Aqua.Tests.Serialization
 {
     using Aqua.EnumerableExtensions;
+    using Aqua.ProtoBuf;
     using Aqua.TypeExtensions;
     using System;
     using System.Linq;
@@ -27,9 +28,9 @@ namespace Aqua.Tests.Serialization
             return configuration;
         }
 
-        public static T Serialize<T>(this T graph) => Serialize(graph, null);
+        public static T Clone<T>(this T graph) => Clone(graph, null);
 
-        public static T Serialize<T>(this T graph, global::ProtoBuf.Meta.TypeModel model)
+        public static T Clone<T>(this T graph, global::ProtoBuf.Meta.TypeModel model)
             => (T)(model ?? _configuration).DeepClone(graph);
 
         public static void SkipUnsupportedDataType(Type type, object value)
@@ -38,9 +39,9 @@ namespace Aqua.Tests.Serialization
             Skip.If(type.Is<BigInteger>(), $"{type} not supported by out-of-the-box protobuf-net");
             Skip.If(type.Is<Complex>(), $"{type} not supported by out-of-the-box protobuf-net");
             Skip.If(type.IsNotPublic(), $"Not-public {type} not supported protobuf-net");
-#if !NET48
+#if NET5_0_OR_GREATER
             Skip.If(type.Is<Half>(), $"{type} serialization is not supported.");
-#endif // NET48
+#endif // NET5_0_OR_GREATER
         }
     }
 }

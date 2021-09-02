@@ -15,7 +15,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         public class With_binary_formatter : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {
             public With_binary_formatter()
-                : base(BinarySerializationHelper.Serialize)
+                : base(BinarySerializationHelper.Clone)
             {
             }
         }
@@ -23,7 +23,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         public class With_data_contract_serializer : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {
             public With_data_contract_serializer()
-                : base(DataContractSerializationHelper.Serialize)
+                : base(DataContractSerializationHelper.Clone)
             {
             }
         }
@@ -31,7 +31,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         public class With_newtown_json_serializer : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {
             public With_newtown_json_serializer()
-                : base(NewtonsoftJsonSerializationHelper.Serialize)
+                : base(NewtonsoftJsonSerializationHelper.Clone)
             {
             }
         }
@@ -39,7 +39,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         public class With_system_text_json_serializer : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {
             public With_system_text_json_serializer()
-                : base(SystemTextJsonSerializationHelper.Serialize)
+                : base(SystemTextJsonSerializationHelper.Clone)
             {
             }
         }
@@ -48,7 +48,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         public class With_net_data_contract_serializer : When_serializing_dynamicobject_for_typeinfo_of_typeinfo
         {
             public With_net_data_contract_serializer()
-                : base(NetDataContractSerializationHelper.Serialize)
+                : base(NetDataContractSerializationHelper.Clone)
             {
             }
         }

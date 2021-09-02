@@ -13,9 +13,7 @@ namespace Aqua.Tests.Serialization
         {
             protected override T Deserialize<T>(string json)
             {
-                var serializerOptions = new System.Text.Json.JsonSerializerOptions()
-                    .AddConverter(new Aqua.Text.Json.Converters.TimeSpanConverter())
-                    .ConfigureAqua();
+                var serializerOptions = SystemTextJsonSerializationHelper.SerializerOptions;
                 return System.Text.Json.JsonSerializer.Deserialize<T>(json, serializerOptions);
             }
         }
@@ -24,7 +22,7 @@ namespace Aqua.Tests.Serialization
         {
             protected override T Deserialize<T>(string json)
             {
-                var serializerSettings = new global::Newtonsoft.Json.JsonSerializerSettings().ConfigureAqua();
+                var serializerSettings = NewtonsoftJsonSerializationHelper.SerializerSettings;
                 return global::Newtonsoft.Json.JsonConvert.DeserializeObject<T>(json, serializerSettings);
             }
         }
