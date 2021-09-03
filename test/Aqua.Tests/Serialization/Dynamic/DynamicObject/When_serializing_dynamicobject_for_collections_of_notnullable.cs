@@ -135,6 +135,13 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         }
 
         [Fact]
+        public void Should_roundtrip_null_array()
+        {
+            var resurrected = Roundtrip(default(int[]));
+            resurrected.ShouldBeNull();
+        }
+
+        [Fact]
         public void Should_roundtrip_enumerable_array()
         {
             var enumerable = new[] { 0, 1, 22, -333 }.AsEnumerable();

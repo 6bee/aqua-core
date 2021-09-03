@@ -216,6 +216,22 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             result.ShouldBe(value);
         }
 
+        [Fact]
+        public void Should_serialize_null_array()
+        {
+            var type = typeof(TestData.RecordType[]);
+            var result = Serialize(type, null);
+            result.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_serialize_null_array_as_property()
+        {
+            var type = typeof(TestData.RecordType[]);
+            var result = SerializeAsProperty(type, null);
+            result.ShouldBeNull();
+        }
+
         [SkippableFact]
         public void Should_serialize_DateTimeOffset_as_property()
         {

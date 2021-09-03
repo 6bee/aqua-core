@@ -3,6 +3,7 @@
 namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 {
     using Aqua.Dynamic;
+    using Shouldly;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -65,7 +66,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         public class With_xml_serializer : When_serializing_dynamicobject_collections_of_notnullable
         {
             public With_xml_serializer()
-                : base(x => XmlSerializationHelper.Serialize(x.ToArray()))
+                : base(x => XmlSerializationHelper.Serialize(x?.ToArray()))
             {
             }
         }
@@ -130,6 +131,13 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
             var enumerable = new[] { 0, 1, 22, -333 };
             var resurrected = Roundtrip(enumerable);
             resurrected.SequenceShouldBeEqual(enumerable);
+        }
+
+        [Fact]
+        public void Should_roundtrip_null_array()
+        {
+            var resurrected = Roundtrip(default(int[]));
+            resurrected.ShouldBeNull();
         }
 
         [Fact]
