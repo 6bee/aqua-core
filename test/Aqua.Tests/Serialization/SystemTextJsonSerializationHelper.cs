@@ -5,7 +5,6 @@ namespace Aqua.Tests.Serialization
     using Aqua.Text.Json;
     using Aqua.Text.Json.Converters;
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Numerics;
     using System.Text.Json;
     using Xunit;
@@ -19,7 +18,6 @@ namespace Aqua.Tests.Serialization
             .AddConverter(new TimeSpanConverter())
             .ConfigureAqua();
 
-        [SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out", Justification = "Debugging purpose")]
         public static T Clone<T>(this T graph)
         {
             var json = JsonSerializer.Serialize(graph, SerializerOptions);
