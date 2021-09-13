@@ -36,14 +36,16 @@ Blog blog = new Blog
             Title = "Announcing .NET Core 1.0",
             Date = new DateTime(2016, 6, 27),
             Author = "rlander"
-            Text = "We are excited to announce the release of .NET Core 1.0, ASP.NET Core 1.0 and Entity Framework Core 1.0, available on Windows, OS X and Linux! .NET Core is a cross-platform, open source, and modular .NET platform [...]"
+            Text = "We are excited to announce the release of .NET Core 1.0, ASP.NET Core 1.0 and " +
+               "Entity Framework Core 1.0, available on Windows, OS X and Linux! " +
+               ".NET Core is a cross-platform, open source, and modular .NET platform [...]",
         },
         new Post
         {
             Title = "Happy 15th Birthday .NET!",
             Date = new DateTime(2017, 2, 13),
             Author = "bmassi",
-            Text = "Today marks the 15th anniversary since .NET debuted to the world [...]"
+            Text = "Today marks the 15th anniversary since .NET debuted to the world [...]",
         }
     }
 }
