@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [Unreleased vNext][vNext-unreleased]
+## [Unreleased vNext][vnext-unreleased]
 
 ### Added
 
@@ -41,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced `ITypeSafetyChecker` to enable type checking before instantiation by `DynamicObjectMapper`.
 
 
-[vNext-unreleased]: https://github.com/6bee/aqua-core/compare/5.0.0...main
+[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/5.0.0...main
 [5.0.0]: https://github.com/6bee/aqua-core/compare/4.6.5...5.0.0
 
 [issue#36]: https://github.com/6bee/aqua-core/issues/36
