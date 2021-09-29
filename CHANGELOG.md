@@ -5,7 +5,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [Unreleased 5.0.0][5.0.0-unreleased]
+## [Unreleased vNext][vNext]
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+
+## [Unreleased 5.0.0][5.0.0]
 
 ### Added
 - Added support for [protobuf-net v2][protobuf-net-v2] serialization.
@@ -15,10 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Migrated to [nullable reference types][nullable-references].
 - Reduce [Json.NET][json-net] doc size by substituting type info for common and well known types.
-
-### Deprecated
-
-### Removed
 
 ### Fixed
 - Fixed issue relating to MemberInfo reflection on _.NET 6.0 WebAssembly_. [#36][issue#36]
@@ -30,7 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced `ITypeSafetyChecker` to enable type checking before instantiation by `DynamicObjectMapper`.
 
 
-[5.0.0-unreleased]: https://github.com/6bee/aqua-core/compare/4.6.5...main
+[vNext]: https://github.com/6bee/aqua-core/compare/5.0.0...main
+[5.0.0]: https://github.com/6bee/aqua-core/compare/4.6.5...5.0.0
 
 [issue#36]: https://github.com/6bee/aqua-core/issues/36
 
