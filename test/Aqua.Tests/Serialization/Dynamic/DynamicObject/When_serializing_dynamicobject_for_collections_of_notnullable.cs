@@ -93,7 +93,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
 
             public IEnumerator<T> GetEnumerator() => _source.GetEnumerator();
 
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_source).GetEnumerator();
         }
 
         public sealed class EnumerableProxy<T> : IEnumerable<T>

@@ -110,7 +110,7 @@ namespace Aqua.Dynamic
 
         public IEnumerator<Property> GetEnumerator() => _list.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => _list.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_list).GetEnumerator();
 
         internal IEnumerable<Property> FindAll(string name) => FindAll(new Property(name, null));
 
