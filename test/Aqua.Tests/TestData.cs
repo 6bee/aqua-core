@@ -62,6 +62,7 @@ namespace Aqua.Tests
         }
 
         private const BindingFlags PublicStatic = BindingFlags.Static | BindingFlags.Public;
+        private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
 
         private static IEnumerable<(Type Type, object Value, CultureInfo Culture)> GenerateTestValueSet() => new object[]
             {
@@ -108,7 +109,7 @@ namespace Aqua.Tests
                 'à',
                 true,
                 false,
-                default(Guid),
+                Guid.Empty,
                 Guid.NewGuid(),
                 DateTime.Now,
                 default(DateTime),
@@ -158,7 +159,7 @@ namespace Aqua.Tests
                 (x, c) => (x.Type, x.Value, c));
 
         private static object CreateDefault(Type t)
-            => typeof(TestData).GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+            => typeof(TestData).GetMethods(PrivateStatic)
             .Single(x => string.Equals(x.Name, nameof(CreateDefault), StringComparison.Ordinal) && x.IsGenericMethodDefinition)
             .MakeGenericMethod(t)
             .Invoke(null, null);

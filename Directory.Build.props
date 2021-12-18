@@ -27,21 +27,21 @@
     <IncludeSymbols>true</IncludeSymbols>
     <EmbedAllSources>true</EmbedAllSources>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageOutputPath Condition="'$(PackageOutputPath)'==''">$(MSBuildThisFileDirectory)artifacts</PackageOutputPath>
+    <PackageOutputPath Condition=" '$(PackageOutputPath)' == '' ">$(MSBuildThisFileDirectory)artifacts</PackageOutputPath>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Nullable Condition="'$(Nullable)' == ''">enable</Nullable>
-    <IncludeGlobalAssemblyInfo Condition="'$(IncludeGlobalAssemblyInfo)' == ''">true</IncludeGlobalAssemblyInfo>
+    <Nullable Condition=" '$(Nullable)' == '' ">enable</Nullable>
+    <IncludeGlobalAssemblyInfo Condition=" '$(IncludeGlobalAssemblyInfo)' == '' ">true</IncludeGlobalAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion Condition="'$(LangVersion)' == ''">9.0</LangVersion>
-    <GenerateDocumentationFile Condition="'$(GenerateDocumentationFile)' == ''">true</GenerateDocumentationFile>
+    <LangVersion Condition=" '$(LangVersion)' == '' ">10.0</LangVersion>
+    <GenerateDocumentationFile Condition=" '$(GenerateDocumentationFile)' == '' ">true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
-    <TreatWarningsAsErrors Condition="'$(TreatWarningsAsErrors)' == ''">true</TreatWarningsAsErrors>
-    <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>
-    <EnableStyleCopAnalyzers Condition="'$(EnableStyleCopAnalyzers)' == ''">true</EnableStyleCopAnalyzers>
-    <EnableNETAnalyzers Condition="'$(EnableNETAnalyzers)' == ''">true</EnableNETAnalyzers>
-    <EnableSonarAnalyzers Condition="'$(EnableSonarAnalyzers)' == ''">true</EnableSonarAnalyzers>
+    <TreatWarningsAsErrors Condition=" '$(TreatWarningsAsErrors)' == '' ">true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet Condition=" '$(CodeAnalysisRuleSet)' == '' ">$(MSBuildThisFileDirectory)Style.NoDoc.ruleset</CodeAnalysisRuleSet>
+    <EnableStyleCopAnalyzers Condition=" '$(EnableStyleCopAnalyzers)' == '' ">true</EnableStyleCopAnalyzers>
+    <EnableNETAnalyzers Condition=" '$(EnableNETAnalyzers)' == '' ">true</EnableNETAnalyzers>
+    <EnableSonarAnalyzers Condition=" '$(EnableSonarAnalyzers)' == '' ">true</EnableSonarAnalyzers>
   </PropertyGroup>
 
   <ItemGroup>
@@ -50,27 +50,27 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties/GlobalAssemblyInfo.cs" Condition="'$(IncludeGlobalAssemblyInfo)' == 'true'" />
+    <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties/GlobalAssemblyInfo.cs" Condition=" '$(IncludeGlobalAssemblyInfo)' == 'true' " />
   </ItemGroup>
 
   <PropertyGroup>
-    <SignAssembly Condition="'$(SignAssembly)' == ''">true</SignAssembly>
+    <SignAssembly Condition=" '$(SignAssembly)' == '' ">true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)key.snk</AssemblyOriginatorKeyFile>
-    <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="1.1.0" PrivateAssets="all" />
-    <PackageReference Include="aqua.tool.Validation" Version="1.4.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="2.0.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.Validation" Version="2.0.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" Condition="'$(EnableStyleCopAnalyzers)' == 'true'">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" Condition=" '$(EnableStyleCopAnalyzers)' == 'true' ">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.27.0.35380" Condition="'$(EnableSonarAnalyzers)' == 'true'">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.33.0.40503" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

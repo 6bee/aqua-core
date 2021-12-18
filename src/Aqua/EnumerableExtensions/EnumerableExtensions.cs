@@ -253,7 +253,9 @@ namespace Aqua.EnumerableExtensions
                 return false;
             }
 
+#pragma warning disable S3267 // False positive: there's no linq extension method to simplify loop with
             foreach (var item in source)
+#pragma warning restore S3267 // False positive: there's no linq extension method to simplify loop with
             {
                 if (predicate(item))
                 {
