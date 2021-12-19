@@ -2,7 +2,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Transform any object-graph into a dynamic, composed dictionaries like structure, holding serializable values and type information.</Description>
+    <Description>
+      Transform any object-graph into a dynamic, composed dictionaries like structure, holding serializable values and type information.
+
+      Commonly Used Types:
+      Aqua.Dynamic.DynamicObject
+      Aqua.Dynamic.DynamicObjectMapper
+      Aqua.TypeSystem.ConstructorInfo
+      Aqua.TypeSystem.FieldInfo
+      Aqua.TypeSystem.MethodInfo
+      Aqua.TypeSystem.TypeInfo
+      Aqua.TypeSystem.PropertyInfo
+    </Description>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
     <PackageId>aqua-core</PackageId>
     <PackageTags>type-info;dynamic-object;expando-object;object-mapping;object-mapper</PackageTags>
