@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <Description>Provides protobuf-net configuration for Aqua types.</Description>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
     <PackageTags>protobuf protobuf-net proto2 proto3 binary serialization</PackageTags>
     <RootNamespace>Aqua.ProtoBuf</RootNamespace>
     <PackageId>aqua-core-protobuf-net</PackageId>
@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="protobuf-net" Version="2.4.6" />
+    <PackageReference Include="protobuf-net" Version="2.4.7" />
   </ItemGroup>
 
   <ItemGroup>
