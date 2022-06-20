@@ -58,7 +58,7 @@ Blog restoredBlog = new DynamicObjectMapper().Map(dynamicObject) as Blog;
 [1]: https://ci.appveyor.com/api/projects/status/98rc3yav530hlw1c/branch/main?svg=true
 [2]: https://ci.appveyor.com/project/6bee/aqua-core
 
-[3]: https://travis-ci.com/6bee/aqua-core.svg?branch=main
+[3]: https://travis-ci.com/github/6bee/aqua-core.svg?branch=main
 [4]: https://travis-ci.com/6bee/aqua-core?branch=main
 
 [5]: https://codecov.io/gh/6bee/aqua-core/branch/main/graph/badge.svg
