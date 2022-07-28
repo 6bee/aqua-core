@@ -11,6 +11,8 @@ namespace Aqua.ProtoBuf.Dynamic
             .AddTypeSurrogate<DynamicObject, DynamicObjectSurrogate>()
             .AddSubType<Value, Value<DynamicObjectSurrogate>>()
             .AddSubType<Values, Values<DynamicObjectSurrogate>>()
-            .AddTypeSurrogate<Property, PropertySurrogate>();
+            .AddTypeSurrogate<Property, PropertySurrogate>()
+            .AddType<PropertySet>(t => t.IgnoreListHandling = true)
+            .AddTypeSurrogate<PropertySet, PropertySetSurrogate>();
     }
 }

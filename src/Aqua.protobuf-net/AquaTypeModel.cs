@@ -5,6 +5,7 @@ namespace Aqua.ProtoBuf
     using Aqua.Dynamic;
     using Aqua.TypeExtensions;
     using global::ProtoBuf.Meta;
+    using global::ProtoBuf.Serializers;
     using System;
     using System.Diagnostics.CodeAnalysis;
 
@@ -61,6 +62,20 @@ namespace Aqua.ProtoBuf
             return this;
         }
 
+        public AquaTypeModel AddSerializerType<T, TSerializer>(Action<MetaType>? config = null)
+            where TSerializer : ISerializer<T>
+            => AddSerializerType<T>(typeof(TSerializer), config);
+
+        public AquaTypeModel AddSerializerType<T>(Type serializerType, Action<MetaType>? config = null)
+            => AddSerializerType(typeof(T), serializerType, config);
+
+        public AquaTypeModel AddSerializerType(Type type, Type serializerType, Action<MetaType>? config = null)
+        {
+            GetType(type).SerializerType = serializerType;
+            config?.Invoke(GetType(serializerType));
+            return this;
+        }
+
         public MetaType GetType<T>() => GetType(typeof(T));
 
         public MetaType GetType(Type type) => Model[type];
@@ -91,10 +106,7 @@ namespace Aqua.ProtoBuf
 
         private AquaTypeModel AddDynamicPropertyType(bool flag, Type propertyType, bool addSingleValueSuppoort, bool addCollectionSupport, bool addNullableSupport)
         {
-            if (propertyType is null)
-            {
-                throw new ArgumentNullException(nameof(propertyType));
-            }
+            propertyType.AssertNotNull(nameof(propertyType));
 
             if (!Model.CanSerialize(propertyType))
             {
