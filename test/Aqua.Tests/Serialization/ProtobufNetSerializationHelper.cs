@@ -31,7 +31,7 @@ namespace Aqua.Tests.Serialization
         public static T Clone<T>(this T graph) => Clone(graph, null);
 
         public static T Clone<T>(this T graph, global::ProtoBuf.Meta.TypeModel model)
-            => (T)(model ?? _configuration).DeepClone(graph);
+            => (model ?? _configuration).DeepClone(graph);
 
         public static void SkipUnsupportedDataType(Type type, object value)
         {
