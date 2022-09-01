@@ -48,6 +48,13 @@ namespace Aqua.Tests
             public string Value { get; init; }
         }
 
+        public class EmptyType
+        {
+            public override int GetHashCode() => 0;
+
+            public override bool Equals(object obj) => obj is EmptyType;
+        }
+
         public enum TestEnum
         {
             Foo,
@@ -129,6 +136,7 @@ namespace Aqua.Tests
                 TestEnum.Foo,
                 TestEnum.Bar,
                 new { Text = string.Empty, Timestamp = default(DateTime?) },
+                new EmptyType(),
 
                 // TODO: consider support for custom tuples
                 // (Name: "NegativePi", Value: -Math.PI),

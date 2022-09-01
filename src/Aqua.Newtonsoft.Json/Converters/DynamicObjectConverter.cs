@@ -29,9 +29,9 @@ namespace Aqua.Newtonsoft.Json.Converters
             serializer.AssertNotNull(nameof(serializer));
 
             TypeInfo? typeInfo = null;
-            void SetResult(IEnumerable<DynamicProperty>? properties = null)
+            void SetResult(IEnumerable<DynamicProperty>? properties = null, bool advance = true)
             {
-                reader.AssertEndObject();
+                reader.AssertEndObject(advance);
 
                 result.Type = typeInfo;
                 if (properties?.Any() is true)
@@ -165,6 +165,12 @@ namespace Aqua.Newtonsoft.Json.Converters
                 }
 
                 SetResult(propertySet);
+                return;
+            }
+
+            if (reader.TokenType == JsonToken.EndObject)
+            {
+                SetResult(advance: false);
                 return;
             }
 

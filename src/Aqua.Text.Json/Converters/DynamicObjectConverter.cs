@@ -27,9 +27,9 @@ namespace Aqua.Text.Json.Converters
         {
             reader.Advance();
             TypeInfo? typeInfo = null;
-            void SetResult(ref Utf8JsonReader reader, IEnumerable<DynamicProperty>? properties = null)
+            void SetResult(ref Utf8JsonReader reader, IEnumerable<DynamicProperty>? properties = null, bool advance = true)
             {
-                reader.AssertEndObject();
+                reader.AssertEndObject(advance);
 
                 result.Type = typeInfo;
                 if (properties?.Any() is true)
@@ -222,6 +222,12 @@ namespace Aqua.Text.Json.Converters
                 }
 
                 SetResult(ref reader, propertySet);
+                return;
+            }
+
+            if (reader.TokenType == JsonTokenType.EndObject)
+            {
+                SetResult(ref reader, advance: false);
                 return;
             }
 

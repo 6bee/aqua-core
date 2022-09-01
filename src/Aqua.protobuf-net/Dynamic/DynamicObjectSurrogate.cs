@@ -23,6 +23,9 @@ namespace Aqua.ProtoBuf.Dynamic
         [SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "Required for serialization")]
         public Dictionary<string, Value?>? Properties { get; set; }
 
+        [ProtoMember(3)]
+        public bool? IsNull { get; set; }
+
         [ProtoConverter]
         public static DynamicObjectSurrogate Convert(DynamicObject? source)
             => source is null
@@ -30,6 +33,7 @@ namespace Aqua.ProtoBuf.Dynamic
             : new DynamicObjectSurrogate
             {
                 Type = source.Type,
+                IsNull = source.Properties?.Count > 0 ? null : source.IsNull,
                 Properties = Convert(source.Properties, source.Type),
             };
 
@@ -55,9 +59,9 @@ namespace Aqua.ProtoBuf.Dynamic
         [ProtoConverter]
         [return: NotNullIfNotNull("surrogate")]
         public static DynamicObject? Convert(DynamicObjectSurrogate? surrogate)
-            => surrogate?.Type is null && surrogate?.Properties is null
+            => surrogate is null || (surrogate.Type is null && surrogate.Properties is null)
             ? null
-            : surrogate.Properties is null
+            : surrogate.Properties is null && surrogate.IsNull is true
             ? DynamicObject.CreateDefault(surrogate.Type)
             : new DynamicObject(
                 surrogate.Type,
