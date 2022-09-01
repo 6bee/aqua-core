@@ -62,7 +62,7 @@
 
   <ItemGroup>
     <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="2.0.0" PrivateAssets="all" />
-    <PackageReference Include="aqua.tool.Validation" Version="2.0.0" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.Validation" Version="2.0.1" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -70,7 +70,7 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" Condition=" '$(EnableStyleCopAnalyzers)' == 'true' ">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.33.0.40503" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.44.0.52574" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
