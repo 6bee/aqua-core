@@ -20,6 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 
+## [5.1.0][5.1.0] - 2022-09-01
+
+### Changed
+- Targeting .NET 6.0
+- Updated dependency _System.Text.Json 6.0.5_
+
+### Fixed
+- Fixed issue relating to json and protobuf deserialization of dynamic object for empty type. [#39][issue#39]
+
+
 ## [5.0.0][5.0.0] - 2021-09-29
 
 ### Added
@@ -41,10 +51,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced `ITypeSafetyChecker` to enable type checking before instantiation by `DynamicObjectMapper`.
 
 
-[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/5.0.0...main
+[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/5.1.0...main
+[5.1.0]: https://github.com/6bee/aqua-core/compare/5.0.0...5.1.0
 [5.0.0]: https://github.com/6bee/aqua-core/compare/4.6.5...5.0.0
 
 [issue#36]: https://github.com/6bee/aqua-core/issues/36
+[issue#39]: https://github.com/6bee/aqua-core/issues/39
 
 [json-net]: https://www.newtonsoft.com/json
 [nullable-references]: https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references
