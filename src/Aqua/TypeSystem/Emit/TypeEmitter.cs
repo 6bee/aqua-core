@@ -10,6 +10,7 @@ namespace Aqua.TypeSystem.Emit
     using System.Reflection;
     using System.Reflection.Emit;
     using System.Runtime.CompilerServices;
+    using System.Runtime.ExceptionServices;
     using System.Security;
     using System.Threading;
     using TypeInfo = Aqua.TypeSystem.TypeInfo;
@@ -110,7 +111,7 @@ namespace Aqua.TypeSystem.Emit
                 {
                     if (innerException is TypeEmitterException typeEmitterException)
                     {
-                        throw typeEmitterException;
+                        ExceptionDispatchInfo.Capture(typeEmitterException).Throw();
                     }
 
                     innerException = innerException.InnerException;
