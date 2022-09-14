@@ -84,13 +84,13 @@ namespace Aqua.TypeSystem.Emit
             Func<Type> emit;
             if (type.CheckNotNull(nameof(type)).IsAnonymousType)
             {
-                Exception CreateException(string reason) => throw new ArgumentException($"Cannot emit anonymous type '{type}' {reason}.");
+                Exception CreateException(string reason) => new ArgumentException($"Cannot emit anonymous type '{type}' {reason}.");
                 var properties = type.Properties?
-                    .Select(x => x.Name ?? throw new ArgumentException("with unnamed property contained"))
+                    .Select(x => x.Name ?? throw CreateException("with unnamed property contained"))
                     .ToList();
                 if (properties is null)
                 {
-                    throw CreateException("with not proeprties declared");
+                    throw CreateException("with no properties declared");
                 }
 
                 emit = () => _typeCache.GetOrCreate(properties, InternalEmitAnonymousType);
