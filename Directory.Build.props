@@ -4,8 +4,8 @@
   <PropertyGroup>
     <MajorVersion>5</MajorVersion>
     <MinorVersion>1</MinorVersion>
-    <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel></PreReleaseLabel>
+    <PatchVersion>1</PatchVersion>
+    <PreReleaseLabel>alpha-001</PreReleaseLabel>
   </PropertyGroup>
 
   <PropertyGroup> 
@@ -34,7 +34,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion Condition=" '$(LangVersion)' == '' ">10.0</LangVersion>
+    <LangVersion Condition=" '$(LangVersion)' == '' ">10</LangVersion>
     <GenerateDocumentationFile Condition=" '$(GenerateDocumentationFile)' == '' ">true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <TreatWarningsAsErrors Condition=" '$(TreatWarningsAsErrors)' == '' ">true</TreatWarningsAsErrors>
