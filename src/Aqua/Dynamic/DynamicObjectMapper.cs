@@ -829,6 +829,32 @@ namespace Aqua.Dynamic
         protected virtual IEnumerable<FieldInfo>? GetFieldsForMapping(Type type) => null;
 
         /// <summary>
+        /// Can be overriden in a derived class to return a cutom object factory for a given type.
+        /// </summary>
+        /// <param name="targetType">The type of the instance to be created.</param>
+        /// <param name="dynamicObject">Dynamic object holding data for the instance to be created.</param>
+        /// <param name="factory">The factory function or <see langword="null"/> if <see langword="false"/> is returned as result.</param>
+        /// <returns><see langword="true"/> if a factory function is assigned to the out parameter, <see langword="false"/> otherwise.</returns>
+        protected virtual bool TryGetObjectFactory(Type targetType, DynamicObject dynamicObject, [NotNullWhen(true)] out Func<object>? factory)
+        {
+            factory = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Can be overriden in a derived class to return a cutom object initializer for a given instance.
+        /// </summary>
+        /// <param name="targetType">The type of the instance to be initalized.</param>
+        /// <param name="dynamicObject">Dynamic object holding data for the instance to be initalized.</param>
+        /// <param name="initializer">The initializer function or <see langword="null"/> if <see langword="false"/> is returned as result.</param>
+        /// <returns><see langword="true"/> if an initializer function is assigned to the out parameter, <see langword="false"/> otherwise.</returns>
+        protected virtual bool TryGetObjectInitializer(Type targetType, DynamicObject dynamicObject, [NotNullWhen(true)] out Action<object>? initializer)
+        {
+            initializer = null;
+            return false;
+        }
+
+        /// <summary>
         /// Maps an object to a dynamic object.
         /// </summary>
         /// <remarks>Null references and dynamic objects are not mapped.</remarks>
@@ -952,53 +978,77 @@ namespace Aqua.Dynamic
             }
             else
             {
-                var constructor = targetType.GetConstructors()
-                    .Select(i =>
+                if (TryGetObjectFactory(targetType, obj, out var func))
+                {
+                    if (func is null)
                     {
-                        var paramterList = i.GetParameters();
-                        return new
-                        {
-                            Info = i,
-                            ParametersCount = paramterList.Length,
-                            Parameters = paramterList
-                                .Select(parameter => new
-                                {
-                                    Info = parameter,
-                                    Property = obj.Properties?
-                                        .Where(dynamicProperty => string.Equals(dynamicProperty.Name, parameter.Name, StringComparison.OrdinalIgnoreCase))
-                                        .Select(dynamicProperty => new { dynamicProperty.Name, Value = MapFromDynamicObjectGraph(dynamicProperty.Value, parameter.ParameterType) })
-                                        .SingleOrDefault(dynamicProperty => IsAssignable(parameter.ParameterType, dynamicProperty.Value)),
-                                })
-                                .ToArray(),
-                        };
-                    })
-                    .OrderByDescending(i => i.ParametersCount == 0 ? int.MaxValue : i.ParametersCount)
-                    .FirstOrDefault(i => i.Parameters.All(p => p.Property is not null));
+                        throw new DynamicObjectMapperException($"Factory function must not be null if {nameof(TryGetObjectFactory)} returns true.");
+                    }
 
-                if (constructor is not null)
-                {
-                    factory = (t, item) =>
-                    {
-                        var arguments = constructor.Parameters
-                            .Select(x => x.Property?.Value)
-                            .ToArray();
-                        var instance = constructor.Info.Invoke(arguments);
-                        return instance;
-                    };
-                    initializer = InitializeProperties;
-                }
-#if NET5_0_OR_GREATER
-                else if (targetType.IsValueType && targetType.GetCustomAttribute<System.Runtime.CompilerServices.IsReadOnlyAttribute>() is null)
-#else
-                else if (targetType.IsValueType)
-#endif // NET5_0_OR_GREATER
-                {
-                    factory = (t, item) => Activator.CreateInstance(t) ?? throw new DynamicObjectMapperException($"Failed to create instance of type {t.FullName}");
-                    initializer = InitializeProperties;
+                    factory = (_, _) => func();
                 }
                 else
                 {
-                    throw new DynamicObjectMapperException($"Failed to pick matching constructor for type {targetType.FullName}");
+                    var constructor = targetType.GetConstructors()
+                        .Select(i =>
+                        {
+                            var paramterList = i.GetParameters();
+                            return new
+                            {
+                                Info = i,
+                                ParametersCount = paramterList.Length,
+                                Parameters = paramterList
+                                    .Select(parameter => new
+                                    {
+                                        Info = parameter,
+                                        Property = obj.Properties?
+                                            .Where(dynamicProperty => string.Equals(dynamicProperty.Name, parameter.Name, StringComparison.OrdinalIgnoreCase))
+                                            .Select(dynamicProperty => new { dynamicProperty.Name, Value = MapFromDynamicObjectGraph(dynamicProperty.Value, parameter.ParameterType) })
+                                            .SingleOrDefault(dynamicProperty => IsAssignable(parameter.ParameterType, dynamicProperty.Value)),
+                                    })
+                                    .ToArray(),
+                            };
+                        })
+                        .OrderByDescending(i => i.ParametersCount == 0 ? int.MaxValue : i.ParametersCount)
+                        .FirstOrDefault(i => i.Parameters.All(p => p.Property is not null));
+
+                    if (constructor is not null)
+                    {
+                        factory = (t, item) =>
+                        {
+                            var arguments = constructor.Parameters
+                                .Select(x => x.Property?.Value)
+                                .ToArray();
+                            var instance = constructor.Info.Invoke(arguments);
+                            return instance;
+                        };
+                    }
+#if NET5_0_OR_GREATER
+                    else if (targetType.IsValueType && targetType.GetCustomAttribute<System.Runtime.CompilerServices.IsReadOnlyAttribute>() is null)
+#else
+                    else if (targetType.IsValueType)
+#endif // NET5_0_OR_GREATER
+                    {
+                        factory = (t, item) => Activator.CreateInstance(t) ?? throw new DynamicObjectMapperException($"Failed to create instance of type {t.FullName}");
+                    }
+                    else
+                    {
+                        throw new DynamicObjectMapperException($"Failed to pick matching constructor for type {targetType.FullName}");
+                    }
+                }
+
+                if (TryGetObjectInitializer(targetType, obj, out var init))
+                {
+                    if (func is null)
+                    {
+                        throw new DynamicObjectMapperException($"Initializer function must not be null if {nameof(TryGetObjectInitializer)} returns true.");
+                    }
+
+                    initializer = (_, _, x) => init(x);
+                }
+                else
+                {
+                    initializer = InitializeProperties;
                 }
             }
 
