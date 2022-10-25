@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased vNext][vnext-unreleased]
 
 ### Added
+- Protected virtual methods in DynamicObjectMapper to allow override object creation and object initialization individually.
 
 ### Changed
 
