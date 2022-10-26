@@ -51,12 +51,6 @@ namespace Aqua.TypeSystem
 
         public override MemberTypes MemberType => MemberTypes.Field;
 
-        [IgnoreDataMember]
-        [Unmapped]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Use method ToFieldInfo() instead", true)]
-        public System.Reflection.FieldInfo Field => ToFieldInfo();
-
         public static explicit operator System.Reflection.FieldInfo?(FieldInfo? field)
             => field?.ToFieldInfo();
 

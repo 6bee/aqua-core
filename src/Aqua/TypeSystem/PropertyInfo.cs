@@ -68,12 +68,6 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo? PropertyType { get; set; }
 
-        [IgnoreDataMember]
-        [Unmapped]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Use method ToPropertyInfo() instead", true)]
-        public System.Reflection.PropertyInfo Property => ToPropertyInfo();
-
         public static explicit operator System.Reflection.PropertyInfo?(PropertyInfo? proeprty)
             => proeprty?.ToPropertyInfo();
 

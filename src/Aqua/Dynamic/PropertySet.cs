@@ -145,10 +145,5 @@ namespace Aqua.Dynamic
 
         public static PropertySet From(Dictionary<string, object?> dictionary)
             => new PropertySet(dictionary.CheckNotNull(nameof(dictionary)));
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Method was renamed to 'From'", true)]
-        public static PropertySet ToPropertySet(Dictionary<string, object?> dictionary)
-            => From(dictionary);
     }
 }

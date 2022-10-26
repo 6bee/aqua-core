@@ -68,12 +68,6 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo? ReturnType { get; set; }
 
-        [IgnoreDataMember]
-        [Unmapped]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Use method ToMethodInfo() instead", true)]
-        public System.Reflection.MethodInfo Method => ToMethodInfo();
-
         public override string ToString()
             => $"{ReturnType} {base.ToString()}".Trim();
 

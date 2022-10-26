@@ -34,13 +34,6 @@ namespace Aqua.Dynamic
             Value = value;
         }
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Constructor was removed, use static method Property.From(...) instead.", true)]
-        public Property(KeyValuePair<string, object?> property)
-            : this(property.Key, property.Value)
-        {
-        }
-
         internal protected Property(Property property)
             : this(property.CheckNotNull(nameof(property)).Name, property?.Value)
         {
@@ -66,10 +59,5 @@ namespace Aqua.Dynamic
 
         public static implicit operator KeyValuePair<string, object?>(Property property)
             => property.CheckNotNull(nameof(property)).ToKeyValuePair();
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Method was renamed to 'From'", true)]
-        public static Property ToProperty(KeyValuePair<string, object?> keyValuePair)
-            => From(keyValuePair);
     }
 }

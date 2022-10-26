@@ -53,12 +53,6 @@ namespace Aqua.TypeSystem
 
         public override MemberTypes MemberType => MemberTypes.Constructor;
 
-        [IgnoreDataMember]
-        [Unmapped]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Use method ToConstructorInfo() instead", true)]
-        public System.Reflection.ConstructorInfo Constructor => ToConstructorInfo();
-
         public static explicit operator System.Reflection.ConstructorInfo?(ConstructorInfo? constructor)
             => constructor?.ToConstructorInfo();
 

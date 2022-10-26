@@ -170,15 +170,6 @@ namespace Aqua.TypeSystem
                 : Name ?? string.Empty;
 
         /// <summary>
-        /// Gets <see cref="Type"/> by resolving this <see cref="TypeInfo"/> instance using the default <see cref="TypeResolver"/>.
-        /// </summary>
-        [IgnoreDataMember]
-        [Unmapped]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("Use method ToType() instead, this property is being removed in a future version.", false)]
-        public Type Type => ToType();
-
-        /// <summary>
         /// Returns the <see cref="Type"/> represented by this <see cref="TypeInfo"/> instance by resolving it using the default <see cref="TypeResolver"/>.
         /// </summary>
         public Type ToType()
