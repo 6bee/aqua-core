@@ -3,8 +3,8 @@
 
   <PropertyGroup>
     <MajorVersion>5</MajorVersion>
-    <MinorVersion>1</MinorVersion>
-    <PatchVersion>1</PatchVersion>
+    <MinorVersion>2</MinorVersion>
+    <PatchVersion>0</PatchVersion>
     <PreReleaseLabel>alpha-001</PreReleaseLabel>
   </PropertyGroup>
 
@@ -67,10 +67,10 @@
 
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" Condition=" '$(EnableStyleCopAnalyzers)' == 'true' ">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" Condition=" '$(EnableStyleCopAnalyzers)' == 'true' ">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.44.0.52574" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.47.0.55603" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

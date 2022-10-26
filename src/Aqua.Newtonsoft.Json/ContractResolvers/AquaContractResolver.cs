@@ -67,6 +67,6 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
         }
 
         private static JsonConverter CreateObjectConverter(Type type, KnownTypesRegistry knownTypes)
-            => (JsonConverter)Activator.CreateInstance(typeof(ObjectConverter<>).MakeGenericType(type), knownTypes) !;
+            => (JsonConverter)Activator.CreateInstance(typeof(ObjectConverter<>).MakeGenericType(type), knownTypes)!;
     }
 }

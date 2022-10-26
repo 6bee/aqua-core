@@ -104,7 +104,7 @@ namespace Aqua.TypeSystem
 
                 if (type.IsArray)
                 {
-                    type = type.GetElementType() !.MakeGenericType(genericArguments!).MakeArrayType();
+                    type = type.GetElementType()!.MakeGenericType(genericArguments!).MakeArrayType();
                 }
                 else
                 {
@@ -126,7 +126,7 @@ namespace Aqua.TypeSystem
             if (typeInfo.Properties?.Any() is true)
             {
                 var type = resolvedType.IsArray
-                    ? resolvedType.GetElementType() !
+                    ? resolvedType.GetElementType()!
                     : resolvedType;
 
                 var resolvedProperties = type

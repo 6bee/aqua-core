@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 
-## [Unreleased 5.1.1][5.1.1-unreleased]
+## [Unreleased 5.2.0][5.2.0-unreleased]
 
 ### Added
 - Protected virtual methods in DynamicObjectMapper to allow override object creation and object initialization individually.
@@ -68,7 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 [vnext-unreleased]: https://github.com/6bee/aqua-core/compare/5.1.0...main
-[5.1.1-unreleased]: https://github.com/6bee/aqua-core/compare/5.1.0...main
+[5.2.0-unreleased]: https://github.com/6bee/aqua-core/compare/5.1.0...main
 [5.1.0]: https://github.com/6bee/aqua-core/compare/5.0.0...5.1.0
 [5.0.0]: https://github.com/6bee/aqua-core/compare/4.6.5...5.0.0
 

@@ -68,7 +68,7 @@ namespace Aqua.Dynamic
         /// </summary>
         /// <param name="properties">Initial collection of properties and their values.</param>
         /// <exception cref="ArgumentNullException">The specified members collection is <see langword="null"/>.</exception>
-        public DynamicObject(IEnumerable<(string name, object? value)>? properties)
+        public DynamicObject(IEnumerable<(string Name, object? Value)>? properties)
             => Properties = properties is null
             ? null
             : new PropertySet(properties.CheckNotNull(nameof(properties)));

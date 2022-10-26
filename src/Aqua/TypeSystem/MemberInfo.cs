@@ -38,7 +38,7 @@ namespace Aqua.TypeSystem
                 System.Reflection.MethodBase method => method.IsStatic,
                 System.Reflection.PropertyInfo property => (property.GetMethod ?? property.SetMethod)?.IsStatic,
                 System.Reflection.FieldInfo field => field.IsStatic,
-                _ => member.GetBindingFlags().Contains(System.Reflection.BindingFlags.Static)
+                _ => member.GetBindingFlags().Contains(System.Reflection.BindingFlags.Static),
             };
             IsStatic = isStatic is true
                 ? true

@@ -24,7 +24,7 @@ namespace Aqua.Dynamic
         {
             objectMapper.AssertNotNull(nameof(objectMapper));
 
-            return (T)objectMapper.Map(obj, typeof(T)) !;
+            return (T)objectMapper.Map(obj, typeof(T))!;
         }
 
         /// <summary>

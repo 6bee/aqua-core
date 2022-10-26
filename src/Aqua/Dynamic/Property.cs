@@ -58,10 +58,10 @@ namespace Aqua.Dynamic
         public static Property From<T>(KeyValuePair<string, T> kvp)
             => new Property(kvp.Key, kvp.Value);
 
-        public static implicit operator Property((string name, object? value) property)
-            => new Property(property.name, property.value);
+        public static implicit operator Property((string Name, object? Value) property)
+            => new Property(property.Name, property.Value);
 
-        public static implicit operator (string name, object? value)(Property property)
+        public static implicit operator (string Name, object? Value)(Property property)
             => (property.CheckNotNull(nameof(property)).Name, property?.Value);
 
         public static implicit operator KeyValuePair<string, object?>(Property property)

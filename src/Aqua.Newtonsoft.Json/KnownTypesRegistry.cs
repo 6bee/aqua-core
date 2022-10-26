@@ -65,8 +65,8 @@ namespace Aqua.Newtonsoft.Json
             .SelectMany(x => new[]
                 {
                     x,
-                    (x.Type.IsValueType ? (typeof(Nullable<>).MakeGenericType(x.Item1), x.Key + "?") : x),
-                    (x.Type.MakeArrayType(), x.Key + "[]"),
+                    (x.Type.IsValueType ? (typeof(Nullable<>).MakeGenericType(x.Type), $"{x.Key}?") : x),
+                    (x.Type.MakeArrayType(), $"{x.Key}[]"),
                 })
             .Distinct()
             .ToArray();

@@ -19,7 +19,7 @@ namespace Aqua.TypeSystem.Emit
     {
         private sealed class TypeResolverScope : ITypeResolver
         {
-            private readonly HashSet<TypeInfo> _references = new (ReferenceEqualityComparer<TypeInfo>.Default);
+            private readonly HashSet<TypeInfo> _references = new(ReferenceEqualityComparer<TypeInfo>.Default);
             private readonly ITypeResolver _typeResolver;
 
             public TypeResolverScope(ITypeResolver typeResolver)
@@ -51,9 +51,9 @@ namespace Aqua.TypeSystem.Emit
             }
         }
 
-        private readonly ConstructorInfo _emittedTypeAttributeConstructorInfo = typeof(EmittedTypeAttribute).GetConstructor(Type.EmptyTypes) !;
-        private readonly ConstructorInfo _compilerGeneratedAttributeConstructorInfo = typeof(CompilerGeneratedAttribute).GetConstructor(Type.EmptyTypes) !;
-        private readonly ConstructorInfo _objectConstructorInfo = typeof(object).GetConstructor(Type.EmptyTypes) !;
+        private readonly ConstructorInfo _emittedTypeAttributeConstructorInfo = typeof(EmittedTypeAttribute).GetConstructor(Type.EmptyTypes)!;
+        private readonly ConstructorInfo _compilerGeneratedAttributeConstructorInfo = typeof(CompilerGeneratedAttribute).GetConstructor(Type.EmptyTypes)!;
+        private readonly ConstructorInfo _objectConstructorInfo = typeof(object).GetConstructor(Type.EmptyTypes)!;
         private readonly TypeCache _typeCache;
         private readonly AssemblyBuilder _assemblyBuilder;
         private readonly ModuleBuilder _module;

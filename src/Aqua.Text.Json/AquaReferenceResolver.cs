@@ -10,8 +10,8 @@ namespace Aqua.Text.Json
 
     internal sealed class AquaReferenceResolver : ReferenceResolver
     {
-        private readonly Dictionary<string, object> _registry = new (StringComparer.Ordinal);
-        private readonly Dictionary<object, string> _lookup = new (ReferenceEqualityComparer<object>.Default);
+        private readonly Dictionary<string, object> _registry = new(StringComparer.Ordinal);
+        private readonly Dictionary<object, string> _lookup = new(ReferenceEqualityComparer<object>.Default);
         private uint _refCount;
 
         public override void AddReference(string referenceId, object value)

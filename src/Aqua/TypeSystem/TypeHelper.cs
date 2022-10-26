@@ -28,7 +28,7 @@ namespace Aqua.TypeSystem
 
             if (type.IsArray)
             {
-                return type.GetElementType() !;
+                return type.GetElementType()!;
             }
 
             var enumerableType = FindIEnumerable(type);
@@ -49,7 +49,7 @@ namespace Aqua.TypeSystem
 
             if (type.IsArray)
             {
-                return typeof(IEnumerable<>).MakeGenericType(type.GetElementType() !);
+                return typeof(IEnumerable<>).MakeGenericType(type.GetElementType()!);
             }
 
             if (type.IsGenericType)
@@ -350,7 +350,7 @@ namespace Aqua.TypeSystem
             var isStatic = property.IsStatic ?? false;
             return bindingFlags => declaringType
                 .GetProperty(propertyName, bindingFlags)
-                .If(x => (x!.GetGetMethod(true) ?? x!.GetSetMethod(true)) !.IsStatic == isStatic);
+                .If(x => (x!.GetGetMethod(true) ?? x!.GetSetMethod(true))!.IsStatic == isStatic);
         }
 
         /// <summary>
