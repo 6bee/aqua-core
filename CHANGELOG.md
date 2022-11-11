@@ -20,21 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 
-## [Unreleased 5.2.0][5.2.0-unreleased]
+## [5.2.0][5.2.0] - 2022-11-11
 
 ### Added
 - Protected virtual methods in DynamicObjectMapper to allow override object creation and object initialization individually.
 
-### Changed
-
-### Deprecated
-
 ### Removed
 - Removed methods previously marked as obsolete.
-
-### Fixed
-
-### Security
 
 
 ## [5.1.0][5.1.0] - 2022-09-01
@@ -68,8 +60,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced `ITypeSafetyChecker` to enable type checking before instantiation by `DynamicObjectMapper`.
 
 
-[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/5.1.0...main
-[5.2.0-unreleased]: https://github.com/6bee/aqua-core/compare/5.1.0...main
+[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/5.2.0...main
+[5.2.0]: https://github.com/6bee/aqua-core/compare/5.1.0...5.2.0
 [5.1.0]: https://github.com/6bee/aqua-core/compare/5.0.0...5.1.0
 [5.0.0]: https://github.com/6bee/aqua-core/compare/4.6.5...5.0.0
 
