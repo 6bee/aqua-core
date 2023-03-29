@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Aqua.Tests" Description=" " ToolsVersion="16.0">
-  <Include Path="Style.NoDoc.ruleset" Action="Default" />
+<RuleSet Name="Aqua.Tests" Description=" " ToolsVersion="17.0">
+  <Include Path="style.nodoc.ruleset" Action="Default" />
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
     <Rule Id="CA1034" Action="None" />
     <Rule Id="CA1051" Action="None" />
@@ -32,8 +32,10 @@
     <Rule Id="S125" Action="Info" />
     <Rule Id="S1118" Action="Info" />
     <Rule Id="S1135" Action="Info" />
+    <Rule Id="S1144" Action="Info" />
     <Rule Id="S1172" Action="None" />
     <Rule Id="S1481" Action="Info" />
+    <Rule Id="S2094" Action="Info" />
     <Rule Id="S2223" Action="Info" />
     <Rule Id="S2326" Action="Info" />
     <Rule Id="S2344" Action="Info" />
@@ -43,6 +45,7 @@
     <Rule Id="S3218" Action="Info" />
     <Rule Id="S3459" Action="None" />
     <Rule Id="S3898" Action="None" />
+    <Rule Id="S4487" Action="Info" />
     <Rule Id="S5773" Action="None" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">

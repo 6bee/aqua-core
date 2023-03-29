@@ -206,7 +206,7 @@ namespace Aqua.Dynamic
             property.AssertNotNull(nameof(property));
             var properties = GetOrCreatePropertSet();
 
-            if (properties.SingleOrDefault(x => string.Equals(x.Name, property.Name, StringComparison.Ordinal)) is Property existing)
+            if (properties.Any(x => string.Equals(x.Name, property.Name, StringComparison.Ordinal)))
             {
                 properties.Remove(property);
             }

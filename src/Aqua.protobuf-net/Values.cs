@@ -21,8 +21,8 @@ namespace Aqua.ProtoBuf
             : sequence is DynamicObject[] dynamicObjectArray
             ? new Values<DynamicObjectSurrogate>(dynamicObjectArray.Select(DynamicObjectSurrogate.Convert))
             : elementType.IsNullableType() && sequence.Cast<object>().Any(x => x is null)
-            ? (Values?)Activator.CreateInstance(typeof(NullableValues<>).MakeGenericType(elementType), new object[] { sequence })
-            : (Values?)Activator.CreateInstance(typeof(Values<>).MakeGenericType(elementType), new object[] { sequence });
+            ? (Values?)Activator.CreateInstance(typeof(NullableValues<>).MakeGenericType(elementType), sequence)
+            : (Values?)Activator.CreateInstance(typeof(Values<>).MakeGenericType(elementType), sequence);
 
         [return: NotNullIfNotNull("values")]
         public static IEnumerable? Unwrap(Values? values)

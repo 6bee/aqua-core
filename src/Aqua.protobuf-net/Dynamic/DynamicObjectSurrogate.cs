@@ -101,7 +101,7 @@ namespace Aqua.ProtoBuf.Dynamic
                     return (!needAny || collection.Any(elementType.IsInstanceOfType))
                         && collection.All(x => elementType.IsInstanceOfType(x) || (x is null && isNullableType))
                         ? collection.CastCollectionToArrayOfType(elementType)
-                        : null;
+                        : null!;
                 }
 
                 var elementType = typeof(object);

@@ -9,6 +9,7 @@ namespace Aqua
 
     internal static class MethodInfos
     {
+#pragma warning disable S2094 // Classes should not be empty
         /// <summary>
         /// Type definition used in generic type filters.
         /// </summary>
@@ -29,6 +30,7 @@ namespace Aqua
         private sealed class TSource
         {
         }
+#pragma warning restore S2094 // Classes should not be empty
 
         internal static class Enumerable
         {

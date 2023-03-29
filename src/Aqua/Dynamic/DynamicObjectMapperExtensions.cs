@@ -41,7 +41,7 @@ namespace Aqua.Dynamic
 
             if (objects is null)
             {
-                return default;
+                return default!;
             }
 
             IEnumerable<object?> source = objects.Select(x => objectMapper.Map(x, type));
@@ -64,7 +64,7 @@ namespace Aqua.Dynamic
 
             if (objects is null)
             {
-                return default;
+                return default!;
             }
 
             return (IEnumerable<T>)objectMapper.Map(objects, typeof(T));
