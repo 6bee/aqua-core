@@ -4,7 +4,6 @@ namespace Aqua.TypeSystem
 {
     using Aqua.Dynamic;
     using System;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.Runtime.Serialization;
 
@@ -68,8 +67,8 @@ namespace Aqua.TypeSystem
         [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
         public TypeInfo? PropertyType { get; set; }
 
-        public static explicit operator System.Reflection.PropertyInfo?(PropertyInfo? proeprty)
-            => proeprty?.ToPropertyInfo();
+        public static explicit operator System.Reflection.PropertyInfo?(PropertyInfo? property)
+            => property?.ToPropertyInfo();
 
         public System.Reflection.PropertyInfo ToPropertyInfo()
             => _property ??= this.ResolveProperty(TypeResolver.Instance)

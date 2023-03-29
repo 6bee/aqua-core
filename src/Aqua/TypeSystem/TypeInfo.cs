@@ -7,7 +7,6 @@ namespace Aqua.TypeSystem
     using Aqua.TypeExtensions;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
