@@ -6,7 +6,6 @@ namespace Aqua.Dynamic
 
     public class DynamicObjectMapperSettings
     {
-#pragma warning disable SA1629 // Documentation text should end with a period
         /// <summary>
         /// Gets or sets a value indicating whether unasignalbe members should be skipped silenly.
         /// If set to <see langword="true"/> properties which cannot be assigned due to a type mismatch are silently skipped,
@@ -48,7 +47,6 @@ namespace Aqua.Dynamic
         /// The default value is <see langword="false"/>.
         /// </summary>
         public bool WrapNullAsDynamicObject { get; set; }
-#pragma warning restore SA1629 // Documentation text should end with a periods
 
         internal DynamicObjectMapperSettings Copy() => (DynamicObjectMapperSettings)MemberwiseClone();
     }

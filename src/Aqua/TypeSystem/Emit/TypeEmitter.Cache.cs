@@ -15,7 +15,6 @@ namespace Aqua.TypeSystem.Emit
         private sealed class PropertyList
         {
             private readonly ReadOnlyCollection<string> _properties;
-
             private readonly Lazy<int> _hash;
 
             internal PropertyList(IEnumerable<string> properties)
@@ -64,7 +63,6 @@ namespace Aqua.TypeSystem.Emit
         private sealed class TypeWithPropertyList
         {
             private readonly ReadOnlyCollection<Tuple<string, Type>> _properties;
-
             private readonly Lazy<int> _hash;
 
             public TypeWithPropertyList(TypeInfo typeInfo, ITypeResolver typeResolver)
@@ -79,7 +77,7 @@ namespace Aqua.TypeSystem.Emit
                 _hash = new Lazy<int>(_properties.GetCollectionHashCode);
             }
 
-            public string TypeFullName { get; private set; }
+            public string TypeFullName { get; }
 
             public override bool Equals(object? obj)
             {

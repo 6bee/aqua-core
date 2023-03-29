@@ -38,14 +38,6 @@ namespace Aqua.Tests.TypeSystem.ConstructorInfo
             }
         }
 
-        private class SubSubtype : Subtype<int>
-        {
-            public SubSubtype()
-                : base(default)
-            {
-            }
-        }
-
         public class Overload
         {
             public Overload()

@@ -18,8 +18,6 @@ namespace Aqua.Dynamic
     [KnownType(typeof(DynamicObject[])), XmlInclude(typeof(DynamicObject[]))]
     public partial class DynamicObject
     {
-        private const string ObsoleteConstructor = "This contructor overload will be removed in a future version.";
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObject"/> class.
         /// </summary>
