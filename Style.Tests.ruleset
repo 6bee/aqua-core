@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Aqua.Tests" Description=" " ToolsVersion="17.0">
-  <Include Path="style.nodoc.ruleset" Action="Default" />
+  <Include Path="Style.NoDoc.ruleset" Action="Default" />
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
     <Rule Id="CA1034" Action="None" />
     <Rule Id="CA1051" Action="None" />
@@ -51,6 +51,5 @@
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1306" Action="Info" />
     <Rule Id="SA1401" Action="Info" />
-    <Rule Id="SA1600" Action="Info" />
   </Rules>
 </RuleSet>
