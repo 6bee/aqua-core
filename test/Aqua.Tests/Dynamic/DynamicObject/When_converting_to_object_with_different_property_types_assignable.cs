@@ -25,8 +25,8 @@ namespace Aqua.Tests.Dynamic.DynamicObject
 
         private const int Int32Value = 11;
         private const string StringValue = "eleven";
-        private readonly DateTime DateTimeValue = DateTime.Now;
 
+        private readonly DateTime DateTimeValue = DateTime.Now;
         private readonly CustomType obj;
 
         public When_converting_to_object_with_different_property_types_assignable()
