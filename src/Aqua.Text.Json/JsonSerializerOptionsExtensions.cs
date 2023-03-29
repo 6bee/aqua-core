@@ -34,8 +34,6 @@ namespace Aqua.Text.Json
         {
             options.AssertNotNull(nameof(options));
 
-            options.IgnoreReadOnlyProperties = true;
-
             if (options.ReferenceHandler is not AquaReferenceHandler)
             {
                 options.ReferenceHandler = AquaReferenceHandler.Root;
