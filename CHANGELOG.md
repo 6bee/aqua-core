@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- Bump _Newtonsoft.Json_ from 13.0.1 to 13.0.3 (concerns _Aqua.Newtonsoft.Json_)
+- Bump _protobuf-net_ from 2.4.7 to 2.4.8 (concerns _Aqua.protobuf-net_)
+- Bump _System.Text.Json_ from 6.0.6 to 7.0.2 (concerns _Aqua.Text.Json_)
+- Remove `JsonSerializerOptions.IgnoreReadOnlyProperties` setting (concerns _Aqua.Text.Json_)
 
 ### Deprecated
 
