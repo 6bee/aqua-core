@@ -759,7 +759,11 @@ namespace Aqua.Dynamic
                 var elementType = TypeHelper.GetElementType(type);
                 if (elementType != typeof(object))
                 {
-                    if (elementType.IsEnum() || (_settings.FormatNativeTypesAsString && _isNativeType(elementType)))
+                    if (_isKnownType(elementType))
+                    {
+                        // keep unchanged
+                    }
+                    else if (elementType.IsEnum() || (_settings.FormatNativeTypesAsString && _isNativeType(elementType)))
                     {
                         elementType = typeof(string);
                     }
