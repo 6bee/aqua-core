@@ -15,8 +15,8 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public override TypeInfo? ReadJson(JsonReader reader, Type objectType, TypeInfo? existingValue, JsonSerializer serializer)
         {
-            reader.AssertNotNull(nameof(reader));
-            serializer.AssertNotNull(nameof(serializer));
+            reader.AssertNotNull();
+            serializer.AssertNotNull();
 
             if (reader.TokenType == JsonToken.String &&
                 reader.Value is string typeKey &&
@@ -30,7 +30,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public override void WriteJson(JsonWriter writer, TypeInfo? value, JsonSerializer serializer)
         {
-            writer.AssertNotNull(nameof(writer));
+            writer.AssertNotNull();
 
             if (value is not null && KnownTypesRegistry.TryGetTypeKey(value, out var typeKey))
             {

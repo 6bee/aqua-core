@@ -32,7 +32,7 @@ namespace Aqua.TypeSystem
             : base(method, typeInfoProvider)
         {
             _method = method;
-            ReturnType = typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).GetTypeInfo(method?.ReturnType, false, false);
+            ReturnType = typeInfoProvider.CheckNotNull().GetTypeInfo(method?.ReturnType, false, false);
         }
 
         public MethodInfo(string name, Type declaringType, IEnumerable<Type>? parameterTypes = null, Type? returnType = null)
@@ -48,7 +48,7 @@ namespace Aqua.TypeSystem
         public MethodInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes, Type? returnType, TypeInfoProvider typeInfoProvider)
             : base(name, declaringType, genericArguments, parameterTypes, typeInfoProvider)
         {
-            ReturnType = typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).GetTypeInfo(returnType, false, false);
+            ReturnType = typeInfoProvider.CheckNotNull().GetTypeInfo(returnType, false, false);
         }
 
         public MethodInfo(string name, TypeInfo declaringType, IEnumerable<TypeInfo>? genericArguments = null, IEnumerable<TypeInfo>? parameterTypes = null, TypeInfo? returnType = null)

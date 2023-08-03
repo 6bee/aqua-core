@@ -23,8 +23,8 @@ namespace Aqua.Text.Json.Converters
 
             public Property(PropertyInfo propertyInfo, KnownTypesRegistry knownTypes)
             {
-                PropertyInfo = propertyInfo.CheckNotNull(nameof(propertyInfo));
-                _knownTypes = knownTypes.CheckNotNull(nameof(knownTypes));
+                PropertyInfo = propertyInfo.CheckNotNull();
+                _knownTypes = knownTypes.CheckNotNull();
                 IsIgnored = propertyInfo.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Any();
                 DataMemberAttribute = (DataMemberAttribute?)propertyInfo.GetCustomAttributes(typeof(DataMemberAttribute), false)?.FirstOrDefault();
                 Name = string.IsNullOrWhiteSpace(DataMemberAttribute?.Name) ? propertyInfo.Name : DataMemberAttribute!.Name;
@@ -77,7 +77,7 @@ namespace Aqua.Text.Json.Converters
 
         public ObjectConverter(KnownTypesRegistry knownTypes, bool handleSubtypes)
         {
-            knownTypes.AssertNotNull(nameof(knownTypes));
+            knownTypes.AssertNotNull();
             KnownTypesRegistry = knownTypes;
             _handleSubtypes = handleSubtypes;
         }
@@ -86,7 +86,7 @@ namespace Aqua.Text.Json.Converters
 
         protected IReadOnlyCollection<Property> GetProperties(Type type)
         {
-            type.AssertNotNull(nameof(type));
+            type.AssertNotNull();
             lock (_properties)
             {
                 if (!_properties.TryGetValue(type, out var propertySet))
@@ -118,8 +118,8 @@ namespace Aqua.Text.Json.Converters
 
         public sealed override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            typeToConvert.AssertNotNull(nameof(typeToConvert));
-            options.AssertNotNull(nameof(options));
+            typeToConvert.AssertNotNull();
+            options.AssertNotNull();
 
             return ReadJson(ref reader, typeToConvert, options.ToSessionOptions());
         }
@@ -187,8 +187,8 @@ namespace Aqua.Text.Json.Converters
 
         public sealed override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
-            writer.AssertNotNull(nameof(writer));
-            options.AssertNotNull(nameof(options));
+            writer.AssertNotNull();
+            options.AssertNotNull();
 
             WriteJson(writer, value, options.ToSessionOptions());
         }
@@ -220,8 +220,8 @@ namespace Aqua.Text.Json.Converters
 
         protected virtual void ReadObjectProperties(ref Utf8JsonReader reader, [DisallowNull] T result, Dictionary<string, Property> properties, JsonSerializerOptions options)
         {
-            properties.AssertNotNull(nameof(properties));
-            options.AssertNotNull(nameof(options));
+            properties.AssertNotNull();
+            options.AssertNotNull();
             while (reader.TokenType != JsonTokenType.EndObject)
             {
                 if (reader.TokenType == JsonTokenType.PropertyName)
@@ -244,10 +244,10 @@ namespace Aqua.Text.Json.Converters
 
         protected virtual void WriteObjectProperties(Utf8JsonWriter writer, T instance, IReadOnlyCollection<Property> properties, JsonSerializerOptions options)
         {
-            writer.AssertNotNull(nameof(writer));
-            instance.AssertNotNull(nameof(instance));
-            options.AssertNotNull(nameof(options));
-            properties.AssertNotNull(nameof(properties));
+            writer.AssertNotNull();
+            instance.AssertNotNull();
+            options.AssertNotNull();
+            properties.AssertNotNull();
 
             foreach (var property in properties)
             {

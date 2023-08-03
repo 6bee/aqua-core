@@ -108,7 +108,7 @@ namespace Aqua.Text.Json.Converters
 
         public static bool TryRead(this ref Utf8JsonReader reader, Type? type, JsonSerializerOptions options, out object? result)
         {
-            options.AssertNotNull(nameof(options));
+            options.AssertNotNull();
 
             if (type is not null && _typeReaders.TryGetValue(type, out var read))
             {
@@ -201,8 +201,8 @@ namespace Aqua.Text.Json.Converters
 
         public static bool TryWriteReference(this Utf8JsonWriter writer, object value, JsonSerializerOptions options)
         {
-            writer.AssertNotNull(nameof(writer));
-            options.AssertNotNull(nameof(options));
+            writer.AssertNotNull();
+            options.AssertNotNull();
             var referenceResolver = options.ReferenceHandler?.CreateResolver();
             if (referenceResolver is null)
             {

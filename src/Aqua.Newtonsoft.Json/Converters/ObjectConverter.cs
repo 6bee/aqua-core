@@ -20,8 +20,8 @@ namespace Aqua.Newtonsoft.Json.Converters
 
             public Property(PropertyInfo propertyInfo, KnownTypesRegistry knownTypes)
             {
-                PropertyInfo = propertyInfo.CheckNotNull(nameof(propertyInfo));
-                _knownTypes = knownTypes.CheckNotNull(nameof(knownTypes));
+                PropertyInfo = propertyInfo.CheckNotNull();
+                _knownTypes = knownTypes.CheckNotNull();
                 IsIgnored = propertyInfo.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Any();
                 DataMemberAttribute = (DataMemberAttribute?)propertyInfo.GetCustomAttributes(typeof(DataMemberAttribute), false)?.FirstOrDefault();
                 Name = string.IsNullOrWhiteSpace(DataMemberAttribute?.Name) ? propertyInfo.Name : DataMemberAttribute!.Name;
@@ -65,14 +65,14 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         protected ObjectConverter(KnownTypesRegistry knownTypes)
         {
-            KnownTypesRegistry = knownTypes.CheckNotNull(nameof(knownTypes));
+            KnownTypesRegistry = knownTypes.CheckNotNull();
         }
 
         protected KnownTypesRegistry KnownTypesRegistry { get; }
 
         protected IReadOnlyCollection<Property> GetProperties(Type type)
         {
-            type.AssertNotNull(nameof(type));
+            type.AssertNotNull();
             lock (_properties)
             {
                 if (!_properties.TryGetValue(type, out var propertySet))

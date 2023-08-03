@@ -23,32 +23,32 @@ namespace Aqua.Newtonsoft.Json.ContractResolvers
                 decorated = self._decorated;
             }
 
-            _knownTypes = knownTypes.CheckNotNull(nameof(knownTypes));
+            _knownTypes = knownTypes.CheckNotNull();
             _decorated = decorated?.GetType() == typeof(DefaultContractResolver) ? null : decorated;
         }
 
         public override JsonContract ResolveContract(Type type)
         {
-            type.AssertNotNull(nameof(type));
+            type.AssertNotNull();
             return _decorated is null || typeof(DynamicObject).IsAssignableFrom(type) || typeof(TypeInfo).IsAssignableFrom(type)
                 ? base.ResolveContract(type)
                 : _decorated.ResolveContract(type);
         }
 
         protected override JsonContract CreateContract(Type objectType)
-            => IsTypeHandled(objectType.CheckNotNull(nameof(objectType)))
+            => IsTypeHandled(objectType.CheckNotNull())
             ? CreateObjectContract(objectType)
             : base.CreateContract(objectType);
 
         private static bool IsTypeHandled(Type type)
-            => type.CheckNotNull(nameof(type)).IsClass
+            => type.CheckNotNull().IsClass
             && Equals(type.Assembly, typeof(DynamicObject).Assembly)
             && type.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0;
 
         protected override JsonObjectContract CreateObjectContract(Type objectType)
         {
-            var contract = base.CreateObjectContract(objectType.CheckNotNull(nameof(objectType)));
-            if (IsTypeHandled(objectType.CheckNotNull(nameof(objectType))))
+            var contract = base.CreateObjectContract(objectType.CheckNotNull());
+            if (IsTypeHandled(objectType.CheckNotNull()))
             {
                 contract.IsReference = true;
                 contract.ItemReferenceLoopHandling = ReferenceLoopHandling.Serialize;

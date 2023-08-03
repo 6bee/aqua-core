@@ -22,7 +22,7 @@ namespace Aqua.TypeSystem
         protected MethodBaseInfo(System.Reflection.MethodBase method, TypeInfoProvider typeInfoProvider)
             : base(method, typeInfoProvider)
         {
-            var genericArguments = method.CheckNotNull(nameof(method)).IsGenericMethod ? method.GetGenericArguments() : null;
+            var genericArguments = method.CheckNotNull().IsGenericMethod ? method.GetGenericArguments() : null;
             GenericArgumentTypes = genericArguments
                 .AsNullIfEmpty()?
                 .Select(x => typeInfoProvider.GetTypeInfo(x, false, false))
@@ -37,7 +37,7 @@ namespace Aqua.TypeSystem
         protected MethodBaseInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes, TypeInfoProvider typeInfoProvider)
             : this(
             name,
-            typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).GetTypeInfo(declaringType, includePropertyInfos: false, setMemberDeclaringTypes: false),
+            typeInfoProvider.CheckNotNull().GetTypeInfo(declaringType, includePropertyInfos: false, setMemberDeclaringTypes: false),
             genericArguments?.Select(x => typeInfoProvider.GetTypeInfo(x, false, false)),
             parameterTypes?.Select(x => typeInfoProvider.GetTypeInfo(x, false, false)))
         {
@@ -57,7 +57,7 @@ namespace Aqua.TypeSystem
         protected MethodBaseInfo(MethodBaseInfo method, TypeInfoProvider typeInfoProvider)
             : base(method, typeInfoProvider)
         {
-            GenericArgumentTypes = method.CheckNotNull(nameof(method)).GenericArgumentTypes
+            GenericArgumentTypes = method.CheckNotNull().GenericArgumentTypes
                 .AsNullIfEmpty()?
                 .Select(x => typeInfoProvider.Get(x))
                 .ToList();

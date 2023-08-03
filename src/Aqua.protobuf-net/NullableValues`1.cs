@@ -22,7 +22,7 @@ namespace Aqua.ProtoBuf
 
         public NullableValues(IEnumerable array)
         {
-            array.AssertNotNull(nameof(array));
+            array.AssertNotNull();
 
             if (array is not Value<T?>[] typedArray)
             {
@@ -50,12 +50,12 @@ namespace Aqua.ProtoBuf
 
         public NullableValues(IEnumerable<Value<T?>> items)
         {
-            Array = items.CheckNotNull(nameof(items)).ToArray();
+            Array = items.CheckNotNull().ToArray();
         }
 
         public NullableValues(Value<T?>[] array)
         {
-            Array = array.CheckNotNull(nameof(array));
+            Array = array.CheckNotNull();
         }
 
         [ProtoIgnore]

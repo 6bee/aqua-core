@@ -23,7 +23,7 @@ namespace Aqua.TypeSystem
         }
 
         public PropertyInfo(System.Reflection.PropertyInfo property)
-            : this(property.CheckNotNull(nameof(property)), new TypeInfoProvider())
+            : this(property.CheckNotNull(), new TypeInfoProvider())
         {
         }
 

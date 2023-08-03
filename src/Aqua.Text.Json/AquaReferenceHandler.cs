@@ -13,7 +13,7 @@ namespace Aqua.Text.Json
 
         public AquaReferenceHandler(AquaReferenceHandler referenceHandler)
         {
-            referenceHandler.AssertNotNull(nameof(referenceHandler));
+            referenceHandler.AssertNotNull();
             _referenceResolver = referenceHandler.CreateResolver();
         }
 

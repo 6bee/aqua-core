@@ -38,7 +38,7 @@ namespace Aqua.TypeSystem
         }
 
         public TypeInfo(Type type, bool includePropertyInfos, bool setMemberDeclaringTypes)
-            : this(type.CheckNotNull(nameof(type)), new TypeInfoProvider(includePropertyInfos, setMemberDeclaringTypes))
+            : this(type.CheckNotNull(), new TypeInfoProvider(includePropertyInfos, setMemberDeclaringTypes))
         {
         }
 
@@ -93,7 +93,7 @@ namespace Aqua.TypeSystem
         }
 
         public TypeInfo(TypeInfo type)
-            : this(type.CheckNotNull(nameof(type)), new TypeInfoProvider())
+            : this(type.CheckNotNull(), new TypeInfoProvider())
         {
         }
 

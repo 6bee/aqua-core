@@ -31,8 +31,8 @@ namespace Aqua.TypeSystem
         protected MemberInfo(System.Reflection.MemberInfo member, TypeInfoProvider typeInfoProvider)
         {
             _member = member;
-            Name = member.CheckNotNull(nameof(member)).Name;
-            DeclaringType = typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).GetTypeInfo(member.DeclaringType, false, false);
+            Name = member.CheckNotNull().Name;
+            DeclaringType = typeInfoProvider.CheckNotNull().GetTypeInfo(member.DeclaringType, false, false);
             var isStatic = member switch
             {
                 System.Reflection.MethodBase method => method.IsStatic,
@@ -53,8 +53,8 @@ namespace Aqua.TypeSystem
 
         protected MemberInfo(MemberInfo member, TypeInfoProvider typeInfoProvider)
         {
-            Name = member.CheckNotNull(nameof(member)).Name;
-            DeclaringType = typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).Get(member.DeclaringType);
+            Name = member.CheckNotNull().Name;
+            DeclaringType = typeInfoProvider.CheckNotNull().Get(member.DeclaringType);
         }
 
         [IgnoreDataMember]

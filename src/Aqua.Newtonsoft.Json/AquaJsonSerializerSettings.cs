@@ -16,7 +16,7 @@ namespace Aqua.Newtonsoft.Json
 
         public AquaJsonSerializerSettings(JsonSerializerSettings settings, KnownTypesRegistry? knownTypesRegistry = null)
         {
-            settings.AssertNotNull(nameof(settings));
+            settings.AssertNotNull();
             KnownTypesRegistry = knownTypesRegistry
                 ?? (settings as AquaJsonSerializerSettings)?.KnownTypesRegistry
                 ?? new KnownTypesRegistry();

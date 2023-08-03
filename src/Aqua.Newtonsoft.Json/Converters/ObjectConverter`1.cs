@@ -27,9 +27,9 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public virtual T? ReadJson(JsonReader reader, Type objectType, T? existingValue, JsonSerializer serializer)
         {
-            reader.AssertNotNull(nameof(reader));
-            objectType.AssertNotNull(nameof(objectType));
-            serializer.AssertNotNull(nameof(serializer));
+            reader.AssertNotNull();
+            objectType.AssertNotNull();
+            serializer.AssertNotNull();
 
             if (reader.TokenType == JsonToken.Null)
             {
@@ -90,14 +90,14 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         public virtual void WriteJson(JsonWriter writer, T? value, JsonSerializer serializer)
         {
-            writer.AssertNotNull(nameof(writer));
+            writer.AssertNotNull();
             if (value is null)
             {
                 writer.WriteNull();
                 return;
             }
 
-            serializer.AssertNotNull(nameof(serializer));
+            serializer.AssertNotNull();
             writer.WriteStartObject();
 
             if (!writer.TryWriteReference(serializer, value))
@@ -118,9 +118,9 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         protected virtual void ReadObjectProperties(JsonReader reader, [DisallowNull] T result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {
-            reader.AssertNotNull(nameof(reader));
-            properties.AssertNotNull(nameof(properties));
-            serializer.AssertNotNull(nameof(serializer));
+            reader.AssertNotNull();
+            properties.AssertNotNull();
+            serializer.AssertNotNull();
             while (reader.TokenType != JsonToken.EndObject)
             {
                 if (reader.TokenType == JsonToken.PropertyName)
@@ -143,10 +143,10 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         protected virtual void WriteObjectProperties(JsonWriter writer, T instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
         {
-            writer.AssertNotNull(nameof(writer));
-            instance.AssertNotNull(nameof(instance));
-            serializer.AssertNotNull(nameof(serializer));
-            properties.AssertNotNull(nameof(properties));
+            writer.AssertNotNull();
+            instance.AssertNotNull();
+            serializer.AssertNotNull();
+            properties.AssertNotNull();
             foreach (var property in properties)
             {
                 var value = property.GetValue(instance);

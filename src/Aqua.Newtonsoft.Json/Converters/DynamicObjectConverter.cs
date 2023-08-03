@@ -24,9 +24,9 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         protected override void ReadObjectProperties(JsonReader reader, DynamicObject result, Dictionary<string, Property> properties, JsonSerializer serializer)
         {
-            reader.CheckNotNull(nameof(reader)).Advance();
-            result.AssertNotNull(nameof(result));
-            serializer.AssertNotNull(nameof(serializer));
+            reader.CheckNotNull().Advance();
+            result.AssertNotNull();
+            serializer.AssertNotNull();
 
             TypeInfo? typeInfo = null;
             void SetResult(IEnumerable<DynamicProperty>? properties = null, bool advance = true)
@@ -179,9 +179,9 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         protected override void WriteObjectProperties(JsonWriter writer, DynamicObject instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
         {
-            writer.AssertNotNull(nameof(writer));
-            serializer.AssertNotNull(nameof(serializer));
-            var instanceType = instance.CheckNotNull(nameof(instance)).Type;
+            writer.AssertNotNull();
+            serializer.AssertNotNull();
+            var instanceType = instance.CheckNotNull().Type;
             var dynamicProperties = instance.Properties;
             if (TryGetWrappedValue(dynamicProperties, out var value))
             {

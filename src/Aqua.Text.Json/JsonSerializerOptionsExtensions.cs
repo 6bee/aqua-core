@@ -32,7 +32,7 @@ namespace Aqua.Text.Json
         /// <param name="knownTypesRegistry">Optional registry of known types.</param>
         public static JsonSerializerOptions ConfigureAqua(this JsonSerializerOptions options, KnownTypesRegistry? knownTypesRegistry)
         {
-            options.AssertNotNull(nameof(options));
+            options.AssertNotNull();
 
             if (options.ReferenceHandler is not AquaReferenceHandler)
             {

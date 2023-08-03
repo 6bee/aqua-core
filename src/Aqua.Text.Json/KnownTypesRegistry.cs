@@ -79,8 +79,8 @@ namespace Aqua.Text.Json
         /// </summary>
         private KnownTypesRegistry(Dictionary<Type, string> keyLookup, Dictionary<string, TypeInfo> typeLookup)
         {
-            keyLookup.AssertNotNull(nameof(keyLookup));
-            typeLookup.AssertNotNull(nameof(typeLookup));
+            keyLookup.AssertNotNull();
+            typeLookup.AssertNotNull();
             _keyLookup = keyLookup;
             _typeLookup = typeLookup;
         }
@@ -99,7 +99,7 @@ namespace Aqua.Text.Json
         /// <see langword="false"/> if either <paramref name="type"/> or <paramref name="typeKey"/> are already registered.</returns>
         public bool TryRegister(Type type, string? typeKey = null)
         {
-            type.AssertNotNull(nameof(type));
+            type.AssertNotNull();
 
             typeKey ??= type.Name.ToLowerInvariant();
 

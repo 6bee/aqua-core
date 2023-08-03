@@ -58,7 +58,7 @@ namespace Aqua.Dynamic
         }
 
         private PropertySet(List<Property> properties)
-            => _list = properties.CheckNotNull(nameof(properties));
+            => _list = properties.CheckNotNull();
 
         public int Count => _list.Count;
 
@@ -93,7 +93,7 @@ namespace Aqua.Dynamic
 
         public void Add(Property property)
         {
-            property.AssertNotNull(nameof(property));
+            property.AssertNotNull();
 
             if (Contains(property))
             {
@@ -137,12 +137,12 @@ namespace Aqua.Dynamic
         }
 
         public static implicit operator Dictionary<string, object?>(PropertySet propertySet)
-            => propertySet.CheckNotNull(nameof(propertySet)).ToDictionary();
+            => propertySet.CheckNotNull().ToDictionary();
 
         public Dictionary<string, object?> ToDictionary()
             => _list.ToDictionary(x => x.Name ?? string.Empty, x => x.Value);
 
         public static PropertySet From(Dictionary<string, object?> dictionary)
-            => new PropertySet(dictionary.CheckNotNull(nameof(dictionary)));
+            => new PropertySet(dictionary.CheckNotNull());
     }
 }

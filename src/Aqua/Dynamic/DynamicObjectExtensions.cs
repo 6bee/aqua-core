@@ -40,7 +40,7 @@ namespace Aqua.Dynamic
         /// Returns <see langword="true"/> if this <see cref="DynamicObject"/> wraps a single value, <see langword="false"/> otherwise.
         /// </summary>
         public static bool IsSingleValueWrapper(this DynamicObject dynamicObject)
-            => dynamicObject.CheckNotNull(nameof(dynamicObject)).PropertyCount == 1
+            => dynamicObject.CheckNotNull().PropertyCount == 1
             && string.IsNullOrEmpty(dynamicObject.PropertyNames.Single());
     }
 }

@@ -12,7 +12,7 @@ namespace Aqua.ProtoBuf
     {
         internal AquaTypeModel(RuntimeTypeModel typeModel)
         {
-            typeModel.AssertNotNull(nameof(typeModel));
+            typeModel.AssertNotNull();
 
             Model = typeModel;
 
@@ -131,6 +131,6 @@ namespace Aqua.ProtoBuf
         }
 
         [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "Model property may be used")]
-        public static implicit operator RuntimeTypeModel(AquaTypeModel model) => model.CheckNotNull(nameof(model)).Model;
+        public static implicit operator RuntimeTypeModel(AquaTypeModel model) => model.CheckNotNull().Model;
     }
 }

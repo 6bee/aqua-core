@@ -18,7 +18,7 @@ namespace Aqua.ProtoBuf
 
         public Values(IEnumerable items)
         {
-            items.AssertNotNull(nameof(items));
+            items.AssertNotNull();
 
             if (items is not T[] typedArray)
             {
@@ -32,12 +32,12 @@ namespace Aqua.ProtoBuf
 
         public Values(IEnumerable<T> items)
         {
-            Array = items.CheckNotNull(nameof(items)).ToArray();
+            Array = items.CheckNotNull().ToArray();
         }
 
         public Values(T[] array)
         {
-            Array = array.CheckNotNull(nameof(array));
+            Array = array.CheckNotNull();
         }
 
         [ProtoIgnore]

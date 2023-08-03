@@ -94,7 +94,7 @@ namespace Aqua.Newtonsoft.Json
         /// <see langword="false"/> if either <paramref name="type"/> or <paramref name="typeKey"/> are already registered.</returns>
         public bool TryRegister(Type type, string? typeKey = null)
         {
-            type.AssertNotNull(nameof(type));
+            type.AssertNotNull();
 
             typeKey ??= type.Name.ToLowerInvariant();
 

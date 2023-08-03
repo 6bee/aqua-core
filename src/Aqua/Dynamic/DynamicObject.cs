@@ -56,7 +56,7 @@ namespace Aqua.Dynamic
         public DynamicObject(IEnumerable<(string Name, object? Value)>? properties)
             => Properties = properties is null
             ? null
-            : new PropertySet(properties.CheckNotNull(nameof(properties)));
+            : new PropertySet(properties.CheckNotNull());
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified members.
@@ -66,7 +66,7 @@ namespace Aqua.Dynamic
         public DynamicObject(IEnumerable<Property>? properties)
             => Properties = properties is null
             ? null
-            : new PropertySet(properties.CheckNotNull(nameof(properties)));
+            : new PropertySet(properties.CheckNotNull());
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicObject"/> class with the given <see cref="PropertySet"/>.
@@ -102,7 +102,7 @@ namespace Aqua.Dynamic
         /// <exception cref="ArgumentNullException">The specified members collection is <see langword="null"/>.</exception>
         public DynamicObject(DynamicObject dynamicObject, bool deepCopy = true)
         {
-            var type = dynamicObject.CheckNotNull(nameof(dynamicObject)).Type;
+            var type = dynamicObject.CheckNotNull().Type;
             Type = type is null ? null : new TypeInfo(type);
 
             var properties = dynamicObject.Properties;
@@ -203,7 +203,7 @@ namespace Aqua.Dynamic
         /// <param name="property">Property to be set.</param>
         public void Set(Property property)
         {
-            property.AssertNotNull(nameof(property));
+            property.AssertNotNull();
             var properties = GetOrCreatePropertSet();
 
             if (properties.Any(x => string.Equals(x.Name, property.Name, StringComparison.Ordinal)))
@@ -268,7 +268,7 @@ namespace Aqua.Dynamic
         /// <returns><see langword="true"/> is the dynamic object contains a member with the specified name; otherwise <see langword="false"/>.</returns>
         public bool TryGet(string name, out object? value)
         {
-            if (TryGetProperty(Properties, name.CheckNotNull(nameof(name)), out var property))
+            if (TryGetProperty(Properties, name.CheckNotNull(), out var property))
             {
                 value = property.Value;
                 return true;

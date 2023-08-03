@@ -53,8 +53,8 @@ namespace Aqua.TypeExtensions
         /// </summary>
         internal static bool TryDynamicCast(this Type targetType, object value, out object? result)
         {
-            targetType.AssertNotNull(nameof(targetType));
-            value.AssertNotNull(nameof(value));
+            targetType.AssertNotNull();
+            value.AssertNotNull();
 
             var sourceType = value.GetType();
             var methodCandidates =
@@ -87,7 +87,7 @@ namespace Aqua.TypeExtensions
         /// Returns <see langword="true"/> if the given <see cref="Type"/> is considered an anonymous type.
         /// </summary>
         public static bool IsAnonymousType(this Type type)
-            => (type.CheckNotNull(nameof(type)).Name.Contains("AnonymousType", StringComparison.Ordinal)
+            => (type.CheckNotNull().Name.Contains("AnonymousType", StringComparison.Ordinal)
             && type.IsDefined<CompilerGeneratedAttribute>())
             || type.IsEmittedType();
 
@@ -122,7 +122,7 @@ namespace Aqua.TypeExtensions
         /// <param name="interfaceType">The actualy type to be checked for.</param>
         public static bool Implements(this Type type, Type interfaceType)
         {
-            type.AssertNotNull(nameof(type));
+            type.AssertNotNull();
             return type.Implements(interfaceType, new Type[1][]);
         }
 
@@ -135,7 +135,7 @@ namespace Aqua.TypeExtensions
         [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1011:Closing square brackets should be spaced correctly", Justification = "False positive")]
         public static bool Implements(this Type type, Type interfaceType, [NotNullWhen(true)] out Type[]? genericTypeArguments)
         {
-            type.AssertNotNull(nameof(type));
+            type.AssertNotNull();
             var typeArgs = new Type[1][];
             if (type.Implements(interfaceType, typeArgs))
             {
@@ -149,7 +149,7 @@ namespace Aqua.TypeExtensions
 
         private static bool Implements(this Type type, Type interfaceType, Type[][] typeArgs)
         {
-            interfaceType.AssertNotNull(nameof(interfaceType));
+            interfaceType.AssertNotNull();
             var isAssignableFromSpecifiedInterface = interfaceType.IsGenericTypeDefinition
                 ? IsAssignableToGenericTypeDefinition(interfaceType, typeArgs)
                 : interfaceType.IsGenericType
@@ -221,7 +221,7 @@ namespace Aqua.TypeExtensions
         /// Returns <see langword="true"/> if the give <see cref="Type"/> is an <c>enum</c>.
         /// </summary>
         public static bool IsEnum(this Type type)
-            => type.CheckNotNull(nameof(type)).AsNonNullableType().IsEnum;
+            => type.CheckNotNull().AsNonNullableType().IsEnum;
 
         /// <summary>
         /// Returns a formatted string for the given <see cref="Type"/>.
@@ -232,6 +232,6 @@ namespace Aqua.TypeExtensions
         /// This has no effect for non-nested types or if <paramref name="includeNamespance"/> is <see langword="true"/>.</param>
         /// <returns>Formatted string for the given <see cref="Type"/>.</returns>
         public static string GetFriendlyName(this Type type, bool includeNamespance = true, bool includeDeclaringType = true)
-            => new TypeSystem.TypeInfo(type.CheckNotNull(nameof(type)), false, false).GetFriendlyName(includeNamespance, includeDeclaringType);
+            => new TypeSystem.TypeInfo(type.CheckNotNull(), false, false).GetFriendlyName(includeNamespance, includeDeclaringType);
     }
 }

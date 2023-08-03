@@ -22,7 +22,7 @@ namespace Aqua.Dynamic
         /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
         public static T Map<T>(this IDynamicObjectMapper objectMapper, DynamicObject? obj)
         {
-            objectMapper.AssertNotNull(nameof(objectMapper));
+            objectMapper.AssertNotNull();
 
             return (T)objectMapper.Map(obj, typeof(T))!;
         }
@@ -37,7 +37,7 @@ namespace Aqua.Dynamic
         [return: NotNullIfNotNull("objects")]
         public static IEnumerable? Map(this IDynamicObjectMapper objectMapper, IEnumerable<DynamicObject?>? objects, Type? type = null)
         {
-            objectMapper.AssertNotNull(nameof(objectMapper));
+            objectMapper.AssertNotNull();
 
             if (objects is null)
             {
@@ -60,7 +60,7 @@ namespace Aqua.Dynamic
         [return: NotNullIfNotNull("objects")]
         public static IEnumerable<T>? Map<T>(this IDynamicObjectMapper objectMapper, IEnumerable<DynamicObject>? objects)
         {
-            objectMapper.AssertNotNull(nameof(objectMapper));
+            objectMapper.AssertNotNull();
 
             if (objects is null)
             {
@@ -81,7 +81,7 @@ namespace Aqua.Dynamic
         [return: NotNullIfNotNull("objects")]
         public static IReadOnlyList<DynamicObject?>? MapCollection(this IDynamicObjectMapper objectMapper, object? objects, Func<Type, bool>? setTypeInformation = null)
         {
-            objectMapper.AssertNotNull(nameof(objectMapper));
+            objectMapper.AssertNotNull();
 
             IEnumerable<DynamicObject?>? enumerable;
             if (objects is null)

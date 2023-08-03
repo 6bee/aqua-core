@@ -29,12 +29,12 @@ namespace Aqua.Dynamic
 
         public Property(string name, object? value)
         {
-            Name = name.CheckNotNull(nameof(name));
+            Name = name.CheckNotNull();
             Value = value;
         }
 
         internal protected Property(Property property)
-            : this(property.CheckNotNull(nameof(property)).Name, property?.Value)
+            : this(property.CheckNotNull().Name, property?.Value)
         {
         }
 
@@ -54,9 +54,9 @@ namespace Aqua.Dynamic
             => new Property(property.Name, property.Value);
 
         public static implicit operator (string Name, object? Value)(Property property)
-            => (property.CheckNotNull(nameof(property)).Name, property?.Value);
+            => (property.CheckNotNull().Name, property?.Value);
 
         public static implicit operator KeyValuePair<string, object?>(Property property)
-            => property.CheckNotNull(nameof(property)).ToKeyValuePair();
+            => property.CheckNotNull().ToKeyValuePair();
     }
 }

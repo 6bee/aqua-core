@@ -27,11 +27,11 @@ namespace Aqua.TypeSystem
 
         [return: NotNullIfNotNull("property")]
         public static PropertyInfo? GetPropertyInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.PropertyInfo? property)
-            => property is null ? null : new PropertyInfo(property, typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).AsNative());
+            => property is null ? null : new PropertyInfo(property, typeInfoProvider.CheckNotNull().AsNative());
 
         [return: NotNullIfNotNull("type")]
         public static TypeInfo? GetTypeInfo(this ITypeInfoProvider typeInfoProvider, Type type)
-            => typeInfoProvider.CheckNotNull(nameof(typeInfoProvider)).GetTypeInfo(type);
+            => typeInfoProvider.CheckNotNull().GetTypeInfo(type);
 
         private static TypeInfoProvider AsNative(this ITypeInfoProvider typeInfoProvider)
             => (typeInfoProvider as TypeInfoProvider) ?? new TypeInfoProvider(false, false, typeInfoProvider);
