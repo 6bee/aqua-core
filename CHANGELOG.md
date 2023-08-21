@@ -1,19 +1,22 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
 
 ## [Unreleased vNext][vnext-unreleased]
 
 ### Added
 
 ### Changed
+
 - Bump _Newtonsoft.Json_ from 13.0.1 to 13.0.3 (concerns _Aqua.Newtonsoft.Json_)
 - Bump _protobuf-net_ from 2.4.7 to 2.4.8 (concerns _Aqua.protobuf-net_)
 - Bump _System.Text.Json_ from 6.0.6 to 7.0.2 (concerns _Aqua.Text.Json_)
 - Remove `JsonSerializerOptions.IgnoreReadOnlyProperties` setting (concerns _Aqua.Text.Json_)
+- Add `TypeResolver.AllowEmitType` property too optionally suppress automatic type emitting
+- add `ITypeResolver.TryResolveType(...)` extension method
 
 ### Deprecated
 
@@ -23,46 +26,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-
 ## [5.2.0][5.2.0] - 2022-11-11
 
 ### Added
+
 - Protected virtual methods in DynamicObjectMapper to allow override object creation and object initialization individually.
 
 ### Removed
-- Removed methods previously marked as obsolete.
 
+- Removed methods previously marked as obsolete.
 
 ## [5.1.0][5.1.0] - 2022-09-01
 
 ### Changed
+
 - Targeting .NET 6.0
 - Updated dependency _System.Text.Json 6.0.5_
 
 ### Fixed
-- Fixed issue relating to json and protobuf deserialization of dynamic object for empty type. [#39][issue#39]
 
+- Fixed issue relating to json and protobuf deserialization of dynamic object for empty type. [#39][issue#39]
 
 ## [5.0.0][5.0.0] - 2021-09-29
 
 ### Added
+
 - Added support for [protobuf-net v2][protobuf-net-v2] serialization.
 - Added support for _System.Text.Json_ serialization.
 - Added _GetMethodEx_ extension methods for method reflection by exact signature.
 
 ### Changed
+
 - Migrated to [nullable reference types][nullable-references].
 - Reduce [Json.NET][json-net] doc size by substituting type info for common and well known types.
 
 ### Fixed
+
 - Fixed issue relating to MemberInfo reflection on _.NET 6.0 WebAssembly_. [#36][issue#36]
 - Fixed _FormatNativeTypeAsString_ value formatting to use _InvariantCulture_.
 - Fixed type missmatch of numeric values with [Json.NET][json-net] serialization using custom `JsonConverter` for `DynamicObject`.
 - Various minor API improvements and bug fixes.
 
 ### Security
-- Introduced `ITypeSafetyChecker` to enable type checking before instantiation by `DynamicObjectMapper`.
 
+- Introduced `ITypeSafetyChecker` to enable type checking before instantiation by `DynamicObjectMapper`.
 
 [vnext-unreleased]: https://github.com/6bee/aqua-core/compare/5.2.0...main
 [5.2.0]: https://github.com/6bee/aqua-core/compare/5.1.0...5.2.0

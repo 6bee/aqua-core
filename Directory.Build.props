@@ -5,7 +5,7 @@
     <MajorVersion>5</MajorVersion>
     <MinorVersion>3</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-002</PreReleaseLabel>
+    <PreReleaseLabel>alpha-004</PreReleaseLabel>
   </PropertyGroup>
 
   <PropertyGroup> 
@@ -61,8 +61,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="2.2.3" PrivateAssets="all" />
-    <PackageReference Include="aqua.tool.Validation" Version="2.2.3" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="2.2.9" PrivateAssets="all" />
+    <PackageReference Include="aqua.tool.Validation" Version="2.2.9" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
