@@ -12,18 +12,28 @@ namespace Aqua.TypeSystem
 
     public class TypeResolver : ITypeResolver
     {
-        private static readonly ITypeResolver _defaultTypeResolver = new TypeResolver();
+        private static readonly TypeResolver _defaultTypeResolver = new();
 
         private static ITypeResolver? _instance;
 
-        private readonly TransparentCache<string, Type> _typeCache = new TransparentCache<string, Type>();
+        private readonly TransparentCache<string, Type> _typeCache = new();
 
-        private readonly Func<TypeInfo, Type> _typeEmitter;
+        private readonly Lazy<Func<TypeInfo, Type>> _typeEmitter;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TypeResolver"/> class.
+        /// </summary>
+        /// <param name="typeEmitter">Optional type emitter function. If this parameter is <see langword="null"/> and <see cref="AllowEmitType"/> is <see langword="true"/>, default type emitter is used.</param>
         public TypeResolver(Func<TypeInfo, Type>? typeEmitter = null)
-        {
-            _typeEmitter = typeEmitter ?? new Emit.TypeEmitter(this).EmitType;
-        }
+            => _typeEmitter = new(() => typeEmitter ?? new Emit.TypeEmitter(this).EmitType);
+
+        /// <summary>
+        /// Gets a value indicating whether types which cannot be resoved are allowed to be emitted at runtime. Default value is <see langword="true"/>.
+        /// </summary>
+        /// <remarks>
+        /// Emitting types requires <see cref="TypeInfo"/> to carry property information.
+        /// </remarks>
+        public bool AllowEmitType { get; init; } = true;
 
         /// <summary>
         /// Gets or sets an instance of ITypeResolver.
@@ -66,11 +76,11 @@ namespace Aqua.TypeSystem
                     .FirstOrDefault(x => IsValid(typeInfo, x));
             }
 
-            if (type is null)
+            if (type is null && AllowEmitType)
             {
                 try
                 {
-                    type = _typeEmitter(typeInfo);
+                    type = _typeEmitter.Value(typeInfo);
                 }
                 catch (TypeResolverException)
                 {
