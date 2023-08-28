@@ -16,7 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump _System.Text.Json_ from 6.0.6 to 7.0.2 (concerns _Aqua.Text.Json_)
 - Remove `JsonSerializerOptions.IgnoreReadOnlyProperties` setting (concerns _Aqua.Text.Json_)
 - Add `TypeResolver.AllowEmitType` property too optionally suppress automatic type emitting
-- add `ITypeResolver.TryResolveType(...)` extension method
+- Add `ITypeResolver.TryResolveType(...)` extension method
+- Support dynamic object mapping to custom collection types with `Add` method
 
 ### Deprecated
 

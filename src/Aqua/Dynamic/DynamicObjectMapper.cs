@@ -24,6 +24,28 @@ namespace Aqua.Dynamic
 
     public partial class DynamicObjectMapper : IDynamicObjectMapper
     {
+        private static class Helper
+        {
+#pragma warning disable S2094 // Classes should not be empty
+            /// <summary>
+            /// Type definition used in generic type filters.
+            /// </summary>
+            private sealed class TElement
+            {
+            }
+#pragma warning restore S2094 // Classes should not be empty
+
+            public static readonly MethodInfo AddAllMethodInfo = typeof(Helper).GetMethodEx(
+                nameof(AddAll),
+                new[] { typeof(TElement) },
+                typeof(IEnumerable<TElement>),
+                typeof(object),
+                typeof(MethodInfo));
+
+            public static void AddAll<TElement>(IEnumerable<TElement> source, object target, MethodInfo addMethod)
+                => source.ForEach(x => addMethod.Invoke(target, new[] { (object?)x }));
+        }
+
         private sealed class InternalDynamicObjectFactory : IDynamicObjectFactory
         {
             private readonly ITypeInfoProvider _typeInfoProvider;
@@ -705,9 +727,34 @@ namespace Aqua.Dynamic
                         && parameters[0].ParameterType.IsAssignableFrom(enumerableType);
                 });
 
-                return ctor is null
-                    ? throw new DynamicObjectMapperException($"Failed to project collection with element type '{elementType?.AssemblyQualifiedName}' into type '{resultType?.AssemblyQualifiedName}'")
-                    : ctor.Invoke(new[] { r1 });
+                if (ctor is not null)
+                {
+                    return ctor.Invoke(new[] { r1 });
+                }
+
+                if (enumerableType.IsAssignableFrom(resultType))
+                {
+                    ctor = resultType.GetConstructors().FirstOrDefault(c => c.GetParameters().Length == 0);
+                    if (ctor is not null)
+                    {
+                        var addMethod = resultType.GetMethods()
+                            .Where(m => string.Equals(m.Name, "Add", StringComparison.Ordinal))
+                            .FirstOrDefault(m =>
+                            {
+                                var parameters = m.GetParameters();
+                                return parameters.Length == 1
+                                    && parameters[0].ParameterType.IsAssignableFrom(elementType);
+                            });
+                        if (addMethod is not null)
+                        {
+                            var targetCollection = ctor.Invoke(null);
+                            Helper.AddAllMethodInfo.MakeGenericMethod(elementType).Invoke(null, new[] { r1, targetCollection, addMethod });
+                            return targetCollection;
+                        }
+                    }
+                }
+
+                throw new DynamicObjectMapperException($"Failed to project collection with element type '{elementType?.AssemblyQualifiedName}' into type '{resultType?.AssemblyQualifiedName}'");
             }
 
             return obj;
