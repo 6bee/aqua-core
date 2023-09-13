@@ -5,7 +5,7 @@
     <MajorVersion>5</MajorVersion>
     <MinorVersion>3</MinorVersion>
     <PatchVersion>0</PatchVersion>
-    <PreReleaseLabel>alpha-005</PreReleaseLabel>
+    <PreReleaseLabel></PreReleaseLabel>
   </PropertyGroup>
 
   <PropertyGroup> 
