@@ -70,7 +70,7 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" Condition=" '$(EnableStyleCopAnalyzers)' == 'true' ">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.55.0.65544" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.9.0.77355" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
