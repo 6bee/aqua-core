@@ -11,14 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Bump _Newtonsoft.Json_ from 13.0.1 to 13.0.3 (concerns _Aqua.Newtonsoft.Json_)
-- Bump _protobuf-net_ from 2.4.7 to 2.4.8 (concerns _Aqua.protobuf-net_)
-- Bump _System.Text.Json_ from 6.0.6 to 7.0.2 (concerns _Aqua.Text.Json_)
-- Remove `JsonSerializerOptions.IgnoreReadOnlyProperties` setting (concerns _Aqua.Text.Json_)
-- Add `TypeResolver.AllowEmitType` property too optionally suppress automatic type emitting
-- Add `ITypeResolver.TryResolveType(...)` extension method
-- Support dynamic object mapping to custom collection types with `Add` method
-
 ### Deprecated
 
 ### Removed
@@ -26,6 +18,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Security
+
+## [5.3.0][5.3.0] - 2023-09-14
+
+### Changed
+
+- Bump _Newtonsoft.Json_ from 13.0.1 to 13.0.3 (concerns _Aqua.Newtonsoft.Json_)
+- Bump _protobuf-net_ from 2.4.7 to 2.4.8 (concerns _Aqua.protobuf-net_)
+- Bump _System.Text.Json_ from 6.0.6 to 7.0.3 (concerns _Aqua.Text.Json_)
+- Remove `JsonSerializerOptions.IgnoreReadOnlyProperties` setting (concerns _Aqua.Text.Json_)
+- Add `TypeResolver.AllowEmitType` property too optionally suppress automatic type emitting
+- Add `ITypeResolver.TryResolveType(...)` extension method
+- Support dynamic object mapping to custom collection types with `Add` method
 
 ## [5.2.0][5.2.0] - 2022-11-11
 
@@ -72,7 +76,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Introduced `ITypeSafetyChecker` to enable type checking before instantiation by `DynamicObjectMapper`.
 
-[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/5.2.0...main
+[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/5.3.0...main
+[5.3.0]: https://github.com/6bee/aqua-core/compare/5.2.0...5.3.0
 [5.2.0]: https://github.com/6bee/aqua-core/compare/5.1.0...5.2.0
 [5.1.0]: https://github.com/6bee/aqua-core/compare/5.0.0...5.1.0
 [5.0.0]: https://github.com/6bee/aqua-core/compare/4.6.5...5.0.0
