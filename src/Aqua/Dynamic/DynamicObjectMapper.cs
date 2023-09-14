@@ -754,7 +754,7 @@ namespace Aqua.Dynamic
                     }
                 }
 
-                throw new DynamicObjectMapperException($"Failed to project collection with element type '{elementType?.AssemblyQualifiedName}' into type '{resultType?.AssemblyQualifiedName}'");
+                throw new DynamicObjectMapperException($"Failed to project collection with element type '{elementType?.AssemblyQualifiedName}' into type '{resultType.AssemblyQualifiedName}'");
             }
 
             return obj;
@@ -1380,7 +1380,7 @@ namespace Aqua.Dynamic
             return false;
         }
 
-        private static object FormatNativeTypeAsString(object obj, Type type)
+        private static string FormatNativeTypeAsString(object obj, Type type)
         {
             if (type == typeof(DateTime) || type == typeof(DateTime?))
             {
@@ -1425,7 +1425,7 @@ namespace Aqua.Dynamic
             if (type == typeof(System.Numerics.Complex) || type == typeof(System.Numerics.Complex?))
             {
                 var c = (System.Numerics.Complex)obj;
-                return FormattableString.Invariant($"{c.Real:R}{Math.Sign(c.Imaginary):+;-}i{Math.Abs(c.Imaginary):R}");
+                return $"{c.Real:R}{Math.Sign(c.Imaginary):+;-}i{Math.Abs(c.Imaginary):R}";
             }
 
             if (type == typeof(byte[]))

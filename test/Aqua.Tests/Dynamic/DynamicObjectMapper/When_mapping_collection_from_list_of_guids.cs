@@ -59,7 +59,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             for (int i = 0; i < source.Count; i++)
             {
                 var dynamicObject = dynamicObjects.ElementAt(i);
-                var value = source.ElementAt(i);
+                var value = source[i];
 
                 dynamicObject[string.Empty].ShouldBe(value);
             }

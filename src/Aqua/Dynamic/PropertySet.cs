@@ -125,7 +125,7 @@ namespace Aqua.Dynamic
                     yield break;
                 }
 
-                yield return _list.ElementAt(i);
+                yield return _list[i];
             }
         }
 

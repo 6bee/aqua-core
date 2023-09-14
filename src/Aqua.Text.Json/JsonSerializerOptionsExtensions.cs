@@ -107,15 +107,15 @@ namespace Aqua.Text.Json
         internal static JsonSerializerOptions ToSessionOptions(this JsonSerializerOptions options)
         {
             var referenceHandler = options.ReferenceHandler as AquaReferenceHandler;
-            if (referenceHandler is null || referenceHandler.IsRoot is false)
+            if (referenceHandler?.IsRoot is true)
             {
-                return options;
+                return new JsonSerializerOptions(options)
+                {
+                    ReferenceHandler = new AquaReferenceHandler(referenceHandler),
+                };
             }
 
-            return new JsonSerializerOptions(options)
-            {
-                ReferenceHandler = new AquaReferenceHandler(referenceHandler),
-            };
+            return options;
         }
     }
 }

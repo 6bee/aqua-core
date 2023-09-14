@@ -61,7 +61,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
         {
             for (int i = 0; i < dynamicObjects.Length; i++)
             {
-                var sourceObject = dynamicObjects.ElementAt(i).Values.Single();
+                var sourceObject = dynamicObjects[i].Values.Single();
 
                 var recreatedObject = recreatedObjectLists.ElementAt(i);
 

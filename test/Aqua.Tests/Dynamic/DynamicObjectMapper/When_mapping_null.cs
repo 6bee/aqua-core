@@ -96,9 +96,9 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
 
             result.ShouldNotBeNull();
             result.Count().ShouldBe(3);
-            result.ElementAt(0).ShouldBeOfType<DynamicObject>();
-            result.ElementAt(1).ShouldBeNull();
-            result.ElementAt(2).ShouldBeOfType<DynamicObject>();
+            result[0].ShouldBeOfType<DynamicObject>();
+            result[1].ShouldBeNull();
+            result[2].ShouldBeOfType<DynamicObject>();
         }
 
         [Fact]

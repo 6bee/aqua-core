@@ -91,7 +91,7 @@ namespace Aqua.TypeSystem
                 MemberTypes.Constructor => new ConstructorInfo((System.Reflection.ConstructorInfo)member!, typeInfoProvider),
                 MemberTypes.Property => new PropertyInfo((System.Reflection.PropertyInfo)member!, typeInfoProvider),
                 MemberTypes.Method => new MethodInfo((System.Reflection.MethodInfo)member!, typeInfoProvider),
-                _ => throw new Exception($"Unsupported member type: {member.GetMemberType()}"),
+                _ => throw new NotSupportedException($"Unsupported member type: {member.GetMemberType()}"),
             };
     }
 }

@@ -34,7 +34,7 @@ namespace Aqua.TypeSystem
             var enumerableType = FindIEnumerable(type);
             if (enumerableType is not null)
             {
-                return enumerableType.GetGenericArguments().First();
+                return enumerableType.GetGenericArguments()[0];
             }
 
             return type;

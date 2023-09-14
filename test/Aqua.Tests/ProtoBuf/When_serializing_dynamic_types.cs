@@ -142,8 +142,8 @@ namespace Aqua.Tests.ProtoBuf
 
             for (int i = 0; i < copyCount; i++)
             {
-                var originalValue = dynamicObjects.ElementAt(i)?.Get();
-                var copyValue = copy.ElementAt(i)?.Get();
+                var originalValue = dynamicObjects[i]?.Get();
+                var copyValue = copy[i]?.Get();
                 copyValue.ShouldBe(originalValue);
             }
 
@@ -243,12 +243,12 @@ namespace Aqua.Tests.ProtoBuf
 
             var copy = entity.Clone();
 
-            var item0 = copy.ElementAt(0);
+            var item0 = copy[0];
             item0["Id"].ShouldBe(1);
             item0["Name"].ShouldBe("Product E. Name");
             item0["Price"].ShouldBe(1234.56m);
 
-            var item1 = copy.ElementAt(1);
+            var item1 = copy[1];
             item1["Id"].ShouldBe(2);
             item1["Name"].ShouldBe("Noname");
             item1["Price"].ShouldBe(78.9m);

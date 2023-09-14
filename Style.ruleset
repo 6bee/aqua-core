@@ -13,6 +13,11 @@
     <Rule Id="S3011" Action="Info" />
     <Rule Id="S3358" Action="Info" />
     <Rule Id="S3626" Action="Info" />
+    <Rule Id="S6562" Action="Info" />
+    <Rule Id="S6580" Action="Info" />
+    <Rule Id="S6602" Action="Info" />
+    <Rule Id="S6603" Action="Info" />
+    <Rule Id="S6605" Action="Info" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1101" Action="None" />

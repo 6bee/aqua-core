@@ -60,7 +60,7 @@ namespace Aqua.Utils
                 // create value if not found in cache
                 if (!isReferenceAlive)
                 {
-                    value = factory.CheckNotNull()(key) ?? throw new Exception($"Value factory must not return null");
+                    value = factory.CheckNotNull()(key) ?? throw new InvalidOperationException("Value factory must not return null");
                     _cache[key] = new WeakReference(value);
                 }
 

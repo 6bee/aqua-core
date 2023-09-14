@@ -71,8 +71,8 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper
             {
                 var dynamicObject = dynamicObjects.ElementAt(i);
 
-                var intValue = source.ElementAt(i).Int32Property;
-                var stringValue = source.ElementAt(i).StringProperty;
+                var intValue = source[i].Int32Property;
+                var stringValue = source[i].StringProperty;
 
                 dynamicObject["Int32Property"].ShouldBe(intValue);
                 dynamicObject["StringProperty"].ShouldBe(stringValue);

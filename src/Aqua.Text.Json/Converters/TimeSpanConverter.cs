@@ -23,7 +23,7 @@ namespace Aqua.Text.Json.Converters
 
         public override TimeSpan Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader.TokenType == JsonTokenType.String)
+            if (reader.TokenType is JsonTokenType.String)
             {
                 var value = reader.GetString();
                 return TimeSpan.TryParse(value, out var timespan)

@@ -34,7 +34,7 @@ namespace Aqua.Dynamic
         }
 
         internal protected Property(Property property)
-            : this(property.CheckNotNull().Name, property?.Value)
+            : this(property.CheckNotNull().Name, property.Value)
         {
         }
 
@@ -54,7 +54,7 @@ namespace Aqua.Dynamic
             => new Property(property.Name, property.Value);
 
         public static implicit operator (string Name, object? Value)(Property property)
-            => (property.CheckNotNull().Name, property?.Value);
+            => (property.CheckNotNull().Name, property.Value);
 
         public static implicit operator KeyValuePair<string, object?>(Property property)
             => property.CheckNotNull().ToKeyValuePair();
