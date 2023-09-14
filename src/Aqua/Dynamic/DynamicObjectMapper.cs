@@ -1425,7 +1425,16 @@ namespace Aqua.Dynamic
             if (type == typeof(System.Numerics.Complex) || type == typeof(System.Numerics.Complex?))
             {
                 var c = (System.Numerics.Complex)obj;
-                return $"{c.Real:R}{Math.Sign(c.Imaginary):+;-}i{Math.Abs(c.Imaginary):R}";
+                return
+#if NET6_0_OR_GREATER
+                    string.Create(
+                        CultureInfo.InvariantCulture,
+#else
+#pragma warning disable S6618 // "string.Create" should be used instead of "FormattableString"
+                    FormattableString.Invariant(
+#pragma warning restore S6618 // "string.Create" should be used instead of "FormattableString"
+#endif // NET6_0_OR_GREATER
+                        $"{c.Real:R}{Math.Sign(c.Imaginary):+;-}i{Math.Abs(c.Imaginary):R}");
             }
 
             if (type == typeof(byte[]))
