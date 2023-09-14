@@ -22,6 +22,7 @@ namespace Aqua.Tests
         private sealed class ExpectedAnnotationException : Xunit.Sdk.XunitException
         {
             public ExpectedAnnotationException(Type type, Type attributeType)
+                : base(null)
             {
                 Type = type;
                 AttributeType = attributeType;
