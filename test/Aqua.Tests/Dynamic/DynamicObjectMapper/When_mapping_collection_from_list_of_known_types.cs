@@ -28,11 +28,11 @@ public class When_mapping_collection_from_list_of_known_types
 
     public When_mapping_collection_from_list_of_known_types()
     {
-        sourceObjects = new[]
-        {
+        sourceObjects =
+        [
             new CustomReferenceType { Int32Property = 1, StringProperty = "One" },
             new CustomReferenceType { Int32Property = 2, StringProperty = "Two" },
-        };
+        ];
 
         var mapper = new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider());
 

@@ -37,13 +37,13 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
         public static readonly MethodInfo AddAllMethodInfo = typeof(Helper).GetMethodEx(
             nameof(AddAll),
-            new[] { typeof(TElement) },
+            [typeof(TElement)],
             typeof(IEnumerable<TElement>),
             typeof(object),
             typeof(MethodInfo));
 
         public static void AddAll<TElement>(IEnumerable<TElement> source, object target, MethodInfo addMethod)
-            => source.ForEach(x => addMethod.Invoke(target, new[] { (object?)x }));
+            => source.ForEach(x => addMethod.Invoke(target, [(object?)x]));
     }
 
     private sealed class InternalDynamicObjectFactory : IDynamicObjectFactory
@@ -126,9 +126,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 {
                     _referenceMap.Add(from, to);
                 }
-#pragma warning disable CA1031 // Do not catch general exception types
                 catch
-#pragma warning restore CA1031 // Do not catch general exception types
                 {
                     // detected cyclic reference
                     // can happen for non-serializable types without parameterless constructor, which have cyclic references
@@ -155,8 +153,8 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
         public FromContext(ITypeSafetyChecker? typeSafetyChecker)
         {
-            _referenceMap = new Dictionary<ReferenceMapKey, object>();
-            _safeTypes = new HashSet<Type>();
+            _referenceMap = [];
+            _safeTypes = [];
             _typeSafetyChecker = typeSafetyChecker;
         }
 
@@ -699,24 +697,24 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
             if (resultType.IsArray)
             {
-                return MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
+                return MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, [r1]);
             }
 
             if (IsMatchingDictionary(resultType, elementType))
             {
                 var targetTypeGenericArguments = resultType.GetGenericArguments();
                 var method = ToDictionaryMethodInfo.MakeGenericMethod(targetTypeGenericArguments);
-                return method.Invoke(null, new[] { r1 });
+                return method.Invoke(null, [r1]);
             }
 
             if (resultType.IsAssignableFrom(typeof(List<>).MakeGenericType(elementType)))
             {
-                return MethodInfos.Enumerable.ToList.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
+                return MethodInfos.Enumerable.ToList.MakeGenericMethod(elementType).Invoke(null, [r1]);
             }
 
             if (resultType.IsAssignableFrom(typeof(IQueryable<>).MakeGenericType(elementType)))
             {
-                return MethodInfos.Queryable.AsQueryable.MakeGenericMethod(elementType).Invoke(null, new[] { r1 });
+                return MethodInfos.Queryable.AsQueryable.MakeGenericMethod(elementType).Invoke(null, [r1]);
             }
 
             var enumerableType = typeof(IEnumerable<>).MakeGenericType(elementType);
@@ -729,7 +727,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
             if (ctor is not null)
             {
-                return ctor.Invoke(new[] { r1 });
+                return ctor.Invoke([r1]);
             }
 
             if (enumerableType.IsAssignableFrom(resultType))
@@ -748,7 +746,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     if (addMethod is not null)
                     {
                         var targetCollection = ctor.Invoke(null);
-                        Helper.AddAllMethodInfo.MakeGenericMethod(elementType).Invoke(null, new[] { r1, targetCollection, addMethod });
+                        Helper.AddAllMethodInfo.MakeGenericMethod(elementType).Invoke(null, [r1, targetCollection, addMethod]);
                         return targetCollection;
                     }
                 }

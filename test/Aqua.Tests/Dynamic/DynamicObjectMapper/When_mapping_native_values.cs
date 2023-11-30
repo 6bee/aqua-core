@@ -32,7 +32,7 @@ public class When_mapping_native_values
     {
         using var cultureContext = culture.CreateContext();
 
-        var result = MapAsValueMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
+        var result = MapAsValueMethod.MakeGenericMethod(type).Invoke(null, [value]);
 
         if (result is null)
         {
@@ -59,7 +59,7 @@ public class When_mapping_native_values
     {
         using var cultureContext = culture.CreateContext();
 
-        var result = MapAsPropertyMethod.MakeGenericMethod(type).Invoke(null, new[] { value });
+        var result = MapAsPropertyMethod.MakeGenericMethod(type).Invoke(null, [value]);
 
         if (result is null)
         {

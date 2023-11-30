@@ -22,11 +22,11 @@ public class When_mapping_collection_from_list_of_custom_reference_type
 
     public When_mapping_collection_from_list_of_custom_reference_type()
     {
-        source = new List<CustomReferenceType>
-        {
+        source =
+        [
             new CustomReferenceType { Int32Property = 1, StringProperty = "One" },
             new CustomReferenceType { Int32Property = 2, StringProperty = "Two" },
-        };
+        ];
         dynamicObjects = new DynamicObjectMapper().MapCollection(source);
     }
 

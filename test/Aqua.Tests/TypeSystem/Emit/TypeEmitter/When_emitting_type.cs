@@ -20,11 +20,11 @@ public class When_emitting_type
         {
             Name = "TestClass",
             Namespace = "TestNamespace",
-            Properties = new List<PropertyInfo>
-            {
+            Properties =
+            [
                 new PropertyInfo { Name = "Int32Value", PropertyType = new TypeInfo(typeof(int)) },
                 new PropertyInfo { Name = "StringValue", PropertyType = new TypeInfo(typeof(string)) },
-            },
+            ],
         };
 
         emittedType = new TypeEmitter().EmitType(typeInfo);

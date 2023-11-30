@@ -396,11 +396,11 @@ public abstract class When_serializing_dynamic_object
     {
         var source = new A<A<int>[]>
         {
-            Value = new[]
-            {
+            Value =
+            [
                 new A<int> { Value = 1 },
                 new A<int> { Value = 2 },
-            },
+            ],
         };
 
         var result = Serialize(source);
@@ -415,18 +415,18 @@ public abstract class When_serializing_dynamic_object
         {
             new A<A<int>[]>
             {
-                Value = new[]
-                {
+                Value =
+                [
                     new A<int> { Value = 1 },
                     new A<int> { Value = 2 },
-                },
+                ],
             },
             new A<A<int>[]>
             {
-                Value = new[]
-                {
+                Value =
+                [
                     new A<int> { Value = 3 },
-                },
+                ],
             },
         };
 
@@ -444,7 +444,7 @@ public abstract class When_serializing_dynamic_object
         var method = typeof(When_serializing_dynamic_object)
           .GetMethods(PrivateInstance)
           .Single(x => x.Name == nameof(SerializeAsProperty) && x.IsGenericMethod && x.GetGenericArguments().Length is 1);
-        return method.MakeGenericMethod(propertyTape).Invoke(this, new[] { propertyValue, setTypeFromGenericArgument, formatValuesAsStrings });
+        return method.MakeGenericMethod(propertyTape).Invoke(this, [propertyValue, setTypeFromGenericArgument, formatValuesAsStrings]);
     }
 
     private T SerializeAsProperty<T>(T value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
@@ -455,7 +455,7 @@ public abstract class When_serializing_dynamic_object
         var method = typeof(When_serializing_dynamic_object)
             .GetMethods(PrivateInstance)
             .Single(x => x.Name == nameof(Serialize) && x.IsGenericMethod && x.GetGenericArguments().Length is 1 && x.GetParameters().Length is 3);
-        return method.MakeGenericMethod(type).Invoke(this, new[] { value, setTypeFromGenericArgument, formatValuesAsStrings });
+        return method.MakeGenericMethod(type).Invoke(this, [value, setTypeFromGenericArgument, formatValuesAsStrings]);
     }
 
     private T Serialize<T>(T value, bool setTypeFromGenericArgument, bool formatValuesAsStrings)

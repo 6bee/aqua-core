@@ -16,7 +16,7 @@ public class When_mapping_collection_from_list_of_guids
 
     public When_mapping_collection_from_list_of_guids()
     {
-        source = new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+        source = [Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()];
         dynamicObjects = new DynamicObjectMapper().MapCollection(source);
     }
 

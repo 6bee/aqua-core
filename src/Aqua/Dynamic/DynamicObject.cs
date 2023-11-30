@@ -45,7 +45,7 @@ public partial class DynamicObject
     public DynamicObject(TypeInfo? type, PropertySet? propertySet = null)
     {
         Type = type;
-        Properties = propertySet ?? new PropertySet();
+        Properties = propertySet ?? [];
     }
 
     /// <summary>
@@ -285,7 +285,7 @@ public partial class DynamicObject
     }
 
     private PropertySet GetOrCreatePropertSet()
-        => Properties ??= new PropertySet();
+        => Properties ??= [];
 
     /// <summary>
     /// Creates a dynamic objects representing the object structure defined by the specified object.

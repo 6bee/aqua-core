@@ -16,7 +16,7 @@ public class When_mapping_collection_from_list_of_nullable_guids
 
     public When_mapping_collection_from_list_of_nullable_guids()
     {
-        source = new List<Guid?> { Guid.NewGuid(), Guid.NewGuid(), null };
+        source = [Guid.NewGuid(), Guid.NewGuid(), null];
         dynamicObjects = new DynamicObjectMapper().MapCollection(source);
     }
 

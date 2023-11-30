@@ -165,7 +165,7 @@ public sealed partial class TypeEmitter
 
                 property.SetGetMethod(propertyGetter);
 
-                var propertySetter = type.DefineMethod($"set_{x.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, new[] { x.Type });
+                var propertySetter = type.DefineMethod($"set_{x.Name}", MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.HideBySig, null, [x.Type]);
                 var setterPil = propertySetter.GetILGenerator();
                 setterPil.Emit(OpCodes.Ldarg_0);
                 setterPil.Emit(OpCodes.Ldarg_1);

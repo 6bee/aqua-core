@@ -97,7 +97,7 @@ public class When_resolving_constructor
     {
         var constructorInfo = new ConstructorInfo(".ctor", typeof(Subtype<int>), new[] { typeof(int) });
         var constructor = (System.Reflection.ConstructorInfo)constructorInfo;
-        var expected = typeof(Subtype<int>).GetConstructor(new[] { typeof(int) });
+        var expected = typeof(Subtype<int>).GetConstructor([typeof(int)]);
         constructor.ShouldBeSameAs(expected);
     }
 
@@ -130,7 +130,7 @@ public class When_resolving_constructor
     public void Should_resolve_default_constructor_created_by_name_with_parameter_list()
     {
         var ctor = new ConstructorInfo(".ctor", typeof(Overload), new[] { typeof(string) });
-        var expected = typeof(Overload).GetConstructor(new[] { typeof(string) });
+        var expected = typeof(Overload).GetConstructor([typeof(string)]);
         ctor.ToConstructorInfo().ShouldBeSameAs(expected);
     }
 

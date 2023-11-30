@@ -12,7 +12,7 @@ public class When_created_based_on_object_with_indexer
 {
     private class ClassWithIndexerAndItemProperty
     {
-        private readonly Dictionary<string, object> _data = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _data = [];
 
         [System.Runtime.CompilerServices.IndexerName("MyIndexer")]
         public object this[string key]

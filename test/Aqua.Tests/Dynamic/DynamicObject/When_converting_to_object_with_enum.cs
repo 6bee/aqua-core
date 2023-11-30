@@ -28,8 +28,8 @@ public class When_converting_to_object_with_enum
 
     public When_converting_to_object_with_enum()
     {
-        dynamicObjects = new[]
-        {
+        dynamicObjects =
+        [
             new DynamicObject(typeof(ClassWithEnum))
             {
                 Properties = new PropertySet
@@ -58,7 +58,7 @@ public class When_converting_to_object_with_enum
                     { "EnumProperty", null },
                 },
             },
-        };
+        ];
 
         var mapper = new DynamicObjectMapper();
         objects = dynamicObjects.Select(mapper.Map<ClassWithEnum>);

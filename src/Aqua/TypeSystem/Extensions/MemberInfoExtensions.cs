@@ -11,7 +11,7 @@ using System.Reflection;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class MemberInfoExtensions
 {
-    private static readonly Dictionary<MemberInfo, BindingFlags> _bindingFlagsCache = new Dictionary<MemberInfo, BindingFlags>();
+    private static readonly Dictionary<MemberInfo, BindingFlags> _bindingFlagsCache = [];
 
     [return: NotNullIfNotNull("member")]
     public static Aqua.TypeSystem.MemberTypes? GetMemberType(this MemberInfo? member) => (Aqua.TypeSystem.MemberTypes?)member?.MemberType;

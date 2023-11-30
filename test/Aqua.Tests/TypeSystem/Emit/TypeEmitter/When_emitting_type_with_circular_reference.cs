@@ -20,10 +20,10 @@ public class When_emitting_type_with_circular_reference
             Namespace = "TestNamespace",
         };
 
-        typeInfo.Properties = new List<PropertyInfo>
-        {
+        typeInfo.Properties =
+        [
             new PropertyInfo("CircularReference", typeInfo, typeInfo),
-        };
+        ];
 
         var ex = Should.Throw<TypeEmitterException>(() => new TypeEmitter().EmitType(typeInfo));
         ex.Message.ShouldBe("Cannot emit type with circular reference: 'TestNamespace.TestClass'");

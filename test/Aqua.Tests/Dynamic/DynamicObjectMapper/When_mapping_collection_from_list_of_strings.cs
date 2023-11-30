@@ -15,7 +15,7 @@ public class When_mapping_collection_from_list_of_strings
 
     public When_mapping_collection_from_list_of_strings()
     {
-        source = new List<string> { "V1", "V2", "V3" };
+        source = ["V1", "V2", "V3"];
         dynamicObjects = new DynamicObjectMapper().MapCollection(source);
     }
 

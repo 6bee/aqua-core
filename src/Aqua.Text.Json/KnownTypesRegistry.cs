@@ -143,6 +143,6 @@ public sealed class KnownTypesRegistry
     /// </summary>
     public static KnownTypesRegistry Empty
         => new KnownTypesRegistry(
-            new Dictionary<Type, string>(),
-            new Dictionary<string, TypeInfo>());
+            [],
+            []);
 }

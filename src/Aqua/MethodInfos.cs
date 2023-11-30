@@ -36,17 +36,17 @@ internal static class MethodInfos
     {
         internal static readonly MethodInfo Cast = typeof(System.Linq.Enumerable).GetMethodEx(
             nameof(System.Linq.Enumerable.Cast),
-            new[] { typeof(TResult) },
+            [typeof(TResult)],
             typeof(IEnumerable));
 
         internal static readonly MethodInfo ToArray = typeof(System.Linq.Enumerable).GetMethodEx(
             nameof(System.Linq.Enumerable.ToArray),
-            new[] { typeof(TSource) },
+            [typeof(TSource)],
             typeof(IEnumerable<TSource>));
 
         internal static readonly MethodInfo ToList = typeof(System.Linq.Enumerable).GetMethodEx(
             nameof(System.Linq.Enumerable.ToList),
-            new[] { typeof(TSource) },
+            [typeof(TSource)],
             typeof(IEnumerable<TSource>));
     }
 
@@ -54,7 +54,7 @@ internal static class MethodInfos
     {
         internal static readonly MethodInfo AsQueryable = typeof(System.Linq.Queryable).GetMethodEx(
             nameof(System.Linq.Queryable.AsQueryable),
-            new[] { typeof(TElement) },
+            [typeof(TElement)],
             typeof(IEnumerable<TElement>));
     }
 }

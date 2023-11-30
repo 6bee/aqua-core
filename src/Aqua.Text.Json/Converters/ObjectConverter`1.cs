@@ -66,7 +66,7 @@ public class ObjectConverter<T> : JsonConverter<T>
 
     [SuppressMessage("Major Code Smell", "S2743:Static fields should not be used in generic types", Justification = "Static field is specific for generic type")]
     private static readonly Dictionary<Type, IReadOnlyCollection<Property>> _properties
-        = new Dictionary<Type, IReadOnlyCollection<Property>>();
+        = [];
 
     private readonly bool _handleSubtypes;
 

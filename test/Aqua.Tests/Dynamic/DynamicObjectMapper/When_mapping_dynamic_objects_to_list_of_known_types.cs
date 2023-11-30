@@ -28,8 +28,8 @@ public class When_mapping_dynamic_objects_to_list_of_known_types
 
     public When_mapping_dynamic_objects_to_list_of_known_types()
     {
-        dynamicObjects = new[]
-        {
+        dynamicObjects =
+        [
             new DynamicObject(typeof(CustomReferenceType))
             {
                 Properties = new PropertySet
@@ -44,7 +44,7 @@ public class When_mapping_dynamic_objects_to_list_of_known_types
                     { string.Empty, new CustomReferenceType { Int32Property = 2, StringProperty = "Two" } },
                 },
             },
-        };
+        ];
 
         var mapper = new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider());
         recreatedObjectLists = dynamicObjects.Select(mapper.Map<CustomReferenceType>);

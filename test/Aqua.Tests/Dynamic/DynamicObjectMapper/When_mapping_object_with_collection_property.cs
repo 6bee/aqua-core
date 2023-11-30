@@ -136,9 +136,9 @@ public class When_mapping_object_with_collection_property
     {
         var obj = CreateObject(new int[][]
         {
-            new[] { 1, 2 },
-            new[] { 3 },
-            new[] { 4, 5, 6 },
+            [1, 2],
+            [3],
+            [4, 5, 6],
         });
 
         var dynamicObject = new DynamicObjectMapper().MapObject(obj);

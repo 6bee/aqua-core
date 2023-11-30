@@ -29,7 +29,7 @@ public class When_mapping_object_from_object_with_igrouping_members
                 var mappedGrouping = typeof(CustomDynamicObjectMapper)
                     .GetMethod(nameof(MapGrouping), PrivateInstance)
                     .MakeGenericMethod(obj.GetType().GenericTypeArguments)
-                    .Invoke(this, new[] { obj, setTypeInformation });
+                    .Invoke(this, [obj, setTypeInformation]);
                 return (DynamicObject)mappedGrouping;
             }
 

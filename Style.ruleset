@@ -20,6 +20,8 @@
     <Rule Id="S6605" Action="Info" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <!-- SA1010: disabled for C# 12.0 collection initialization `[]` -->
+    <Rule Id="SA1010" Action="None" />
     <Rule Id="SA1101" Action="None" />
     <Rule Id="SA1133" Action="None" />
     <Rule Id="SA1201" Action="None" />

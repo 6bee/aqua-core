@@ -61,7 +61,7 @@ public abstract class ObjectConverter : JsonConverter
         }
     }
 
-    private static readonly Dictionary<Type, IReadOnlyCollection<Property>> _properties = new Dictionary<Type, IReadOnlyCollection<Property>>();
+    private static readonly Dictionary<Type, IReadOnlyCollection<Property>> _properties = [];
 
     protected ObjectConverter(KnownTypesRegistry knownTypes)
     {
