@@ -209,12 +209,12 @@ namespace Aqua.TypeSystem
                     })
                     .ToArray();
 
-                if (matches.Length == 0)
+                if (matches.Length is 0)
                 {
                     return null;
                 }
 
-                if (matches.Length == 1)
+                if (matches.Length is 1)
                 {
                     return matches[0];
                 }
@@ -327,12 +327,12 @@ namespace Aqua.TypeSystem
                     .OrderBy(m => CountDeclarationDepth(declaringType.GetTypeInfo(), m.DeclaringType?.GetTypeInfo(), 0))
                     .ToArray();
 
-                if (matches.Length == 0)
+                if (matches.Length is 0)
                 {
                     return null;
                 }
 
-                if (matches.Length == 1)
+                if (matches.Length is 1)
                 {
                     return matches[0];
                 }

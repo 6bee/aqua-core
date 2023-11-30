@@ -12,6 +12,6 @@ namespace Aqua.TypeSystem.Extensions
 
         public static bool MatchesExactly(this BindingFlags? flags, BindingFlags bindingFlags) => flags == bindingFlags;
 
-        public static bool MatchesPartly(this BindingFlags? flags, BindingFlags bindingFlags) => flags is not null && (flags & bindingFlags) != 0;
+        public static bool MatchesPartly(this BindingFlags? flags, BindingFlags bindingFlags) => flags is not null && (flags & bindingFlags) is not 0;
     }
 }

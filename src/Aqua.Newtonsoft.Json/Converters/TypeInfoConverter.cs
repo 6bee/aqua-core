@@ -18,7 +18,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             reader.AssertNotNull();
             serializer.AssertNotNull();
 
-            if (reader.TokenType == JsonToken.String &&
+            if (reader.TokenType is JsonToken.String &&
                 reader.Value is string typeKey &&
                 KnownTypesRegistry.TryGetTypeInfo(typeKey, out var typeInfo))
             {

@@ -31,7 +31,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             objectType.AssertNotNull();
             serializer.AssertNotNull();
 
-            if (reader.TokenType == JsonToken.Null)
+            if (reader.TokenType is JsonToken.Null)
             {
                 return default;
             }
@@ -123,7 +123,7 @@ namespace Aqua.Newtonsoft.Json.Converters
             serializer.AssertNotNull();
             while (reader.TokenType != JsonToken.EndObject)
             {
-                if (reader.TokenType == JsonToken.PropertyName)
+                if (reader.TokenType is JsonToken.PropertyName)
                 {
                     var name = (reader.Value as string) ?? throw reader.CreateException("Property name must not be null");
                     if (properties.TryGetValue(name, out var property))

@@ -111,8 +111,8 @@ namespace Aqua.Newtonsoft.Json.Converters
             if (type is not null && _typeReaders.TryGetValue(type, out var read))
             {
                 result = read(reader);
-                return reader.TokenType != JsonToken.EndArray
-                    && reader.TokenType != JsonToken.EndObject;
+                return reader.TokenType is not JsonToken.EndArray
+                    && reader.TokenType is not JsonToken.EndObject;
             }
 
             reader.Advance($"Expected token object of type '{type}'.");
@@ -153,7 +153,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 throw reader.CreateException($"Expected start object.");
             }
 
-            if (reader.TokenType != JsonToken.StartObject)
+            if (reader.TokenType is not JsonToken.StartObject)
             {
                 throw reader.CreateException($"Unexpected token type '{reader.TokenType}', expected {nameof(JsonToken.StartObject)} instead.");
             }
@@ -167,7 +167,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 reader.Advance();
             }
 
-            if (reader.TokenType != JsonToken.EndObject)
+            if (reader.TokenType is not JsonToken.EndObject)
             {
                 throw reader.CreateException($"Unexpected token type '{reader.TokenType}', expected {nameof(JsonToken.EndObject)} instead.");
             }
@@ -180,7 +180,7 @@ namespace Aqua.Newtonsoft.Json.Converters
         public static void AssertIdToken(this JsonReader reader, bool advance = false) => AssertProperty(reader, IdToken, advance);
 
         public static bool IsProperty(this JsonReader reader, string propertyName)
-            => reader.CheckNotNull().TokenType == JsonToken.PropertyName
+            => reader.CheckNotNull().TokenType is JsonToken.PropertyName
             && string.Equals(reader.Value as string, propertyName, StringComparison.Ordinal);
 
         public static bool TryWriteReference(this JsonWriter writer, JsonSerializer serializer, object value)

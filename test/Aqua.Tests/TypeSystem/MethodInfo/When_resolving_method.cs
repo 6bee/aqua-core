@@ -150,7 +150,7 @@ namespace Aqua.Tests.TypeSystem.MethodInfo
         {
             var expected = typeof(Overload)
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Single(x => x.Name == nameof(Overload.Method) && x.GetParameters().Length == 1);
+                .Single(x => x.Name == nameof(Overload.Method) && x.GetParameters().Length is 1);
 
             var methodInfo = new MethodInfo(expected);
 
@@ -166,7 +166,7 @@ namespace Aqua.Tests.TypeSystem.MethodInfo
 
             var expected = typeof(Overload)
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Single(x => x.Name == nameof(Overload.Method) && x.GetParameters().Length == 0);
+                .Single(x => x.Name == nameof(Overload.Method) && x.GetParameters().Length is 0);
 
             methodInfo.ToMethodInfo().ShouldBeSameAs(expected);
         }

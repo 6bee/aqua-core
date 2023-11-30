@@ -94,7 +94,7 @@ namespace Aqua.Text.Json.Converters
                     propertySet = type
                         .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                         .Where(x => x.CanRead && x.CanWrite)
-                        .Where(x => x.GetIndexParameters().Length == 0)
+                        .Where(x => x.GetIndexParameters().Length is 0)
                         .Select(x => new Property(x, KnownTypesRegistry))
                         .Where(x => !x.IsIgnored)
                         .OrderBy(x => x.SortOrder)
@@ -126,7 +126,7 @@ namespace Aqua.Text.Json.Converters
 
         protected virtual T? ReadJson(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader.TokenType == JsonTokenType.Null)
+            if (reader.TokenType is JsonTokenType.Null)
             {
                 return default;
             }
@@ -222,9 +222,9 @@ namespace Aqua.Text.Json.Converters
         {
             properties.AssertNotNull();
             options.AssertNotNull();
-            while (reader.TokenType != JsonTokenType.EndObject)
+            while (reader.TokenType is not JsonTokenType.EndObject)
             {
-                if (reader.TokenType == JsonTokenType.PropertyName)
+                if (reader.TokenType is JsonTokenType.PropertyName)
                 {
                     var name = reader.GetString() ?? throw reader.CreateException("Property name must not be null");
                     if (properties.TryGetValue(name, out var property))

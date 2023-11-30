@@ -49,9 +49,9 @@ namespace Aqua.Tests.Dynamic.DynamicObject
         [Fact]
         public void Member_name_should_be_name_of_property()
         {
-            dynamicObject.PropertyNames.Any(name => name == "Guid1").ShouldBeTrue();
-            dynamicObject.PropertyNames.Any(name => name == "Guid2").ShouldBeTrue();
-            dynamicObject.PropertyNames.Any(name => name == "Guid3").ShouldBeTrue();
+            dynamicObject.PropertyNames.Any(name => name is "Guid1").ShouldBeTrue();
+            dynamicObject.PropertyNames.Any(name => name is "Guid2").ShouldBeTrue();
+            dynamicObject.PropertyNames.Any(name => name is "Guid3").ShouldBeTrue();
         }
 
         [Fact]

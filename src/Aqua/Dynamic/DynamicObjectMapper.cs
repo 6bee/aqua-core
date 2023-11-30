@@ -723,7 +723,7 @@ namespace Aqua.Dynamic
                 var ctor = resultType.GetConstructors().FirstOrDefault(c =>
                 {
                     var parameters = c.GetParameters();
-                    return parameters.Length == 1
+                    return parameters.Length is 1
                         && parameters[0].ParameterType.IsAssignableFrom(enumerableType);
                 });
 
@@ -734,7 +734,7 @@ namespace Aqua.Dynamic
 
                 if (enumerableType.IsAssignableFrom(resultType))
                 {
-                    ctor = resultType.GetConstructors().FirstOrDefault(c => c.GetParameters().Length == 0);
+                    ctor = resultType.GetConstructors().FirstOrDefault(c => c.GetParameters().Length is 0);
                     if (ctor is not null)
                     {
                         var addMethod = resultType.GetMethods()
@@ -742,7 +742,7 @@ namespace Aqua.Dynamic
                             .FirstOrDefault(m =>
                             {
                                 var parameters = m.GetParameters();
-                                return parameters.Length == 1
+                                return parameters.Length is 1
                                     && parameters[0].ParameterType.IsAssignableFrom(elementType);
                             });
                         if (addMethod is not null)
@@ -1060,7 +1060,7 @@ namespace Aqua.Dynamic
                                     .ToArray(),
                             };
                         })
-                        .OrderByDescending(i => i.ParametersCount == 0 ? int.MaxValue : i.ParametersCount)
+                        .OrderByDescending(i => i.ParametersCount is 0 ? int.MaxValue : i.ParametersCount)
                         .FirstOrDefault(i => i.Parameters.All(p => p.Property is not null));
 
                     if (constructor is not null)
@@ -1280,7 +1280,7 @@ namespace Aqua.Dynamic
             }
 
             var targetTypeGenericArgumentsCount = targetType.GetGenericArguments().Length;
-            if (targetTypeGenericArgumentsCount != 2)
+            if (targetTypeGenericArgumentsCount is not 2)
             {
                 return false;
             }

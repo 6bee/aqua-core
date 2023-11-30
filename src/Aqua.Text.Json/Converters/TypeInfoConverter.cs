@@ -15,7 +15,7 @@ namespace Aqua.Text.Json.Converters
 
         protected override TypeInfo? ReadJson(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader.TokenType == JsonTokenType.String &&
+            if (reader.TokenType is JsonTokenType.String &&
                 reader.GetString() is string typeKey &&
                 KnownTypesRegistry.TryGetTypeInfo(typeKey, out var typeInfo))
             {

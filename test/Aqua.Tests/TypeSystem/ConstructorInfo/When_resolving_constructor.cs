@@ -88,7 +88,7 @@ namespace Aqua.Tests.TypeSystem.ConstructorInfo
             var constructor = (System.Reflection.ConstructorInfo)constructorInfo;
             var expected = typeof(A)
                 .GetConstructors()
-                .Single(x => x.GetParameters().Length == 0);
+                .Single(x => x.GetParameters().Length is 0);
             constructor.ShouldBeSameAs(expected);
         }
 

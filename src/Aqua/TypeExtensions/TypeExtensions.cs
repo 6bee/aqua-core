@@ -32,14 +32,14 @@ namespace Aqua.TypeExtensions
         /// </summary>
         public static IEnumerable<PropertyInfo> GetDefaultPropertiesForSerialization(this Type type)
             => type.GetProperties(ReflectionBinding.PublicInstance)
-            .Where(x => x.CanRead && x.GetIndexParameters().Length == 0);
+            .Where(x => x.CanRead && x.GetIndexParameters().Length is 0);
 
         /// <summary>
         /// Gets the public instance properties for the given <see cref="Type"/> which have a getter.
         /// </summary>
         public static IEnumerable<PropertyInfo> GetDefaultPropertiesForDeserialization(this Type type)
             => type.GetProperties(ReflectionBinding.PublicInstance)
-            .Where(p => p.CanWrite && p.GetIndexParameters().Length == 0);
+            .Where(p => p.CanWrite && p.GetIndexParameters().Length is 0);
 
         /// <summary>
         /// Returns <see langword="true"/> if the given <see cref="Type"/> is either a reference type or a <see cref="Nullable{T}"/> value type.
@@ -64,14 +64,14 @@ namespace Aqua.TypeExtensions
                 .Where(x =>
                 {
                     var parameters = x.GetParameters();
-                    return parameters.Length == 1
+                    return parameters.Length is 1
                         && parameters[0].ParameterType == sourceType;
                 })
                 .ToArray();
 
             var conversionMethod =
-                methodCandidates.FirstOrDefault(mi => mi.Name == "op_Implicit") ??
-                methodCandidates.FirstOrDefault(mi => mi.Name == "op_Explicit");
+                methodCandidates.FirstOrDefault(mi => mi.Name is "op_Implicit") ??
+                methodCandidates.FirstOrDefault(mi => mi.Name is "op_Explicit");
 
             if (conversionMethod is null)
             {

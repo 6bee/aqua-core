@@ -5,7 +5,6 @@ namespace Aqua.Text.Json.Converters
     using Aqua.Dynamic;
     using Aqua.EnumerableExtensions;
     using Aqua.TypeSystem;
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -75,7 +74,7 @@ namespace Aqua.Text.Json.Converters
                 {
                     value = reader.Read<DynamicObject>(options);
                 }
-                else if (PeekTokenType(reader) == JsonTokenType.String)
+                else if (PeekTokenType(reader) is JsonTokenType.String)
                 {
                     value = reader.Read(typeof(string), options);
                 }
@@ -91,7 +90,7 @@ namespace Aqua.Text.Json.Converters
             if (IsProperty(ref reader, ItemsProperty, out isDynamicValue) || IsProperty(ref reader, ValuesProperty, out isDynamicValue))
             {
                 reader.Advance();
-                if (reader.TokenType == JsonTokenType.Null)
+                if (reader.TokenType is JsonTokenType.Null)
                 {
                     SetResult(ref reader);
                     return;
@@ -99,7 +98,7 @@ namespace Aqua.Text.Json.Converters
 
                 var referenceResolver = options.ReferenceHandler?.CreateResolver();
                 var reference = default(string);
-                if (reader.TokenType == JsonTokenType.StartObject)
+                if (reader.TokenType is JsonTokenType.StartObject)
                 {
                     reader.Advance();
                     if (reader.IsRefToken())
@@ -125,7 +124,7 @@ namespace Aqua.Text.Json.Converters
                     reader.Advance();
                 }
 
-                if (reader.TokenType != JsonTokenType.StartArray)
+                if (reader.TokenType is not JsonTokenType.StartArray)
                 {
                     throw reader.CreateException($"Expected array");
                 }
@@ -134,12 +133,12 @@ namespace Aqua.Text.Json.Converters
                 var itemType = isDynamicValue ? typeof(DynamicObject) : elementType;
                 bool TryReadNextItem(ref Utf8JsonReader reader, out object? value)
                 {
-                    var localItemType = PeekTokenType(reader) == JsonTokenType.String
+                    var localItemType = PeekTokenType(reader) is JsonTokenType.String
                         ? typeof(string)
                         : itemType;
                     if (!reader.TryRead(localItemType, options, out value))
                     {
-                        if (reader.TokenType == JsonTokenType.EndArray)
+                        if (reader.TokenType is JsonTokenType.EndArray)
                         {
                             return false;
                         }
@@ -185,13 +184,13 @@ namespace Aqua.Text.Json.Converters
             if (reader.IsProperty(nameof(DynamicObject.Properties)))
             {
                 reader.Advance();
-                if (reader.TokenType == JsonTokenType.Null)
+                if (reader.TokenType is JsonTokenType.Null)
                 {
                     SetResult(ref reader);
                     return;
                 }
 
-                if (reader.TokenType != JsonTokenType.StartArray)
+                if (reader.TokenType is not JsonTokenType.StartArray)
                 {
                     throw reader.CreateException("Expected array");
                 }
@@ -201,7 +200,7 @@ namespace Aqua.Text.Json.Converters
                 static bool NextItem(ref Utf8JsonReader reader)
                 {
                     reader.Advance();
-                    return reader.TokenType != JsonTokenType.EndArray;
+                    return reader.TokenType is not JsonTokenType.EndArray;
                 }
 
                 while (NextItem(ref reader))
@@ -225,7 +224,7 @@ namespace Aqua.Text.Json.Converters
                 return;
             }
 
-            if (reader.TokenType == JsonTokenType.EndObject)
+            if (reader.TokenType is JsonTokenType.EndObject)
             {
                 SetResult(ref reader, advance: false);
                 return;
@@ -277,12 +276,12 @@ namespace Aqua.Text.Json.Converters
                     {
                         writer.WriteStartObject();
 
-                        writer.WriteString(nameof(DynamicProperty.Name), property.Name);
+                        writer.WriteString(nameof(property.Name), property.Name);
 
                         writer.WritePropertyName(nameof(Type));
                         writer.Serialize(CreateTypeInfo(property.Value), options);
 
-                        writer.WritePropertyName(nameof(DynamicProperty.Value));
+                        writer.WritePropertyName(nameof(property.Value));
                         if (property.Value is null)
                         {
                             writer.WriteNullValue();
@@ -302,7 +301,7 @@ namespace Aqua.Text.Json.Converters
 
         private static bool TryGetWrappedValue(PropertySet? propertySet, [NotNullWhen(true)] out object? value)
         {
-            if (propertySet?.Count == 1)
+            if (propertySet?.Count is 1)
             {
                 var p = propertySet.First();
                 if (string.IsNullOrEmpty(p.Name) && p.Value is object v)

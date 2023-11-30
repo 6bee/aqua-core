@@ -16,7 +16,7 @@ namespace Aqua.Tests.TypeSystem.TypeResolver
         {
             Type GenerateAnonymousType<T>(uint nestingCount, T value)
             {
-                if (nestingCount == 0)
+                if (nestingCount is 0)
                 {
                     return null;
                 }

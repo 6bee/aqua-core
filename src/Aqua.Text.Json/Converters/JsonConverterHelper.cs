@@ -114,15 +114,15 @@ namespace Aqua.Text.Json.Converters
             {
                 reader.Advance();
 
-                if (reader.TokenType == JsonTokenType.Null)
+                if (reader.TokenType is JsonTokenType.Null)
                 {
                     result = null;
                     return true;
                 }
 
                 var isValue =
-                    reader.TokenType != JsonTokenType.EndArray &&
-                    reader.TokenType != JsonTokenType.EndObject;
+                    reader.TokenType is not JsonTokenType.EndArray &&
+                    reader.TokenType is not JsonTokenType.EndObject;
 
                 result = isValue
                     ? read(ref reader)
@@ -168,7 +168,7 @@ namespace Aqua.Text.Json.Converters
                 throw reader.CreateException($"Expected start object.");
             }
 
-            if (reader.TokenType != JsonTokenType.StartObject)
+            if (reader.TokenType is not JsonTokenType.StartObject)
             {
                 throw reader.CreateException($"Unexpected token type '{reader.TokenType}', expected {nameof(JsonTokenType.StartObject)} instead.");
             }
@@ -181,7 +181,7 @@ namespace Aqua.Text.Json.Converters
                 reader.Advance();
             }
 
-            if (reader.TokenType != JsonTokenType.EndObject)
+            if (reader.TokenType is not JsonTokenType.EndObject)
             {
                 throw reader.CreateException($"Unexpected token type '{reader.TokenType}', expected {nameof(JsonTokenType.EndObject)} instead.");
             }
@@ -196,7 +196,7 @@ namespace Aqua.Text.Json.Converters
         public static void AssertValuesToken(this ref Utf8JsonReader reader, bool advance = false) => reader.AssertProperty(JsonMetadata.ValuesToken, advance);
 
         public static bool IsProperty(this ref Utf8JsonReader reader, string propertyName)
-            => reader.TokenType == JsonTokenType.PropertyName
+            => reader.TokenType is JsonTokenType.PropertyName
             && reader.ValueTextEquals(propertyName);
 
         public static bool TryWriteReference(this Utf8JsonWriter writer, object value, JsonSerializerOptions options)

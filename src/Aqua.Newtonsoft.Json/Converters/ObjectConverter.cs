@@ -80,7 +80,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                     propertySet = type
                         .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                         .Where(x => x.CanRead && x.CanWrite)
-                        .Where(x => x.GetIndexParameters().Length == 0)
+                        .Where(x => x.GetIndexParameters().Length is 0)
                         .Select(x => new Property(x, KnownTypesRegistry))
                         .Where(x => !x.IsIgnored)
                         .OrderBy(x => x.SortOrder)

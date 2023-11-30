@@ -135,7 +135,7 @@ namespace Aqua.EnumerableExtensions
                 }
             }
 
-            return nullCounter == 0 && counters.Values.All(c => c == 0);
+            return nullCounter is 0 && counters.Values.All(c => c is 0);
         }
 
         /// <summary>

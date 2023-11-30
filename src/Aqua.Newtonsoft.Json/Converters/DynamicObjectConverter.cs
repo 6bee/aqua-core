@@ -76,13 +76,13 @@ namespace Aqua.Newtonsoft.Json.Converters
             if (IsProperty(ItemsProperty, out isDynamicValue) || IsProperty(ValuesProperty, out isDynamicValue))
             {
                 reader.Advance();
-                if (reader.TokenType == JsonToken.Null)
+                if (reader.TokenType is JsonToken.Null)
                 {
                     SetResult();
                     return;
                 }
 
-                if (reader.TokenType != JsonToken.StartArray)
+                if (reader.TokenType is not JsonToken.StartArray)
                 {
                     throw reader.CreateException($"Expected array");
                 }
@@ -93,7 +93,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 {
                     if (!reader.TryRead(itemType, serializer, out value))
                     {
-                        if (reader.TokenType == JsonToken.EndArray)
+                        if (reader.TokenType is JsonToken.EndArray)
                         {
                             return false;
                         }
@@ -128,13 +128,13 @@ namespace Aqua.Newtonsoft.Json.Converters
             if (reader.IsProperty(nameof(DynamicObject.Properties)))
             {
                 reader.Advance();
-                if (reader.TokenType == JsonToken.Null)
+                if (reader.TokenType is JsonToken.Null)
                 {
                     SetResult();
                     return;
                 }
 
-                if (reader.TokenType != JsonToken.StartArray)
+                if (reader.TokenType is not JsonToken.StartArray)
                 {
                     throw reader.CreateException("Expected array");
                 }
@@ -144,7 +144,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 bool NextItem()
                 {
                     reader.Advance();
-                    return reader.TokenType != JsonToken.EndArray;
+                    return reader.TokenType is not JsonToken.EndArray;
                 }
 
                 while (NextItem())
@@ -168,7 +168,7 @@ namespace Aqua.Newtonsoft.Json.Converters
                 return;
             }
 
-            if (reader.TokenType == JsonToken.EndObject)
+            if (reader.TokenType is JsonToken.EndObject)
             {
                 SetResult(advance: false);
                 return;
@@ -247,7 +247,7 @@ namespace Aqua.Newtonsoft.Json.Converters
 
         private static bool TryGetWrappedValue(PropertySet? propertySet, out object? value)
         {
-            if (propertySet?.Count == 1)
+            if (propertySet?.Count is 1)
             {
                 var p = propertySet.First();
                 if (string.IsNullOrEmpty(p.Name) && p.Value is not null)

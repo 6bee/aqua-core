@@ -65,7 +65,7 @@ namespace Aqua.Utils
                 }
 
                 // clean-up stale references from cache
-                if (_cleanupDelay == 0)
+                if (_cleanupDelay is 0)
                 {
                     CleanUpStaleReferences();
                 }

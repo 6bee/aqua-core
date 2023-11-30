@@ -45,7 +45,7 @@ namespace Aqua.ProtoBuf.Dynamic
             }
 
             var wrappedType = default(Type);
-            if (properties.Count == 1 && string.IsNullOrEmpty(properties.Single().Name))
+            if (properties.Count is 1 && string.IsNullOrEmpty(properties.Single().Name))
             {
                 wrappedType = dynamicObjectType?.ToType();
             }

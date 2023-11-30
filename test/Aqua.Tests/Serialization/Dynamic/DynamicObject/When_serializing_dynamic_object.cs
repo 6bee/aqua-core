@@ -443,7 +443,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var method = typeof(When_serializing_dynamic_object)
               .GetMethods(PrivateInstance)
-              .Single(x => x.Name == nameof(SerializeAsProperty) && x.IsGenericMethod && x.GetGenericArguments().Length == 1);
+              .Single(x => x.Name == nameof(SerializeAsProperty) && x.IsGenericMethod && x.GetGenericArguments().Length is 1);
             return method.MakeGenericMethod(propertyTape).Invoke(this, new[] { propertyValue, setTypeFromGenericArgument, formatValuesAsStrings });
         }
 
@@ -454,7 +454,7 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
         {
             var method = typeof(When_serializing_dynamic_object)
                 .GetMethods(PrivateInstance)
-                .Single(x => x.Name == nameof(Serialize) && x.IsGenericMethod && x.GetGenericArguments().Length == 1 && x.GetParameters().Length == 3);
+                .Single(x => x.Name == nameof(Serialize) && x.IsGenericMethod && x.GetGenericArguments().Length is 1 && x.GetParameters().Length is 3);
             return method.MakeGenericMethod(type).Invoke(this, new[] { value, setTypeFromGenericArgument, formatValuesAsStrings });
         }
 
