@@ -1,83 +1,82 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper
+namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper;
+
+using Aqua.Dynamic;
+using Shouldly;
+using System;
+using System.Linq;
+using Xunit;
+
+public class When_mapping_int_as_string_and_long_as_long
 {
-    using Aqua.Dynamic;
-    using Shouldly;
-    using System;
-    using System.Linq;
-    using Xunit;
-
-    public class When_mapping_int_as_string_and_long_as_long
+    private class CustomMapper : DynamicObjectMapper
     {
-        private class CustomMapper : DynamicObjectMapper
+        protected override object MapFromDynamicObjectGraph(object obj, Type targetType)
         {
-            protected override object MapFromDynamicObjectGraph(object obj, Type targetType)
+            if (targetType == typeof(int))
             {
-                if (targetType == typeof(int))
-                {
-                    var value = ((DynamicObject)obj)["Value"];
-                    return int.Parse((string)value);
-                }
-
-                if (targetType == typeof(long))
-                {
-                    var value = ((DynamicObject)obj)["Value"];
-                    return (long)value;
-                }
-
-                throw new NotSupportedException();
+                var value = ((DynamicObject)obj)["Value"];
+                return int.Parse((string)value);
             }
 
-            protected override DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
+            if (targetType == typeof(long))
             {
-                if (obj is int)
-                {
-                    return new DynamicObject(typeof(int))
-                    {
-                        Properties = new PropertySet
-                        {
-                            { "Value", obj.ToString() },
-                        },
-                    };
-                }
-
-                if (obj is long)
-                {
-                    return new DynamicObject(typeof(long))
-                    {
-                        Properties = new PropertySet
-                        {
-                            { "Value", obj },
-                        },
-                    };
-                }
-
-                throw new NotSupportedException();
+                var value = ((DynamicObject)obj)["Value"];
+                return (long)value;
             }
+
+            throw new NotSupportedException();
         }
 
-        private readonly DynamicObject dynamicObjectWithInt;
-        private readonly DynamicObject dynamicObjectWithLong;
-
-        public When_mapping_int_as_string_and_long_as_long()
+        protected override DynamicObject MapToDynamicObjectGraph(object obj, Func<Type, bool> setTypeInformation)
         {
-            var dynamicObjectMapper = new CustomMapper();
+            if (obj is int)
+            {
+                return new DynamicObject(typeof(int))
+                {
+                    Properties = new PropertySet
+                    {
+                        { "Value", obj.ToString() },
+                    },
+                };
+            }
 
-            dynamicObjectWithInt = dynamicObjectMapper.MapObject(123);
-            dynamicObjectWithLong = dynamicObjectMapper.MapObject(456L);
-        }
+            if (obj is long)
+            {
+                return new DynamicObject(typeof(long))
+                {
+                    Properties = new PropertySet
+                    {
+                        { "Value", obj },
+                    },
+                };
+            }
 
-        [Fact]
-        public void Dynamic_object_for_int_should_contain_string_value()
-        {
-            dynamicObjectWithInt.Values.Single().ShouldBeOfType<string>();
+            throw new NotSupportedException();
         }
+    }
 
-        [Fact]
-        public void Dynamic_object_for_lonb_should_contain_string_value()
-        {
-            dynamicObjectWithLong.Values.Single().ShouldBeOfType<long>();
-        }
+    private readonly DynamicObject dynamicObjectWithInt;
+    private readonly DynamicObject dynamicObjectWithLong;
+
+    public When_mapping_int_as_string_and_long_as_long()
+    {
+        var dynamicObjectMapper = new CustomMapper();
+
+        dynamicObjectWithInt = dynamicObjectMapper.MapObject(123);
+        dynamicObjectWithLong = dynamicObjectMapper.MapObject(456L);
+    }
+
+    [Fact]
+    public void Dynamic_object_for_int_should_contain_string_value()
+    {
+        dynamicObjectWithInt.Values.Single().ShouldBeOfType<string>();
+    }
+
+    [Fact]
+    public void Dynamic_object_for_lonb_should_contain_string_value()
+    {
+        dynamicObjectWithLong.Values.Single().ShouldBeOfType<long>();
     }
 }

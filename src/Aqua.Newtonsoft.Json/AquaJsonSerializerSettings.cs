@@ -1,37 +1,36 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.Newtonsoft.Json
+namespace Aqua.Newtonsoft.Json;
+
+using global::Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+public class AquaJsonSerializerSettings : JsonSerializerSettings
 {
-    using global::Newtonsoft.Json;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
+    private static readonly IReadOnlyCollection<PropertyInfo> _baseProperties = typeof(JsonSerializerSettings)
+        .GetProperties()
+        .Where(x => x.CanRead && x.CanWrite)
+        .ToArray();
 
-    public class AquaJsonSerializerSettings : JsonSerializerSettings
+    public AquaJsonSerializerSettings(JsonSerializerSettings settings, KnownTypesRegistry? knownTypesRegistry = null)
     {
-        private static readonly IReadOnlyCollection<PropertyInfo> _baseProperties = typeof(JsonSerializerSettings)
-            .GetProperties()
-            .Where(x => x.CanRead && x.CanWrite)
-            .ToArray();
+        settings.AssertNotNull();
+        KnownTypesRegistry = knownTypesRegistry
+            ?? (settings as AquaJsonSerializerSettings)?.KnownTypesRegistry
+            ?? new KnownTypesRegistry();
+        Copy(settings);
+    }
 
-        public AquaJsonSerializerSettings(JsonSerializerSettings settings, KnownTypesRegistry? knownTypesRegistry = null)
+    public KnownTypesRegistry KnownTypesRegistry { get; }
+
+    private void Copy(JsonSerializerSettings source)
+    {
+        foreach (var property in _baseProperties)
         {
-            settings.AssertNotNull();
-            KnownTypesRegistry = knownTypesRegistry
-                ?? (settings as AquaJsonSerializerSettings)?.KnownTypesRegistry
-                ?? new KnownTypesRegistry();
-            Copy(settings);
-        }
-
-        public KnownTypesRegistry KnownTypesRegistry { get; }
-
-        private void Copy(JsonSerializerSettings source)
-        {
-            foreach (var property in _baseProperties)
-            {
-                var value = property.GetValue(source);
-                property.SetValue(this, value);
-            }
+            var value = property.GetValue(source);
+            property.SetValue(this, value);
         }
     }
 }

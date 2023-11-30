@@ -1,47 +1,46 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.Tests.Dynamic.DynamicObject
+namespace Aqua.Tests.Dynamic.DynamicObject;
+
+using Aqua.Dynamic;
+using Shouldly;
+using System.Collections.Generic;
+using Xunit;
+
+public class When_created_based_on_a_keyvaluepair
 {
-    using Aqua.Dynamic;
-    using Shouldly;
-    using System.Collections.Generic;
-    using Xunit;
+    private readonly KeyValuePair<string, string> source;
+    private readonly DynamicObject dynamicObject;
 
-    public class When_created_based_on_a_keyvaluepair
+    public When_created_based_on_a_keyvaluepair()
     {
-        private readonly KeyValuePair<string, string> source;
-        private readonly DynamicObject dynamicObject;
+        source = new KeyValuePair<string, string>("K1", "V1");
+        dynamicObject = new DynamicObject(source);
+    }
 
-        public When_created_based_on_a_keyvaluepair()
-        {
-            source = new KeyValuePair<string, string>("K1", "V1");
-            dynamicObject = new DynamicObject(source);
-        }
+    [Fact]
+    public void Type_property_should_be_set_to_keyvaluepair()
+    {
+        dynamicObject.Type.ToType().ShouldBe(typeof(KeyValuePair<string, string>));
+    }
 
-        [Fact]
-        public void Type_property_should_be_set_to_keyvaluepair()
-        {
-            dynamicObject.Type.ToType().ShouldBe(typeof(KeyValuePair<string, string>));
-        }
+    [Fact]
+    public void Should_have_two_members()
+    {
+        dynamicObject.PropertyCount.ShouldBe(2);
+    }
 
-        [Fact]
-        public void Should_have_two_members()
-        {
-            dynamicObject.PropertyCount.ShouldBe(2);
-        }
+    [Fact]
+    public void Member_names_should_be_key_and_value()
+    {
+        dynamicObject.PropertyNames.ShouldContain("Key");
+        dynamicObject.PropertyNames.ShouldContain("Value");
+    }
 
-        [Fact]
-        public void Member_names_should_be_key_and_value()
-        {
-            dynamicObject.PropertyNames.ShouldContain("Key");
-            dynamicObject.PropertyNames.ShouldContain("Value");
-        }
-
-        [Fact]
-        public void Member_values_should_be_key_and_value_of_source()
-        {
-            dynamicObject["Key"].ShouldBe(source.Key);
-            dynamicObject["Value"].ShouldBe(source.Value);
-        }
+    [Fact]
+    public void Member_values_should_be_key_and_value_of_source()
+    {
+        dynamicObject["Key"].ShouldBe(source.Key);
+        dynamicObject["Value"].ShouldBe(source.Value);
     }
 }

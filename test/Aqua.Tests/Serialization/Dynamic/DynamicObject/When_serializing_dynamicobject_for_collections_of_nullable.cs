@@ -1,186 +1,185 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.Tests.Serialization.Dynamic.DynamicObject
+namespace Aqua.Tests.Serialization.Dynamic.DynamicObject;
+
+using Aqua.Dynamic;
+using Shouldly;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using Xunit;
+
+public abstract class When_serializing_dynamicobject_for_collections_of_nullable
 {
-    using Aqua.Dynamic;
-    using Shouldly;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using Xunit;
-
-    public abstract class When_serializing_dynamicobject_for_collections_of_nullable
+    public class With_binary_formatter : When_serializing_dynamicobject_for_collections_of_nullable
     {
-        public class With_binary_formatter : When_serializing_dynamicobject_for_collections_of_nullable
+        public With_binary_formatter()
+            : base(BinarySerializationHelper.Clone)
         {
-            public With_binary_formatter()
-                : base(BinarySerializationHelper.Clone)
-            {
-            }
         }
+    }
 
-        public class With_data_contract_serializer : When_serializing_dynamicobject_for_collections_of_nullable
+    public class With_data_contract_serializer : When_serializing_dynamicobject_for_collections_of_nullable
+    {
+        public With_data_contract_serializer()
+            : base(DataContractSerializationHelper.Clone)
         {
-            public With_data_contract_serializer()
-                : base(DataContractSerializationHelper.Clone)
-            {
-            }
         }
+    }
 
-        public class With_newtown_json_serializer : When_serializing_dynamicobject_for_collections_of_nullable
+    public class With_newtown_json_serializer : When_serializing_dynamicobject_for_collections_of_nullable
+    {
+        public With_newtown_json_serializer()
+            : base(NewtonsoftJsonSerializationHelper.Clone)
         {
-            public With_newtown_json_serializer()
-                : base(NewtonsoftJsonSerializationHelper.Clone)
-            {
-            }
         }
+    }
 
-        public class With_system_text_json_serializer : When_serializing_dynamicobject_for_collections_of_nullable
+    public class With_system_text_json_serializer : When_serializing_dynamicobject_for_collections_of_nullable
+    {
+        public With_system_text_json_serializer()
+            : base(SystemTextJsonSerializationHelper.Clone)
         {
-            public With_system_text_json_serializer()
-                : base(SystemTextJsonSerializationHelper.Clone)
-            {
-            }
         }
+    }
 
 #if NETFRAMEWORK
-        public class With_net_data_contract_serializer : When_serializing_dynamicobject_for_collections_of_nullable
+    public class With_net_data_contract_serializer : When_serializing_dynamicobject_for_collections_of_nullable
+    {
+        public With_net_data_contract_serializer()
+            : base(NetDataContractSerializationHelper.Clone)
         {
-            public With_net_data_contract_serializer()
-                : base(NetDataContractSerializationHelper.Clone)
-            {
-            }
         }
+    }
 #endif // NETFRAMEWORK
 
-        public class With_protobuf_net_serializer : When_serializing_dynamicobject_for_collections_of_nullable
+    public class With_protobuf_net_serializer : When_serializing_dynamicobject_for_collections_of_nullable
+    {
+        public With_protobuf_net_serializer()
+            : base(ProtobufNetSerializationHelper.Clone)
         {
-            public With_protobuf_net_serializer()
-                : base(ProtobufNetSerializationHelper.Clone)
-            {
-            }
+        }
+    }
+
+    public class With_xml_serializer : When_serializing_dynamicobject_for_collections_of_nullable
+    {
+        public With_xml_serializer()
+            : base(XmlSerializationHelper.Serialize)
+        {
+        }
+    }
+
+    public sealed class QueryableProxy<T> : IQueryable<T>
+    {
+        private readonly IQueryable<T> _source;
+
+        public QueryableProxy(IEnumerable<T> source)
+        {
+            _source = source.AsQueryable();
         }
 
-        public class With_xml_serializer : When_serializing_dynamicobject_for_collections_of_nullable
+        public QueryableProxy(IQueryable<T> source)
         {
-            public With_xml_serializer()
-                : base(XmlSerializationHelper.Serialize)
-            {
-            }
+            _source = source;
         }
 
-        public sealed class QueryableProxy<T> : IQueryable<T>
-        {
-            private readonly IQueryable<T> _source;
+        public Expression Expression => _source.Expression;
 
-            public QueryableProxy(IEnumerable<T> source)
-            {
-                _source = source.AsQueryable();
-            }
+        public Type ElementType => _source.ElementType;
 
-            public QueryableProxy(IQueryable<T> source)
-            {
-                _source = source;
-            }
+        public IQueryProvider Provider => _source.Provider;
 
-            public Expression Expression => _source.Expression;
+        public IEnumerator<T> GetEnumerator() => _source.GetEnumerator();
 
-            public Type ElementType => _source.ElementType;
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_source).GetEnumerator();
+    }
 
-            public IQueryProvider Provider => _source.Provider;
+    public sealed class EnumerableProxy<T> : IEnumerable<T>
+    {
+        private readonly IEnumerable<T> _source;
 
-            public IEnumerator<T> GetEnumerator() => _source.GetEnumerator();
+        public EnumerableProxy(IEnumerable<T> source)
+            => _source = source;
 
-            IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_source).GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => _source.GetEnumerator();
 
-        public sealed class EnumerableProxy<T> : IEnumerable<T>
-        {
-            private readonly IEnumerable<T> _source;
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_source).GetEnumerator();
+    }
 
-            public EnumerableProxy(IEnumerable<T> source)
-                => _source = source;
+    private readonly Func<DynamicObject, DynamicObject> _serialize;
 
-            public IEnumerator<T> GetEnumerator() => _source.GetEnumerator();
+    protected When_serializing_dynamicobject_for_collections_of_nullable(Func<DynamicObject, DynamicObject> serialize)
+    {
+        _serialize = serialize;
+    }
 
-            IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_source).GetEnumerator();
-        }
+    [Fact]
+    public void Should_roundtrip_array_with_two_null_trings()
+    {
+        var enumerable = new string[] { null, null };
+        var resurrected = Roundtrip(enumerable);
+        resurrected.SequenceShouldBeEqual(enumerable);
+    }
 
-        private readonly Func<DynamicObject, DynamicObject> _serialize;
+    [Fact]
+    public void Should_roundtrip_enumerableproxy()
+    {
+        var enumerable = new EnumerableProxy<int?>(new int?[] { null, 1, 22, 333 });
+        var resurrected = Roundtrip(enumerable);
+        resurrected.SequenceShouldBeEqual(enumerable);
+    }
 
-        protected When_serializing_dynamicobject_for_collections_of_nullable(Func<DynamicObject, DynamicObject> serialize)
-        {
-            _serialize = serialize;
-        }
+    [Fact]
+    public void Should_roundtrip_array()
+    {
+        var enumerable = new int?[] { null, 1, 22, 333 };
+        var resurrected = Roundtrip(enumerable);
+        resurrected.SequenceShouldBeEqual(enumerable);
+        resurrected.ShouldBeOfType<int?[]>();
+    }
 
-        [Fact]
-        public void Should_roundtrip_array_with_two_null_trings()
-        {
-            var enumerable = new string[] { null, null };
-            var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceShouldBeEqual(enumerable);
-        }
+    [Fact]
+    public void Should_roundtrip_enumerable_array()
+    {
+        var enumerable = new int?[] { null, 1, 22, 333 }.AsEnumerable();
+        var resurrected = Roundtrip(enumerable);
+        resurrected.SequenceShouldBeEqual(enumerable);
+        resurrected.ShouldBeOfType<int?[]>();
+    }
 
-        [Fact]
-        public void Should_roundtrip_enumerableproxy()
-        {
-            var enumerable = new EnumerableProxy<int?>(new int?[] { null, 1, 22, 333 });
-            var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceShouldBeEqual(enumerable);
-        }
+    [Fact]
+    public void Should_roundtrip_enumerable_List()
+    {
+        var enumerable = new List<int?> { null, 1, 22, 333 }.AsEnumerable();
+        var resurrected = Roundtrip(enumerable);
+        resurrected.SequenceShouldBeEqual(enumerable);
+        resurrected.ShouldBeOfType<List<int?>>();
+    }
 
-        [Fact]
-        public void Should_roundtrip_array()
-        {
-            var enumerable = new int?[] { null, 1, 22, 333 };
-            var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceShouldBeEqual(enumerable);
-            resurrected.ShouldBeOfType<int?[]>();
-        }
+    [Fact]
+    public void Should_roundtrip_queryableproxy()
+    {
+        var enumerable = new QueryableProxy<int?>(new int?[] { 1, null, 22, 333 }.AsQueryable());
+        var resurrected = Roundtrip(enumerable);
+        resurrected.SequenceShouldBeEqual(enumerable);
+    }
 
-        [Fact]
-        public void Should_roundtrip_enumerable_array()
-        {
-            var enumerable = new int?[] { null, 1, 22, 333 }.AsEnumerable();
-            var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceShouldBeEqual(enumerable);
-            resurrected.ShouldBeOfType<int?[]>();
-        }
+    [Fact]
+    public void Should_roundtrip_enumerablequeryable()
+    {
+        var enumerable = new int?[] { null, 1, 22, 333 }.AsQueryable();
+        var resurrected = Roundtrip(enumerable);
+        resurrected.SequenceShouldBeEqual(enumerable);
+        resurrected.ShouldBeOfType<EnumerableQuery<int?>>();
+    }
 
-        [Fact]
-        public void Should_roundtrip_enumerable_List()
-        {
-            var enumerable = new List<int?> { null, 1, 22, 333 }.AsEnumerable();
-            var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceShouldBeEqual(enumerable);
-            resurrected.ShouldBeOfType<List<int?>>();
-        }
-
-        [Fact]
-        public void Should_roundtrip_queryableproxy()
-        {
-            var enumerable = new QueryableProxy<int?>(new int?[] { 1, null, 22, 333 }.AsQueryable());
-            var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceShouldBeEqual(enumerable);
-        }
-
-        [Fact]
-        public void Should_roundtrip_enumerablequeryable()
-        {
-            var enumerable = new int?[] { null, 1, 22, 333 }.AsQueryable();
-            var resurrected = Roundtrip(enumerable);
-            resurrected.SequenceShouldBeEqual(enumerable);
-            resurrected.ShouldBeOfType<EnumerableQuery<int?>>();
-        }
-
-        private T Roundtrip<T>(T obj)
-        {
-            var dynamicObject = new DynamicObjectMapper().MapObject(obj);
-            var serializedDynamicObject = _serialize(dynamicObject);
-            var resurrected = new DynamicObjectMapper().Map<T>(serializedDynamicObject);
-            return resurrected;
-        }
+    private T Roundtrip<T>(T obj)
+    {
+        var dynamicObject = new DynamicObjectMapper().MapObject(obj);
+        var serializedDynamicObject = _serialize(dynamicObject);
+        var resurrected = new DynamicObjectMapper().Map<T>(serializedDynamicObject);
+        return resurrected;
     }
 }
