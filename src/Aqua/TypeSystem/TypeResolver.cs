@@ -100,7 +100,7 @@ public class TypeResolver : ITypeResolver
         return type;
     }
 
-    [return: NotNullIfNotNull("type")]
+    [return: NotNullIfNotNull(nameof(type))]
     private Type? ResolveOpenGenericType(TypeInfo typeInfo, Type? type)
     {
         if (type is null)

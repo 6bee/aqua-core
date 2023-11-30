@@ -14,7 +14,7 @@ using System.Linq;
 [ProtoContract]
 public abstract class Values : Value
 {
-    [return: NotNullIfNotNull("sequence")]
+    [return: NotNullIfNotNull(nameof(sequence))]
     public static Values? Wrap(IEnumerable? sequence, Type elementType)
         => sequence is null
         ? null
@@ -24,7 +24,7 @@ public abstract class Values : Value
         ? (Values?)Activator.CreateInstance(typeof(NullableValues<>).MakeGenericType(elementType), sequence)
         : (Values?)Activator.CreateInstance(typeof(Values<>).MakeGenericType(elementType), sequence);
 
-    [return: NotNullIfNotNull("values")]
+    [return: NotNullIfNotNull(nameof(values))]
     public static IEnumerable? Unwrap(Values? values)
         => values is Values<DynamicObjectSurrogate> dynamicObjects
         ? dynamicObjects.Array.Select(DynamicObjectSurrogate.Convert).ToArray()

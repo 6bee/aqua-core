@@ -13,10 +13,10 @@ public static class MemberInfoExtensions
 {
     private static readonly Dictionary<MemberInfo, BindingFlags> _bindingFlagsCache = [];
 
-    [return: NotNullIfNotNull("member")]
+    [return: NotNullIfNotNull(nameof(member))]
     public static Aqua.TypeSystem.MemberTypes? GetMemberType(this MemberInfo? member) => (Aqua.TypeSystem.MemberTypes?)member?.MemberType;
 
-    [return: NotNullIfNotNull("member")]
+    [return: NotNullIfNotNull(nameof(member))]
     internal static BindingFlags? GetBindingFlags(this MemberInfo? member)
     {
         if (member is null)

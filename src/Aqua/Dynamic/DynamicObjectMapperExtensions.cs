@@ -34,7 +34,7 @@ public static class DynamicObjectMapperExtensions
     /// <param name="objects">Collection of <see cref="DynamicObject" /> to be mapped.</param>
     /// <param name="type">Target type for mapping, set this parameter to <see langword="null"/> if type information included within individual <see cref="DynamicObject" />s should be used.</param>
     /// <returns>Collection of objects created based on the <see cref="DynamicObject" />s specified.</returns>
-    [return: NotNullIfNotNull("objects")]
+    [return: NotNullIfNotNull(nameof(objects))]
     public static IEnumerable? Map(this IDynamicObjectMapper objectMapper, IEnumerable<DynamicObject?>? objects, Type? type = null)
     {
         objectMapper.AssertNotNull();
@@ -57,7 +57,7 @@ public static class DynamicObjectMapperExtensions
     /// <param name="objectMapper">The <see cref="IDynamicObjectMapper"/> instance used to map the <see cref="DynamicObject"/>s.</param>
     /// <param name="objects">Collection of <see cref="DynamicObject" />s to be mapped.</param>
     /// <returns>Collection of <typeparamref name="T" /> created based on the <see cref="DynamicObject" />s specified.</returns>
-    [return: NotNullIfNotNull("objects")]
+    [return: NotNullIfNotNull(nameof(objects))]
     public static IEnumerable<T>? Map<T>(this IDynamicObjectMapper objectMapper, IEnumerable<DynamicObject>? objects)
     {
         objectMapper.AssertNotNull();
@@ -78,7 +78,7 @@ public static class DynamicObjectMapperExtensions
     /// <param name="setTypeInformation">Set this parameter to <see langword="true"/> if type information should be included within the <see cref="DynamicObject"/>s,
     /// set it to <see langword="false"/> otherwise.</param>
     /// <returns>A collection of <see cref="DynamicObject"/> representing the objects specified.</returns>
-    [return: NotNullIfNotNull("objects")]
+    [return: NotNullIfNotNull(nameof(objects))]
     public static IReadOnlyList<DynamicObject?>? MapCollection(this IDynamicObjectMapper objectMapper, object? objects, Func<Type, bool>? setTypeInformation = null)
     {
         objectMapper.AssertNotNull();

@@ -112,7 +112,7 @@ partial class TypeEmitter
 
         public override int GetHashCode() => _hash.Value;
 
-        [return: NotNullIfNotNull("property")]
+        [return: NotNullIfNotNull(nameof(property))]
         private static Tuple<string, Type>? CreatePropertyInfo(PropertyInfo? property, ITypeResolver typeResolver)
         {
             if (property is null)

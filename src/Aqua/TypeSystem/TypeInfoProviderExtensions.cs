@@ -9,27 +9,27 @@ using System.Diagnostics.CodeAnalysis;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class TypeInfoProviderExtensions
 {
-    [return: NotNullIfNotNull("constructor")]
+    [return: NotNullIfNotNull(nameof(constructor))]
     public static ConstructorInfo? GetConstructorInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.ConstructorInfo? constructor)
         => constructor is null ? null : new ConstructorInfo(constructor, typeInfoProvider.AsNative());
 
-    [return: NotNullIfNotNull("field")]
+    [return: NotNullIfNotNull(nameof(field))]
     public static FieldInfo? GetFieldInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.FieldInfo? field)
         => field is null ? null : new FieldInfo(field, typeInfoProvider.AsNative());
 
-    [return: NotNullIfNotNull("method")]
+    [return: NotNullIfNotNull(nameof(method))]
     public static MethodInfo? GetMethodInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.MethodInfo? method)
         => method is null ? null : new MethodInfo(method, typeInfoProvider.AsNative());
 
-    [return: NotNullIfNotNull("member")]
+    [return: NotNullIfNotNull(nameof(member))]
     public static MemberInfo? GetMemberInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.MemberInfo? member)
         => member is null ? null : MemberInfo.Create(member, typeInfoProvider.AsNative());
 
-    [return: NotNullIfNotNull("property")]
+    [return: NotNullIfNotNull(nameof(property))]
     public static PropertyInfo? GetPropertyInfo(this ITypeInfoProvider typeInfoProvider, System.Reflection.PropertyInfo? property)
         => property is null ? null : new PropertyInfo(property, typeInfoProvider.CheckNotNull().AsNative());
 
-    [return: NotNullIfNotNull("type")]
+    [return: NotNullIfNotNull(nameof(type))]
     public static TypeInfo? GetTypeInfo(this ITypeInfoProvider typeInfoProvider, Type type)
         => typeInfoProvider.CheckNotNull().GetTypeInfo(type);
 

@@ -19,10 +19,10 @@ public abstract class Value
     [ProtoIgnore]
     public virtual object? ObjectValue { get; protected set; }
 
-    [return: NotNullIfNotNull("value")]
+    [return: NotNullIfNotNull(nameof(value))]
     public static Value? Wrap(object? value) => Wrap(value, null);
 
-    [return: NotNullIfNotNull("value")]
+    [return: NotNullIfNotNull(nameof(value))]
     internal static Value? Wrap(object? value, Type? type)
         => value is null
         ? null
@@ -34,7 +34,7 @@ public abstract class Value
         ? Values.Wrap(collection!, TypeHelper.GetElementType(type) ?? TypeHelper.GetElementType(collection.GetType()))
         : (Value?)Activator.CreateInstance(typeof(Value<>).MakeGenericType(value.GetType()), value);
 
-    [return: NotNullIfNotNull("value")]
+    [return: NotNullIfNotNull(nameof(value))]
     public static object? Unwrap(Value? value)
         => value is null || value is NullValue
         ? null

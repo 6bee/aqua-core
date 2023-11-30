@@ -7,6 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 
 public interface ITypeResolver
 {
-    [return: NotNullIfNotNull("type")]
+    [return: NotNullIfNotNull(nameof(type))]
     Type? ResolveType(TypeInfo? type);
 }

@@ -537,7 +537,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
     /// <param name="setTypeInformation">Set this parameter to <see langword="true"/> if type information should be included within the <see cref="DynamicObject"/>,
     /// set it to <see langword="false"/> otherwise.</param>
     /// <returns>An instance of <see cref="DynamicObject"/> representing the mapped instance.</returns>
-    [return: NotNullIfNotNull("obj")]
+    [return: NotNullIfNotNull(nameof(obj))]
     public DynamicObject? MapObject(object? obj, Func<Type, bool>? setTypeInformation = null)
         => Wrap(() => MapToDynamicObjectGraph(obj, setTypeInformation ?? (_ => true)), _toContext);
 
@@ -551,7 +551,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
     /// Maps an item of an object graph into a <see cref="DynamicObject"/>.
     /// May be overridden in a derived class to implement a customized mapping strategy.
     /// </summary>
-    [return: NotNullIfNotNull("obj")]
+    [return: NotNullIfNotNull(nameof(obj))]
     protected virtual DynamicObject? MapToDynamicObjectGraph(object? obj, Func<Type, bool> setTypeInformation) => MapInternal(obj, setTypeInformation);
 
     /// <summary>
@@ -762,7 +762,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
     /// Maps from object to dynamic object if required.
     /// </summary>
     /// <remarks>Null references, strings, value types, and dynamic objects are no mapped.</remarks>
-    [return: NotNullIfNotNull("obj")]
+    [return: NotNullIfNotNull(nameof(obj))]
     private object? MapToDynamicObjectIfRequired(object? obj, Func<Type, bool> setTypeInformation)
     {
         if (obj is null)
@@ -907,7 +907,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
     /// Maps an object to a dynamic object.
     /// </summary>
     /// <remarks>Null references and dynamic objects are not mapped.</remarks>
-    [return: NotNullIfNotNull("obj")]
+    [return: NotNullIfNotNull(nameof(obj))]
     private DynamicObject? MapInternal(object? obj, Func<Type, bool> setTypeInformation)
     {
         if (obj is null)

@@ -203,7 +203,7 @@ public static class EnumerableExtensions
 
     public static IEnumerable<T>? AsNullIfEmpty<T>(this IEnumerable<T>? source) => source?.Any() is true ? source : null!;
 
-    [return: NotNullIfNotNull("source")]
+    [return: NotNullIfNotNull(nameof(source))]
     public static string? StringJoin<T>(this IEnumerable<T>? source, string separator) => source is null ? default : string.Join(separator, source);
 
     [DebuggerStepThrough]

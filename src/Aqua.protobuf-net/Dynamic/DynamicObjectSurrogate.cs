@@ -57,7 +57,7 @@ public sealed class DynamicObjectSurrogate
     }
 
     [ProtoConverter]
-    [return: NotNullIfNotNull("surrogate")]
+    [return: NotNullIfNotNull(nameof(surrogate))]
     public static DynamicObject? Convert(DynamicObjectSurrogate? surrogate)
         => surrogate is null || (surrogate.Type is null && surrogate.Properties is null)
         ? null

@@ -13,7 +13,7 @@ public interface IDynamicObjectMapper
     /// <param name="obj"><see cref="DynamicObject"/> to be mapped.</param>
     /// <param name="targetType">Target type for mapping, set this parameter to <see langword="null"/> if type information included within <see cref="DynamicObject"/> should be used.</param>
     /// <returns>The object created based on the <see cref="DynamicObject"/> specified.</returns>
-    [return: NotNullIfNotNull("obj")]
+    [return: NotNullIfNotNull(nameof(obj))]
     object? Map(DynamicObject? obj, Type? targetType = null);
 
     /// <summary>
@@ -23,6 +23,6 @@ public interface IDynamicObjectMapper
     /// <param name="setTypeInformation">Type information is included within the <see cref="DynamicObject"/> if either lambda is <see langword="null"/> or returns <see langword="true"/>,
     /// no type information is set otherwise.</param>
     /// <returns>An instance of <see cref="DynamicObject"/> representing the mapped instance.</returns>
-    [return: NotNullIfNotNull("obj")]
+    [return: NotNullIfNotNull(nameof(obj))]
     DynamicObject? MapObject(object? obj, Func<Type, bool>? setTypeInformation = null);
 }

@@ -79,10 +79,10 @@ public abstract class MemberInfo
 
     public override string ToString() => $"{DeclaringType}.{Name}";
 
-    [return: NotNullIfNotNull("member")]
+    [return: NotNullIfNotNull(nameof(member))]
     public static MemberInfo? Create(System.Reflection.MemberInfo? member) => Create(member, new TypeInfoProvider());
 
-    [return: NotNullIfNotNull("member")]
+    [return: NotNullIfNotNull(nameof(member))]
     internal static MemberInfo? Create(System.Reflection.MemberInfo? member, TypeInfoProvider typeInfoProvider)
         => member.GetMemberType() switch
         {

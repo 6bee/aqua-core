@@ -18,7 +18,7 @@ public static class TypeHelper
     /// </summary>
     /// <param name="type">The collection type.</param>
     /// <returns>Collection element type if <paramref name="type"/> is a collection type. If <paramref name="type"/> is a non-collection or string type, <paramref name="type"/> is returned.</returns>
-    [return: NotNullIfNotNull("type")]
+    [return: NotNullIfNotNull(nameof(type))]
     public static Type? GetElementType(Type? type)
     {
         if (type is null)
@@ -86,11 +86,11 @@ public static class TypeHelper
         return null;
     }
 
-    [return: NotNullIfNotNull("type")]
+    [return: NotNullIfNotNull(nameof(type))]
     public static Type? ResolveType(this TypeInfo? type, ITypeResolver typeResolver)
         => typeResolver.CheckNotNull().ResolveType(type);
 
-    [return: NotNullIfNotNull("member")]
+    [return: NotNullIfNotNull(nameof(member))]
     public static System.Reflection.MemberInfo? ResolveMemberInfo(this MemberInfo? member, ITypeResolver typeResolver)
         => member?.MemberType switch
         {

@@ -49,7 +49,7 @@ public class TypeInfoProvider : ITypeInfoProvider
     /// <param name="includePropertyInfos">If provided overrules <seealso cref="IncludePropertyInfos"/> property set on class level.</param>
     /// <param name="setMemberDeclaringTypes">If provided overrules <seealso cref="SetMemberDeclaringTypes"/> property set on class level.</param>
     /// <returns>Returns a <see cref="TypeInfo"/> representing the specified <see cref="Type"/> or null if the type parameter is null.</returns>
-    [return: NotNullIfNotNull("type")]
+    [return: NotNullIfNotNull(nameof(type))]
     public virtual TypeInfo? GetTypeInfo(Type? type, bool? includePropertyInfos = null, bool? setMemberDeclaringTypes = null)
     {
         if (type is null)
@@ -83,7 +83,7 @@ public class TypeInfoProvider : ITypeInfoProvider
         }
     }
 
-    [return: NotNullIfNotNull("type")]
+    [return: NotNullIfNotNull(nameof(type))]
     internal TypeInfo? Get(TypeInfo? type)
     {
         lock (SyncRoot)

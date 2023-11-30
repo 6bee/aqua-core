@@ -315,7 +315,7 @@ public class DynamicObjectConverter : ObjectConverter<DynamicObject>
         return false;
     }
 
-    [return: NotNullIfNotNull("value")]
+    [return: NotNullIfNotNull(nameof(value))]
     private static TypeInfo? CreateTypeInfo(object? value)
         => value is null
         ? null
