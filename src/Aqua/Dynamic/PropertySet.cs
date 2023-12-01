@@ -25,7 +25,7 @@ public class PropertySet : IReadOnlyCollection<Property>
         {
         }
 
-        public static readonly PropertyComparer Instance = new PropertyComparer();
+        public static readonly PropertyComparer Instance = new();
 
         public bool Equals(Property? x, Property? y)
             => ReferenceEquals(x, y)
@@ -66,12 +66,8 @@ public class PropertySet : IReadOnlyCollection<Property>
     {
         get
         {
-            var existing = FindAll(name).FirstOrDefault();
-            if (existing is null)
-            {
-                throw new ArgumentException($"Property '{name}' is not found.", nameof(name));
-            }
-
+            var existing = FindAll(name).FirstOrDefault()
+                ?? throw new ArgumentException($"Property '{name}' is not found.", nameof(name));
             return existing.Value;
         }
 
@@ -143,5 +139,5 @@ public class PropertySet : IReadOnlyCollection<Property>
         => _list.ToDictionary(x => x.Name ?? string.Empty, x => x.Value);
 
     public static PropertySet From(Dictionary<string, object?> dictionary)
-        => new PropertySet(dictionary.CheckNotNull());
+        => new(dictionary.CheckNotNull());
 }

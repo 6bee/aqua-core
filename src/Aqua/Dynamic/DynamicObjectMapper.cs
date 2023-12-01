@@ -178,9 +178,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 {
                     _referenceMap.Add(key, to);
                 }
-#pragma warning disable CA1031 // Do not catch general exception types
                 catch
-#pragma warning restore CA1031 // Do not catch general exception types
                 {
                     // detected cyclic reference
                     // can happen for non-serializable types without parameterless constructor, which have cyclic references
@@ -253,7 +251,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
         .ToDictionary(x => x.Key, x => x.Value.ToHashSet());
 
     private static readonly Dictionary<Type, Dictionary<Type, Func<object, object>>> _explicitConversionsTable =
-        new Dictionary<Type, Dictionary<Type, Func<object, object>>>
+        new()
         {
             // source: https://msdn.microsoft.com/en-us/library/yht2cx7b.aspx
             {
@@ -433,7 +431,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                         x =>
                         {
                             var d = (DateTime)x;
-                            return new DateTimeOffset(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Millisecond, default(TimeSpan));
+                            return new DateTimeOffset(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Millisecond, default);
                         }
                     },
                 }
@@ -1346,9 +1344,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 value = converter(value);
                 return true;
             }
-#pragma warning disable CA1031 // Do not catch general exception types
             catch
-#pragma warning restore CA1031 // Do not catch general exception types
             {
                 return false;
             }

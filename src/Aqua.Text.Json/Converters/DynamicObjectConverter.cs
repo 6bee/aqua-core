@@ -169,10 +169,7 @@ public class DynamicObjectConverter : ObjectConverter<DynamicObject>
 
             if (!string.IsNullOrWhiteSpace(reference))
             {
-                if (referenceResolver is not null)
-                {
-                    referenceResolver.AddReference(reference!, valueArray);
-                }
+                referenceResolver?.AddReference(reference!, valueArray);
 
                 reader.AssertEndObject();
             }
@@ -267,7 +264,7 @@ public class DynamicObjectConverter : ObjectConverter<DynamicObject>
                 writer.Serialize(instanceType, options);
             }
 
-            if (dynamicProperties?.Any() is true)
+            if (dynamicProperties?.Count > 0)
             {
                 writer.WritePropertyName(nameof(DynamicObject.Properties));
 

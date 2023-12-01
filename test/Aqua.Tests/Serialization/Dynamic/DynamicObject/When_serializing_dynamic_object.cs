@@ -413,7 +413,7 @@ public abstract class When_serializing_dynamic_object
     {
         var source = new List<A<A<int>[]>>
         {
-            new A<A<int>[]>
+            new()
             {
                 Value =
                 [
@@ -421,7 +421,7 @@ public abstract class When_serializing_dynamic_object
                     new A<int> { Value = 2 },
                 ],
             },
-            new A<A<int>[]>
+            new()
             {
                 Value =
                 [

@@ -123,5 +123,5 @@ public sealed class KnownTypesRegistry
 
     public bool TryGetTypeKey(Type type, [MaybeNullWhen(false)] out string typeKey) => _keyLookup.TryGetValue(type, out typeKey);
 
-    private static TypeInfo CreateTypeInfo(Type type) => new TypeInfo(type, false, false);
+    private static TypeInfo CreateTypeInfo(Type type) => new(type, false, false);
 }

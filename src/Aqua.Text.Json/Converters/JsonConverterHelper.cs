@@ -60,7 +60,7 @@ public static class JsonConverterHelper
     }
 
     public static JsonException CreateException(this ref Utf8JsonReader reader, string message)
-        => new JsonException(message);
+        => new(message);
 
     public static void Advance(this ref Utf8JsonReader reader, string? errorMessage = null)
     {
@@ -229,8 +229,7 @@ public static class JsonConverterHelper
             .GetAssemblies()
             .Where(x => !x.IsDynamic)
             .Select(x => x.GetType(typeName))
-            .Where(x => x is not null)
-            .FirstOrDefault();
+            .FirstOrDefault(x => x is not null);
     }
 
     internal static Type? MapTypeInfo(this TypeInfo? type)

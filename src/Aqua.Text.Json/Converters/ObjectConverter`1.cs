@@ -166,10 +166,7 @@ public class ObjectConverter<T> : JsonConverter<T>
             }
         }
 
-        if (type is null)
-        {
-            type = typeToConvert;
-        }
+        type ??= typeToConvert;
 
         var result = CreateObject(type) ?? throw reader.CreateException($"Failed create instance of type {type.FullName}");
         if (!string.IsNullOrWhiteSpace(reference) && referenceResolver is not null)

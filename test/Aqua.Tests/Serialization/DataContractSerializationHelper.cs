@@ -75,15 +75,12 @@ public static class DataContractSerializationHelper
                     {
                         return x.GetType(typeName);
                     }
-#pragma warning disable CA1031 // Do not catch general exception types
                     catch
-#pragma warning restore CA1031 // Do not catch general exception types
                     {
                         return null;
                     }
                 })
-                .Where(x => x is not null)
-                .FirstOrDefault();
+                .FirstOrDefault(x => x is not null);
             if (isNullable)
             {
                 type = typeof(Nullable<>).MakeGenericType(type);

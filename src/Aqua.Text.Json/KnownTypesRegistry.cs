@@ -128,13 +128,13 @@ public sealed class KnownTypesRegistry
 
     public bool TryGetTypeKey(Type type, [MaybeNullWhen(false)] out string typeKey) => _keyLookup.TryGetValue(type, out typeKey);
 
-    private static TypeInfo CreateTypeInfo(Type type) => new TypeInfo(type, false, false);
+    private static TypeInfo CreateTypeInfo(Type type) => new(type, false, false);
 
     /// <summary>
     /// Gets a new instance of the <see cref="KnownTypesRegistry"/> class with the default set of know types.
     /// </summary>
     public static KnownTypesRegistry Default
-        => new KnownTypesRegistry(
+        => new(
             _defaultTypes.ToDictionary(x => x.Type, x => x.Key),
             _defaultTypes.ToDictionary(x => x.Key, x => CreateTypeInfo(x.Type), StringComparer.InvariantCultureIgnoreCase));
 
@@ -142,7 +142,5 @@ public sealed class KnownTypesRegistry
     /// Gets a new instance of the <see cref="KnownTypesRegistry"/> class.
     /// </summary>
     public static KnownTypesRegistry Empty
-        => new KnownTypesRegistry(
-            [],
-            []);
+        => new([], []);
 }

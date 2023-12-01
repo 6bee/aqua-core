@@ -220,8 +220,7 @@ public static class JsonConverterHelper
             .GetAssemblies()
             .Where(x => !x.IsDynamic)
             .Select(x => x.GetType(typeName))
-            .Where(x => x is not null)
-            .FirstOrDefault();
+            .FirstOrDefault(x => x is not null);
     }
 
     private static Type? MapTypeInfo(this TypeInfo? type)

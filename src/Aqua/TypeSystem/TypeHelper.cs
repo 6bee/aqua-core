@@ -65,7 +65,7 @@ public static class TypeHelper
         }
 
         var interfaces = type.GetInterfaces();
-        if (interfaces is not null && interfaces.Any())
+        if (interfaces is not null && interfaces.Length is not 0)
         {
             foreach (var interfaceType in interfaces)
             {
@@ -240,11 +240,8 @@ public static class TypeHelper
         Exception CreateException(string reason, Exception? innerException = null)
             => new TypeResolverException($"Failed to resolve method '{method}' since {reason}.", innerException);
 
-        var declaringType = method.ResolveDeclaringType(typeResolver);
-        if (declaringType is null)
-        {
-            throw CreateException("no declaring type specified");
-        }
+        var declaringType = method.ResolveDeclaringType(typeResolver)
+            ?? throw CreateException("no declaring type specified");
 
         var isGenericMethod = method.IsGenericMethod;
         var genericArguments = method.GenericArgumentTypes?
