@@ -9,7 +9,9 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
+#if !NET8_0_OR_GREATER
 [Serializable]
+#endif // NET8_0_OR_GREATER
 [DataContract(Name = "MethodBase", IsReference = true)]
 [KnownType(typeof(ConstructorInfo)), XmlInclude(typeof(ConstructorInfo))]
 [KnownType(typeof(MethodInfo)), XmlInclude(typeof(MethodInfo))]

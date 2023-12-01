@@ -49,7 +49,7 @@ public class TypeResolver : ITypeResolver
         set => _instance = value;
     }
 
-    [return: NotNullIfNotNull("typeInfo")]
+    [return: NotNullIfNotNull(nameof(type))]
     public virtual Type? ResolveType(TypeInfo? type)
     {
         if (type is null)

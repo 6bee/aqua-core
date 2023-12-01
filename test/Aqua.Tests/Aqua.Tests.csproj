@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <Description>Tests for aqua-core</Description>
-    <TargetFrameworks>net48;net6.0</TargetFrameworks>
+    <TargetFrameworks>net48;net6.0;net8.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,5 +35,5 @@
       Version="2.2.9"
       PrivateAssets="all" />
   </ItemGroup>
-  
+
 </Project>

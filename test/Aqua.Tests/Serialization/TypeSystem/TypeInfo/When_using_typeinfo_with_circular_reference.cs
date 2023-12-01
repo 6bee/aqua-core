@@ -12,6 +12,7 @@ public abstract class When_using_typeinfo_with_circular_reference
 {
     // XmlSerializer doesn't support circular references
     // protobuf-net doesn't support circular references
+#if !NET8_0_OR_GREATER
     public class With_binary_formatter : When_using_typeinfo_with_circular_reference
     {
         public With_binary_formatter()
@@ -19,6 +20,8 @@ public abstract class When_using_typeinfo_with_circular_reference
         {
         }
     }
+
+#endif // NET8_0_OR_GREATER
 
     public class With_data_contract_serializer : When_using_typeinfo_with_circular_reference
     {

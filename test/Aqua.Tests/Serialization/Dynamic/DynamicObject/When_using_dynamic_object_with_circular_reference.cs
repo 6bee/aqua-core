@@ -11,6 +11,7 @@ public abstract class When_using_dynamic_object_with_circular_reference
 {
     // XML serialization doesn't support circular references
     // protobuf-net doesn't support circular references
+#if !NET8_0_OR_GREATER
     public class With_binary_formatter : When_using_dynamic_object_with_circular_reference
     {
         public With_binary_formatter()
@@ -18,6 +19,8 @@ public abstract class When_using_dynamic_object_with_circular_reference
         {
         }
     }
+
+#endif // NET8_0_OR_GREATER
 
     public class With_newtown_json_serializer : When_using_dynamic_object_with_circular_reference
     {

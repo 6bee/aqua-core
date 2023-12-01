@@ -13,6 +13,7 @@ using Xunit;
 
 public abstract class When_serializing_dynamicobject_for_collections_of_notnullable
 {
+#if !NET8_0_OR_GREATER
     public class With_binary_formatter : When_serializing_dynamicobject_for_collections_of_notnullable
     {
         public With_binary_formatter()
@@ -20,6 +21,8 @@ public abstract class When_serializing_dynamicobject_for_collections_of_notnulla
         {
         }
     }
+
+#endif // NET8_0_OR_GREATER
 
     public class With_data_contract_serializer : When_serializing_dynamicobject_for_collections_of_notnullable
     {

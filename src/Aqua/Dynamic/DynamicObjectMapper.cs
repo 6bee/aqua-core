@@ -753,6 +753,11 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             throw new DynamicObjectMapperException($"Failed to project collection with element type '{elementType?.AssemblyQualifiedName}' into type '{resultType.AssemblyQualifiedName}'");
         }
 
+        if (targetType == typeof(Type) && obj is TypeSystem.TypeInfo typeInfoObj)
+        {
+            return typeInfoObj.ResolveType(_typeResolver);
+        }
+
         return obj;
     }
 
@@ -835,12 +840,14 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
     /// </summary>
     private void PopulateObjectMembers(Type type, object from, DynamicObject to, Func<Type, bool> setTypeInformation)
     {
+#if !NET8_0_OR_GREATER
         if (_settings.UtilizeFormatterServices && type.IsSerializable)
         {
             MapObjectMembers(type, from, to, setTypeInformation);
         }
         else
         {
+#endif // NET8_0_OR_GREATER
             var properties = GetPropertiesForMapping(type) ?? type.GetDefaultPropertiesForSerialization();
             foreach (var property in properties.Where(HasNoUnmappedAnnotation))
             {
@@ -856,7 +863,9 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 value = MapToDynamicObjectIfRequired(value, setTypeInformation);
                 to.Add(field.Name, value);
             }
+#if !NET8_0_OR_GREATER
         }
+#endif // NET8_0_OR_GREATER
     }
 
     /// <summary>
@@ -1018,11 +1027,13 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 return method.CreateDelegate(t, instance);
             };
         }
+#if !NET8_0_OR_GREATER
         else if (_settings.UtilizeFormatterServices && targetType.IsSerializable)
         {
             factory = (t, item) => GetUninitializedObject(t);
             initializer = PopulateObjectMembers;
         }
+#endif // NET8_0_OR_GREATER
         else
         {
             if (TryGetObjectFactory(targetType, obj, out var func))

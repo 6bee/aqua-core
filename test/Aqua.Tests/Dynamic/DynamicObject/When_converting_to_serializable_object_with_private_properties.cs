@@ -49,22 +49,36 @@ public class When_converting_to_serializable_object_with_private_properties
     }
 
     [Fact]
-    public void Should_have_the_int_property_set()
+    public void Should_have_set_the_int_property()
     {
         obj.Int32Property.ShouldBe(Int32Value);
     }
 
+#if NET8_0_OR_GREATER
     [Fact]
-    public void Should_have_the_private_double_property_set()
+    public void Should_have_not_set_the_private_double_property()
+    {
+        GetPropertyValue("DoubleProperty").ShouldBe(default(double));
+    }
+
+    [Fact]
+    public void Should_have_not_set_the_private_string_property()
+    {
+        GetPropertyValue("StringProperty").ShouldBe(default(string));
+    }
+#else // NET8_0_OR_GREATER
+    [Fact]
+    public void Should_have_set_the_private_double_property()
     {
         GetPropertyValue("DoubleProperty").ShouldBe(DoubleValue);
     }
 
     [Fact]
-    public void Should_have_the_private_string_property_set()
+    public void Should_have_set_the_private_string_property()
     {
         GetPropertyValue("StringProperty").ShouldBe(StringValue);
     }
+#endif // NET8_0_OR_GREATER
 
     private object GetPropertyValue(string propertyName)
         => typeof(SerializableType).GetProperty(propertyName, PrivateInstance).GetValue(obj);

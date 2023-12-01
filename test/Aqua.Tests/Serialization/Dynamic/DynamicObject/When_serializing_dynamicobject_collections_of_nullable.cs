@@ -13,6 +13,7 @@ using Xunit;
 public abstract class When_serializing_dynamicobject_collections_of_nullable
 {
     // protobuf-net doesn't support serialization of collection with null elements as the root object
+#if !NET8_0_OR_GREATER
     public class With_binary_formatter : When_serializing_dynamicobject_collections_of_nullable
     {
         public With_binary_formatter()
@@ -20,6 +21,8 @@ public abstract class When_serializing_dynamicobject_collections_of_nullable
         {
         }
     }
+
+#endif // NET8_0_OR_GREATER
 
     public class With_data_contract_serializer : When_serializing_dynamicobject_collections_of_nullable
     {

@@ -7,14 +7,18 @@ using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
+#if !NET8_0_OR_GREATER
 [Serializable]
+#endif // NET8_0_OR_GREATER
 [DataContract(Name = "Property", IsReference = true)]
 [DebuggerDisplay("Property: {Name,nq}")]
 public class PropertyInfo : MemberInfo
 {
     [IgnoreDataMember]
     [Unmapped]
+#if !NET8_0_OR_GREATER
     [NonSerialized]
+#endif // NET8_0_OR_GREATER
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private System.Reflection.PropertyInfo? _property;
 

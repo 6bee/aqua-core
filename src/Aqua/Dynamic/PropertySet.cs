@@ -14,11 +14,15 @@ using System.Runtime.Serialization;
 /// However, since <see cref="Property" /> is not immutable a <see cref="PropertySet"/> may technically not be considered a set
 /// and does not guarantee uniqueness of property names.
 /// </summary>
+#if !NET8_0_OR_GREATER
 [Serializable]
+#endif // NET8_0_OR_GREATER
 [CollectionDataContract]
 public class PropertySet : IReadOnlyCollection<Property>
 {
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif // NET8_0_OR_GREATER
     private sealed class PropertyComparer : IEqualityComparer<Property>
     {
         private PropertyComparer()

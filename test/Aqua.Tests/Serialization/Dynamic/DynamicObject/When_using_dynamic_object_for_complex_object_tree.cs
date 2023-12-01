@@ -9,6 +9,7 @@ using Xunit;
 
 public abstract class When_using_dynamic_object_for_complex_object_tree
 {
+#if !NET8_0_OR_GREATER
     public class With_binary_formatter : When_using_dynamic_object_for_complex_object_tree
     {
         public With_binary_formatter()
@@ -16,6 +17,8 @@ public abstract class When_using_dynamic_object_for_complex_object_tree
         {
         }
     }
+
+#endif // NET8_0_OR_GREATER
 
     public class With_data_contract_serializer : When_using_dynamic_object_for_complex_object_tree
     {

@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+#if !NET8_0_OR_GREATER
+
 namespace Aqua.Dynamic;
 
 using Aqua.EnumerableExtensions;
@@ -116,3 +118,5 @@ partial class DynamicObjectMapper
         return memberName;
     }
 }
+
+#endif // NET8_0_OR_GREATER

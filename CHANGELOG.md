@@ -9,11 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add .NET 8.0 framework target
+
 ### Changed
+
+- Bump _System.Text.Json_ from 7.0.3 to 8.0.0 (concerns _Aqua.Text.Json_)
 
 ### Deprecated
 
 ### Removed
+
+- Binary serialization removed for .NET 8.0 and later ([SYSLIB0050: Formatter-based serialization is obsolete][syslib0050])
 
 ### Fixed
 
@@ -88,3 +94,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [json-net]: https://www.newtonsoft.com/json
 [nullable-references]: https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references
 [protobuf-net-v2]: https://www.nuget.org/packages/protobuf-net/2.4.6
+[syslib0050]: https://learn.microsoft.com/en-us/dotnet/fundamentals/syslib-diagnostics/syslib0050

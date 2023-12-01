@@ -14,6 +14,16 @@ using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
 public abstract class When_serializing_dynamic_object
 {
+#if !NET8_0_OR_GREATER
+    public class With_binary_formatter : When_serializing_dynamic_object
+    {
+        public With_binary_formatter()
+            : base(BinarySerializationHelper.Clone)
+        {
+        }
+    }
+
+#endif // NET8_0_OR_GREATER
     public class With_newtonsoft_json_serializer : When_serializing_dynamic_object
     {
         public With_newtonsoft_json_serializer()
@@ -34,14 +44,6 @@ public abstract class When_serializing_dynamic_object
     {
         public With_data_contract_serializer()
             : base(DataContractSerializationHelper.Clone)
-        {
-        }
-    }
-
-    public class With_binary_formatter : When_serializing_dynamic_object
-    {
-        public With_binary_formatter()
-            : base(BinarySerializationHelper.Clone)
         {
         }
     }

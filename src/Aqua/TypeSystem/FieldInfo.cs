@@ -7,14 +7,18 @@ using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
+#if !NET8_0_OR_GREATER
 [Serializable]
+#endif // NET8_0_OR_GREATER
 [DataContract(Name = "Field", IsReference = true)]
 [DebuggerDisplay("Field: {Name,nq}")]
 public class FieldInfo : MemberInfo
 {
     [IgnoreDataMember]
     [Unmapped]
+#if !NET8_0_OR_GREATER
     [NonSerialized]
+#endif // NET8_0_OR_GREATER
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private System.Reflection.FieldInfo? _field;
 

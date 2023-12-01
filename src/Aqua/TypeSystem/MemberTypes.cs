@@ -4,7 +4,9 @@ namespace Aqua.TypeSystem;
 
 using System;
 
+#if !NET8_0_OR_GREATER
 [Serializable]
+#endif // NET8_0_OR_GREATER
 [Flags]
 public enum MemberTypes
 {

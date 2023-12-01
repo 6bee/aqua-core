@@ -10,6 +10,7 @@ using Xunit;
 
 public abstract class When_using_dynamic_object_for_typeinfo
 {
+#if !NET8_0_OR_GREATER
     public class With_binary_formatter : When_using_dynamic_object_for_typeinfo
     {
         public With_binary_formatter()
@@ -17,6 +18,8 @@ public abstract class When_using_dynamic_object_for_typeinfo
         {
         }
     }
+
+#endif // NET8_0_OR_GREATER
 
     public class With_data_contract_serializer : When_using_dynamic_object_for_typeinfo
     {

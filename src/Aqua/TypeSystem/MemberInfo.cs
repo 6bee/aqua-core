@@ -10,7 +10,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
+#if !NET8_0_OR_GREATER
 [Serializable]
+#endif // NET8_0_OR_GREATER
 [DataContract(Name = "Member", IsReference = true)]
 [KnownType(typeof(ConstructorInfo)), XmlInclude(typeof(ConstructorInfo))]
 [KnownType(typeof(FieldInfo)), XmlInclude(typeof(FieldInfo))]
@@ -20,7 +22,9 @@ public abstract class MemberInfo
 {
     [IgnoreDataMember]
     [Unmapped]
+#if !NET8_0_OR_GREATER
     [NonSerialized]
+#endif // NET8_0_OR_GREATER
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private System.Reflection.MemberInfo? _member;
 

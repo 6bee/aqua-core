@@ -25,6 +25,10 @@ public class DynamicObjectMapperSettings
     /// Gets or sets a value indicating whether serializable types should be formatted using <see cref="System.Runtime.Serialization.FormatterServices"/>.
     /// The default value is <see langword="true"/>.
     /// </summary>
+#if NET8_0_OR_GREATER
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    [System.Obsolete("SYSLIB0050: Formatter-based serialization is obsolete", true)]
+#endif // NET8_0_OR_GREATER
     public bool UtilizeFormatterServices { get; set; } = true;
 
     /// <summary>
