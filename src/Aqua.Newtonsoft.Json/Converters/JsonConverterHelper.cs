@@ -12,19 +12,19 @@ public static class JsonConverterHelper
 {
     private static readonly Dictionary<Type, Func<JsonReader, object?>> _typeReaders = new (Type Type, Func<JsonReader, object?> Reader)[]
         {
-            (typeof(bool), r => r.ReadAsBoolean()),
-            (typeof(byte[]), r => r.ReadAsBytes()),
-            (typeof(DateTime), r => r.ReadAsDateTime()),
-            (typeof(DateTimeOffset), r => r.ReadAsDateTimeOffset()),
-            (typeof(decimal), r => r.ReadAsDecimal()),
-            (typeof(double), r => r.ReadAsDouble()),
-            (typeof(int), r => r.ReadAsInt32()),
-            (typeof(string), r => r.ReadAsString()),
+            (typeof(bool), static r => r.ReadAsBoolean()),
+            (typeof(byte[]), static r => r.ReadAsBytes()),
+            (typeof(DateTime), static r => r.ReadAsDateTime()),
+            (typeof(DateTimeOffset), static r => r.ReadAsDateTimeOffset()),
+            (typeof(decimal), static r => r.ReadAsDecimal()),
+            (typeof(double), static r => r.ReadAsDouble()),
+            (typeof(int), static r => r.ReadAsInt32()),
+            (typeof(string), static r => r.ReadAsString()),
         }
         .SelectMany(x => x.Type.IsClass
             ? new[] { x }
             : new[] { x, (Type: typeof(Nullable<>).MakeGenericType(x.Type), x.Reader) })
-        .ToDictionary(x => x.Type, x => x.Reader);
+        .ToDictionary(static x => x.Type, static x => x.Reader);
 
     public static string IdToken => "$id";
 
@@ -218,9 +218,9 @@ public static class JsonConverterHelper
         return Type.GetType(typeName) ??
             AppDomain.CurrentDomain
             .GetAssemblies()
-            .Where(x => !x.IsDynamic)
+            .Where(static x => !x.IsDynamic)
             .Select(x => x.GetType(typeName))
-            .FirstOrDefault(x => x is not null);
+            .FirstOrDefault(static x => x is not null);
     }
 
     private static Type? MapTypeInfo(this TypeInfo? type)

@@ -115,7 +115,7 @@ public class DynamicObjectConverter : ObjectConverter<DynamicObject>
                 elementType = typeof(object);
             }
             else if (values.Any(x => x is not null && (elementType == typeof(object) || !elementType.IsInstanceOfType(x))) &&
-                values.All(x => x is null || x is string))
+                values.All(static x => x is null || x is string))
             {
                 elementType = typeof(string);
             }
@@ -195,7 +195,7 @@ public class DynamicObjectConverter : ObjectConverter<DynamicObject>
                 : ValueProperty;
             var isDynamicValue =
                 value is DynamicObject ||
-                (value is object[] objectArray && objectArray.Any(x => x is DynamicObject));
+                (value is object[] objectArray && objectArray.Any(static x => x is DynamicObject));
             if (isDynamicValue)
             {
                 propertyName = $"Dynamic{propertyName}";

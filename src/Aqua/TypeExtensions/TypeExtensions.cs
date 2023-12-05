@@ -25,21 +25,21 @@ public static class TypeExtensions
     /// </summary>
     public static IEnumerable<FieldInfo> GetDefaultFieldsForDeserialization(this Type type)
         => type.GetFields(ReflectionBinding.PublicInstance)
-        .Where(x => !x.IsInitOnly);
+        .Where(static x => !x.IsInitOnly);
 
     /// <summary>
     /// Gets the public instance properties for the given <see cref="Type"/> which have a setter.
     /// </summary>
     public static IEnumerable<PropertyInfo> GetDefaultPropertiesForSerialization(this Type type)
         => type.GetProperties(ReflectionBinding.PublicInstance)
-        .Where(x => x.CanRead && x.GetIndexParameters().Length is 0);
+        .Where(static x => x.CanRead && x.GetIndexParameters().Length is 0);
 
     /// <summary>
     /// Gets the public instance properties for the given <see cref="Type"/> which have a getter.
     /// </summary>
     public static IEnumerable<PropertyInfo> GetDefaultPropertiesForDeserialization(this Type type)
         => type.GetProperties(ReflectionBinding.PublicInstance)
-        .Where(p => p.CanWrite && p.GetIndexParameters().Length is 0);
+        .Where(static p => p.CanWrite && p.GetIndexParameters().Length is 0);
 
     /// <summary>
     /// Returns <see langword="true"/> if the given <see cref="Type"/> is either a reference type or a <see cref="Nullable{T}"/> value type.
@@ -70,8 +70,8 @@ public static class TypeExtensions
             .ToArray();
 
         var conversionMethod =
-            methodCandidates.FirstOrDefault(mi => mi.Name is "op_Implicit") ??
-            methodCandidates.FirstOrDefault(mi => mi.Name is "op_Explicit");
+            methodCandidates.FirstOrDefault(static mi => mi.Name is "op_Implicit") ??
+            methodCandidates.FirstOrDefault(static mi => mi.Name is "op_Explicit");
 
         if (conversionMethod is null)
         {
@@ -79,7 +79,7 @@ public static class TypeExtensions
             return false;
         }
 
-        result = conversionMethod.Invoke(null, new[] { value });
+        result = conversionMethod.Invoke(null, [value]);
         return true;
     }
 

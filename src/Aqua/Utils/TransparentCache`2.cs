@@ -92,8 +92,8 @@ public class TransparentCache<TKey, TValue>
         lock (_cache)
         {
             _cache
-                .Where(x => !x.Value.IsAlive)
-                .Select(x => x.Key)
+                .Where(static x => !x.Value.IsAlive)
+                .Select(static x => x.Key)
                 .ToArray()
                 .ForEach(_cache.Remove);
         }

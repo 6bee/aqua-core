@@ -23,7 +23,7 @@ public static class RuntimeReflectionExtensions
     {
         try
         {
-            return GetMethodsCore(declaringType, name, x => true, bindingFlags).Single();
+            return GetMethodsCore(declaringType, name, static x => true, bindingFlags).Single();
         }
         catch (Exception ex)
         {

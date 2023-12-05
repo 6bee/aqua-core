@@ -34,7 +34,7 @@ partial class DynamicObjectMapper
         var customPropertySet = GetPropertiesForMapping(type);
         var customPropertyNames = customPropertySet?
             .Where(HasNoUnmappedAnnotation)
-            .ToDictionary(x => x.Name);
+            .ToDictionary(static x => x.Name);
 
         var members = FormatterServices.GetSerializableMembers(type);
         var membersByCleanName = members.ToDictionary(GetCleanMemberName);
@@ -79,7 +79,7 @@ partial class DynamicObjectMapper
         var customPropertySet = GetPropertiesForMapping(type);
         var customPropertyNames = customPropertySet?
             .Where(HasNoUnmappedAnnotation)
-            .ToDictionary(x => x.Name);
+            .ToDictionary(static x => x.Name);
 
         var members = FormatterServices.GetSerializableMembers(type);
         var values = FormatterServices.GetObjectData(from, members);

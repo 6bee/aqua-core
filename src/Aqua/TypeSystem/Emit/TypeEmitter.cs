@@ -196,7 +196,7 @@ public sealed partial class TypeEmitter
         type.SetCustomAttribute(new CustomAttributeBuilder(_compilerGeneratedAttributeConstructorInfo, Array.Empty<object>()));
 
         // define generic parameters
-        var genericTypeParameterNames = propertyNames.Select((x, i) => $"T{i}").ToArray();
+        var genericTypeParameterNames = propertyNames.Select(static (_, i) => $"T{i}").ToArray();
         var genericTypeParameters = type.DefineGenericParameters(genericTypeParameterNames);
 
         // define fields

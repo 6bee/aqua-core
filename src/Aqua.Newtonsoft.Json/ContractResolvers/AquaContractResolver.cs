@@ -57,7 +57,7 @@ public sealed class AquaContractResolver : DefaultContractResolver
                 : typeof(TypeInfo).IsAssignableFrom(objectType)
                     ? new TypeInfoConverter(_knownTypes)
                     : CreateObjectConverter(objectType, _knownTypes);
-            foreach (var property in contract.Properties.Where(x => !x.Writable || !x.Readable))
+            foreach (var property in contract.Properties.Where(static x => !x.Writable || !x.Readable))
             {
                 property.Ignored = true;
             }

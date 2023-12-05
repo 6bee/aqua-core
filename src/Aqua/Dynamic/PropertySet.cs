@@ -57,7 +57,7 @@ public class PropertySet : IReadOnlyCollection<Property>
     }
 
     public PropertySet(IEnumerable<(string Name, object? Value)> properties)
-        : this(properties?.Select(x => new Property(x.Name, x.Value))!)
+        : this(properties?.Select(static x => new Property(x.Name, x.Value))!)
     {
     }
 
@@ -140,7 +140,7 @@ public class PropertySet : IReadOnlyCollection<Property>
         => propertySet.CheckNotNull().ToDictionary();
 
     public Dictionary<string, object?> ToDictionary()
-        => _list.ToDictionary(x => x.Name ?? string.Empty, x => x.Value);
+        => _list.ToDictionary(static x => x.Name ?? string.Empty, static x => x.Value);
 
     public static PropertySet From(Dictionary<string, object?> dictionary)
         => new(dictionary.CheckNotNull());

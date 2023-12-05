@@ -41,12 +41,12 @@ public static class JsonSerializerOptionsExtensions
 
         knownTypesRegistry ??= KnownTypesRegistry.Default;
 
-        if (!options.Converters.Any(x => x is DynamicObjectConverter))
+        if (!options.Converters.Any(static x => x is DynamicObjectConverter))
         {
             options.Converters.Add(new DynamicObjectConverter(knownTypesRegistry));
         }
 
-        if (!options.Converters.Any(x => x is TypeInfoConverter))
+        if (!options.Converters.Any(static x => x is TypeInfoConverter))
         {
             options.Converters.Add(new TypeInfoConverter(knownTypesRegistry));
         }
@@ -55,18 +55,18 @@ public static class JsonSerializerOptionsExtensions
         // hence we register for abstract as well as non-abstract types.
         typeof(MemberInfo).Assembly
             .GetTypes()
-            .Where(x => !x.IsAbstract)
+            .Where(static x => !x.IsAbstract)
             .Where(typeof(MemberInfo).IsAssignableFrom)
             .RegisterJsonConverter(typeof(MemberInfoConverter<>), options, knownTypesRegistry);
-        if (!options.Converters.Any(x => x is MemberInfoConverter))
+        if (!options.Converters.Any(static x => x is MemberInfoConverter))
         {
             options.Converters.Add(new MemberInfoConverter(knownTypesRegistry));
         }
 
         typeof(DynamicObject).Assembly
             .GetTypes()
-            .Where(x => x.IsClass && !x.IsAbstract && !x.IsGenericType)
-            .Where(x => x.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0)
+            .Where(static x => x.IsClass && !x.IsAbstract && !x.IsGenericType)
+            .Where(static x => x.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0)
             .RegisterJsonConverter(typeof(ObjectConverter<>), options, knownTypesRegistry);
 
         return options;

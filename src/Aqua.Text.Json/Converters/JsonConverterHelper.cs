@@ -16,28 +16,28 @@ public static class JsonConverterHelper
 
     private static readonly Dictionary<Type, Parse> _typeReaders = new (Type Type, Parse Reader)[]
         {
-            (typeof(bool), (ref Utf8JsonReader r) => r.GetBoolean()),
-            (typeof(byte), (ref Utf8JsonReader r) => r.GetByte()),
-            (typeof(byte[]), (ref Utf8JsonReader r) => r.GetBytesFromBase64()),
+            (typeof(bool), static (ref Utf8JsonReader r) => r.GetBoolean()),
+            (typeof(byte), static (ref Utf8JsonReader r) => r.GetByte()),
+            (typeof(byte[]), static (ref Utf8JsonReader r) => r.GetBytesFromBase64()),
             (typeof(DateTime), (ref Utf8JsonReader r) => r.GetDateTime()),
-            (typeof(DateTimeOffset), (ref Utf8JsonReader r) => r.GetDateTimeOffset()),
-            (typeof(decimal), (ref Utf8JsonReader r) => r.GetDecimal()),
-            (typeof(double), (ref Utf8JsonReader r) => r.GetDouble()),
-            (typeof(Guid), (ref Utf8JsonReader r) => r.GetGuid()),
-            (typeof(short), (ref Utf8JsonReader r) => r.GetInt16()),
-            (typeof(int), (ref Utf8JsonReader r) => r.GetInt32()),
-            (typeof(long), (ref Utf8JsonReader r) => r.GetInt64()),
-            (typeof(sbyte), (ref Utf8JsonReader r) => r.GetSByte()),
-            (typeof(float), (ref Utf8JsonReader r) => r.GetSingle()),
-            (typeof(string), (ref Utf8JsonReader r) => r.GetString()),
-            (typeof(ushort), (ref Utf8JsonReader r) => r.GetUInt16()),
-            (typeof(uint), (ref Utf8JsonReader r) => r.GetUInt32()),
-            (typeof(ulong), (ref Utf8JsonReader r) => r.GetUInt64()),
+            (typeof(DateTimeOffset), static (ref Utf8JsonReader r) => r.GetDateTimeOffset()),
+            (typeof(decimal), static (ref Utf8JsonReader r) => r.GetDecimal()),
+            (typeof(double), static (ref Utf8JsonReader r) => r.GetDouble()),
+            (typeof(Guid), static (ref Utf8JsonReader r) => r.GetGuid()),
+            (typeof(short), static (ref Utf8JsonReader r) => r.GetInt16()),
+            (typeof(int), static (ref Utf8JsonReader r) => r.GetInt32()),
+            (typeof(long), static (ref Utf8JsonReader r) => r.GetInt64()),
+            (typeof(sbyte), static (ref Utf8JsonReader r) => r.GetSByte()),
+            (typeof(float), static (ref Utf8JsonReader r) => r.GetSingle()),
+            (typeof(string), static (ref Utf8JsonReader r) => r.GetString()),
+            (typeof(ushort), static (ref Utf8JsonReader r) => r.GetUInt16()),
+            (typeof(uint), static (ref Utf8JsonReader r) => r.GetUInt32()),
+            (typeof(ulong), static (ref Utf8JsonReader r) => r.GetUInt64()),
         }
-        .SelectMany(x => x.Type.IsClass
+        .SelectMany(static x => x.Type.IsClass
             ? new[] { x }
             : new[] { x, (Type: typeof(Nullable<>).MakeGenericType(x.Type), x.Reader) })
-        .ToDictionary(x => x.Type, x => x.Reader);
+        .ToDictionary(static x => x.Type, static x => x.Reader);
 
     public static bool IsCollection(this TypeInfo? type)
     {
@@ -227,9 +227,9 @@ public static class JsonConverterHelper
         return Type.GetType(typeName) ??
             AppDomain.CurrentDomain
             .GetAssemblies()
-            .Where(x => !x.IsDynamic)
+            .Where(static x => !x.IsDynamic)
             .Select(x => x.GetType(typeName))
-            .FirstOrDefault(x => x is not null);
+            .FirstOrDefault(static x => x is not null);
     }
 
     internal static Type? MapTypeInfo(this TypeInfo? type)

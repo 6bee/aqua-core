@@ -78,7 +78,7 @@ public class ObjectConverter<T> : ObjectConverter
         }
 
         var properties = GetProperties(type);
-        ReadObjectProperties(reader, result, properties.ToDictionary(x => x.Name), serializer);
+        ReadObjectProperties(reader, result, properties.ToDictionary(static x => x.Name), serializer);
 
         reader.AssertEndObject(false);
 

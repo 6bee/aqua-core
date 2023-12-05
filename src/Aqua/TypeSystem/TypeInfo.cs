@@ -89,7 +89,7 @@ public class TypeInfo
             {
                 Properties = type
                     .GetProperties()
-                    .OrderBy(x => x.MetadataToken)
+                    .OrderBy(static x => x.MetadataToken)
                     .Select(x => new PropertyInfo(x.Name, typeInfoProvider.GetTypeInfo(x.PropertyType), typeInfoProvider.SetMemberDeclaringTypes ? this : null))
                     .ToList();
             }

@@ -111,7 +111,7 @@ public partial class DynamicObject
         Properties = properties is null
             ? null
             : deepCopy
-                ? new PropertySet(properties.Select(x => new Property(x)))
+                ? new PropertySet(properties.Select(static x => new Property(x)))
                 : new PropertySet(properties);
     }
 
@@ -155,12 +155,12 @@ public partial class DynamicObject
     /// <summary>
     /// Gets a collection of member names hold by this dynamic object.
     /// </summary>
-    public IEnumerable<string> PropertyNames => Properties?.Select(x => x.Name ?? string.Empty).ToArray() ?? Enumerable.Empty<string>();
+    public IEnumerable<string> PropertyNames => Properties?.Select(static x => x.Name ?? string.Empty).ToArray() ?? Enumerable.Empty<string>();
 
     /// <summary>
     /// Gets a collection of member values hold by this dynamic object.
     /// </summary>
-    public IEnumerable<object?> Values => Properties?.Select(x => x.Value).ToArray() ?? Enumerable.Empty<object?>();
+    public IEnumerable<object?> Values => Properties?.Select(static x => x.Value).ToArray() ?? Enumerable.Empty<object?>();
 
     /// <summary>
     /// Gets or sets a member value.

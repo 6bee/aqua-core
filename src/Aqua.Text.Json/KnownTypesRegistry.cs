@@ -50,7 +50,7 @@ public sealed class KnownTypesRegistry
             typeof(PropertyInfo),
             typeof(TypeInfo),
         }
-        .Select(x =>
+        .Select(static x =>
         {
             var name = x switch
             {
@@ -62,7 +62,7 @@ public sealed class KnownTypesRegistry
 
             return (Type: x, Key: name);
         })
-        .SelectMany(x => new[]
+        .SelectMany(static x => new[]
             {
                 x,
                 x.Type.IsValueType ? (typeof(Nullable<>).MakeGenericType(x.Type), $"{x.Key}?") : x,
@@ -135,8 +135,8 @@ public sealed class KnownTypesRegistry
     /// </summary>
     public static KnownTypesRegistry Default
         => new(
-            _defaultTypes.ToDictionary(x => x.Type, x => x.Key),
-            _defaultTypes.ToDictionary(x => x.Key, x => CreateTypeInfo(x.Type), StringComparer.InvariantCultureIgnoreCase));
+            _defaultTypes.ToDictionary(static x => x.Type, static x => x.Key),
+            _defaultTypes.ToDictionary(static x => x.Key, static x => CreateTypeInfo(x.Type), StringComparer.InvariantCultureIgnoreCase));
 
     /// <summary>
     /// Gets a new instance of the <see cref="KnownTypesRegistry"/> class.

@@ -28,7 +28,7 @@ public sealed class NullableValues<T> : Values
         {
             typedArray = array
                 .Cast<object>()
-                .Select(x =>
+                .Select(static x =>
                 {
                     if (x is Value<T?> v)
                     {
@@ -61,7 +61,7 @@ public sealed class NullableValues<T> : Values
     [ProtoIgnore]
     public override object? ObjectValue
     {
-        get => Array.Select(x => x.TypedValue).ToArray();
+        get => Array.Select(static x => x.TypedValue).ToArray();
         protected set => throw new NotSupportedException($"Items must be set via {nameof(Array)} property");
     }
 
@@ -75,16 +75,16 @@ public sealed class NullableValues<T> : Values
 
     private static Value<T?>[] MapInternal(object[] array)
         => (array ?? System.Array.Empty<object>())
-        .Select(x => x is null || x is NullValue ? new Value<T?>(default) : (Value<T?>)x)
+        .Select(static x => x is null || x is NullValue ? new Value<T?>(default) : (Value<T?>)x)
         .ToArray();
 
     private static object[] MapInternal(Value<T?>[] array)
         => array
-        .Select(x => x?.ObjectValue is null ? NullValue.Instance : (Value)x)
+        .Select(static x => x?.ObjectValue is null ? NullValue.Instance : (Value)x)
         .ToArray();
 
     protected override IEnumerable GetEnumerable()
         => Array
-        .Select(x => x.TypedValue)
+        .Select(static x => x.TypedValue)
         .ToArray();
 }

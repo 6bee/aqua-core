@@ -93,11 +93,11 @@ public class ObjectConverter<T> : JsonConverter<T>
             {
                 propertySet = type
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(x => x.CanRead && x.CanWrite)
-                    .Where(x => x.GetIndexParameters().Length is 0)
+                    .Where(static x => x.CanRead && x.CanWrite)
+                    .Where(static x => x.GetIndexParameters().Length is 0)
                     .Select(x => new Property(x, KnownTypesRegistry))
-                    .Where(x => !x.IsIgnored)
-                    .OrderBy(x => x.SortOrder)
+                    .Where(static x => !x.IsIgnored)
+                    .OrderBy(static x => x.SortOrder)
                     .ToList()
                     .AsReadOnly();
                 _properties.Add(type, propertySet);
@@ -175,7 +175,7 @@ public class ObjectConverter<T> : JsonConverter<T>
         }
 
         var properties = GetProperties(type);
-        ReadObjectProperties(ref reader, result, properties.ToDictionary(x => x.Name), options);
+        ReadObjectProperties(ref reader, result, properties.ToDictionary(static x => x.Name), options);
 
         reader.AssertEndObject(false);
 

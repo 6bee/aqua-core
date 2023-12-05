@@ -11,7 +11,7 @@ public class AquaJsonSerializerSettings : JsonSerializerSettings
 {
     private static readonly IReadOnlyCollection<PropertyInfo> _baseProperties = typeof(JsonSerializerSettings)
         .GetProperties()
-        .Where(x => x.CanRead && x.CanWrite)
+        .Where(static x => x.CanRead && x.CanWrite)
         .ToArray();
 
     public AquaJsonSerializerSettings(JsonSerializerSettings settings, KnownTypesRegistry? knownTypesRegistry = null)

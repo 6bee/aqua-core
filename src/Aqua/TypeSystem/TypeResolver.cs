@@ -141,10 +141,10 @@ public class TypeResolver : ITypeResolver
 
             var resolvedProperties = type
                 .GetProperties()
-                .OrderBy(x => x.MetadataToken)
-                .Select(x => x.Name);
+                .OrderBy(static x => x.MetadataToken)
+                .Select(static x => x.Name);
 
-            if (!typeInfo.Properties.Select(x => x.Name).SequenceEqual(resolvedProperties))
+            if (!typeInfo.Properties.Select(static x => x.Name).SequenceEqual(resolvedProperties))
             {
                 return false;
             }

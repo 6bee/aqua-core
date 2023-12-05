@@ -79,11 +79,11 @@ public abstract class ObjectConverter : JsonConverter
             {
                 propertySet = type
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(x => x.CanRead && x.CanWrite)
-                    .Where(x => x.GetIndexParameters().Length is 0)
+                    .Where(static x => x.CanRead && x.CanWrite)
+                    .Where(static x => x.GetIndexParameters().Length is 0)
                     .Select(x => new Property(x, KnownTypesRegistry))
-                    .Where(x => !x.IsIgnored)
-                    .OrderBy(x => x.SortOrder)
+                    .Where(static x => !x.IsIgnored)
+                    .OrderBy(static x => x.SortOrder)
                     .ToList()
                     .AsReadOnly();
                 _properties.Add(type, propertySet);

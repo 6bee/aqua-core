@@ -51,7 +51,7 @@ public sealed class DynamicObjectSurrogate
         }
 
         var map = properties.ToDictionary<Property, string, Value?>(
-            x => x.Name,
+            static x => x.Name,
             x => Wrap(x.Value, wrappedType));
         return map;
     }
@@ -75,8 +75,8 @@ public sealed class DynamicObjectSurrogate
         }
 
         var items = properties.ToDictionary(
-            x => x.Key,
-            x => Value.Unwrap(x.Value));
+            static x => x.Key,
+            static x => Value.Unwrap(x.Value));
 
         return PropertySet.From(items);
     }

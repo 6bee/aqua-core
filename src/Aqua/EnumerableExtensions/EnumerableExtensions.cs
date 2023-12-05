@@ -44,10 +44,10 @@ public static class EnumerableExtensions
             rightSet,
             leftKeySelector,
             rightKeySelector,
-            (k, g) => new { Key = k, Group = g },
+            static (k, g) => new { Key = k, Group = g },
             keyEqualityComparer)
         .SelectMany(
-            x => x.Group.DefaultIfEmpty(),
+            static x => x.Group.DefaultIfEmpty(),
             (x, y) => resultSelector(x.Key, y));
 
     public static IEnumerable<(T? Left, T Right)> RightOuterJoin<T, TKey>(this IEnumerable<T> leftSet, IEnumerable<T> rightSet, Func<T, TKey> comparisonSelector, IEqualityComparer<TKey>? keyEqualityComparer = null)
@@ -65,10 +65,10 @@ public static class EnumerableExtensions
             leftSet,
             rightKeySelector,
             leftKeySelector,
-            (k, g) => new { Key = k, Group = g },
+            static (k, g) => new { Key = k, Group = g },
             keyEqualityComparer)
         .SelectMany(
-            x => x.Group.DefaultIfEmpty(),
+            static x => x.Group.DefaultIfEmpty(),
             (x, y) => resultSelector(y, x.Key));
 
     /// <summary>
@@ -135,7 +135,7 @@ public static class EnumerableExtensions
             }
         }
 
-        return nullCounter is 0 && counters.Values.All(c => c is 0);
+        return nullCounter is 0 && counters.Values.All(static c => c is 0);
     }
 
     /// <summary>
