@@ -1,6 +1,6 @@
 language: csharp
 mono: none
-dotnet: 6.0.300
+dotnet: 8.0.x
 
 branches:
   except:
@@ -17,4 +17,4 @@ before_script:
   - dotnet --info
 
 script:
-  - dotnet test test/Aqua.Tests -c $CONFIGURATION -f net6.0
+  - dotnet test test/Aqua.Tests -c $CONFIGURATION -f net8.0
