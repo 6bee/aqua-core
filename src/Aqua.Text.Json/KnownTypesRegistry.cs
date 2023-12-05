@@ -65,7 +65,7 @@ public sealed class KnownTypesRegistry
         .SelectMany(x => new[]
             {
                 x,
-                (x.Type.IsValueType ? (typeof(Nullable<>).MakeGenericType(x.Type), $"{x.Key}?") : x),
+                x.Type.IsValueType ? (typeof(Nullable<>).MakeGenericType(x.Type), $"{x.Key}?") : x,
                 (x.Type.MakeArrayType(), $"{x.Key}[]"),
             })
         .Distinct()
