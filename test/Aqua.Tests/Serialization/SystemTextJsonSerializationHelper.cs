@@ -19,9 +19,12 @@ public static class SystemTextJsonSerializationHelper
         .ConfigureAqua();
 
     public static T Clone<T>(this T graph)
+        => Clone(graph, SerializerOptions);
+
+    public static T Clone<T>(this T graph, JsonSerializerOptions options)
     {
-        var json = JsonSerializer.Serialize(graph, SerializerOptions);
-        return JsonSerializer.Deserialize<T>(json, SerializerOptions);
+        var json = JsonSerializer.Serialize(graph, options);
+        return JsonSerializer.Deserialize<T>(json, options);
     }
 
     public static void SkipUnsupportedDataType(Type type, object value)
