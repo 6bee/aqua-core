@@ -37,4 +37,4 @@ before_script:
   - dotnet --info
 
 script:
-  - dotnet test test/Aqua.Tests -c $CONFIGURATION -f net8.0
+  - dotnet test Aqua.sln -c $CONFIGURATION -f net8.0

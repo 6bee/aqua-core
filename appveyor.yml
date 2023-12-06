@@ -17,12 +17,8 @@ before_build:
   - dotnet --info
   - dotnet tool install --global codecov.tool
 
-build_script:
-  - dotnet build Aqua.sln
-
 test_script:
-  - dotnet test test\Aqua.Tests --settings coverlet.runsettings
-  - dotnet test test\Aqua.Tests.VBNet
+  - dotnet test Aqua.sln --settings coverlet.runsettings
 
 after_test:
   - codecov -f **\coverage.cobertura.xml
