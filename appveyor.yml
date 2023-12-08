@@ -17,6 +17,9 @@ before_build:
   - dotnet --info
   - dotnet tool install --global codecov.tool
 
+build_script:
+  - dotnet build Aqua.sln
+
 test_script:
   - dotnet test Aqua.sln --settings coverlet.runsettings
 
