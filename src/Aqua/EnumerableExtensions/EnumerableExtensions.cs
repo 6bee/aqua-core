@@ -44,7 +44,7 @@ public static class EnumerableExtensions
             rightSet,
             leftKeySelector,
             rightKeySelector,
-            static (k, g) => new { Key = k, Group = g },
+            static (k, g) => (Key: k, Group: g),
             keyEqualityComparer)
         .SelectMany(
             static x => x.Group.DefaultIfEmpty(),
@@ -65,7 +65,7 @@ public static class EnumerableExtensions
             leftSet,
             rightKeySelector,
             leftKeySelector,
-            static (k, g) => new { Key = k, Group = g },
+            static (k, g) => (Key: k, Group: g),
             keyEqualityComparer)
         .SelectMany(
             static x => x.Group.DefaultIfEmpty(),
