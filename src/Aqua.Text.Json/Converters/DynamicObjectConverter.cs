@@ -285,7 +285,7 @@ public class DynamicObjectConverter : ObjectConverter<DynamicObject>
                     }
                     else
                     {
-                        writer.Serialize(property.Value, options);
+                        writer.Serialize(property.Value, property.Value.GetType(), options);
                     }
 
                     writer.WriteEndObject();
