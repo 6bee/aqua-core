@@ -34,7 +34,7 @@ jobs:
 
     - name: Check version
       # assert version match with project version so only pre-release label can be changed based on release tag
-      run: dotnet build -t:CheckVersion -c Release -p BuildVersion="${{ steps.version.outputs.major_without_prefix }}.${{ steps.version.outputs.minor }}.${{ steps.version.outputs.patch }}"
+      run: dotnet build Aqua.sln -t:CheckVersion -c Release -p BuildVersion="${{ steps.version.outputs.major_without_prefix }}.${{ steps.version.outputs.minor }}.${{ steps.version.outputs.patch }}"
 
     - name: Set version info
       run: |
