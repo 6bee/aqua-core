@@ -1,4 +1,7 @@
 # aqua-core
+
+[![Github Workflow][pub-badge]][pub-link]
+
 | branch | AppVeyor                         | Travis CI                      | Codecov.io         | Codacy                  | CodeFactor             | License                     |
 | ---    | ---                              | ---                            | ---                | ---                     | ---                    | ---                         |
 | `main` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
@@ -13,17 +16,20 @@
 Transform any object-graph into a dynamic, composed dictionaries like structure, holding serializable values and type information.
 
 Aqua-core provides a bunch of serializable classes:
-*   `DynamicObject`
-*   `TypeInfo`
-*   `FieldInfo`
-*   `PropertyInfo`
-*   `MethodInfo`
-*   `ConstructorInfo`
+
+- `DynamicObject`
+- `TypeInfo`
+- `FieldInfo`
+- `PropertyInfo`
+- `MethodInfo`
+- `ConstructorInfo`
 
 Any object graph may be translated into a `DynamicObject` structure and back to it's original type using `DynamicObjectMapper`.
 
 ## Sample
+
 Mapping an object graph into a `DynamicObject` and then back to it's original type
+
 ```C#
 Blog blog = new Blog
 {
@@ -92,3 +98,6 @@ Blog restoredBlog = new DynamicObjectMapper().Map(dynamicObject) as Blog;
 [26]: https://www.nuget.org/packages/aqua-core-text-json
 [27]: https://img.shields.io/myget/aqua/vpre/aqua-core-text-json.svg?style=flat-square&label=myget
 [28]: https://www.myget.org/feed/aqua/package/nuget/aqua-core-text-json
+
+[pub-badge]: https://github.com/6bee/aqua-core/actions/workflows/publish.yml/badge.svg
+[pub-link]: https://github.com/6bee/aqua-core/actions/workflows/publish.yml
