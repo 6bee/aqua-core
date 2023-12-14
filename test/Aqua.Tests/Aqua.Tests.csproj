@@ -24,16 +24,4 @@
     <PackageReference Include="coverlet.collector" Version="6.0.0" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
-    <!-- NOTE: For some reason PolySharp package code generation is not picked up for net48. We're using our deprecated polyfill packages as a workaround. -->
-    <PackageReference
-      Include="
-        aqua.tool.polyfill.IsExternalInit;
-        aqua.tool.polyfill.CallerArgumentExpression;
-        aqua.tool.polyfill.Nullable;
-        aqua.tool.polyfill.StackTraceHidden;"
-      Version="2.2.9"
-      PrivateAssets="all" />
-  </ItemGroup>
-
 </Project>
