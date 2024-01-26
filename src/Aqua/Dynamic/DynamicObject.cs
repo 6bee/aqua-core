@@ -11,9 +11,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
-#if !NET8_0_OR_GREATER
 [Serializable]
-#endif // NET8_0_OR_GREATER
 [DataContract(IsReference = true)]
 [DebuggerDisplay("{GetDebuggerDisplay(),nq}")]
 [KnownType(typeof(DynamicObject)), XmlInclude(typeof(DynamicObject))]

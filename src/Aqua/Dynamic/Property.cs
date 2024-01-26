@@ -10,9 +10,7 @@ using System.Numerics;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
-#if !NET8_0_OR_GREATER
 [Serializable]
-#endif // NET8_0_OR_GREATER
 [DataContract]
 [KnownType(typeof(object)), XmlInclude(typeof(object))]
 [KnownType(typeof(object[])), XmlInclude(typeof(object[]))]

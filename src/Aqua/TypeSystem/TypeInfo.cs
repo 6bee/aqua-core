@@ -14,9 +14,7 @@ using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
-#if !NET8_0_OR_GREATER
 [Serializable]
-#endif // NET8_0_OR_GREATER
 [DataContract(Name = "Type", IsReference = true)]
 [DebuggerDisplay("Type: {FullName,nq}")]
 [KnownType(typeof(TypeInfo[])), XmlInclude(typeof(TypeInfo[]))]
@@ -26,9 +24,7 @@ public class TypeInfo
 
     [IgnoreDataMember]
     [Unmapped]
-#if !NET8_0_OR_GREATER
     [NonSerialized]
-#endif // NET8_0_OR_GREATER
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private Type? _type;
 

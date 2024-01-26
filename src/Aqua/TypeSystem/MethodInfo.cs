@@ -8,18 +8,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
-#if !NET8_0_OR_GREATER
 [Serializable]
-#endif // NET8_0_OR_GREATER
 [DataContract(Name = "Method", IsReference = true)]
 [DebuggerDisplay("Method: {Name,nq}")]
 public class MethodInfo : MethodBaseInfo
 {
     [IgnoreDataMember]
     [Unmapped]
-#if !NET8_0_OR_GREATER
     [NonSerialized]
-#endif // NET8_0_OR_GREATER
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private System.Reflection.MethodInfo? _method;
 

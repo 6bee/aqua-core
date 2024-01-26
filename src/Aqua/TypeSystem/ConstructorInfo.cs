@@ -8,9 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
-#if !NET8_0_OR_GREATER
 [Serializable]
-#endif // NET8_0_OR_GREATER
 [DataContract(Name = "Constructor", IsReference = true)]
 [DebuggerDisplay("Constructor: {Name,nq}")]
 public class ConstructorInfo : MethodBaseInfo
@@ -19,9 +17,7 @@ public class ConstructorInfo : MethodBaseInfo
 
     [IgnoreDataMember]
     [Unmapped]
-#if !NET8_0_OR_GREATER
     [NonSerialized]
-#endif // NET8_0_OR_GREATER
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private System.Reflection.ConstructorInfo? _constructor;
 
