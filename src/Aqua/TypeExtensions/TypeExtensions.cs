@@ -156,65 +156,63 @@ public static class TypeExtensions
             ? IsAssignableToGenericType(interfaceType, typeArgs)
             : interfaceType.IsAssignableFrom;
 
-        return isAssignableFromSpecifiedInterface(type)
+        return GetTypeHierarchy(type).Any(isAssignableFromSpecifiedInterface)
             || type.GetInterfaces().Any(isAssignableFromSpecifiedInterface);
-    }
 
-    private static Func<Type, bool> IsAssignableToGenericTypeDefinition(Type interfaceTypeInfo, Type[][] typeArgs)
-    {
-        var genericArgumentsCount = interfaceTypeInfo.GetGenericArguments().Length;
-
-        return i =>
+        static IEnumerable<Type> GetTypeHierarchy(Type? t)
         {
-            var genericArguments = i.GenericTypeArguments;
-            var isAssignable = i.IsGenericType && genericArguments.Length == genericArgumentsCount;
-            if (isAssignable)
+            while (t is not null)
             {
-                try
-                {
-                    isAssignable = interfaceTypeInfo.MakeGenericType(genericArguments).IsAssignableFrom(i);
-                }
-                catch (ArgumentException)
-                {
-                    // justification:
-                    // https://stackoverflow.com/questions/4864496/checking-if-an-object-meets-a-generic-parameter-constraint/4864565#4864565
-                    isAssignable = false;
-                }
+                yield return t;
+                t = t.BaseType;
             }
+        }
 
-            if (isAssignable)
-            {
-                typeArgs[0] = genericArguments;
-            }
-
-            return isAssignable;
-        };
-    }
-
-    private static Func<Type, bool> IsAssignableToGenericType(Type interfaceTypeInfo, Type[][] typeArgs)
-    {
-        var interfaceTypeDefinition = interfaceTypeInfo.GetGenericTypeDefinition();
-        var interfaceGenericArguments = interfaceTypeInfo.GetGenericArguments();
-
-        return i =>
+        static Func<Type, bool> IsAssignableToGenericTypeDefinition(Type interfaceTypeInfo, Type[][] typeArgs)
         {
-            if (i.IsGenericType && !i.IsGenericTypeDefinition)
+            return i =>
             {
-                var typeDefinition = i.GetGenericTypeDefinition();
-                if (typeDefinition == interfaceTypeDefinition)
+                var isAssignable = false;
+                if (i.IsGenericType)
                 {
-                    var genericArguments = i.GetGenericArguments();
-                    var allArgumentsAreAssignable = Enumerable.Range(0, genericArguments.Length - 1)
-                        .All(index => Implements(genericArguments[index], interfaceGenericArguments[index], typeArgs));
-                    if (allArgumentsAreAssignable)
+                    var typeDef = i.IsGenericTypeDefinition ? i : i.GetGenericTypeDefinition();
+                    isAssignable = typeDef == interfaceTypeInfo;
+                }
+
+                if (isAssignable)
+                {
+                    typeArgs[0] = i.GenericTypeArguments;
+                }
+
+                return isAssignable;
+            };
+        }
+
+        static Func<Type, bool> IsAssignableToGenericType(Type interfaceTypeInfo, Type[][] typeArgs)
+        {
+            var interfaceTypeDefinition = interfaceTypeInfo.GetGenericTypeDefinition();
+            var interfaceGenericArguments = interfaceTypeInfo.GetGenericArguments();
+
+            return i =>
+            {
+                if (i.IsGenericType && !i.IsGenericTypeDefinition)
+                {
+                    var typeDefinition = i.GetGenericTypeDefinition();
+                    if (typeDefinition == interfaceTypeDefinition)
                     {
-                        return true;
+                        var genericArguments = i.GetGenericArguments();
+                        var allArgumentsAreAssignable = Enumerable.Range(0, genericArguments.Length - 1)
+                            .All(index => Implements(genericArguments[index], interfaceGenericArguments[index], typeArgs));
+                        if (allArgumentsAreAssignable)
+                        {
+                            return true;
+                        }
                     }
                 }
-            }
 
-            return false;
-        };
+                return false;
+            };
+        }
     }
 
     /// <summary>

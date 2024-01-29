@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using Xunit;
 
 public class When_reflecting_implemented_types
@@ -36,6 +37,10 @@ public class When_reflecting_implemented_types
         public IEnumerator<T> GetEnumerator() => throw new NotImplementedException();
 
         IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
+    }
+
+    public class GenericSubClass<TNew, TBase> : TestQueryable<TBase>
+    {
     }
 
     [Fact]
@@ -112,5 +117,23 @@ public class When_reflecting_implemented_types
         var result = typeof(TestSubClass).Implements(typeof(TestBaseClass));
 
         result.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void Should_reflect_generic_base_class()
+    {
+        var result = typeof(GenericSubClass<int, long>).Implements(typeof(TestQueryable<>), out var generics);
+
+        result.ShouldBeTrue();
+        generics.ShouldHaveSingleItem().ShouldBe(typeof(long));
+    }
+
+    [Fact]
+    public void Should_reflect_generic_base_class_interface()
+    {
+        var result = typeof(GenericSubClass<int, long>).Implements(typeof(IQueryable<>), out var generics);
+
+        result.ShouldBeTrue();
+        generics.ShouldHaveSingleItem().ShouldBe(typeof(long));
     }
 }

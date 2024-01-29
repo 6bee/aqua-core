@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bump _System.Text.Json_ from 7.0.3 to 8.0.0 (concerns _Aqua.Text.Json_)
+- Include type hierarchy in `Implements` type checking
 
 ### Deprecated
 
