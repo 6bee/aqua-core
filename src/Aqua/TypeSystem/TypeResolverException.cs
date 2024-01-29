@@ -3,7 +3,6 @@
 namespace Aqua.TypeSystem;
 
 using System;
-using System.Runtime.Serialization;
 
 [Serializable]
 public class TypeResolverException : Exception
@@ -23,7 +22,7 @@ public class TypeResolverException : Exception
     }
 
 #if !NET8_0_OR_GREATER
-    protected TypeResolverException(SerializationInfo info, StreamingContext context)
+    protected TypeResolverException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
         : base(info, context)
     {
     }

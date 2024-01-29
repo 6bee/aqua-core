@@ -3,7 +3,6 @@
 namespace Aqua.TypeSystem.Emit;
 
 using System;
-using System.Runtime.Serialization;
 
 [Serializable]
 public class TypeEmitterException : Exception
@@ -23,7 +22,7 @@ public class TypeEmitterException : Exception
     }
 
 #if !NET8_0_OR_GREATER
-    protected TypeEmitterException(SerializationInfo info, StreamingContext context)
+    protected TypeEmitterException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
         : base(info, context)
     {
     }

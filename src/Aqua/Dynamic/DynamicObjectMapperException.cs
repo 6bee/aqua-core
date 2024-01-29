@@ -3,7 +3,6 @@
 namespace Aqua.Dynamic;
 
 using System;
-using System.Runtime.Serialization;
 
 [Serializable]
 public class DynamicObjectMapperException : Exception
@@ -28,7 +27,7 @@ public class DynamicObjectMapperException : Exception
     }
 
 #if !NET8_0_OR_GREATER
-    protected DynamicObjectMapperException(SerializationInfo info, StreamingContext context)
+    protected DynamicObjectMapperException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
         : base(info, context)
     {
     }

@@ -14,6 +14,7 @@
     <Rule Id="S3011" Action="Info" />
     <Rule Id="S3358" Action="Info" />
     <Rule Id="S3626" Action="Info" />
+    <Rule Id="S3925" Action="Info" />
     <Rule Id="S6562" Action="Info" />
     <Rule Id="S6580" Action="Info" />
     <Rule Id="S6602" Action="Info" />
