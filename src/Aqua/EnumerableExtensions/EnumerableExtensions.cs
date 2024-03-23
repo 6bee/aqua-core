@@ -201,7 +201,32 @@ public static class EnumerableExtensions
 
     public static IEnumerable<T> AsEmptyIfNull<T>(this IEnumerable<T>? source) => source ?? Enumerable.Empty<T>();
 
-    public static IEnumerable<T>? AsNullIfEmpty<T>(this IEnumerable<T>? source) => source?.Any() is true ? source : null!;
+    public static T[] AsEmptyIfNull<T>(this T[]? source) => source is null ? Array.Empty<T>() : source;
+
+    public static string AsEmptyIfNull(this string? source) => source is null ? string.Empty : source;
+
+    public static T? AsNullIfEmpty<T>(this T? source)
+        where T : IEnumerable
+        => source is string str && string.IsNullOrEmpty(str)
+        ? default
+        : source?.GetEnumerator().MoveNext() is not true
+        ? default
+        : source;
+
+    public static string? AsNullIfEmptyOrWhiteSpace(this string? source)
+        => string.IsNullOrWhiteSpace(source)
+        ? default
+        : source;
+
+    public static bool IsNotNullOrEmpty([NotNullWhen(true)] this IEnumerable? source)
+        => source is string str
+        ? !string.IsNullOrEmpty(str)
+        : source?.GetEnumerator().MoveNext() is true;
+
+    public static bool IsNullOrEmpty([NotNullWhen(false)] this IEnumerable? source)
+        => source is string str
+        ? string.IsNullOrEmpty(str)
+        : source?.GetEnumerator().MoveNext() is not true;
 
     [return: NotNullIfNotNull(nameof(source))]
     public static string? StringJoin<T>(this IEnumerable<T>? source, string separator) => source is null ? default : string.Join(separator, source);
