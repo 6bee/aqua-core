@@ -123,6 +123,7 @@ public static class TypeExtensions
     public static bool Implements(this Type type, Type interfaceType)
     {
         type.AssertNotNull();
+        interfaceType.AssertNotNull();
         return type.Implements(interfaceType, new Type[1][]);
     }
 
@@ -136,6 +137,7 @@ public static class TypeExtensions
     public static bool Implements(this Type type, Type interfaceType, [NotNullWhen(true)] out Type[]? genericTypeArguments)
     {
         type.AssertNotNull();
+        interfaceType.AssertNotNull();
         var typeArgs = new Type[1][];
         if (type.Implements(interfaceType, typeArgs))
         {
@@ -149,7 +151,6 @@ public static class TypeExtensions
 
     private static bool Implements(this Type type, Type interfaceType, Type[][] typeArgs)
     {
-        interfaceType.AssertNotNull();
         var isAssignableFromSpecifiedInterface = interfaceType.IsGenericTypeDefinition
             ? IsAssignableToGenericTypeDefinition(interfaceType, typeArgs)
             : interfaceType.IsGenericType
