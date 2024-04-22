@@ -19,7 +19,7 @@
     </Description>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'== 'netStandard2.0' or '$(TargetFramework)'== 'netStandard2.1'">
     <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
   </ItemGroup>
 
