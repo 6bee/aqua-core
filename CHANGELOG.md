@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Bump _System.Text.Json_ from 7.0.3 to 8.0.0 (concerns _Aqua.Text.Json_)
+- Bump _System.Text.Json_ from 7.0.3 to 8.0.3 (concerns _Aqua.Text.Json_)
 - Include type hierarchy in `Implements` type checking
 
 ### Deprecated
@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Binary serialization removed for .NET 8.0 and later ([SYSLIB0050: Formatter-based serialization is obsolete][syslib0050])
+- Dependency on _System.Text.Json_ removed for .NET 6.0 and later as provided by target framework [#43][issue#43]
 
 ### Fixed
 
@@ -91,6 +92,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [issue#36]: https://github.com/6bee/aqua-core/issues/36
 [issue#39]: https://github.com/6bee/aqua-core/issues/39
+[issue#43]: https://github.com/6bee/aqua-core/issues/43
 
 [json-net]: https://www.newtonsoft.com/json
 [nullable-references]: https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references
