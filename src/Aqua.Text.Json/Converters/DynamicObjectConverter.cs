@@ -207,7 +207,7 @@ public class DynamicObjectConverter : ObjectConverter<DynamicObject>
                 reader.AssertProperty(nameof(DynamicProperty.Name));
                 var name = reader.ReadString() ?? throw reader.CreateException("Property name must not be null");
 
-                reader.AssertProperty(nameof(Type));
+                reader.AssertProperty(nameof(DynamicObject.Type));
                 var type = reader.Read<TypeInfo?>(options);
 
                 reader.AssertProperty(nameof(DynamicProperty.Value));
@@ -275,7 +275,7 @@ public class DynamicObjectConverter : ObjectConverter<DynamicObject>
 
                     writer.WriteString(nameof(property.Name), property.Name);
 
-                    writer.WritePropertyName(nameof(Type));
+                    writer.WritePropertyName(nameof(DynamicObject.Type));
                     writer.Serialize(CreateTypeInfo(property.Value), options);
 
                     writer.WritePropertyName(nameof(property.Value));
