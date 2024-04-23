@@ -112,17 +112,9 @@ public class PropertySet : IReadOnlyCollection<Property>
     internal IEnumerable<Property> FindAll(Property property)
     {
         var match = CreatePredicate(property);
-        var count = Count;
-        for (int i = 0; i < count; i++)
-        {
-            i = _list.FindIndex(i, match);
-            if (i < 0)
-            {
-                yield break;
-            }
-
-            yield return _list[i];
-        }
+        return from item in _list
+               where match(item)
+               select item;
     }
 
     private static Predicate<Property> CreatePredicate(Property property)
