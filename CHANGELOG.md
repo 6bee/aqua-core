@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [5.4.0][5.4.0] - 2024-06-04
+
+### Added
+
 - Add .NET 8.0 framework target
 
 ### Changed
@@ -16,16 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump _System.Text.Json_ from 7.0.3 to 8.0.3 (concerns _Aqua.Text.Json_)
 - Include type hierarchy in `Implements` type checking
 
-### Deprecated
-
 ### Removed
 
 - Binary serialization removed for .NET 8.0 and later ([SYSLIB0050: Formatter-based serialization is obsolete][syslib0050])
 - Dependency on _System.Text.Json_ removed for .NET 6.0 and later as provided by target framework [#43][issue#43]
-
-### Fixed
-
-### Security
 
 ## [5.3.0][5.3.0] - 2023-09-14
 
@@ -84,7 +92,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Introduced `ITypeSafetyChecker` to enable type checking before instantiation by `DynamicObjectMapper`.
 
-[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/5.3.0...main
+[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/5.4.0...main
+[5.4.0]: https://github.com/6bee/aqua-core/compare/5.3.0...5.4.0
 [5.3.0]: https://github.com/6bee/aqua-core/compare/5.2.0...5.3.0
 [5.2.0]: https://github.com/6bee/aqua-core/compare/5.1.0...5.2.0
 [5.1.0]: https://github.com/6bee/aqua-core/compare/5.0.0...5.1.0
