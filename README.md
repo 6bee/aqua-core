@@ -71,7 +71,7 @@ Blog restoredBlog = new DynamicObjectMapper().Map(dynamicObject) as Blog;
 [6]: https://codecov.io/gh/6bee/aqua-core
 
 [7]: https://app.codacy.com/project/badge/Grade/b6c426b5f19140d8a793f06d73984005
-[8]: https://www.codacy.com/gh/6bee/aqua-core/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=6bee/aqua-core&amp;utm_campaign=Badge_Grade
+[8]: https://app.codacy.com/gh/6bee/aqua-core/dashboard
 
 [9]: https://www.codefactor.io/repository/github/6bee/aqua-core/badge
 [10]: https://www.codefactor.io/repository/github/6bee/aqua-core
