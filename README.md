@@ -1,10 +1,11 @@
 # aqua-core
 
+[![GitHub license][lic-badge]][lic-link]
 [![Github Workflow][pub-badge]][pub-link]
 
-| branch | AppVeyor                         | Travis CI                      | Codecov.io         | Codacy                  | CodeFactor             | License                     |
-| ---    | ---                              | ---                            | ---                | ---                     | ---                    | ---                         |
-| `main` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] | [![GitHub license][11]][12] |
+| branch | AppVeyor                         | Travis CI                      | Codecov.io         | Codacy                  | CodeFactor             |
+| ---    | ---                              | ---                            | ---                | ---                     | ---                    |
+| `main` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] |
 
 | package                     | nuget                    | myget                          |
 | ---                         | ---                      | ---                            |
@@ -76,9 +77,6 @@ Blog restoredBlog = new DynamicObjectMapper().Map(dynamicObject) as Blog;
 [9]: https://www.codefactor.io/repository/github/6bee/aqua-core/badge
 [10]: https://www.codefactor.io/repository/github/6bee/aqua-core
 
-[11]: https://img.shields.io/github/license/6bee/aqua-core.svg
-[12]: https://github.com/6bee/aqua-core/blob/main/license.txt
-
 [13]: https://buildstats.info/nuget/aqua-core
 [14]: https://www.nuget.org/packages/aqua-core
 [15]: https://img.shields.io/myget/aqua/vpre/aqua-core.svg?style=flat-square&label=myget
@@ -98,6 +96,9 @@ Blog restoredBlog = new DynamicObjectMapper().Map(dynamicObject) as Blog;
 [26]: https://www.nuget.org/packages/aqua-core-text-json
 [27]: https://img.shields.io/myget/aqua/vpre/aqua-core-text-json.svg?style=flat-square&label=myget
 [28]: https://www.myget.org/feed/aqua/package/nuget/aqua-core-text-json
+
+[lic-badge]: https://img.shields.io/github/license/6bee/aqua-core.svg
+[lic-link]: https://github.com/6bee/aqua-core/blob/main/license.txt
 
 [pub-badge]: https://github.com/6bee/aqua-core/actions/workflows/publish.yml/badge.svg
 [pub-link]: https://github.com/6bee/aqua-core/actions/workflows/publish.yml
