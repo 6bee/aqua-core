@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="8.0.3" Condition=" '$(TargetFramework)' == 'net48' Or '$(TargetFramework)' == 'net6.0' " />
+    <PackageReference Include="System.Text.Json" Version="8.0.4" Condition=" '$(TargetFramework)' == 'net48' Or '$(TargetFramework)' == 'net6.0' " />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" PrivateAssets="all" />
     <PackageReference Include="xunit" Version="2.8.1" PrivateAssets="all" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1" PrivateAssets="all" />
