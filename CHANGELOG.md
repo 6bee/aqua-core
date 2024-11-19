@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [5.4.2][5.4.2] - 2024-11-19
+
+### Security
+
 - Bump _System.Text.Json_ from 8.0.4 to 8.0.5 ([CVE-2024-43485][CVE-2024-43485])
 
 ## [5.4.1][5.4.1] - 2024-07-10
@@ -100,7 +104,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Introduced `ITypeSafetyChecker` to enable type checking before instantiation by `DynamicObjectMapper`.
 
-[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/v5.4.1...main
+[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/v5.4.2...main
+[5.4.2]: https://github.com/6bee/aqua-core/compare/v5.4.1...v5.4.2
 [5.4.1]: https://github.com/6bee/aqua-core/compare/v5.4.0...v5.4.1
 [5.4.0]: https://github.com/6bee/aqua-core/compare/5.3.0...v5.4.0
 [5.3.0]: https://github.com/6bee/aqua-core/compare/5.2.0...5.3.0
