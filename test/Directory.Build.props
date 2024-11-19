@@ -7,6 +7,7 @@
     <IncludeGlobalAssemblyInfo>false</IncludeGlobalAssemblyInfo>
     <Nullable>disable</Nullable>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)../Style.Tests.ruleset</CodeAnalysisRuleSet>
+    <EnableSonarAnalyzers>false</EnableSonarAnalyzers>
   </PropertyGroup>
   
 </Project>

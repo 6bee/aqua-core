@@ -225,9 +225,9 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             typeof(System.Numerics.BigInteger),
             typeof(System.Numerics.Complex),
             typeof(byte[]),
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
             typeof(Half),
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
         }
         .SelectMany(static x => x.IsValueType ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
         .ToHashSet()
@@ -436,7 +436,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     },
                 }
             },
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
             {
                 typeof(Half), new Dictionary<Type, Func<object, object>>
                 {
@@ -453,7 +453,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(double), static x => checked((double)(Half)x) },
                 }
             },
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
         };
 
     private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper).GetMethodEx(nameof(ToDictionary));
@@ -1081,11 +1081,11 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                         return instance;
                     };
                 }
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
                 else if (targetType.IsValueType && targetType.GetCustomAttribute<System.Runtime.CompilerServices.IsReadOnlyAttribute>() is null)
 #else
                 else if (targetType.IsValueType)
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
                 {
                     factory = static (t, item) => Activator.CreateInstance(t) ?? throw new DynamicObjectMapperException($"Failed to create instance of type {t.FullName}");
                 }
@@ -1263,12 +1263,12 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             return Convert.FromBase64String(value);
         }
 
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
         if (targetType == typeof(Half))
         {
             return Half.Parse(value, CultureInfo.InvariantCulture);
         }
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
 
         throw new DynamicObjectMapperException(new NotImplementedException($"string parser for type {targetType} is not implemented"));
     }
@@ -1431,14 +1431,14 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
         {
             var c = (System.Numerics.Complex)obj;
             return
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
                 string.Create(
                     CultureInfo.InvariantCulture,
 #else
 #pragma warning disable S6618 // "string.Create" should be used instead of "FormattableString"
                 FormattableString.Invariant(
 #pragma warning restore S6618 // "string.Create" should be used instead of "FormattableString"
-#endif // NET6_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
                     $"{c.Real:R}{Math.Sign(c.Imaginary):+;-}i{Math.Abs(c.Imaginary):R}");
         }
 
@@ -1447,12 +1447,12 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             return Convert.ToBase64String((byte[])obj);
         }
 
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
         if (type == typeof(Half))
         {
             return ((Half)obj).ToString(CultureInfo.InvariantCulture);
         }
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
 
         return obj.ToString() ?? string.Empty;
     }

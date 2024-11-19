@@ -104,9 +104,9 @@ public abstract class When_serializing_dynamic_object
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
         Skip.If(type.Is<Half>(), "Half type serialization is not supported.");
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
         Skip.If(this.TestIs<With_xml_serializer>(), "XmlSerializer has limited type support.");
 
         using var cultureContext = culture.CreateContext();
@@ -155,9 +155,9 @@ public abstract class When_serializing_dynamic_object
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
         Skip.If(type.Is<Half>(), "Half type serialization is not supported.");
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
         Skip.If(this.TestIs<With_xml_serializer>(), "XmlSerializer has limited type support.");
 
         using var cultureContext = culture.CreateContext();

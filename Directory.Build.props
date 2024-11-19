@@ -3,8 +3,8 @@
 
   <PropertyGroup>
     <MajorVersion>5</MajorVersion>
-    <MinorVersion>4</MinorVersion>
-    <PatchVersion>2</PatchVersion>
+    <MinorVersion>5</MinorVersion>
+    <PatchVersion>0</PatchVersion>
     <PreReleaseLabel>dev</PreReleaseLabel>
   </PropertyGroup>
 
@@ -34,7 +34,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion Condition=" '$(LangVersion)' == '' ">12.0</LangVersion>
+    <LangVersion Condition=" '$(LangVersion)' == '' ">13.0</LangVersion>
     <GenerateDocumentationFile Condition=" '$(GenerateDocumentationFile)' == '' ">true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <TreatWarningsAsErrors Condition=" '$(TreatWarningsAsErrors)' == '' ">true</TreatWarningsAsErrors>
@@ -69,7 +69,7 @@
 
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.26.0.92422" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

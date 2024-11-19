@@ -35,9 +35,9 @@ public sealed class KnownTypesRegistry
             typeof(DateTime),
             typeof(TimeSpan),
             typeof(DateTimeOffset),
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
             typeof(Half),
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
             typeof(DynamicObject),
             typeof(Property),
             typeof(PropertySet),

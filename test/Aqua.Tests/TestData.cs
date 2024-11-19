@@ -127,12 +127,12 @@ public static class TestData
             new Complex(-87654, 234),
             new Complex(double.MinValue, double.MinValue),
             new Complex(double.MaxValue, double.MaxValue),
-#if NET5_0_OR_GREATER
+#if NET8_0_OR_GREATER
             Half.MaxValue,
             Half.Epsilon,
             (Half)0f,
             (Half).1f,
-#endif // NET5_0_OR_GREATER
+#endif // NET8_0_OR_GREATER
             (TestEnum)(-1),
             TestEnum.Foo,
             TestEnum.Bar,
