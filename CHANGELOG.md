@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- Bump _System.Text.Json_ from 8.0.4 to 8.0.5 ([CVE-2024-43485][CVE-2024-43485])
+
 ## [5.4.1][5.4.1] - 2024-07-10
 
 ### Security
@@ -115,3 +117,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [protobuf-net-v2]: https://www.nuget.org/packages/protobuf-net/2.4.6
 [syslib0050]: https://learn.microsoft.com/en-us/dotnet/fundamentals/syslib-diagnostics/syslib0050
 [CVE-2024-30105]: https://github.com/advisories/GHSA-hh2w-p6rv-4g7w
+[CVE-2024-43485]: https://github.com/advisories/GHSA-8g4q-xg66-9fp4
