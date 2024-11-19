@@ -26,31 +26,31 @@ public static class DataContractSerializationHelper
             var isNullable = false;
             if (typeName.StartsWith("ArrayOf_", StringComparison.Ordinal))
             {
-                typeName = typeName.Substring(8);
+                typeName = typeName[8..];
                 isArray++;
             }
 
             if (typeName.StartsWith("ListOf_", StringComparison.Ordinal))
             {
-                typeName = typeName.Substring(7);
+                typeName = typeName[7..];
                 isArray++;
             }
 
             if (typeName.StartsWith("ArrayOf", StringComparison.Ordinal))
             {
-                typeName = typeName.Substring(7);
+                typeName = typeName[7..];
                 isArray++;
             }
 
             if (typeName.StartsWith("ListOf", StringComparison.Ordinal))
             {
-                typeName = typeName.Substring(6);
+                typeName = typeName[6..];
                 isArray++;
             }
 
             if (typeName.StartsWith("NullableOf", StringComparison.Ordinal))
             {
-                typeName = typeName.Substring(10);
+                typeName = typeName[10..];
                 isNullable = true;
             }
 

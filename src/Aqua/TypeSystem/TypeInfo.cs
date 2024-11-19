@@ -199,7 +199,7 @@ public class TypeInfo
 
         if (typeName?.Length > 2 && IsArray)
         {
-            typeName = typeName.Substring(0, typeName.Length - 2);
+            typeName = typeName[..^2];
         }
 
         return $"{typeName}{genericArgumentsString}{(IsArray ? "[]" : null)}";
