@@ -77,24 +77,24 @@ Blog restoredBlog = new DynamicObjectMapper().Map(dynamicObject) as Blog;
 [9]: https://www.codefactor.io/repository/github/6bee/aqua-core/badge
 [10]: https://www.codefactor.io/repository/github/6bee/aqua-core
 
-[13]: https://buildstats.info/nuget/aqua-core
+[13]: https://img.shields.io/nuget/v/aqua-core.svg
 [14]: https://www.nuget.org/packages/aqua-core
-[15]: https://img.shields.io/myget/aqua/vpre/aqua-core.svg?style=flat-square&label=myget
+[15]: https://img.shields.io/myget/aqua/vpre/aqua-core.svg?label=myget
 [16]: https://www.myget.org/feed/aqua/package/nuget/aqua-core
 
-[17]: https://buildstats.info/nuget/aqua-core-newtonsoft-json
+[17]: https://img.shields.io/nuget/v/aqua-core-newtonsoft-json.svg
 [18]: https://www.nuget.org/packages/aqua-core-newtonsoft-json
-[19]: https://img.shields.io/myget/aqua/vpre/aqua-core-newtonsoft-json.svg?style=flat-square&label=myget
+[19]: https://img.shields.io/myget/aqua/vpre/aqua-core-newtonsoft-json.svg?label=myget
 [20]: https://www.myget.org/feed/aqua/package/nuget/aqua-core-newtonsoft-json
 
-[21]: https://buildstats.info/nuget/aqua-core-protobuf-net
+[21]: https://img.shields.io/nuget/v/aqua-core-protobuf-net.svg
 [22]: https://www.nuget.org/packages/aqua-core-protobuf-net
-[23]: https://img.shields.io/myget/aqua/vpre/aqua-core-protobuf-net.svg?style=flat-square&label=myget
+[23]: https://img.shields.io/myget/aqua/vpre/aqua-core-protobuf-net.svg?label=myget
 [24]: https://www.myget.org/feed/aqua/package/nuget/aqua-core-protobuf-net
 
-[25]: https://buildstats.info/nuget/aqua-core-text-json
+[25]: https://img.shields.io/nuget/v/aqua-core-text-json.svg
 [26]: https://www.nuget.org/packages/aqua-core-text-json
-[27]: https://img.shields.io/myget/aqua/vpre/aqua-core-text-json.svg?style=flat-square&label=myget
+[27]: https://img.shields.io/myget/aqua/vpre/aqua-core-text-json.svg?label=myget
 [28]: https://www.myget.org/feed/aqua/package/nuget/aqua-core-text-json
 
 [lic-badge]: https://img.shields.io/github/license/6bee/aqua-core.svg
