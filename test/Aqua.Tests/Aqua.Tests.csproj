@@ -15,14 +15,4 @@
     <ProjectReference Include="..\Aqua.Tests.TestObjects2\Aqua.Tests.TestObjects2.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="9.0.0" Condition=" '$(TargetFramework)' == 'net48' " />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" PrivateAssets="all" />
-    <PackageReference Include="xunit" Version="2.9.2" PrivateAssets="all" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" PrivateAssets="all" />
-    <PackageReference Include="Xunit.SkippableFact" Version="1.4.13" PrivateAssets="all" />
-    <PackageReference Include="Shouldly" Version="4.2.1" PrivateAssets="all" />
-    <PackageReference Include="coverlet.collector" Version="6.0.2" PrivateAssets="all" />
-  </ItemGroup>
-
 </Project>
