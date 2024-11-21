@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aqua.Tests.TestObjects2", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aqua.Newtonsoft.Json", "src\Aqua.Newtonsoft.Json\Aqua.Newtonsoft.Json.csproj", "{D2899A6B-BCEA-4DD8-99A7-6829B0FE1359}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Aqua.Tests.VBNet", "test\Aqua.Tests.VBNet\Aqua.Tests.VBNet.vbproj", "{087114F2-1E30-4C77-8297-B375EEE3AED9}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Aqua.VBNet.Tests", "test\Aqua.VBNet.Tests\Aqua.VBNet.Tests.vbproj", "{087114F2-1E30-4C77-8297-B375EEE3AED9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{2E2B1850-C328-47C3-BED5-313F6E9DBB01} = {2E2B1850-C328-47C3-BED5-313F6E9DBB01}
 	EndProjectSection
