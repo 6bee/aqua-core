@@ -37,6 +37,10 @@ public sealed class KnownTypesRegistry
             typeof(DateTimeOffset),
 #if NET8_0_OR_GREATER
             typeof(Half),
+            typeof(Int128),
+            typeof(UInt128),
+            typeof(DateOnly),
+            typeof(TimeOnly),
 #endif // NET8_0_OR_GREATER
             typeof(DynamicObject),
             typeof(Property),

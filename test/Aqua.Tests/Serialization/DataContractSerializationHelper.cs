@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.Serialization;
 using System.Xml;
+using Xunit;
 
 public static class DataContractSerializationHelper
 {
@@ -143,5 +145,16 @@ public static class DataContractSerializationHelper
             // stream.Dump(filename);
             throw;
         }
+    }
+
+    public static void SkipUnsupportedDataType(Type type, object value)
+    {
+#if NET8_0_OR_GREATER
+        Skip.If(type.Is<Half>(), $"{type} not supported by out-of-the-box DataContractSerializer");
+        Skip.If(type.Is<Int128>(), $"{type} not supported by out-of-the-box DataContractSerializer");
+        Skip.If(type.Is<UInt128>(), $"{type} not supported by out-of-the-box DataContractSerializer");
+        Skip.If(type.Is<DateOnly>(), $"{type} not supported by out-of-the-box DataContractSerializer");
+        Skip.If(type.Is<TimeOnly>(), $"{type} not supported by out-of-the-box DataContractSerializer");
+#endif
     }
 }

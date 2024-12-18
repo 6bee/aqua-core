@@ -31,8 +31,5 @@ public static class SystemTextJsonSerializationHelper
     {
         Skip.If(type.Is<BigInteger>(), $"{type} not supported by out-of-the-box System.Text.Json");
         Skip.If(type.Is<Complex>(), $"{type} not supported by out-of-the-box System.Text.Json");
-#if NET8_0_OR_GREATER
-        Skip.If(type.Is<Half>(), $"{type} serialization is not supported.");
-#endif // NET8_0_OR_GREATER
     }
 }

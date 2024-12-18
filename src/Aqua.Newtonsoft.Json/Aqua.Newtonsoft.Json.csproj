@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0</TargetFrameworks>
     <PackageId>aqua-core-newtonsoft-json</PackageId>
     <PackageTags>aqua-core;json-net;newtonsoft-json</PackageTags>
     <Description>Provides Json.NET serialization for Aqua types.</Description>

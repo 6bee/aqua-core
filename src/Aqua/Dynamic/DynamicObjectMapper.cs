@@ -227,6 +227,10 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             typeof(byte[]),
 #if NET8_0_OR_GREATER
             typeof(Half),
+            typeof(Int128),
+            typeof(UInt128),
+            typeof(DateOnly),
+            typeof(TimeOnly),
 #endif // NET8_0_OR_GREATER
         }
         .SelectMany(static x => x.IsValueType ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
@@ -1268,6 +1272,26 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
         {
             return Half.Parse(value, CultureInfo.InvariantCulture);
         }
+
+        if (targetType == typeof(Int128))
+        {
+            return Int128.Parse(value, CultureInfo.InvariantCulture);
+        }
+
+        if (targetType == typeof(UInt128))
+        {
+            return UInt128.Parse(value, CultureInfo.InvariantCulture);
+        }
+
+        if (targetType == typeof(DateOnly))
+        {
+            return DateOnly.Parse(value, CultureInfo.InvariantCulture);
+        }
+
+        if (targetType == typeof(TimeOnly))
+        {
+            return TimeOnly.Parse(value, CultureInfo.InvariantCulture);
+        }
 #endif // NET8_0_OR_GREATER
 
         throw new DynamicObjectMapperException(new NotImplementedException($"string parser for type {targetType} is not implemented"));
@@ -1451,6 +1475,26 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
         if (type == typeof(Half))
         {
             return ((Half)obj).ToString(CultureInfo.InvariantCulture);
+        }
+
+        if (type == typeof(Int128))
+        {
+            return ((Int128)obj).ToString(CultureInfo.InvariantCulture);
+        }
+
+        if (type == typeof(UInt128))
+        {
+            return ((UInt128)obj).ToString(CultureInfo.InvariantCulture);
+        }
+
+        if (type == typeof(DateOnly))
+        {
+            return ((DateOnly)obj).ToString("o", CultureInfo.InvariantCulture);
+        }
+
+        if (type == typeof(TimeOnly))
+        {
+            return ((TimeOnly)obj).ToString("o", CultureInfo.InvariantCulture);
         }
 #endif // NET8_0_OR_GREATER
 

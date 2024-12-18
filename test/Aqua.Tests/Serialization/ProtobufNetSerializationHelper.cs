@@ -41,6 +41,8 @@ public static class ProtobufNetSerializationHelper
         Skip.If(type.IsNotPublic(), $"Not-public {type} not supported protobuf-net");
 #if NET8_0_OR_GREATER
         Skip.If(type.Is<Half>(), $"{type} serialization is not supported.");
+        Skip.If(type.Is<Int128>(), $"{type} serialization is not supported.");
+        Skip.If(type.Is<UInt128>(), $"{type} serialization is not supported.");
 #endif // NET8_0_OR_GREATER
     }
 }
