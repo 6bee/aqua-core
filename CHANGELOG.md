@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add .NET 9.0 framework target
+
 ### Changed
 
 - Bump _System.Text.Json_ from 8.0.5 to 9.0.0 (netstandard2.0) (concerns _Aqua.Text.Json_)
