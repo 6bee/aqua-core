@@ -67,8 +67,6 @@ public class When_serializing_dynamic_types
             { "p3", 1 },
         };
 
-        // NOTE: PropertySet type cannot be serialized by protobuf-net 3.0.x
-        //       as it doesn't implement ICollection<> and no surrogate can be registered.
         var copy = new DynamicObject(propertySet).Clone();
 
         copy["p1"].ShouldBe(propertySet["p1"]);
@@ -99,8 +97,6 @@ public class When_serializing_dynamic_types
             .AddDynamicPropertyType(TypeHelper.GetElementType(type) ?? type)
             .Compile();
 
-        // NOTE: PropertySet type cannot be serialized by protobuf-net 3.0.x
-        //       as it doesn't implement ICollection<> and no surrogate can be registered.
         var copy = new DynamicObject(propertySet).Clone(config);
 
         copy["p1"].ShouldBe(value);
@@ -136,8 +132,8 @@ public class When_serializing_dynamic_types
         var dynamicObjects = new DynamicObjectMapper(new DynamicObjectMapperSettings { WrapNullAsDynamicObject = true }).MapCollection(value);
         var copy = dynamicObjects.Clone();
 
-        var dynamicObjectsCount = dynamicObjects?.Count() ?? 0;
-        var copyCount = copy?.Count() ?? 0;
+        var dynamicObjectsCount = dynamicObjects?.Count ?? 0;
+        var copyCount = copy?.Count ?? 0;
         copyCount.ShouldBe(dynamicObjectsCount);
 
         for (int i = 0; i < copyCount; i++)
