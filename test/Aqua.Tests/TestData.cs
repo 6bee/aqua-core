@@ -127,17 +127,31 @@ public static class TestData
             new Complex(-87654, 234),
             new Complex(double.MinValue, double.MinValue),
             new Complex(double.MaxValue, double.MaxValue),
-#if NET8_0_OR_GREATER
-            Half.MaxValue,
-            Half.Epsilon,
-            (Half)0f,
-            (Half).1f,
-#endif // NET8_0_OR_GREATER
             (TestEnum)(-1),
             TestEnum.Foo,
             TestEnum.Bar,
             new { Text = string.Empty, Timestamp = default(DateTime?) },
             new EmptyType(),
+#if NET5_0_OR_GREATER
+            Half.MaxValue,
+            Half.Epsilon,
+            (Half)0f,
+            (Half).1f,
+#endif // NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
+            DateOnly.MinValue,
+            DateOnly.MaxValue,
+            DateOnly.FromDateTime(DateTime.Today),
+            TimeOnly.MinValue,
+            TimeOnly.MaxValue,
+            TimeOnly.FromDateTime(DateTime.Now),
+#endif // NET6_0_OR_GREATER
+#if NET7_0_OR_GREATER
+            Int128.MinValue,
+            Int128.MaxValue,
+            UInt128.MinValue,
+            UInt128.MaxValue,
+#endif // NET7_0_OR_GREATER
 
             // TODO: consider support for custom tuples
             // (Name: "NegativePi", Value: -Math.PI),

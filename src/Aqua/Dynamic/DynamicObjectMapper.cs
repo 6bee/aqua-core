@@ -225,11 +225,19 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             typeof(System.Numerics.BigInteger),
             typeof(System.Numerics.Complex),
             typeof(byte[]),
-#if NET8_0_OR_GREATER
+#if NET5_0_OR_GREATER
             typeof(Half),
-#endif // NET8_0_OR_GREATER
+#endif // NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
+            typeof(DateOnly),
+            typeof(TimeOnly),
+#endif // NET6_0_OR_GREATER
+#if NET7_0_OR_GREATER
+            typeof(Int128),
+            typeof(UInt128),
+#endif // NET7_0_OR_GREATER
         }
-        .SelectMany(static x => x.IsValueType ? new[] { x, typeof(Nullable<>).MakeGenericType(x) } : new[] { x })
+        .SelectMany<Type, Type>(static x => x.IsValueType ? [x, typeof(Nullable<>).MakeGenericType(x)] : [x])
         .ToHashSet()
         .Contains;
 
@@ -247,6 +255,13 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             { typeof(char), new[] { typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal) } },
             { typeof(float), new[] { typeof(double) } },
             { typeof(ulong), new[] { typeof(float), typeof(double), typeof(decimal) } },
+#if NET7_0_OR_GREATER
+            // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_implicit
+            { typeof(Int128), new[] { typeof(sbyte), typeof(ulong), typeof(uint), typeof(ushort), typeof(int), typeof(short), typeof(long), typeof(char), typeof(byte) } },
+
+            // source: https://learn.microsoft.com/en-us/dotnet/api/system.uint128.op_implicit
+            { typeof(UInt128), new[] { typeof(byte), typeof(char), typeof(ushort), typeof(uint), typeof(ulong) } },
+#endif // NET7_0_OR_GREATER
         }
         .ToDictionary(static x => x.Key, static x => x.Value.ToHashSet());
 
@@ -263,6 +278,10 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(ulong), static x => checked((ulong)(sbyte)x) },
                     { typeof(char), static x => checked((char)(sbyte)x) },
                     { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(sbyte)x) },
+#if NET7_0_OR_GREATER
+                    // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
+                    { typeof(UInt128), static x => checked((UInt128)(sbyte)x) },
+#endif // NET7_0_OR_GREATER
                 }
             },
             {
@@ -283,6 +302,10 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(ulong), static x => checked((ulong)(short)x) },
                     { typeof(char), static x => checked((char)(short)x) },
                     { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(short)x) },
+#if NET7_0_OR_GREATER
+                    // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
+                    { typeof(UInt128), static x => checked((UInt128)(short)x) },
+#endif // NET7_0_OR_GREATER
                 }
             },
             {
@@ -306,6 +329,10 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(ulong), static x => checked((ulong)(int)x) },
                     { typeof(char), static x => checked((char)(int)x) },
                     { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(int)x) },
+#if NET7_0_OR_GREATER
+                    // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
+                    { typeof(UInt128), static x => checked((UInt128)(int)x) },
+#endif // NET7_0_OR_GREATER
                 }
             },
             {
@@ -331,6 +358,10 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(ulong), static x => checked((ulong)(long)x) },
                     { typeof(char), static x => checked((char)(long)x) },
                     { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(long)x) },
+#if NET7_0_OR_GREATER
+                    // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
+                    { typeof(UInt128), static x => checked((UInt128)(long)x) },
+#endif // NET7_0_OR_GREATER
                 }
             },
             {
@@ -370,6 +401,12 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(char), static x => checked((char)(float)x) },
                     { typeof(decimal), static x => checked((decimal)(float)x) },
                     { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(float)x) },
+#if NET7_0_OR_GREATER
+                    { typeof(Int128), static x => checked((Int128)(float)x) },
+
+                    // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
+                    { typeof(UInt128), static x => checked((UInt128)(float)x) },
+#endif // NET7_0_OR_GREATER
                 }
             },
             {
@@ -387,6 +424,13 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(float), static x => checked((float)(double)x) },
                     { typeof(decimal), static x => checked((decimal)(double)x) },
                     { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(double)x) },
+#if NET7_0_OR_GREATER
+                    // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
+                    { typeof(Int128), static x => checked((Int128)(double)x) },
+
+                    // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
+                    { typeof(UInt128), static x => checked((UInt128)(double)x) },
+#endif // NET7_0_OR_GREATER
                 }
             },
             {
@@ -404,6 +448,13 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(float), static x => checked((float)(decimal)x) },
                     { typeof(double), static x => checked((double)(decimal)x) },
                     { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(decimal)x) },
+#if NET7_0_OR_GREATER
+                    // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
+                    { typeof(Int128), static x => checked((Int128)(decimal)x) },
+
+                    // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
+                    { typeof(UInt128), static x => checked((UInt128)(decimal)x) },
+#endif // NET7_0_OR_GREATER
                 }
             },
             {
@@ -436,7 +487,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     },
                 }
             },
-#if NET8_0_OR_GREATER
+#if NET5_0_OR_GREATER
             {
                 typeof(Half), new Dictionary<Type, Func<object, object>>
                 {
@@ -453,7 +504,49 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(double), static x => checked((double)(Half)x) },
                 }
             },
-#endif // NET8_0_OR_GREATER
+#endif // NET5_0_OR_GREATER
+#if NET7_0_OR_GREATER
+            {
+                // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
+                typeof(Int128), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), static x => checked((sbyte)(Int128)x) },
+                    { typeof(byte), static x => checked((byte)(Int128)x) },
+                    { typeof(short), static x => checked((short)(Int128)x) },
+                    { typeof(ushort), static x => checked((ushort)(Int128)x) },
+                    { typeof(int), static x => checked((int)(Int128)x) },
+                    { typeof(uint), static x => checked((uint)(Int128)x) },
+                    { typeof(long), static x => checked((long)(Int128)x) },
+                    { typeof(ulong), static x => checked((ulong)(Int128)x) },
+                    { typeof(char), static x => checked((char)(Int128)x) },
+                    { typeof(float), static x => checked((float)(Int128)x) },
+                    { typeof(double), static x => checked((double)(Int128)x) },
+                    { typeof(decimal), static x => checked((decimal)(Int128)x) },
+                    { typeof(Half), static x => checked((decimal)(Half)x) },
+                    { typeof(UInt128), static x => checked((UInt128)(Int128)x) },
+                }
+            },
+            {
+                // source: https://learn.microsoft.com/en-us/dotnet/api/system.uint128.op_explicit
+                typeof(UInt128), new Dictionary<Type, Func<object, object>>
+                {
+                    { typeof(sbyte), static x => checked((sbyte)(UInt128)x) },
+                    { typeof(byte), static x => checked((byte)(UInt128)x) },
+                    { typeof(short), static x => checked((short)(UInt128)x) },
+                    { typeof(ushort), static x => checked((ushort)(UInt128)x) },
+                    { typeof(int), static x => checked((int)(UInt128)x) },
+                    { typeof(uint), static x => checked((uint)(UInt128)x) },
+                    { typeof(long), static x => checked((long)(UInt128)x) },
+                    { typeof(ulong), static x => checked((ulong)(UInt128)x) },
+                    { typeof(char), static x => checked((char)(UInt128)x) },
+                    { typeof(float), static x => checked((float)(UInt128)x) },
+                    { typeof(double), static x => checked((double)(UInt128)x) },
+                    { typeof(decimal), static x => checked((decimal)(UInt128)x) },
+                    { typeof(Half), static x => checked((decimal)(Half)x) },
+                    { typeof(Int128), static x => checked((Int128)(UInt128)x) },
+                }
+            },
+#endif // NET7_0_OR_GREATER
         };
 
     private static readonly MethodInfo ToDictionaryMethodInfo = typeof(DynamicObjectMapper).GetMethodEx(nameof(ToDictionary));
@@ -775,8 +868,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 : null;
         }
 
-        if (obj is DynamicObject ||
-            obj is string)
+        if (obj is DynamicObject or string)
         {
             return obj;
         }
@@ -815,7 +907,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 {
                     elementType = typeof(string);
                 }
-                else if (items.All(static x => x is null || x is DynamicObject))
+                else if (items.All(static x => x is null or DynamicObject))
                 {
                     elementType = typeof(DynamicObject);
                 }
@@ -827,7 +919,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
         }
 
         if (_settings.PassthroughAquaTypeSystemTypes &&
-            (obj is TypeSystem.TypeInfo || obj is TypeSystem.MemberInfo))
+            (obj is TypeSystem.TypeInfo or TypeSystem.MemberInfo))
         {
             return obj;
         }
@@ -1263,12 +1355,36 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             return Convert.FromBase64String(value);
         }
 
-#if NET8_0_OR_GREATER
+#if NET5_0_OR_GREATER
         if (targetType == typeof(Half))
         {
             return Half.Parse(value, CultureInfo.InvariantCulture);
         }
-#endif // NET8_0_OR_GREATER
+#endif // NET5_0_OR_GREATER
+
+#if NET6_0_OR_GREATER
+        if (targetType == typeof(DateOnly))
+        {
+            return DateOnly.Parse(value, CultureInfo.InvariantCulture);
+        }
+
+        if (targetType == typeof(TimeOnly))
+        {
+            return TimeOnly.Parse(value, CultureInfo.InvariantCulture);
+        }
+#endif // NET6_0_OR_GREATER
+
+#if NET7_0_OR_GREATER
+        if (targetType == typeof(Int128))
+        {
+            return Int128.Parse(value, CultureInfo.InvariantCulture);
+        }
+
+        if (targetType == typeof(UInt128))
+        {
+            return UInt128.Parse(value, CultureInfo.InvariantCulture);
+        }
+#endif // NET7_0_OR_GREATER
 
         throw new DynamicObjectMapperException(new NotImplementedException($"string parser for type {targetType} is not implemented"));
     }
@@ -1447,12 +1563,36 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             return Convert.ToBase64String((byte[])obj);
         }
 
-#if NET8_0_OR_GREATER
-        if (type == typeof(Half))
+#if NET5_0_OR_GREATER
+        if (type == typeof(Half) || type == typeof(Half?))
         {
-            return ((Half)obj).ToString(CultureInfo.InvariantCulture);
+            return ((Half)obj).ToString("R", CultureInfo.InvariantCulture);
         }
-#endif // NET8_0_OR_GREATER
+#endif // NET5_0_OR_GREATER
+
+#if NET6_0_OR_GREATER
+        if (type == typeof(DateOnly) || type == typeof(DateOnly?))
+        {
+            return ((DateOnly)obj).ToString("O", CultureInfo.InvariantCulture);
+        }
+
+        if (type == typeof(TimeOnly) || type == typeof(TimeOnly?))
+        {
+            return ((TimeOnly)obj).ToString("O", CultureInfo.InvariantCulture);
+        }
+#endif // NET6_0_OR_GREATER
+
+#if NET7_0_OR_GREATER
+        if (type == typeof(Int128) || type == typeof(Int128?))
+        {
+            return ((Int128)obj).ToString(CultureInfo.InvariantCulture);
+        }
+
+        if (type == typeof(UInt128) || type == typeof(UInt128?))
+        {
+            return ((UInt128)obj).ToString(CultureInfo.InvariantCulture);
+        }
+#endif // NET7_0_OR_GREATER
 
         return obj.ToString() ?? string.Empty;
     }

@@ -75,7 +75,7 @@ public sealed class NullableValues<T> : Values
 
     private static Value<T?>[] MapInternal(object[] array)
         => (array ?? System.Array.Empty<object>())
-        .Select(static x => x is null || x is NullValue ? new Value<T?>(default) : (Value<T?>)x)
+        .Select(static x => x is null or NullValue ? new Value<T?>(default) : (Value<T?>)x)
         .ToArray();
 
     private static object[] MapInternal(Value<T?>[] array)

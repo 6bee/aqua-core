@@ -36,7 +36,7 @@ public abstract class Value
 
     [return: NotNullIfNotNull(nameof(value))]
     public static object? Unwrap(Value? value)
-        => value is null || value is NullValue
+        => value is null or NullValue
         ? null
         : value is EmptyArray
         ? Array.Empty<object>()

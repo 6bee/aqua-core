@@ -35,9 +35,6 @@ public sealed class KnownTypesRegistry
             typeof(DateTime),
             typeof(TimeSpan),
             typeof(DateTimeOffset),
-#if NET8_0_OR_GREATER
-            typeof(Half),
-#endif // NET8_0_OR_GREATER
             typeof(DynamicObject),
             typeof(Property),
             typeof(PropertySet),
@@ -49,6 +46,17 @@ public sealed class KnownTypesRegistry
             typeof(MethodInfo),
             typeof(PropertyInfo),
             typeof(TypeInfo),
+#if NET5_0_OR_GREATER
+            typeof(Half),
+#endif // NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
+            typeof(DateOnly),
+            typeof(TimeOnly),
+#endif // NET6_0_OR_GREATER
+#if NET7_0_OR_GREATER
+            typeof(Int128),
+            typeof(UInt128),
+#endif // NET7_0_OR_GREATER
         }
         .Select(static x =>
         {

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml;
+using Xunit;
 
 public static class DataContractSerializationHelper
 {
@@ -143,5 +144,20 @@ public static class DataContractSerializationHelper
             // stream.Dump(filename);
             throw;
         }
+    }
+
+    public static void SkipUnsupportedDataType(Type type, object value)
+    {
+#if NET5_0_OR_GREATER
+        Skip.If(type.Is<Half>(), $"{type} serialization is not supported.");
+#endif // NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
+        Skip.If(type.Is<DateOnly>(), $"{type} serialization is not supported.");
+        Skip.If(type.Is<TimeOnly>(), $"{type} serialization is not supported.");
+#endif // NET6_0_OR_GREATER
+#if NET7_0_OR_GREATER
+        Skip.If(type.Is<Int128>(), $"{type} serialization is not supported.");
+        Skip.If(type.Is<UInt128>(), $"{type} serialization is not supported.");
+#endif // NET7_0_OR_GREATER
     }
 }
