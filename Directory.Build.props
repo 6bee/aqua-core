@@ -61,7 +61,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="aqua.tool.Validation" Version="3.1.0">
+    <PackageReference Include="aqua.tool.Validation" Version="3.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -69,7 +69,7 @@
 
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)Stylecop.json" Visible="false" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.4.0.108396" Condition=" '$(EnableSonarAnalyzers)' == 'true' ">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
