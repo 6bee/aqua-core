@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add .NET 9.0 framework target
+- Add support for `System.Int128`, `System.UInt128`, `System.DateOnly`, `System.TimeOnly`
 
 ### Changed
 
 - Bump _System.Text.Json_ from 8.0.5 to 9.0.0 (netstandard2.0) (concerns _Aqua.Text.Json_)
+- Bump version of _protobuf-net_ from 2.4.8 to 3.2.45
 
 ### Deprecated
 
@@ -93,6 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for [protobuf-net v2][protobuf-net-v2] serialization.
 - Added support for _System.Text.Json_ serialization.
 - Added _GetMethodEx_ extension methods for method reflection by exact signature.
+- Added support for `System.Half`
 
 ### Changed
 
