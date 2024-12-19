@@ -7,5 +7,5 @@ using global::ProtoBuf;
 [ProtoContract]
 public sealed class EmptyArray : Value
 {
-    internal static readonly EmptyArray Instance = new EmptyArray();
+    internal static readonly EmptyArray Instance = new();
 }

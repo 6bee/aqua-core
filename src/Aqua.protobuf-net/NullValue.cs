@@ -7,5 +7,5 @@ using global::ProtoBuf;
 [ProtoContract]
 public sealed class NullValue : Value
 {
-    internal static readonly NullValue Instance = new NullValue();
+    internal static readonly NullValue Instance = new();
 }
