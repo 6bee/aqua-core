@@ -94,6 +94,11 @@ public abstract class When_serializing_dynamic_object
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
     public void Should_serialize_value(Type type, object value, CultureInfo culture)
     {
+        if (this.TestIs<With_data_contract_serializer>())
+        {
+            DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
+        }
+
         if (this.TestIs<With_protobuf_net_serializer>())
         {
             ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
@@ -104,12 +109,10 @@ public abstract class When_serializing_dynamic_object
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-        if (this.TestIs<With_data_contract_serializer>())
+        if (this.TestIs<With_xml_serializer>())
         {
-            DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
+            XmlSerializationHelper.SkipUnsupportedDataType(type, value);
         }
-
-        Skip.If(this.TestIs<With_xml_serializer>(), "XmlSerializer has limited type support.");
 
         using var cultureContext = culture.CreateContext();
 
@@ -147,6 +150,11 @@ public abstract class When_serializing_dynamic_object
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
     public void Should_serialize_value_as_property(Type type, object value, CultureInfo culture)
     {
+        if (this.TestIs<With_data_contract_serializer>())
+        {
+            DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
+        }
+
         if (this.TestIs<With_protobuf_net_serializer>())
         {
             ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
@@ -155,11 +163,6 @@ public abstract class When_serializing_dynamic_object
         if (this.TestIs<With_system_text_json_serializer>())
         {
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
-        }
-
-        if (this.TestIs<With_data_contract_serializer>())
-        {
-            DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
         Skip.If(this.TestIs<With_xml_serializer>(), "XmlSerializer has limited type support.");
