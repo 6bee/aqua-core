@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add .NET 9.0 framework target
 - Add support for `System.Int128`, `System.UInt128`, `System.DateOnly`, `System.TimeOnly`
 
 ### Changed
