@@ -14,7 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bump _System.Text.Json_ from 8.0.5 to 9.0.0 (netstandard2.0) (concerns _Aqua.Text.Json_)
-- Bump version of _protobuf-net_ from 2.4.8 to 3.2.45
 
 ### Deprecated
 
