@@ -1,9 +1,12 @@
 ﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.Text.Json;
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace System.Text.Json;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 using Aqua.Dynamic;
 using Aqua.EnumerableExtensions;
+using Aqua.Text.Json;
 using Aqua.Text.Json.Converters;
 using Aqua.TypeSystem;
 using System;
@@ -12,7 +15,6 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 [EditorBrowsable(EditorBrowsableState.Never)]

@@ -3,7 +3,6 @@
 namespace Aqua.Tests.Serialization.Dynamic.DynamicObject;
 
 using Aqua.Dynamic;
-using Aqua.Text.Json;
 using Shouldly;
 using System;
 using System.Text.Json;

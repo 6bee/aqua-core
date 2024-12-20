@@ -2,7 +2,6 @@
 
 namespace Aqua.Tests.Serialization;
 
-using Aqua.Newtonsoft.Json;
 using global::Newtonsoft.Json;
 
 public static class NewtonsoftJsonSerializationHelper
