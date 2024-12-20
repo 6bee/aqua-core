@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!--
+      NOTE: Due to restrictions in protobuf-net v3 which prevent the use of surrogates for types part of an object hierarchy,
+            we're forced to stick to v2 since remote.linq is using a surrogate for serializing ConstantExpression.
+            ConstantExpression is a sub-type of Expression, hence part of a type hierarchy, and a surrogate is used to handle
+            serialization of the value property of type System.Object. While supported in v2, this cannot be done in v3
+            and no workaround has been found yet. Contributions are welcome ;)
+    -->    
     <PackageReference Include="protobuf-net" Version="2.4.8" />
   </ItemGroup>
 
