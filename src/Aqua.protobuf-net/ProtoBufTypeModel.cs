@@ -8,9 +8,7 @@ using Aqua.ProtoBuf.TypeSystem;
 using global::ProtoBuf.Meta;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
-[EditorBrowsable(EditorBrowsableState.Never)]
 public static class ProtoBufTypeModel
 {
     private static readonly IReadOnlyCollection<Type> _systemTypes = new[]
