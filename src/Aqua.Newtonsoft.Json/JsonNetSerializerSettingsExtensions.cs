@@ -6,7 +6,7 @@ namespace Newtonsoft.Json;
 
 using Aqua.Newtonsoft.Json;
 using Aqua.Newtonsoft.Json.ContractResolvers;
-using global::Newtonsoft.Json.Serialization;
+using Newtonsoft.Json.Serialization;
 using System.ComponentModel;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
