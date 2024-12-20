@@ -61,6 +61,6 @@ public class When_creating_type_info_of_generic_type_definition
     [Fact]
     public void Type_info_should_not_contain_any_generic_arguments()
     {
-        (typeInfo.GenericArguments?.Any() ?? false).ShouldBeFalse();
+        (typeInfo.GenericArguments?.Count > 0).ShouldBeFalse();
     }
 }

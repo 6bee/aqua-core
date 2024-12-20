@@ -133,7 +133,7 @@ public class TypeResolver : ITypeResolver
         }
 
         // validate properties if set in typeinfo
-        if (typeInfo.Properties?.Any() is true)
+        if (typeInfo.Properties?.Count > 0)
         {
             var type = resolvedType.IsArray
                 ? resolvedType.GetElementType()!

@@ -212,7 +212,7 @@ public class DynamicObjectConverter : ObjectConverter<DynamicObject>
                 serializer.Serialize(writer, instanceType);
             }
 
-            if (dynamicProperties?.Any() is true)
+            if (dynamicProperties?.Count > 0)
             {
                 writer.WritePropertyName(nameof(DynamicObject.Properties));
 

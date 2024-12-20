@@ -22,7 +22,7 @@ public abstract class ObjectConverter : JsonConverter
         {
             PropertyInfo = propertyInfo.CheckNotNull();
             _knownTypes = knownTypes.CheckNotNull();
-            IsIgnored = propertyInfo.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Any();
+            IsIgnored = propertyInfo.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Length > 0;
             DataMemberAttribute = (DataMemberAttribute?)propertyInfo.GetCustomAttributes(typeof(DataMemberAttribute), false)?.FirstOrDefault();
             Name = string.IsNullOrWhiteSpace(DataMemberAttribute?.Name) ? propertyInfo.Name : DataMemberAttribute!.Name;
             EmitDefaultValue = DataMemberAttribute?.EmitDefaultValue is true;

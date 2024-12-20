@@ -141,7 +141,7 @@ public class TypeInfo
 
     [IgnoreDataMember]
     [Unmapped]
-    public bool IsGenericTypeDefinition => IsGenericType && (!GenericArguments?.Any() ?? true);
+    public bool IsGenericTypeDefinition => IsGenericType && GenericArguments?.Count is null or 0;
 
     [IgnoreDataMember]
     [Unmapped]
@@ -207,7 +207,7 @@ public class TypeInfo
         string? GetGenericArgumentsString()
         {
             var genericArguments = GenericArguments;
-            var genericArgumentsString = IsGenericType && (genericArguments?.Any() ?? false)
+            var genericArgumentsString = IsGenericType && (genericArguments?.Count > 0)
                 ? $"[{genericArguments.Select(x => x.GetFriendlyName(includeNamespance, includeDeclaringType)).StringJoin(",")}]"
                 : null;
             return genericArgumentsString;

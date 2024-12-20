@@ -73,7 +73,7 @@ public abstract class MethodBaseInfo : MemberInfo
     [DataMember(Order = 6, IsRequired = false, EmitDefaultValue = false)]
     public List<TypeInfo>? ParameterTypes { get; set; }
 
-    public bool IsGenericMethod => GenericArgumentTypes?.Any() ?? false;
+    public bool IsGenericMethod => GenericArgumentTypes?.Count > 0;
 
     public override string ToString()
     {
