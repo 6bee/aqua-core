@@ -18,7 +18,7 @@ public class TransparentCache<TKey, TValue>
 {
     private readonly Dictionary<TKey, WeakReference> _cache;
     private readonly int _cleanupDelay;
-    private bool _isCleanupScheduled;
+    private volatile bool _isCleanupScheduled;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TransparentCache{TKey, TValue}"/> class.
