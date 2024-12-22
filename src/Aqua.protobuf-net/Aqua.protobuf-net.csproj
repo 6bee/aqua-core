@@ -19,6 +19,13 @@
             and no workaround has been found yet. Contributions are welcome ;)
     -->    
     <PackageReference Include="protobuf-net" Version="2.4.8" />
+    
+    <!-- 
+      NOTE: System.Text.RegularExpressions 4.3.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-cmhx-cq75-c4mj
+            Force latest version for transient dependency recevied via protobuf-net 2.4.8
+    -->
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    
   </ItemGroup>
 
   <ItemGroup>
