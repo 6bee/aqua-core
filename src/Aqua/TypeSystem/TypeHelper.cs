@@ -291,11 +291,6 @@ public static class TypeHelper
             throw CreateException($"return type '{method.ReturnType}' could not be reconstructed", ex);
         }
 
-        static int CountDeclarationDepth(System.Reflection.TypeInfo type, System.Reflection.TypeInfo? methodDeclaringType, int i)
-            => type == methodDeclaringType || type?.BaseType is null
-            ? i
-            : CountDeclarationDepth(type.BaseType.GetTypeInfo(), methodDeclaringType, i + 1);
-
         var isStatic = method.IsStatic ?? false;
         var methodName = method.Name;
         System.Reflection.MethodInfo? Filter(System.Reflection.MethodInfo[] candidates)
@@ -312,7 +307,7 @@ public static class TypeHelper
                     var paramTypes = m.GetParameters();
                     for (int i = 0; i < paramTypes.Length; i++)
                     {
-                        if (!Equal(paramTypes[i].ParameterType, parameterTypes[i]))
+                        if (paramTypes[i].ParameterType != parameterTypes[i])
                         {
                             return false;
                         }
@@ -320,8 +315,7 @@ public static class TypeHelper
 
                     return true;
                 })
-                .Where(m => returnType is null || Equal(m.ReturnType, returnType))
-                .OrderBy(m => CountDeclarationDepth(declaringType.GetTypeInfo(), m.DeclaringType?.GetTypeInfo(), 0))
+                .Where(m => returnType is null || m.ReturnType == returnType)
                 .ToArray();
 
             if (matches.Length is 0)
@@ -338,12 +332,6 @@ public static class TypeHelper
         }
 
         return bindingflags => Filter(declaringType.GetMethods(bindingflags));
-
-        // TODO: consider implementing custom comparison to circumvent issue with conflicting type definitions from different assemblies [issue#48]
-        static bool Equal(Type t1, Type t2)
-        {
-            return t1 == t2;
-        }
     }
 
     private static Func<BindingFlags, System.Reflection.PropertyInfo?> CreatePropertyResolver(PropertyInfo property, ITypeResolver typeResolver)

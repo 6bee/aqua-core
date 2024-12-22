@@ -71,9 +71,18 @@ public class TypeResolver : ITypeResolver
         Type? type = Type.GetType(typeInfo.FullName);
         if (!IsValid(typeInfo, type))
         {
-            type = GetAssemblies()
-                .Select(x => x.GetType(typeInfo.FullName))
-                .FirstOrDefault(x => IsValid(typeInfo, x));
+            var candidates = GetAssemblies()
+                .Select(x => x.GetType(typeInfo.FullName)!)
+                .Where(static x => x is not null)
+                .Where(x => IsValid(typeInfo, x))
+                .ToArray();
+
+            if (candidates.Length > 1)
+            {
+                candidates = [.. candidates.OrderBy(x => x.IsPublic ? 0 : 1)];
+            }
+
+            type = candidates.FirstOrDefault();
         }
 
         if (type is null && AllowEmitType)

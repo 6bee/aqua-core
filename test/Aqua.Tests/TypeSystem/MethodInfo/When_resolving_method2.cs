@@ -30,26 +30,15 @@ public class When_resolving_method2
     }
 
     [Fact]
-    public void FindConflictingTypeDefinitions()
+    public void Should_resolve_valuetask()
     {
         var m = typeof(TestClass).GetMethodEx(nameof(TestClass.MethodWithValueTaskReturnType));
+        var resolvedType = new TypeInfo(m.ReturnType).ResolveType(new TypeResolver());
 
-        var t1 = typeof(ValueTask<>).MakeGenericType(typeof(int));
-        var t2 = new TypeInfo(t1).ResolveType(new TypeResolver());
-        var t3 = new TypeInfo(t2).ResolveType(new TypeResolver());
-
-        var result1 = t1 == m.ReturnType;
-        var result2 = t2 == m.ReturnType;
-        var result3 = t2 == t3;
-
-        // NOTE: xunit.runner.visualstudio 3.0.0 provides extra definition of ValueTask<> and causes conflict
+        // NOTE: xunit.runner.visualstudio 3.0.0 provides extra definition of ValueTask<> (by packing dependencies via ILRepack) and causes conflict
         // System.Threading.Tasks.ValueTask`1, System.Threading.Tasks.Extensions, Version = 4.2.0.1, Culture = neutral, PublicKeyToken = cc7b13ffcd2ddd51
         // System.Threading.Tasks.ValueTask`1, xunit.runner.visualstudio.testadapter, Version = 3.0.0.0, Culture = neutral, PublicKeyToken = null
-        var s1 = t1.GetGenericTypeDefinition().AssemblyQualifiedName;
-        var s2 = t2.GetGenericTypeDefinition().AssemblyQualifiedName;
-
-        result1.ShouldBeTrue();
-        result2.ShouldBeTrue();
+        resolvedType.ShouldBeEquivalentTo(m.ReturnType);
     }
 
     [Fact]

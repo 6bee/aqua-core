@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bump _System.Text.Json_ from 8.0.5 to 9.0.0 (netstandard2.0) (concerns _Aqua.Text.Json_)
+- Type resolution prioritize publicly visible types in case of multiple matching candidates [#36][issue#36]
 
 ### Deprecated
 
@@ -123,6 +124,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [issue#36]: https://github.com/6bee/aqua-core/issues/36
 [issue#39]: https://github.com/6bee/aqua-core/issues/39
 [issue#43]: https://github.com/6bee/aqua-core/issues/43
+[issue#48]: https://github.com/6bee/aqua-core/issues/48
 
 [json-net]: https://www.newtonsoft.com/json
 [nullable-references]: https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references
