@@ -18,7 +18,7 @@
             serialization of the value property of type System.Object. While supported in v2, this cannot be done in v3
             and no workaround has been found yet. Contributions are welcome ;)
     -->    
-    <PackageReference Include="protobuf-net" Version="2.4.8" />
+    <PackageReference Include="protobuf-net" Version="2.4.9" />
     
     <!-- 
       NOTE: System.Text.RegularExpressions 4.3.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-cmhx-cq75-c4mj
