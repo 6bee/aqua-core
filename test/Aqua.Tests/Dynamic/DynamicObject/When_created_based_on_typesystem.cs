@@ -149,7 +149,7 @@ public class When_created_based_on_typesystem
     [Fact]
     public void Should_map_constructor_info()
     {
-        var ctor = GetType().GetConstructor(Array.Empty<Type>());
+        var ctor = GetType().GetConstructor(Type.EmptyTypes);
         var o = new DynamicObject(ctor);
         var r = new DynamicObjectMapper().Map<ConstructorInfo>(o);
         r.ShouldBeSameAs(ctor);

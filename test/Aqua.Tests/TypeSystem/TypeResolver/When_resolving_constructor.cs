@@ -14,7 +14,7 @@ public class When_resolving_constructor
     [Fact]
     public void Of_generic_list()
     {
-        var constructorInfo = new ConstructorInfo(typeof(List<string>).GetConstructor(Array.Empty<Type>()));
+        var constructorInfo = new ConstructorInfo(typeof(List<string>).GetConstructor(Type.EmptyTypes));
         constructorInfo.ResolveConstructor(new TypeResolver()).GetParameters().ShouldBeEmpty();
     }
 }

@@ -44,7 +44,7 @@ public class When_creating_constructor_info
     [Fact]
     public void Should_not_have_set_is_static_by_default_when_created_by_memberinfo()
     {
-        var ctor = typeof(A).GetConstructor(Array.Empty<Type>());
+        var ctor = typeof(A).GetConstructor(Type.EmptyTypes);
         new ConstructorInfo(ctor).IsStatic.ShouldBeNull();
     }
 

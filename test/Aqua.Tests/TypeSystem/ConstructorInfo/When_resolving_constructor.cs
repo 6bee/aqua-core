@@ -104,7 +104,7 @@ public class When_resolving_constructor
     [Fact]
     public void Should_resolve_constructor_created_by_memberinfo()
     {
-        var expected = typeof(Overload).GetConstructor(Array.Empty<Type>());
+        var expected = typeof(Overload).GetConstructor(Type.EmptyTypes);
         var ctor = new ConstructorInfo(expected);
         var ctor2 = NewtonsoftJsonSerializationHelper.Clone(ctor);
         ctor2.ToConstructorInfo().ShouldBeSameAs(expected);
@@ -114,15 +114,15 @@ public class When_resolving_constructor
     public void Should_resolve_default_constructor_created_by_name()
     {
         var ctor = new ConstructorInfo(".ctor", typeof(Overload));
-        var expected = typeof(Overload).GetConstructor(Array.Empty<Type>());
+        var expected = typeof(Overload).GetConstructor(Type.EmptyTypes);
         ctor.ToConstructorInfo().ShouldBeSameAs(expected);
     }
 
     [Fact]
     public void Should_resolve_default_constructor_created_by_name_with_empty_parameter_list()
     {
-        var ctor = new ConstructorInfo(".ctor", typeof(Overload), Array.Empty<Type>());
-        var expected = typeof(Overload).GetConstructor(Array.Empty<Type>());
+        var ctor = new ConstructorInfo(".ctor", typeof(Overload), Type.EmptyTypes);
+        var expected = typeof(Overload).GetConstructor(Type.EmptyTypes);
         ctor.ToConstructorInfo().ShouldBeSameAs(expected);
     }
 

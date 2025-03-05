@@ -36,7 +36,7 @@ public static class RuntimeReflectionExtensions
     /// </summary>
     /// <exception cref="InvalidOperationException">No method can be found matching specified criteria.</exception>
     public static MethodInfo GetMethodEx(this Type declaringType, string name, params Type[] parameters)
-        => GetMethodEx(declaringType, name, Array.Empty<Type>(), parameters, ReflectionBinding.Any);
+        => GetMethodEx(declaringType, name, Type.EmptyTypes, parameters, ReflectionBinding.Any);
 
     /// <summary>
     /// Get <see cref="MethodInfo"/> using reflection.
