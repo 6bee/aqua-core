@@ -31,7 +31,7 @@ public class When_mapping_empty_int_array
     [Fact]
     public void Dynamic_object_should_have_one_property_with_object_array_value()
     {
-        var array = dynamicObject.Values.Single().ShouldBeOfType<object[]>();
+        var array = dynamicObject.GetValues().Single().ShouldBeOfType<object[]>();
         array.ShouldBeEmpty();
     }
 

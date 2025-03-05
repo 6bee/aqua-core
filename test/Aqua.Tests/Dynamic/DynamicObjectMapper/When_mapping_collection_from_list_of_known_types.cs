@@ -68,7 +68,7 @@ public class When_mapping_collection_from_list_of_known_types
     {
         foreach (var dynamicObject in dynamicObjects)
         {
-            dynamicObject.PropertyNames.Single().ShouldBeEmpty();
+            dynamicObject.GetPropertyNames().Single().ShouldBeEmpty();
         }
     }
 

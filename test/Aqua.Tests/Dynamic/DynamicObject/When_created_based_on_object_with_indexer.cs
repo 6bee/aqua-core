@@ -58,7 +58,7 @@ public class When_created_based_on_object_with_indexer
     [Fact]
     public void Member_name_should_be_name_of_property()
     {
-        dynamicObject.PropertyNames.ShouldContain("Item");
+        dynamicObject.GetPropertyNames().ShouldContain("Item");
     }
 
     [Fact]

@@ -49,7 +49,7 @@ public class When_mapping_reducing_property_set_for_seriable_type
     [Fact]
     public void Dynamic_object_should_contain_property_two_only()
     {
-        dynamicObject.PropertyNames.Single().ShouldBe("PropertyTwo");
+        dynamicObject.GetPropertyNames().Single().ShouldBe("PropertyTwo");
 
         dynamicObject["PropertyTwo"].ShouldBe("two");
     }

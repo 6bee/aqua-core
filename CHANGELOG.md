@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump _System.Text.Json_ from 8.0.5 to 9.0.0 (netstandard2.0) (concerns _Aqua.Text.Json_)
 - Type resolution prioritize publicly visible types in case of multiple matching candidates [#36][issue#36]
+- Declare members of `DynamicObject`, `PropertySet`, and `Property` virtual
 
 ### Deprecated
 

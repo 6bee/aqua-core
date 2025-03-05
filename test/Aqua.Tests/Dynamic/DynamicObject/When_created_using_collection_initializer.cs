@@ -28,9 +28,9 @@ public class When_created_using_collection_initializer
 
         dynamicObject.PropertyCount.ShouldBe(3);
 
-        dynamicObject.PropertyNames.ShouldContain("Property1");
-        dynamicObject.PropertyNames.ShouldContain("Property2");
-        dynamicObject.PropertyNames.ShouldContain("P -- 3");
+        dynamicObject.GetPropertyNames().ShouldContain("Property1");
+        dynamicObject.GetPropertyNames().ShouldContain("Property2");
+        dynamicObject.GetPropertyNames().ShouldContain("P -- 3");
 
         dynamicObject["Property1"].ShouldBe(value1);
         dynamicObject["Property2"].ShouldBe(value2);

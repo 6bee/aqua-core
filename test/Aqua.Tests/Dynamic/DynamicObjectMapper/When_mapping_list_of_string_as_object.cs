@@ -32,7 +32,7 @@ public class When_mapping_list_of_string_as_object
     [Fact]
     public void Dynamic_object_should_have_items_property_with_object_array()
     {
-        var items = dynamicObject.Values.Single().ShouldBeOfType<object[]>();
+        var items = dynamicObject.GetValues().Single().ShouldBeOfType<object[]>();
         items[0].ShouldBe("One");
         items[1].ShouldBeNull();
     }

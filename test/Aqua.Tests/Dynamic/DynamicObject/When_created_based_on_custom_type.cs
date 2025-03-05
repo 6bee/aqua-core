@@ -38,7 +38,7 @@ public class When_created_based_on_custom_type
     [Fact]
     public void Member_name_should_be_name_of_property()
     {
-        dynamicObject.PropertyNames.Single().ShouldBe("Prop1");
+        dynamicObject.GetPropertyNames().Single().ShouldBe("Prop1");
     }
 
     [Fact]

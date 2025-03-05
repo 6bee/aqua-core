@@ -42,7 +42,7 @@ public class When_created_based_on_object_with_enum_property
     [Fact]
     public void Member_name_should_be_name_of_property()
     {
-        dynamicObject.PropertyNames.ShouldContain("EnumProperty");
+        dynamicObject.GetPropertyNames().ShouldContain("EnumProperty");
     }
 
     [Fact]

@@ -51,7 +51,7 @@ partial class DynamicObject : IDynamicMetaObjectProvider
 
         public override IEnumerable<string> GetDynamicMemberNames()
             => Value is DynamicObject dynamicObject
-            ? dynamicObject.PropertyNames
+            ? dynamicObject.GetPropertyNames()
             : Enumerable.Empty<string>();
     }
 }

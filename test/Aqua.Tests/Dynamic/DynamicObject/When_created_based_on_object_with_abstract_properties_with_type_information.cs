@@ -57,11 +57,11 @@ public class When_created_based_on_object_with_abstract_properties_with_type_inf
 
         dynamicObject.PropertyCount.ShouldBe(5);
 
-        dynamicObject.PropertyNames.ElementAt(0).ShouldBe("Ref");
-        dynamicObject.PropertyNames.ElementAt(1).ShouldBe("Value1");
-        dynamicObject.PropertyNames.ElementAt(2).ShouldBe("Value2");
-        dynamicObject.PropertyNames.ElementAt(3).ShouldBe("Value3");
-        dynamicObject.PropertyNames.ElementAt(4).ShouldBe("Value4");
+        dynamicObject.GetPropertyNames().ElementAt(0).ShouldBe("Ref");
+        dynamicObject.GetPropertyNames().ElementAt(1).ShouldBe("Value1");
+        dynamicObject.GetPropertyNames().ElementAt(2).ShouldBe("Value2");
+        dynamicObject.GetPropertyNames().ElementAt(3).ShouldBe("Value3");
+        dynamicObject.GetPropertyNames().ElementAt(4).ShouldBe("Value4");
 
         var refObj = dynamicObject["Ref"].ShouldBeOfType<DynamicObject>();
         refObj.PropertyCount.ShouldBe(0);

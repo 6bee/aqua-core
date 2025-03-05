@@ -33,8 +33,8 @@ public class When_created_based_on_a_keyvaluepair
     [Fact]
     public void Member_names_should_be_key_and_value()
     {
-        dynamicObject.PropertyNames.ShouldContain("Key");
-        dynamicObject.PropertyNames.ShouldContain("Value");
+        dynamicObject.GetPropertyNames().ShouldContain("Key");
+        dynamicObject.GetPropertyNames().ShouldContain("Value");
     }
 
     [Fact]

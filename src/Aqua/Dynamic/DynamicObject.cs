@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 
 [Serializable]
 [DataContract(IsReference = true)]
-[DebuggerDisplay("{GetDebuggerDisplay(),nq}")]
+[DebuggerDisplay("DynamicObject {GetDebuggerDisplay(),nq}")]
 [KnownType(typeof(DynamicObject)), XmlInclude(typeof(DynamicObject))]
 [KnownType(typeof(DynamicObject[])), XmlInclude(typeof(DynamicObject[]))]
 public partial class DynamicObject
@@ -56,7 +56,7 @@ public partial class DynamicObject
     public DynamicObject(IEnumerable<(string Name, object? Value)>? properties)
         => Properties = properties is null
         ? null
-        : new PropertySet(properties.CheckNotNull());
+        : [.. properties.CheckNotNull()];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DynamicObject"/> class, setting the specified members.
@@ -66,7 +66,7 @@ public partial class DynamicObject
     public DynamicObject(IEnumerable<Property>? properties)
         => Properties = properties is null
         ? null
-        : new PropertySet(properties.CheckNotNull());
+        : [.. properties.CheckNotNull()];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DynamicObject"/> class with the given <see cref="PropertySet"/>.
@@ -109,22 +109,22 @@ public partial class DynamicObject
         Properties = properties is null
             ? null
             : deepCopy
-                ? new PropertySet(properties.Select(static x => new Property(x)))
-                : new PropertySet(properties);
+                ? [.. properties.Select(static x => new Property(x))]
+                : [.. properties];
     }
 
     /// <summary>
     /// Gets or sets the type of object represented by this dynamic object instance.
     /// </summary>
     [DataMember(Order = 1)]
-    public TypeInfo? Type { get; set; }
+    public virtual TypeInfo? Type { get; set; }
 
     /// <summary>
     /// Gets or sets the data members of this dynamic object instance.<br/>
     /// This property may be <see langword="null"/> for the dynamic object represent a <see langword="default"/> value.
     /// </summary>
     [DataMember(Order = 2)]
-    public PropertySet? Properties { get; set; }
+    public virtual PropertySet? Properties { get; set; }
 
     /// <summary>
     /// Gets a value indicating whether target instance is <see langword="null"/>.
@@ -133,7 +133,7 @@ public partial class DynamicObject
     /// Returns <see langword="true"/> if <see cref="Properties"/> has not been set, <see langword="false"/> otherwise.
     /// </remarks>
     [XmlIgnore]
-    public bool IsNull
+    public virtual bool IsNull
     {
         get => Properties is null;
         init
@@ -146,26 +146,26 @@ public partial class DynamicObject
     }
 
     /// <summary>
-    /// Gets the count of members (dynamically added properties) hold by this dynamic object.
+    /// Gets the number of members (dynamically added properties) held by this dynamic object.
     /// </summary>
-    public int PropertyCount => Properties?.Count ?? 0;
+    public virtual int PropertyCount => Properties?.Count ?? 0;
 
     /// <summary>
-    /// Gets a collection of member names hold by this dynamic object.
+    /// Gets a collection of member names held by this dynamic object.
     /// </summary>
-    public IEnumerable<string> PropertyNames => Properties?.Select(static x => x.Name ?? string.Empty).ToArray() ?? Enumerable.Empty<string>();
+    public virtual IReadOnlyList<string> GetPropertyNames() => Properties?.Select(static x => x.Name ?? string.Empty).ToArray() ?? [];
 
     /// <summary>
-    /// Gets a collection of member values hold by this dynamic object.
+    /// Gets a collection of member values held by this dynamic object.
     /// </summary>
-    public IEnumerable<object?> Values => Properties?.Select(static x => x.Value).ToArray() ?? Enumerable.Empty<object?>();
+    public virtual IReadOnlyList<object?> GetValues() => Properties?.Select(static x => x.Value).ToArray() ?? [];
 
     /// <summary>
     /// Gets or sets a member value.
     /// </summary>
     /// <param name="name">Name of the member to set or get.</param>
     /// <returns>Value of the member specified.</returns>
-    public object? this[string name]
+    public virtual object? this[string name]
     {
         get => TryGet(name, out var value)
             ? value
@@ -179,14 +179,14 @@ public partial class DynamicObject
     /// <param name="name">Name of the member to be assigned.</param>
     /// <param name="value">The value to be set.</param>
     /// <returns>The property that was either added or updated.</returns>
-    public Property Set(string name, object? value)
+    public virtual Property Set(string name, object? value)
     {
         var properties = GetOrCreatePropertSet();
         var property = properties.SingleOrDefault(x => string.Equals(x.Name, name, StringComparison.Ordinal));
 
         if (property is null)
         {
-            property = new Property(name, value);
+            property = CreateProperty(name, value);
             properties.Add(property);
         }
         else
@@ -201,7 +201,7 @@ public partial class DynamicObject
     /// Sets a member.
     /// </summary>
     /// <param name="property">Property to be set.</param>
-    public void Set(Property property)
+    public virtual void Set(Property property)
     {
         property.AssertNotNull();
         var properties = GetOrCreatePropertSet();
@@ -214,12 +214,14 @@ public partial class DynamicObject
         properties.Add(property);
     }
 
+    protected virtual Property CreateProperty(string name, object? value) => new(name, value);
+
     /// <summary>
     /// Gets a member's value or <see langword="null"/> if the specified member is unknown.
     /// </summary>
     /// <param name="name">Name of the member for the value to be returned.</param>
     /// <returns>The value assigned to the member specified, <see langword="null"/> if member is not set.</returns>
-    public object? Get(string name = "")
+    public virtual object? Get(string name = "")
         => TryGet(name, out var value)
             ? value
             : null;
@@ -228,7 +230,7 @@ public partial class DynamicObject
     /// Gets a member's value or <c>default(T)</c> if the specified member is <see langword="null"/> or unknown.
     /// </summary>
     /// <returns>The value assigned to the member specified, <c>default(T)</c> if member is <see langword="null"/> or not set.</returns>
-    public T? Get<T>(string name = "")
+    public virtual T? Get<T>(string name = "")
         => Get(name) is T t
             ? t
             : default;
@@ -236,18 +238,18 @@ public partial class DynamicObject
     /// <summary>
     /// Adds a property and it's value.
     /// </summary>
-    public void Add(string name, object? value) => GetOrCreatePropertSet().Add(name, value);
+    public virtual void Add(string name, object? value) => GetOrCreatePropertSet().Add(name, value);
 
     /// <summary>
     /// Adds a property.
     /// </summary>
-    public void Add(Property property) => GetOrCreatePropertSet().Add(property);
+    public virtual void Add(Property property) => GetOrCreatePropertSet().Add(property);
 
     /// <summary>
     /// Removes a member and it's value.
     /// </summary>
     /// <returns><see langword="true"/> if the member is successfully found and removed; otherwise, <see langword="false"/>.</returns>
-    public bool Remove(string name)
+    public virtual bool Remove(string name)
     {
         var properties = Properties;
         if (TryGetProperty(properties, name, out var property))
@@ -266,7 +268,7 @@ public partial class DynamicObject
     /// <param name="value">When this method returns, contains the value assgned with the specified member,
     /// if the member is found; <see langword="null"/> if the member is not found.</param>
     /// <returns><see langword="true"/> is the dynamic object contains a member with the specified name; otherwise <see langword="false"/>.</returns>
-    public bool TryGet(string name, out object? value)
+    public virtual bool TryGet(string name, out object? value)
     {
         if (TryGetProperty(Properties, name.CheckNotNull(), out var property))
         {
@@ -310,18 +312,7 @@ public partial class DynamicObject
         => new(type) { IsNull = true };
 
     private string GetDebuggerDisplay()
-    {
-        if (IsNull)
-        {
-            return $"default({Type})";
-        }
-
-        var type = default(string);
-        if (Type is TypeInfo t)
-        {
-            type = $"{t} ";
-        }
-
-        return $"{nameof(DynamicObject)}( {type}[Count = {PropertyCount}] )";
-    }
+        => IsNull
+        ? $"default({Type})"
+        : $"{Type} [Count = {PropertyCount}]";
 }

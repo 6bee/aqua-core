@@ -209,13 +209,13 @@ public class When_serializing_dynamic_types
 
         emptyCollection.IsNull.ShouldBeFalse();
         emptyCollection.Properties.ShouldHaveSingleItem().Name.ShouldBeEmpty();
-        emptyCollection.Values.ShouldHaveSingleItem().ShouldBeOfType<object[]>().ShouldBeEmpty();
+        emptyCollection.GetValues().ShouldHaveSingleItem().ShouldBeOfType<object[]>().ShouldBeEmpty();
 
         var copy = emptyCollection.Clone();
 
         copy.IsNull.ShouldBeFalse();
         copy.Properties.ShouldHaveSingleItem().Name.ShouldBeEmpty();
-        copy.Values.ShouldHaveSingleItem().ShouldBeOfType<object[]>().ShouldBeEmpty();
+        copy.GetValues().ShouldHaveSingleItem().ShouldBeOfType<object[]>().ShouldBeEmpty();
     }
 
     [Fact]

@@ -34,7 +34,7 @@ public class When_created_based_on_datetime_object
     [Fact]
     public void Member_name_should_be_empty_string()
     {
-        dynamicObject.PropertyNames.Single().ShouldBe(string.Empty);
+        dynamicObject.GetPropertyNames().Single().ShouldBe(string.Empty);
     }
 
     [Fact]

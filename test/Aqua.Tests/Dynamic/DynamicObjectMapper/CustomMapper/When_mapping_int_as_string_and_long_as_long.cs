@@ -71,12 +71,12 @@ public class When_mapping_int_as_string_and_long_as_long
     [Fact]
     public void Dynamic_object_for_int_should_contain_string_value()
     {
-        dynamicObjectWithInt.Values.Single().ShouldBeOfType<string>();
+        dynamicObjectWithInt.GetValues().Single().ShouldBeOfType<string>();
     }
 
     [Fact]
     public void Dynamic_object_for_lonb_should_contain_string_value()
     {
-        dynamicObjectWithLong.Values.Single().ShouldBeOfType<long>();
+        dynamicObjectWithLong.GetValues().Single().ShouldBeOfType<long>();
     }
 }

@@ -49,9 +49,9 @@ public class When_created_based_on_object_with_guid_properties
     [Fact]
     public void Member_name_should_be_name_of_property()
     {
-        dynamicObject.PropertyNames.Any(name => name is "Guid1").ShouldBeTrue();
-        dynamicObject.PropertyNames.Any(name => name is "Guid2").ShouldBeTrue();
-        dynamicObject.PropertyNames.Any(name => name is "Guid3").ShouldBeTrue();
+        dynamicObject.GetPropertyNames().Any(name => name is "Guid1").ShouldBeTrue();
+        dynamicObject.GetPropertyNames().Any(name => name is "Guid2").ShouldBeTrue();
+        dynamicObject.GetPropertyNames().Any(name => name is "Guid3").ShouldBeTrue();
     }
 
     [Fact]

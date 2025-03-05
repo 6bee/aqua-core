@@ -33,8 +33,8 @@ public class When_mapping_list_of_string_as_collection
     public void String_item_should_be_presened_as_dynamic_object()
     {
         var item = dynamicObjects.First();
-        item.PropertyNames.Single().ShouldBeEmpty();
-        item.Values.Single().ShouldBe("One");
+        item.GetPropertyNames().Single().ShouldBeEmpty();
+        item.GetValues().Single().ShouldBe("One");
     }
 
     [Fact]

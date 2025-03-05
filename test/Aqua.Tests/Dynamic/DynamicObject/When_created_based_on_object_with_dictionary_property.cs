@@ -48,7 +48,7 @@ public class When_created_based_on_object_with_dictionary_property
     [Fact]
     public void Member_name_should_be_name_of_property()
     {
-        dynamicObject.PropertyNames.Single().ShouldBe("Dictionary");
+        dynamicObject.GetPropertyNames().Single().ShouldBe("Dictionary");
     }
 
     [Fact]
@@ -95,8 +95,8 @@ public class When_created_based_on_object_with_dictionary_property
     {
         foreach (DynamicObject element in (object[])dynamicObject["Dictionary"])
         {
-            element.PropertyNames.ShouldContain("Key");
-            element.PropertyNames.ShouldContain("Value");
+            element.GetPropertyNames().ShouldContain("Key");
+            element.GetPropertyNames().ShouldContain("Value");
         }
     }
 

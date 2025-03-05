@@ -724,7 +724,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
             if (dynamicObj.IsSingleValueWrapper())
             {
-                return MapRequired(dynamicObj.Values.Single(), resultType);
+                return MapRequired(dynamicObj.GetValues().Single(), resultType);
             }
 
             return MapInternal(dynamicObj, sourceType, resultType);

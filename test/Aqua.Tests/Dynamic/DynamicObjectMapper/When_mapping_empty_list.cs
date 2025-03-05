@@ -32,7 +32,7 @@ public class When_mapping_empty_list
     [Fact]
     public void Dynamic_object_should_have_items_property_with_empty_object_array()
     {
-        dynamicObject.Values.Single()
+        dynamicObject.GetValues().Single()
             .ShouldBeOfType<object[]>()
             .Length.ShouldBe(0);
     }

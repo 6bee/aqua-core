@@ -41,5 +41,5 @@ public static class DynamicObjectExtensions
     /// </summary>
     public static bool IsSingleValueWrapper(this DynamicObject dynamicObject)
         => dynamicObject.CheckNotNull().PropertyCount is 1
-        && string.IsNullOrEmpty(dynamicObject.PropertyNames.Single());
+        && string.IsNullOrEmpty(dynamicObject.GetPropertyNames().Single());
 }

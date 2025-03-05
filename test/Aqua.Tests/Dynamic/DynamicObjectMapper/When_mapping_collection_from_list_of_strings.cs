@@ -48,7 +48,7 @@ public class When_mapping_collection_from_list_of_strings
     {
         foreach (var dynamicObject in dynamicObjects)
         {
-            dynamicObject.PropertyNames.Single().ShouldBe(string.Empty);
+            dynamicObject.GetPropertyNames().Single().ShouldBe(string.Empty);
         }
     }
 

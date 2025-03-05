@@ -150,28 +150,29 @@ public static class EnumerableExtensions
     /// <returns>The collection's hash code.</returns>
     public static int GetCollectionHashCode<T>(this IEnumerable<T>? collection, IEqualityComparer<T>? comparer)
     {
-        comparer ??= EqualityComparer<T>.Default;
+        var hashCode = 0;
 
-        unchecked
+        if (collection is not null)
         {
-            var hashCode = 0;
+            comparer ??= EqualityComparer<T>.Default;
 
-            if (collection is not null)
+            unchecked
             {
                 foreach (var item in collection)
                 {
                     hashCode ^= item is null ? -1 : comparer.GetHashCode(item);
                 }
             }
-
-            return hashCode;
         }
+
+        return hashCode;
     }
 
     /// <summary>
     /// Returns <see langword="true"/> if the object is of type <see cref="IEnumerable"/> but not <see cref="string"/>.
     /// </summary>
 #pragma warning disable S3874 // SonarCSharp_S3874: "out" and "ref" parameters should not be used
+    [DebuggerStepThrough]
     public static bool IsCollection(this object? obj, [NotNullWhen(true)] out IEnumerable? enumerable)
     {
         if (obj is IEnumerable x && obj is not string)
@@ -199,12 +200,16 @@ public static class EnumerableExtensions
         return (IEnumerable)list!;
     }
 
+    [DebuggerStepThrough]
     public static IEnumerable<T> AsEmptyIfNull<T>(this IEnumerable<T>? source) => source ?? Enumerable.Empty<T>();
 
+    [DebuggerStepThrough]
     public static T[] AsEmptyIfNull<T>(this T[]? source) => source is null ? Array.Empty<T>() : source;
 
+    [DebuggerStepThrough]
     public static string AsEmptyIfNull(this string? source) => source is null ? string.Empty : source;
 
+    [DebuggerStepThrough]
     public static T? AsNullIfEmpty<T>(this T? source)
         where T : IEnumerable
         => source is string str && string.IsNullOrEmpty(str)
@@ -213,100 +218,166 @@ public static class EnumerableExtensions
         ? default
         : source;
 
+    [DebuggerStepThrough]
     public static string? AsNullIfEmptyOrWhiteSpace(this string? source)
         => string.IsNullOrWhiteSpace(source)
         ? default
         : source;
 
+    [DebuggerStepThrough]
     public static bool IsNotNullOrEmpty([NotNullWhen(true)] this IEnumerable? source)
         => source is string str
         ? !string.IsNullOrEmpty(str)
         : source?.GetEnumerator().MoveNext() is true;
 
+    [DebuggerStepThrough]
     public static bool IsNullOrEmpty([NotNullWhen(false)] this IEnumerable? source)
         => source is string str
         ? string.IsNullOrEmpty(str)
         : source?.GetEnumerator().MoveNext() is not true;
 
+    [DebuggerStepThrough]
     [return: NotNullIfNotNull(nameof(source))]
-    public static string? StringJoin<T>(this IEnumerable<T>? source, string separator) => source is null ? default : string.Join(separator, source);
+    public static string? StringJoin<T>(this IEnumerable<T>? source, string separator) => source is null ? null : string.Join(separator, source);
+
+#if !NETSTANDARD2_0
+    [DebuggerStepThrough]
+    [return: NotNullIfNotNull(nameof(source))]
+    public static string? StringJoin<T>(this IEnumerable<T>? source, char separator) => source is null ? null : string.Join(separator, source);
+#endif // NETSTANDARD2_0
 
     [DebuggerStepThrough]
     public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
     {
-        foreach (var item in source)
+        action.AssertNotNull();
+
+        if (source is not null)
         {
-            action(item);
+            foreach (var item in source)
+            {
+                action(item);
+            }
         }
     }
 
     [DebuggerStepThrough]
-    public static void ForEach<T>(this IEnumerable<T> source, Action<T, int> action)
+    public static void ForEach<T>(this IEnumerable<T>? source, Action<T, int> action)
     {
-        var index = 0;
-        foreach (var item in source)
+        action.AssertNotNull();
+
+        if (source is not null)
         {
-            action(item, index++);
+            var index = 0;
+            foreach (var item in source)
+            {
+                action(item, index++);
+            }
         }
     }
 
     [DebuggerStepThrough]
-    public static void ForEach<T, TResult>(this IEnumerable<T> source, Func<T, TResult> func)
+    public static void ForEach<T, TResult>(this IEnumerable<T>? source, Func<T, TResult> func)
     {
-        foreach (var item in source)
+        func.AssertNotNull();
+
+        if (source is not null)
         {
-            _ = func(item);
+            foreach (var item in source)
+            {
+                _ = func(item);
+            }
         }
     }
 
     [DebuggerStepThrough]
-    public static void ForEach<T, TResult>(this IEnumerable<T> source, Func<T, int, TResult> func)
+    public static void ForEach<T, TResult>(this IEnumerable<T>? source, Func<T, int, TResult> func)
     {
-        var index = 0;
-        foreach (var item in source)
+        func.AssertNotNull();
+
+        if (source is not null)
         {
-            _ = func(item, index++);
+            var index = 0;
+            foreach (var item in source)
+            {
+                _ = func(item, index++);
+            }
         }
     }
 
+    [DebuggerStepThrough]
     public static bool Any([NotNullWhen(true)] this IEnumerable? source) => source?.GetEnumerator().MoveNext() is true;
 
+    [DebuggerStepThrough]
     public static bool Any([NotNullWhen(true)] this IEnumerable? source, Func<object, bool> predicate)
     {
-        if (source is null)
-        {
-            return false;
-        }
+        predicate.AssertNotNull();
 
-#pragma warning disable S3267 // False positive: there's no linq extension method to simplify loop with
-        foreach (var item in source)
-#pragma warning restore S3267 // False positive: there's no linq extension method to simplify loop with
+        if (source?.GetEnumerator() is IEnumerator enumerator)
         {
-            if (predicate(item))
+            while (enumerator.MoveNext())
             {
-                return true;
+                if (predicate(enumerator.Current))
+                {
+                    return true;
+                }
             }
         }
 
         return false;
     }
 
+    [DebuggerStepThrough]
     public static bool All(this IEnumerable? source, Func<object, bool> predicate)
     {
-        if (source is null)
-        {
-            return true;
-        }
+        predicate.AssertNotNull();
 
-        foreach (var item in source)
+        if (source?.GetEnumerator() is IEnumerator enumerator)
         {
-            if (!predicate(item))
+            while (enumerator.MoveNext())
             {
-                return false;
+                if (!predicate(enumerator.Current))
+                {
+                    return false;
+                }
             }
         }
 
         return true;
+    }
+
+    [DebuggerStepThrough]
+    public static int Count(this IEnumerable? source)
+    {
+        int count = 0;
+        if (source?.GetEnumerator() is IEnumerator enumerator)
+        {
+            while (enumerator.MoveNext())
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    [DebuggerStepThrough]
+    public static int Count(this IEnumerable? source, Func<object, bool> predicate)
+    {
+        predicate.AssertNotNull();
+
+        int count = 0;
+        if (source?.GetEnumerator() is IEnumerator enumerator)
+        {
+            while (enumerator.MoveNext())
+            {
+                if (predicate(enumerator.Current))
+                {
+                    count++;
+                }
+            }
+        }
+
+        return count;
     }
 
 #if NETSTANDARD2_0

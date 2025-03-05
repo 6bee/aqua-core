@@ -33,7 +33,7 @@ public class When_mapping_list_of_nullable_int
     [Fact]
     public void Dynamic_object_should_have_items_property_with_list()
     {
-        var items = dynamicObject.Values.Single().ShouldBeOfType<object[]>();
+        var items = dynamicObject.GetValues().Single().ShouldBeOfType<object[]>();
         items[0].ShouldBeNull();
         items[1].ShouldBe(1);
         items[2].ShouldBe(11);

@@ -45,8 +45,8 @@ public class When_mapping_collection_from_list_of_nullable_guids
     [Fact]
     public void Dynamic_objects_member_name_should_be_empty_string()
     {
-        dynamicObjects.ElementAt(0).PropertyNames.Single().ShouldBe(string.Empty);
-        dynamicObjects.ElementAt(1).PropertyNames.Single().ShouldBe(string.Empty);
+        dynamicObjects.ElementAt(0).GetPropertyNames().Single().ShouldBe(string.Empty);
+        dynamicObjects.ElementAt(1).GetPropertyNames().Single().ShouldBe(string.Empty);
         dynamicObjects.ElementAt(2).ShouldBeNull();
     }
 

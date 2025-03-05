@@ -2,9 +2,11 @@
 
 namespace Aqua.Dynamic;
 
+using Aqua.EnumerableExtensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -16,6 +18,7 @@ using System.Runtime.Serialization;
 /// </summary>
 [Serializable]
 [CollectionDataContract]
+[DebuggerDisplay("PropertySet {GetDebuggerDisplay(),nq}")]
 public class PropertySet : IReadOnlyCollection<Property>
 {
     [Serializable]
@@ -60,9 +63,9 @@ public class PropertySet : IReadOnlyCollection<Property>
     private PropertySet(List<Property> properties)
         => _list = properties.CheckNotNull();
 
-    public int Count => _list.Count;
+    public virtual int Count => _list.Count;
 
-    public object? this[string name]
+    public virtual object? this[string name]
     {
         get
         {
@@ -85,9 +88,9 @@ public class PropertySet : IReadOnlyCollection<Property>
         }
     }
 
-    public void Add(string name, object? value) => Add(new Property(name, value));
+    public virtual void Add(string name, object? value) => Add(new Property(name, value));
 
-    public void Add(Property property)
+    public virtual void Add(Property property)
     {
         property.AssertNotNull();
 
@@ -99,23 +102,25 @@ public class PropertySet : IReadOnlyCollection<Property>
         _list.Add(property);
     }
 
-    public bool Remove(Property property) => _list.RemoveAll(CreatePredicate(property)) > 0;
+    public virtual bool Remove(Property property) => _list.RemoveAll(CreatePredicate(property)) > 0;
 
-    public bool Contains(Property property) => _list.FindIndex(CreatePredicate(property)) > -1;
+    public virtual bool Contains(Property property) => _list.FindIndex(CreatePredicate(property)) > -1;
 
-    public IEnumerator<Property> GetEnumerator() => _list.GetEnumerator();
+    public virtual IEnumerator<Property> GetEnumerator() => _list.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_list).GetEnumerator();
 
-    internal IEnumerable<Property> FindAll(string name) => FindAll(new Property(name, null));
+    protected internal IEnumerable<Property> FindAll(string name) => FindAll(new Property(name, null));
 
-    internal IEnumerable<Property> FindAll(Property property)
+    protected internal IEnumerable<Property> FindAll(Property property)
     {
         var match = CreatePredicate(property);
         return from item in _list
                where match(item)
                select item;
     }
+
+    private string GetDebuggerDisplay() => $"[{Count}] {{ {_list.Select(x => x.Name).StringJoin(", ")} }}";
 
     private static Predicate<Property> CreatePredicate(Property property)
     {
@@ -127,7 +132,7 @@ public class PropertySet : IReadOnlyCollection<Property>
     public static implicit operator Dictionary<string, object?>(PropertySet propertySet)
         => propertySet.CheckNotNull().ToDictionary();
 
-    public Dictionary<string, object?> ToDictionary()
+    public virtual Dictionary<string, object?> ToDictionary()
         => _list.ToDictionary(static x => x.Name ?? string.Empty, static x => x.Value);
 
     public static PropertySet From(Dictionary<string, object?> dictionary)

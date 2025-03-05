@@ -59,8 +59,8 @@ public class When_mapping_collection_from_list_of_custom_value_type
     {
         foreach (var dynamicObject in dynamicObjects)
         {
-            dynamicObject.PropertyNames.ElementAt(0).ShouldBe("Int32Property");
-            dynamicObject.PropertyNames.ElementAt(1).ShouldBe("StringProperty");
+            dynamicObject.GetPropertyNames().ElementAt(0).ShouldBe("Int32Property");
+            dynamicObject.GetPropertyNames().ElementAt(1).ShouldBe("StringProperty");
         }
     }
 

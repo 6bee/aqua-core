@@ -53,8 +53,8 @@ public class When_mapping_collection_from_dictionary
     {
         foreach (var dynamicObject in dynamicObjects)
         {
-            dynamicObject.PropertyNames.ShouldContain("Key");
-            dynamicObject.PropertyNames.ShouldContain("Value");
+            dynamicObject.GetPropertyNames().ShouldContain("Key");
+            dynamicObject.GetPropertyNames().ShouldContain("Value");
         }
     }
 

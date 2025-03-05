@@ -19,7 +19,7 @@ using System.Xml.Serialization;
 [KnownType(typeof(DateTimeOffset)), XmlInclude(typeof(DateTimeOffset))]
 [KnownType(typeof(BigInteger)), XmlInclude(typeof(BigInteger))]
 [KnownType(typeof(Complex)), XmlInclude(typeof(Complex))]
-[DebuggerDisplay("{Name,nq}: {Value}")]
+[DebuggerDisplay("Property {Name,nq}: {Value}")]
 [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Preferred name")]
 public class Property
 {
@@ -39,19 +39,19 @@ public class Property
     }
 
     [DataMember(Order = 1, IsRequired = true)]
-    public string Name { get; set; } = null!;
+    public virtual string Name { get; set; } = null!;
 
     [DataMember(Order = 2)]
-    public object? Value { get; set; }
+    public virtual object? Value { get; set; }
 
     public KeyValuePair<string, object?> ToKeyValuePair()
-        => new KeyValuePair<string, object?>(Name ?? string.Empty, Value);
+        => new(Name ?? string.Empty, Value);
 
     public static Property From<T>(KeyValuePair<string, T> kvp)
-        => new Property(kvp.Key, kvp.Value);
+        => new(kvp.Key, kvp.Value);
 
     public static implicit operator Property((string Name, object? Value) property)
-        => new Property(property.Name, property.Value);
+        => new(property.Name, property.Value);
 
     public static implicit operator (string Name, object? Value)(Property property)
         => (property.CheckNotNull().Name, property.Value);

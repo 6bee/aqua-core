@@ -61,7 +61,7 @@ public class When_mapping_dynamic_objects_to_list_of_known_types
     {
         for (int i = 0; i < dynamicObjects.Length; i++)
         {
-            var sourceObject = dynamicObjects[i].Values.Single();
+            var sourceObject = dynamicObjects[i].GetValues().Single();
 
             var recreatedObject = recreatedObjectLists.ElementAt(i);
 

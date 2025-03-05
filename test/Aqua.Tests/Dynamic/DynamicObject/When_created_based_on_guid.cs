@@ -35,13 +35,13 @@ public class When_created_based_on_guid
     [Fact]
     public void Member_name_should_be_empty_string()
     {
-        dynamicObject.PropertyNames.Single().ShouldBe(string.Empty);
+        dynamicObject.GetPropertyNames().Single().ShouldBe(string.Empty);
     }
 
     [Fact]
     public void Dynamic_guid_properties_should_be_of_type_string()
     {
-        dynamicObject.Values.Single().ShouldBeOfType<Guid>();
+        dynamicObject.GetValues().Single().ShouldBeOfType<Guid>();
     }
 
     [Fact]
