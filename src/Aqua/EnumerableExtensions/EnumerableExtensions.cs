@@ -314,6 +314,56 @@ public static class EnumerableExtensions
     }
 
     [DebuggerStepThrough]
+    public static void ForEach(this IEnumerable source, Action<object> action)
+    {
+        if (source is not null)
+        {
+            foreach (var item in source)
+            {
+                action(item);
+            }
+        }
+    }
+
+    [DebuggerStepThrough]
+    public static void ForEach(this IEnumerable source, Action<object, int> action)
+    {
+        if (source is not null)
+        {
+            var i = 0;
+            foreach (var item in source)
+            {
+                action(item, i++);
+            }
+        }
+    }
+
+    [DebuggerStepThrough]
+    public static void ForEach<TResult>(this IEnumerable source, Func<object, TResult> func)
+    {
+        if (source is not null)
+        {
+            foreach (var item in source)
+            {
+                _ = func(item);
+            }
+        }
+    }
+
+    [DebuggerStepThrough]
+    public static void ForEach<TResult>(this IEnumerable source, Func<object, int, TResult> func)
+    {
+        if (source is not null)
+        {
+            var i = 0;
+            foreach (var item in source)
+            {
+                _ = func(item, i++);
+            }
+        }
+    }
+
+    [DebuggerStepThrough]
     public static bool Any([NotNullWhen(true)] this IEnumerable? source) => source?.GetEnumerator().MoveNext() is true;
 
     [DebuggerStepThrough]
