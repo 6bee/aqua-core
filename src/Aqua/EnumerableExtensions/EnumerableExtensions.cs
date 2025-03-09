@@ -201,10 +201,10 @@ public static class EnumerableExtensions
     }
 
     [DebuggerStepThrough]
-    public static IEnumerable<T> AsEmptyIfNull<T>(this IEnumerable<T>? source) => source ?? Enumerable.Empty<T>();
+    public static IEnumerable<T> AsEmptyIfNull<T>(this IEnumerable<T>? source) => source ?? [];
 
     [DebuggerStepThrough]
-    public static T[] AsEmptyIfNull<T>(this T[]? source) => source is null ? Array.Empty<T>() : source;
+    public static T[] AsEmptyIfNull<T>(this T[]? source) => source is null ? [] : source;
 
     [DebuggerStepThrough]
     public static string AsEmptyIfNull(this string? source) => source is null ? string.Empty : source;
@@ -240,9 +240,11 @@ public static class EnumerableExtensions
     [return: NotNullIfNotNull(nameof(source))]
     public static string? StringJoin<T>(this IEnumerable<T>? source, string separator) => source is null ? null : string.Join(separator, source);
 
-#if !NETSTANDARD2_0
     [DebuggerStepThrough]
     [return: NotNullIfNotNull(nameof(source))]
+#if NETSTANDARD2_0
+    public static string? StringJoin<T>(this IEnumerable<T>? source, char separator) => source is null ? null : string.Join(separator.ToString(), source);
+#else
     public static string? StringJoin<T>(this IEnumerable<T>? source, char separator) => source is null ? null : string.Join(separator, source);
 #endif // NETSTANDARD2_0
 
