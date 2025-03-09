@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class EnumerableExtensions
@@ -204,10 +205,10 @@ public static class EnumerableExtensions
     public static IEnumerable<T> AsEmptyIfNull<T>(this IEnumerable<T>? source) => source ?? [];
 
     [DebuggerStepThrough]
-    public static T[] AsEmptyIfNull<T>(this T[]? source) => source is null ? [] : source;
+    public static T[] AsEmptyIfNull<T>(this T[]? source) => source ?? [];
 
     [DebuggerStepThrough]
-    public static string AsEmptyIfNull(this string? source) => source is null ? string.Empty : source;
+    public static string AsEmptyIfNull(this string? source) => source ?? string.Empty;
 
     [DebuggerStepThrough]
     public static T? AsNullIfEmpty<T>(this T? source)
@@ -235,6 +236,12 @@ public static class EnumerableExtensions
         => source is string str
         ? string.IsNullOrEmpty(str)
         : source?.GetEnumerator().MoveNext() is not true;
+
+    [DebuggerStepThrough]
+    public static bool IsNotNullOrWhiteSpace([NotNullWhen(true)] this string? source) => !string.IsNullOrWhiteSpace(source);
+
+    [DebuggerStepThrough]
+    public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? source) => string.IsNullOrWhiteSpace(source);
 
     [DebuggerStepThrough]
     [return: NotNullIfNotNull(nameof(source))]
