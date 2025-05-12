@@ -205,6 +205,15 @@ public static class EnumerableExtensions
     public static IEnumerable<T> AsEmptyIfNull<T>(this IEnumerable<T>? source) => source ?? [];
 
     [DebuggerStepThrough]
+    public static IReadOnlyCollection<T> AsEmptyIfNull<T>(this IReadOnlyCollection<T>? source) => source ?? [];
+
+    [DebuggerStepThrough]
+    public static IReadOnlyList<T> AsEmptyIfNull<T>(this IReadOnlyList<T>? source) => source ?? [];
+
+    [DebuggerStepThrough]
+    public static List<T> AsEmptyIfNull<T>(this List<T>? source) => source ?? [];
+
+    [DebuggerStepThrough]
     public static T[] AsEmptyIfNull<T>(this T[]? source) => source ?? [];
 
     [DebuggerStepThrough]
