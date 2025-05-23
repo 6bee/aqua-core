@@ -254,7 +254,7 @@ public static class EnumerableExtensions
 
     [DebuggerStepThrough]
     [return: NotNullIfNotNull(nameof(source))]
-    public static string? StringJoin<T>(this IEnumerable<T>? source, string separator) => source is null ? null : string.Join(separator, source);
+    public static string? StringJoin<T>(this IEnumerable<T>? source, string? separator = null) => source is null ? null : string.Join(separator, source);
 
     [DebuggerStepThrough]
     [return: NotNullIfNotNull(nameof(source))]
