@@ -45,8 +45,7 @@ public static class TypeExtensions
     /// Returns <see langword="true"/> if the given <see cref="Type"/> is either a reference type or a <see cref="Nullable{T}"/> value type.
     /// </summary>
     public static bool IsNullableType(this Type type)
-        => type.IsClass
-        || (type.IsGenericType && typeof(Nullable<>) == type.GetGenericTypeDefinition());
+        => !type.IsValueType || Nullable.GetUnderlyingType(type) is not null;
 
     /// <summary>
     /// Tries to convert object o to targetType using implicit or explicit operator.
