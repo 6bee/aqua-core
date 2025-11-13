@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add support for `System.Int128`, `System.UInt128`, `System.DateOnly`, `System.TimeOnly`
+- Add .NET 10.0 framework target
 
 ### Changed
 
-- Bump _System.Text.Json_ from 8.0.5 to 9.0.2 (netstandard2.0) (concerns _Aqua.Text.Json_)
+- Bump _System.Text.Json_ from 8.0.5 to 10.0.0 (netstandard2.0) (concerns _Aqua.Text.Json_)
+- Bump _Newtonsoft.Json_ from 13.0.3 to 13.0.4 (concerns _Aqua.Newtonsoft.Json_)
 - Bump _protobuf-net_ from 2.4.8 to 2.4.9 (concerns _Aqua.protobuf-net_)
 - Type resolution prioritize publicly visible types in case of multiple matching candidates [#36][issue#36]
 - Declare members of `DynamicObject`, `PropertySet`, and `Property` virtual

@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0;net10.0</TargetFrameworks>
     <PackageTags>protobuf protobuf-net proto2 proto3 binary serialization</PackageTags>
     <RootNamespace>Aqua.ProtoBuf</RootNamespace>
     <PackageId>aqua-core-protobuf-net</PackageId>
