@@ -109,10 +109,7 @@ public static class TypeExtensions
     /// Returns the non-nullable value type, or the type itself if <paramref name="type"/> is not of type <see cref="Nullable{T}"/>.
     /// </summary>
     public static Type AsNonNullableType(this Type type)
-    {
-        var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
-        return isNullable ? type.GetGenericArguments()[0] : type;
-    }
+        => Nullable.GetUnderlyingType(type) ?? type;
 
     /// <summary>
     /// Returns <see langword="true"/> if the give <see cref="Type"/> is assignable to the interface type specified.
