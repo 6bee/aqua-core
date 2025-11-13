@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add support for `System.Int128`, `System.UInt128`, `System.DateOnly`, `System.TimeOnly`
 - Add .NET 10.0 framework target
+- add `Assembly.GetLoadedTypes()` extension method
 
 ### Changed
 
