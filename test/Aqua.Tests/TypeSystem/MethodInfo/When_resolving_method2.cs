@@ -27,6 +27,11 @@ public class When_resolving_method2
         public void MethodWithTaskArgument(Task<int> task) => throw new NotImplementedException();
 
         public void MethodWithCustomStructArgument(Value<int> task) => throw new NotImplementedException();
+
+        public void GenericMethodWithSameName<TParam>(string parameter) => throw new NotImplementedException();
+
+        public void GenericMethodWithSameName<TParam>(bool parameter)
+            where TParam : Enum => throw new NotImplementedException();
     }
 
     [Fact]
@@ -96,6 +101,15 @@ public class When_resolving_method2
     {
         var m = typeof(TestClass).GetMethodEx(nameof(TestClass.MethodWithTaskArgument));
         var method = new MethodInfo(m);
+
+        var resolved = method.ResolveMethod(new TypeResolver());
+        resolved.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void Should_resolve_method_with_same_name_and_generic_type_argument()
+    {
+        var method = new MethodInfo(nameof(TestClass.GenericMethodWithSameName), typeof(TestClass), [typeof(string)], [typeof(string)]);
 
         var resolved = method.ResolveMethod(new TypeResolver());
         resolved.ShouldNotBeNull();

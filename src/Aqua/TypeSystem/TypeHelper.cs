@@ -293,6 +293,24 @@ public static class TypeHelper
 
         var isStatic = method.IsStatic ?? false;
         var methodName = method.Name;
+
+        System.Reflection.MethodInfo? TryMakeGeneric(System.Reflection.MethodInfo m)
+        {
+            if (m.IsGenericMethod && genericArguments is not null)
+            {
+                try
+                {
+                    return m.MakeGenericMethod(genericArguments);
+                }
+                catch (ArgumentException)
+                {
+                    return null;
+                }
+            }
+
+            return m;
+        }
+
         System.Reflection.MethodInfo? Filter(System.Reflection.MethodInfo[] candidates)
         {
             var matches = candidates
@@ -301,9 +319,14 @@ public static class TypeHelper
                 .Where(m => m.GetParameters().Length == parameterTypes.Length)
                 .Where(m => m.IsGenericMethod == isGenericMethod)
                 .Where(m => !m.IsGenericMethod || m.GetGenericArguments().Length == genericArguments!.Length)
-                .Select(m => m.IsGenericMethod && genericArguments is not null ? m.MakeGenericMethod(genericArguments) : m)
+                .Select(TryMakeGeneric)
                 .Where(m =>
                 {
+                    if (m is null)
+                    {
+                        return false;
+                    }
+
                     var paramTypes = m.GetParameters();
                     for (int i = 0; i < paramTypes.Length; i++)
                     {
@@ -315,7 +338,8 @@ public static class TypeHelper
 
                     return true;
                 })
-                .Where(m => returnType is null || m.ReturnType == returnType)
+                .Cast<System.Reflection.MethodInfo>()
+                .Where(m => returnType is null || m!.ReturnType == returnType)
                 .ToArray();
 
             if (matches.Length is 0)
