@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Resolve overloaded methods with generic arguments [#49][issue#49]
+
 ### Security
 
 ## [5.4.2][5.4.2] - 2024-11-19
@@ -130,6 +132,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [issue#39]: https://github.com/6bee/aqua-core/issues/39
 [issue#43]: https://github.com/6bee/aqua-core/issues/43
 [issue#48]: https://github.com/6bee/aqua-core/issues/48
+[issue#49]: https://github.com/6bee/aqua-core/issues/49
 
 [json-net]: https://www.newtonsoft.com/json
 [nullable-references]: https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references
