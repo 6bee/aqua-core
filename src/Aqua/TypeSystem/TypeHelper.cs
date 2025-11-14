@@ -294,23 +294,6 @@ public static class TypeHelper
         var isStatic = method.IsStatic ?? false;
         var methodName = method.Name;
 
-        System.Reflection.MethodInfo? TryMakeGeneric(System.Reflection.MethodInfo m)
-        {
-            if (m.IsGenericMethod && genericArguments is not null)
-            {
-                try
-                {
-                    return m.MakeGenericMethod(genericArguments);
-                }
-                catch (ArgumentException)
-                {
-                    return null;
-                }
-            }
-
-            return m;
-        }
-
         System.Reflection.MethodInfo? Filter(System.Reflection.MethodInfo[] candidates)
         {
             var matches = candidates
@@ -338,8 +321,7 @@ public static class TypeHelper
 
                     return true;
                 })
-                .Cast<System.Reflection.MethodInfo>()
-                .Where(m => returnType is null || m!.ReturnType == returnType)
+                .Where(m => returnType is null || m.ReturnType == returnType)
                 .ToArray();
 
             if (matches.Length is 0)
@@ -353,6 +335,23 @@ public static class TypeHelper
             }
 
             throw CreateException($"{matches.Length} methods found matching criteria");
+
+            System.Reflection.MethodInfo TryMakeGeneric(System.Reflection.MethodInfo m)
+            {
+                if (m.IsGenericMethod && genericArguments is not null)
+                {
+                    try
+                    {
+                        return m.MakeGenericMethod(genericArguments);
+                    }
+                    catch (ArgumentException)
+                    {
+                        return null!;
+                    }
+                }
+
+                return m;
+            }
         }
 
         return bindingflags => Filter(declaringType.GetMethods(bindingflags));
