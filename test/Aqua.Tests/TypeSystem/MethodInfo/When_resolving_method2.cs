@@ -28,10 +28,12 @@ public class When_resolving_method2
 
         public void MethodWithCustomStructArgument(Value<int> task) => throw new NotImplementedException();
 
-        public void GenericMethodWithSameName<TParam>(string parameter) => throw new NotImplementedException();
+        public void GenericMethodWithSameName<T>(string parameter) => throw new NotImplementedException();
 
-        public void GenericMethodWithSameName<TParam>(bool parameter)
-            where TParam : Enum => throw new NotImplementedException();
+        public void GenericMethodWithSameName<T>(int parameter) => throw new NotImplementedException();
+
+        public void GenericMethodWithTypeConstraint<T>(bool parameter)
+            where T : struct => throw new NotImplementedException();
     }
 
     [Fact]
@@ -107,12 +109,39 @@ public class When_resolving_method2
     }
 
     [Fact]
-    public void Should_resolve_method_with_same_name_and_generic_type_argument()
+    public void Should_resolve_method_with_same_name_and_generic_type_argument_with_string_arg_overload()
     {
         var method = new MethodInfo(nameof(TestClass.GenericMethodWithSameName), typeof(TestClass), [typeof(string)], [typeof(string)]);
 
         var resolved = method.ResolveMethod(new TypeResolver());
         resolved.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void Should_resolve_method_with_same_name_and_generic_type_argument_with_int_arg_overload()
+    {
+        var method = new MethodInfo(nameof(TestClass.GenericMethodWithSameName), typeof(TestClass), [typeof(string)], [typeof(int)]);
+
+        var resolved = method.ResolveMethod(new TypeResolver());
+        resolved.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void Should_resolve_method_with_generic_type_argument_with_contraint()
+    {
+        var method = new MethodInfo(nameof(TestClass.GenericMethodWithTypeConstraint), typeof(TestClass), [typeof(int)], [typeof(bool)]);
+
+        var resolved = method.ResolveMethod(new TypeResolver());
+        resolved.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void Should_not_resolve_method_with_generic_type_argument_with_contraint_violated()
+    {
+        var method = new MethodInfo(nameof(TestClass.GenericMethodWithTypeConstraint), typeof(TestClass), [typeof(string)], [typeof(bool)]);
+
+        var resolved = method.ResolveMethod(new TypeResolver());
+        resolved.ShouldBeNull();
     }
 
     [Fact]
