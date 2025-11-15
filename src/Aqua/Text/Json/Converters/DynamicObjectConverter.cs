@@ -11,16 +11,11 @@ using System.Linq;
 using System.Text.Json;
 using DynamicProperty = Aqua.Dynamic.Property;
 
-public class DynamicObjectConverter : ObjectConverter<DynamicObject>
+public class DynamicObjectConverter(KnownTypesRegistry knownTypes) : ObjectConverter<DynamicObject>(knownTypes)
 {
     private const string ValueProperty = "Value";
     private const string ValuesProperty = "Values";
     private const string ItemsProperty = "Items";
-
-    public DynamicObjectConverter(KnownTypesRegistry knownTypes)
-        : base(knownTypes)
-    {
-    }
 
     protected override void ReadObjectProperties(ref Utf8JsonReader reader, DynamicObject result, Dictionary<string, Property> properties, JsonSerializerOptions options)
     {

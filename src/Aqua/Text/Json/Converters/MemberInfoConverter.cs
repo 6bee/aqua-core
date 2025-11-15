@@ -5,13 +5,8 @@ namespace Aqua.Text.Json.Converters;
 using Aqua.TypeSystem;
 using System;
 
-public sealed class MemberInfoConverter : MemberInfoConverter<MemberInfo>
+public sealed class MemberInfoConverter(KnownTypesRegistry knownTypes) : MemberInfoConverter<MemberInfo>(knownTypes)
 {
-    public MemberInfoConverter(KnownTypesRegistry knownTypes)
-        : base(knownTypes)
-    {
-    }
-
     public override bool CanConvert(Type typeToConvert)
         => typeof(MemberInfo).IsAssignableFrom(typeToConvert);
 }

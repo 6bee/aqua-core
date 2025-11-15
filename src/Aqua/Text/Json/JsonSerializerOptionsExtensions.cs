@@ -111,7 +111,7 @@ public static class JsonSerializerOptionsExtensions
         var referenceHandler = options.ReferenceHandler as AquaReferenceHandler;
         if (referenceHandler?.IsRoot is true)
         {
-            return new JsonSerializerOptions(options)
+            return new(options)
             {
                 ReferenceHandler = new AquaReferenceHandler(referenceHandler),
             };

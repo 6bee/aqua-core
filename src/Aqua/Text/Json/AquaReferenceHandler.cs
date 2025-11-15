@@ -20,7 +20,7 @@ internal sealed class AquaReferenceHandler : ReferenceHandler
     public override ReferenceResolver CreateResolver()
         => _referenceResolver ?? new AquaReferenceResolver();
 
-    public static AquaReferenceHandler Root => new AquaReferenceHandler();
+    public static AquaReferenceHandler Root => new();
 
     /// <summary>
     /// Gets <see langword="true"/> if <see cref="CreateResolver"/> returns a new instance on every call,

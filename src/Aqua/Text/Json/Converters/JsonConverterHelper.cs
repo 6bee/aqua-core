@@ -36,7 +36,7 @@ public static class JsonConverterHelper
         }
         .SelectMany(static x => x.Type.IsClass
             ? new[] { x }
-            : new[] { x, (Type: typeof(Nullable<>).MakeGenericType(x.Type), x.Reader) })
+            : [x, (Type: typeof(Nullable<>).MakeGenericType(x.Type), x.Reader)])
         .ToDictionary(static x => x.Type, static x => x.Reader);
 
     public static bool IsCollection(this TypeInfo? type)

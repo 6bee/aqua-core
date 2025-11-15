@@ -21,14 +21,12 @@ partial class DynamicObjectMapper
     /// <summary>
     /// Gets an uninitialized instance of the specified type by using <see cref="FormatterServices" />.
     /// </summary>
-    [SecuritySafeCritical]
     private static object GetUninitializedObject(Type type)
         => FormatterServices.GetUninitializedObject(type);
 
     /// <summary>
     /// Populate object members type by using <see cref="FormatterServices" />.
     /// </summary>
-    [SecuritySafeCritical]
     private void PopulateObjectMembers(Type type, DynamicObject from, object to)
     {
         var customPropertySet = GetPropertiesForMapping(type);
@@ -73,7 +71,6 @@ partial class DynamicObjectMapper
     /// <summary>
     /// Retrieves object members type by using <see cref="FormatterServices" /> and populates dynamic object.
     /// </summary>
-    [SecuritySafeCritical]
     private void MapObjectMembers(Type type, object from, DynamicObject to, Func<Type, bool> setTypeInformation)
     {
         var customPropertySet = GetPropertiesForMapping(type);

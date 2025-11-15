@@ -6,13 +6,8 @@ using Aqua.TypeSystem;
 using System;
 using System.Text.Json;
 
-public class TypeInfoConverter : ObjectConverter<TypeInfo>
+public class TypeInfoConverter(KnownTypesRegistry knownTypes) : ObjectConverter<TypeInfo>(knownTypes)
 {
-    public TypeInfoConverter(KnownTypesRegistry knownTypes)
-        : base(knownTypes)
-    {
-    }
-
     protected override TypeInfo? ReadJson(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType is JsonTokenType.String &&

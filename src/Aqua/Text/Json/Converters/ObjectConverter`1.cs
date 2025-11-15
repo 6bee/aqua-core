@@ -12,7 +12,7 @@ using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-public class ObjectConverter<T> : JsonConverter<T>
+public class ObjectConverter<T>(KnownTypesRegistry knownTypes, bool handleSubtypes) : JsonConverter<T>
     where T : class
 {
     [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Preferred name")]
@@ -65,24 +65,20 @@ public class ObjectConverter<T> : JsonConverter<T>
     }
 
     [SuppressMessage("Major Code Smell", "S2743:Static fields should not be used in generic types", Justification = "Static field is specific for generic type")]
-    private static readonly Dictionary<Type, IReadOnlyCollection<Property>> _properties
-        = [];
+    private static readonly Dictionary<Type, IReadOnlyCollection<Property>> _properties = [];
 
-    private readonly bool _handleSubtypes;
+    private readonly bool _handleSubtypes = handleSubtypes;
 
     public ObjectConverter(KnownTypesRegistry knownTypes)
         : this(knownTypes, false)
     {
     }
 
-    public ObjectConverter(KnownTypesRegistry knownTypes, bool handleSubtypes)
-    {
-        knownTypes.AssertNotNull();
-        KnownTypesRegistry = knownTypes;
-        _handleSubtypes = handleSubtypes;
-    }
+    protected KnownTypesRegistry KnownTypesRegistry { get; } = knownTypes.CheckNotNull();
 
-    protected KnownTypesRegistry KnownTypesRegistry { get; }
+    public Func<string, Type?>? DefaultTypeResolver { get; set; }
+
+    public Func<Type, T?>? DefaultObjectFactory { get; set; }
 
     protected IReadOnlyCollection<Property> GetProperties(Type type)
     {
@@ -91,25 +87,19 @@ public class ObjectConverter<T> : JsonConverter<T>
         {
             if (!_properties.TryGetValue(type, out var propertySet))
             {
-                propertySet = type
+                propertySet = [.. type
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                     .Where(static x => x.CanRead && x.CanWrite)
                     .Where(static x => x.GetIndexParameters().Length is 0)
                     .Select(x => new Property(x, KnownTypesRegistry))
                     .Where(static x => !x.IsIgnored)
-                    .OrderBy(static x => x.SortOrder)
-                    .ToList()
-                    .AsReadOnly();
+                    .OrderBy(static x => x.SortOrder)];
                 _properties.Add(type, propertySet);
             }
 
             return propertySet;
         }
     }
-
-    public Func<string, Type?>? DefaultTypeResolver { get; set; }
-
-    public Func<Type, T?>? DefaultObjectFactory { get; set; }
 
     public override bool CanConvert(Type typeToConvert)
         => _handleSubtypes

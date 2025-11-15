@@ -60,7 +60,6 @@ public sealed partial class TypeEmitter
     private readonly TypeResolverScope _typeResolver;
     private int _classIndex = -1;
 
-    [SecuritySafeCritical]
     public TypeEmitter(ITypeResolver? typeResolver = null)
     {
         _typeResolver = new TypeResolverScope(typeResolver ?? TypeResolver.Instance);
