@@ -12,48 +12,17 @@ public abstract class When_using_dynamic_object_with_circular_reference
     // XML serialization doesn't support circular references
     // protobuf-net doesn't support circular references
 #if !NET8_0_OR_GREATER
-    public class With_binary_formatter : When_using_dynamic_object_with_circular_reference
-    {
-        public With_binary_formatter()
-            : base(BinarySerializationHelper.Clone)
-        {
-        }
-    }
-
+    public class With_binary_formatter() : When_using_dynamic_object_with_circular_reference(BinarySerializationHelper.Clone);
 #endif // NET8_0_OR_GREATER
 
-    public class With_newtown_json_serializer : When_using_dynamic_object_with_circular_reference
-    {
-        public With_newtown_json_serializer()
-            : base(NewtonsoftJsonSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_newtown_json_serializer() : When_using_dynamic_object_with_circular_reference(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer : When_using_dynamic_object_with_circular_reference
-    {
-        public With_system_text_json_serializer()
-            : base(SystemTextJsonSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_system_text_json_serializer() : When_using_dynamic_object_with_circular_reference(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_data_contract_serializer : When_using_dynamic_object_with_circular_reference
-    {
-        public With_data_contract_serializer()
-            : base(DataContractSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_data_contract_serializer() : When_using_dynamic_object_with_circular_reference(DataContractSerializationHelper.Clone);
 
 #if NETFRAMEWORK
-    public class With_net_data_contract_serializer : When_using_dynamic_object_with_circular_reference
-    {
-        public With_net_data_contract_serializer()
-            : base(NetDataContractSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_net_data_contract_serializer() : When_using_dynamic_object_with_circular_reference(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
     private readonly DynamicObject serializedObject;

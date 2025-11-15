@@ -10,65 +10,23 @@ using Xunit;
 public abstract class When_using_dynamic_object_for_complex_object_tree
 {
 #if !NET8_0_OR_GREATER
-    public class With_binary_formatter : When_using_dynamic_object_for_complex_object_tree
-    {
-        public With_binary_formatter()
-            : base(BinarySerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_binary_formatter() : When_using_dynamic_object_for_complex_object_tree(BinarySerializationHelper.Clone);
 
 #endif // NET8_0_OR_GREATER
 
-    public class With_data_contract_serializer : When_using_dynamic_object_for_complex_object_tree
-    {
-        public With_data_contract_serializer()
-            : base(DataContractSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_data_contract_serializer() : When_using_dynamic_object_for_complex_object_tree(DataContractSerializationHelper.Clone);
 
-    public class With_newtown_json_serializer : When_using_dynamic_object_for_complex_object_tree
-    {
-        public With_newtown_json_serializer()
-            : base(NewtonsoftJsonSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_newtown_json_serializer() : When_using_dynamic_object_for_complex_object_tree(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer : When_using_dynamic_object_for_complex_object_tree
-    {
-        public With_system_text_json_serializer()
-            : base(SystemTextJsonSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_system_text_json_serializer() : When_using_dynamic_object_for_complex_object_tree(SystemTextJsonSerializationHelper.Clone);
 
 #if NETFRAMEWORK
-    public class With_net_data_contract_serializer : When_using_dynamic_object_for_complex_object_tree
-    {
-        public With_net_data_contract_serializer()
-            : base(NetDataContractSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_net_data_contract_serializer() : When_using_dynamic_object_for_complex_object_tree(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
-    public class With_protobuf_net_serializer : When_using_dynamic_object_for_complex_object_tree
-    {
-        public With_protobuf_net_serializer()
-            : base(ProtobufNetSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_protobuf_net_serializer() : When_using_dynamic_object_for_complex_object_tree(ProtobufNetSerializationHelper.Clone);
 
-    public class With_xml_serializer : When_using_dynamic_object_for_complex_object_tree
-    {
-        public With_xml_serializer()
-            : base(XmlSerializationHelper.Serialize)
-        {
-        }
-    }
+    public class With_xml_serializer() : When_using_dynamic_object_for_complex_object_tree(XmlSerializationHelper.Serialize);
 
     private const double DoubleValue = 1.2345679e-87;
     private const string StringValue = "eleven";

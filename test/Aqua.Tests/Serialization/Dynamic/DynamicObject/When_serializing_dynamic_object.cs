@@ -12,61 +12,25 @@ using System.Reflection;
 using Xunit;
 using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
-public abstract class When_serializing_dynamic_object
+public abstract class When_serializing_dynamic_object(Func<DynamicObject, DynamicObject> serialize)
 {
 #if !NET8_0_OR_GREATER
-    public class With_binary_formatter : When_serializing_dynamic_object
-    {
-        public With_binary_formatter()
-            : base(BinarySerializationHelper.Clone)
-        {
-        }
-    }
-
+    public class With_binary_formatter() : When_serializing_dynamic_object(BinarySerializationHelper.Clone);
 #endif // NET8_0_OR_GREATER
-    public class With_newtonsoft_json_serializer : When_serializing_dynamic_object
-    {
-        public With_newtonsoft_json_serializer()
-            : base(NewtonsoftJsonSerializationHelper.Clone)
-        {
-        }
-    }
+
+    public class With_newtonsoft_json_serializer() : When_serializing_dynamic_object(NewtonsoftJsonSerializationHelper.Clone);
 
     public class With_system_text_json_serializer() : When_serializing_dynamic_object(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_data_contract_serializer : When_serializing_dynamic_object
-    {
-        public With_data_contract_serializer()
-            : base(DataContractSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_data_contract_serializer() : When_serializing_dynamic_object(DataContractSerializationHelper.Clone);
 
 #if NETFRAMEWORK
-    public class With_net_data_contract_serializer : When_serializing_dynamic_object
-    {
-        public With_net_data_contract_serializer()
-            : base(NetDataContractSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_net_data_contract_serializer() : When_serializing_dynamic_object(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
-    public class With_protobuf_net_serializer : When_serializing_dynamic_object
-    {
-        public With_protobuf_net_serializer()
-            : base(ProtobufNetSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_protobuf_net_serializer() : When_serializing_dynamic_object(ProtobufNetSerializationHelper.Clone);
 
-    public class With_xml_serializer : When_serializing_dynamic_object
-    {
-        public With_xml_serializer()
-            : base(XmlSerializationHelper.Serialize)
-        {
-        }
-    }
+    public class With_xml_serializer() : When_serializing_dynamic_object(XmlSerializationHelper.Serialize);
 
     private class A<T>
     {
@@ -74,13 +38,6 @@ public abstract class When_serializing_dynamic_object
     }
 
     private const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;
-
-    private readonly Func<DynamicObject, DynamicObject> _serialize;
-
-    protected When_serializing_dynamic_object(Func<DynamicObject, DynamicObject> serialize)
-    {
-        _serialize = serialize;
-    }
 
     [SkippableTheory]
     [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
@@ -473,7 +430,7 @@ public abstract class When_serializing_dynamic_object
             dynamicObject.Type = new TypeInfo(typeof(TSource), false, false);
         }
 
-        var serializedDynamicObject = _serialize(dynamicObject);
+        var serializedDynamicObject = serialize(dynamicObject);
 
         var resurectedValue = new DynamicObjectMapper().Map<TResult>(serializedDynamicObject);
         return resurectedValue;
@@ -483,7 +440,7 @@ public abstract class When_serializing_dynamic_object
     {
         var dynamicSourceObject = DynamicObject.Create(source);
 
-        var dynamicSourceResult = _serialize(dynamicSourceObject);
+        var dynamicSourceResult = serialize(dynamicSourceObject);
 
         dynamicSourceResult.ShouldNotBeSameAs(dynamicSourceObject);
 

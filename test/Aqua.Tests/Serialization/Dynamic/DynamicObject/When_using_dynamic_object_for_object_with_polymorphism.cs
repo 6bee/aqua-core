@@ -12,29 +12,12 @@ using Xunit;
 
 public abstract class When_using_dynamic_object_for_object_with_polymorphism
 {
-    public class With_newtown_json_serializer : When_using_dynamic_object_for_object_with_polymorphism
-    {
-        public With_newtown_json_serializer()
-            : base(NewtonsoftJsonSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_newtown_json_serializer() : When_using_dynamic_object_for_object_with_polymorphism(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer : When_using_dynamic_object_for_object_with_polymorphism
-    {
-        public With_system_text_json_serializer()
-            : base(SystemTextJsonSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_system_text_json_serializer() : When_using_dynamic_object_for_object_with_polymorphism(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer_with_polymorphism_options : When_using_dynamic_object_for_object_with_polymorphism
+    public class With_system_text_json_serializer_with_polymorphism_options() : When_using_dynamic_object_for_object_with_polymorphism(static x => SystemTextJsonSerializationHelper.Clone(x, CreateOptions()))
     {
-        public With_system_text_json_serializer_with_polymorphism_options()
-            : base(static x => SystemTextJsonSerializationHelper.Clone(x, CreateOptions()))
-        {
-        }
-
         private static JsonSerializerOptions CreateOptions()
         {
             return new JsonSerializerOptions
@@ -45,7 +28,7 @@ public abstract class When_using_dynamic_object_for_object_with_polymorphism
                 {
                     Modifiers = { AddPolymorphy },
                 },
-            }.ConfigureAqua();
+            };
 
             static void AddPolymorphy(JsonTypeInfo typeInfo)
             {

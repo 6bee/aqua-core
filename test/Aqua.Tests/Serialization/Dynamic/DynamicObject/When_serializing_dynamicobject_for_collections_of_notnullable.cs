@@ -11,113 +11,49 @@ using System.Linq;
 using System.Linq.Expressions;
 using Xunit;
 
-public abstract class When_serializing_dynamicobject_for_collections_of_notnullable
+public abstract class When_serializing_dynamicobject_for_collections_of_notnullable(Func<DynamicObject, DynamicObject> serialize)
 {
 #if !NET8_0_OR_GREATER
-    public class With_binary_formatter : When_serializing_dynamicobject_for_collections_of_notnullable
-    {
-        public With_binary_formatter()
-            : base(BinarySerializationHelper.Clone)
-        {
-        }
-    }
-
+    public class With_binary_formatter() : When_serializing_dynamicobject_for_collections_of_notnullable(BinarySerializationHelper.Clone);
 #endif // NET8_0_OR_GREATER
 
-    public class With_data_contract_serializer : When_serializing_dynamicobject_for_collections_of_notnullable
-    {
-        public With_data_contract_serializer()
-            : base(DataContractSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_data_contract_serializer() : When_serializing_dynamicobject_for_collections_of_notnullable(DataContractSerializationHelper.Clone);
 
-    public class With_newtown_json_serializer : When_serializing_dynamicobject_for_collections_of_notnullable
-    {
-        public With_newtown_json_serializer()
-            : base(NewtonsoftJsonSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_newtown_json_serializer() : When_serializing_dynamicobject_for_collections_of_notnullable(NewtonsoftJsonSerializationHelper.Clone);
 
-    public class With_system_text_json_serializer : When_serializing_dynamicobject_for_collections_of_notnullable
-    {
-        public With_system_text_json_serializer()
-            : base(SystemTextJsonSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_system_text_json_serializer() : When_serializing_dynamicobject_for_collections_of_notnullable(SystemTextJsonSerializationHelper.Clone);
 
 #if NETFRAMEWORK
-    public class With_net_data_contract_serializer : When_serializing_dynamicobject_for_collections_of_notnullable
-    {
-        public With_net_data_contract_serializer()
-            : base(NetDataContractSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_net_data_contract_serializer() : When_serializing_dynamicobject_for_collections_of_notnullable(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 
-    public class With_protobuf_net_serializer : When_serializing_dynamicobject_for_collections_of_notnullable
-    {
-        public With_protobuf_net_serializer()
-            : base(ProtobufNetSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_protobuf_net_serializer() : When_serializing_dynamicobject_for_collections_of_notnullable(ProtobufNetSerializationHelper.Clone);
 
-    public class With_xml_serializer : When_serializing_dynamicobject_for_collections_of_notnullable
-    {
-        public With_xml_serializer()
-            : base(XmlSerializationHelper.Serialize)
-        {
-        }
-    }
+    public class With_xml_serializer() : When_serializing_dynamicobject_for_collections_of_notnullable(XmlSerializationHelper.Serialize);
 
-    public sealed class QueryableProxy<T> : IQueryable<T>
+    public sealed class QueryableProxy<T>(IQueryable<T> source) : IQueryable<T>
     {
-        private readonly IQueryable<T> _source;
-
         public QueryableProxy(IEnumerable<T> source)
+            : this(source.AsQueryable())
         {
-            _source = source.AsQueryable();
         }
 
-        public QueryableProxy(IQueryable<T> source)
-        {
-            _source = source;
-        }
+        public Expression Expression => source.Expression;
 
-        public Expression Expression => _source.Expression;
+        public Type ElementType => source.ElementType;
 
-        public Type ElementType => _source.ElementType;
+        public IQueryProvider Provider => source.Provider;
 
-        public IQueryProvider Provider => _source.Provider;
+        public IEnumerator<T> GetEnumerator() => source.GetEnumerator();
 
-        public IEnumerator<T> GetEnumerator() => _source.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_source).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)source).GetEnumerator();
     }
 
-    public sealed class EnumerableProxy<T> : IEnumerable<T>
+    public sealed class EnumerableProxy<T>(IEnumerable<T> source) : IEnumerable<T>
     {
-        private readonly IEnumerable<T> _source;
+        public IEnumerator<T> GetEnumerator() => source.GetEnumerator();
 
-        public EnumerableProxy(IEnumerable<T> source)
-        {
-            _source = source;
-        }
-
-        public IEnumerator<T> GetEnumerator() => _source.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_source).GetEnumerator();
-    }
-
-    private readonly Func<DynamicObject, DynamicObject> _serialize;
-
-    protected When_serializing_dynamicobject_for_collections_of_notnullable(Func<DynamicObject, DynamicObject> serialize)
-    {
-        _serialize = serialize;
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)source).GetEnumerator();
     }
 
     [Fact]
@@ -182,7 +118,7 @@ public abstract class When_serializing_dynamicobject_for_collections_of_notnulla
     private T Roundtrip<T>(T obj)
     {
         var dynamicObject = new DynamicObjectMapper().MapObject(obj);
-        var serializedDynamicObject = _serialize(dynamicObject);
+        var serializedDynamicObject = serialize(dynamicObject);
         var resurrected = new DynamicObjectMapper().Map<T>(serializedDynamicObject);
         return resurrected;
     }
