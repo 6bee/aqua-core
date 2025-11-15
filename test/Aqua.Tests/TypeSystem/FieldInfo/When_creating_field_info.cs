@@ -4,7 +4,6 @@ namespace Aqua.Tests.TypeSystem.FieldInfo;
 
 using Aqua.TypeSystem;
 using Shouldly;
-using System;
 using Xunit;
 using BindingFlags = System.Reflection.BindingFlags;
 

@@ -5,7 +5,6 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo;
 using Aqua.Dynamic;
 using Aqua.TypeSystem;
 using Shouldly;
-using System;
 using Xunit;
 
 public abstract class When_serializing_typeinfo_of_dynamicobject

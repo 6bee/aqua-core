@@ -9,7 +9,6 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Security;
-using System.Threading;
 using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
 public sealed partial class TypeEmitter

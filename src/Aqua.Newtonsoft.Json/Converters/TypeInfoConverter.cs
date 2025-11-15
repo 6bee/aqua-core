@@ -4,7 +4,6 @@ namespace Aqua.Newtonsoft.Json.Converters;
 
 using Aqua.TypeSystem;
 using global::Newtonsoft.Json;
-using System;
 
 public class TypeInfoConverter : ObjectConverter<TypeInfo>
 {

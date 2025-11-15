@@ -6,8 +6,6 @@ using Aqua.Tests.TestObjects;
 using Aqua.TypeExtensions;
 using Aqua.TypeSystem;
 using Shouldly;
-using System;
-using System.Threading.Tasks;
 using Xunit;
 
 public class When_resolving_method2

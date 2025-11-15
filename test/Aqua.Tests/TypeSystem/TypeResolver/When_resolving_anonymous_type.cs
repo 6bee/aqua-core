@@ -4,7 +4,6 @@ namespace Aqua.Tests.TypeSystem.TypeResolver;
 
 using Aqua.TypeSystem;
 using Shouldly;
-using System;
 using Xunit;
 
 public class When_resolving_anonymous_type

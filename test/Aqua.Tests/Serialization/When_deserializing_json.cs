@@ -4,7 +4,6 @@ namespace Aqua.Tests.Serialization;
 
 using Aqua.TypeSystem;
 using Shouldly;
-using System;
 using Xunit;
 
 public abstract class When_deserializing_json

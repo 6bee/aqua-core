@@ -40,12 +40,12 @@ public static class JsonSerializerOptionsExtensions
 
         knownTypesRegistry ??= KnownTypesRegistry.Default;
 
-        if (!options.Converters.Any(c => c.CanConvert(typeof(DynamicObject))))
+        if (!options.Converters.Any(static c => c.CanConvert(typeof(DynamicObject))))
         {
             options.Converters.Add(new DynamicObjectConverter(knownTypesRegistry));
         }
 
-        if (!options.Converters.Any(c => c.CanConvert(typeof(TypeInfo))))
+        if (!options.Converters.Any(static c => c.CanConvert(typeof(TypeInfo))))
         {
             options.Converters.Add(new TypeInfoConverter(knownTypesRegistry));
         }
@@ -64,7 +64,7 @@ public static class JsonSerializerOptionsExtensions
         typeof(DynamicObject).Assembly
             .GetTypes()
             .Where(static x => x.IsClass && !x.IsAbstract && !x.IsGenericType)
-            .Where(static x => x.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0)
+            .Where(static x => x.GetCustomAttributes(typeof(DataContractAttribute), false).Length is not 0)
             .Where(static x => x.GetCustomAttributes(typeof(JsonConverterAttribute), false).Length is 0)
             .RegisterJsonConverter(typeof(ObjectConverter<>), options, knownTypesRegistry);
 

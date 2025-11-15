@@ -4,8 +4,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper;
 
 using Aqua.Dynamic;
 using Shouldly;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 public class When_mapping_list_of_string_as_collection

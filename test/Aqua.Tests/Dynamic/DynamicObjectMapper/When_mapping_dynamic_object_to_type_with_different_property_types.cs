@@ -5,7 +5,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper;
 using Aqua.Dynamic;
 using Shouldly;
 using System.Globalization;
-using System.Threading;
 using Xunit;
 
 /// <summary>

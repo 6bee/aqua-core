@@ -53,6 +53,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties/GlobalAssemblyInfo.cs" Condition=" '$(IncludeGlobalAssemblyInfo)' == 'true' " />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="System" Global="true" />
+    <Using Include="System.Collections.Generic" Global="true" />
+    <Using Include="System.Linq" Global="true" />
+    <Using Include="System.Threading" Global="true" />
+    <Using Include="System.Threading.Tasks" Global="true" />
+  </ItemGroup>
+
   <PropertyGroup>
     <SignAssembly Condition=" '$(SignAssembly)' == '' ">true</SignAssembly>
     <DelaySign>false</DelaySign>

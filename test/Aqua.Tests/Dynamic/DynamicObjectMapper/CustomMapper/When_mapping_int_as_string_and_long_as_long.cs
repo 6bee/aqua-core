@@ -4,8 +4,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper;
 
 using Aqua.Dynamic;
 using Shouldly;
-using System;
-using System.Linq;
 using Xunit;
 
 public class When_mapping_int_as_string_and_long_as_long

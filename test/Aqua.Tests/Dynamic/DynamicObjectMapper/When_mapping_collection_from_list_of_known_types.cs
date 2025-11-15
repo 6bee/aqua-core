@@ -4,9 +4,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper;
 
 using Aqua.Dynamic;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 public class When_mapping_collection_from_list_of_known_types

@@ -6,10 +6,8 @@ using Aqua.Dynamic;
 using Aqua.ProtoBuf.Dynamic;
 using Aqua.TypeExtensions;
 using global::ProtoBuf;
-using System;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 [ProtoContract]
 public abstract class Values : Value

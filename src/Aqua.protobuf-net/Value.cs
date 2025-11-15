@@ -7,7 +7,6 @@ using Aqua.EnumerableExtensions;
 using Aqua.ProtoBuf.Dynamic;
 using Aqua.TypeSystem;
 using global::ProtoBuf;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 [ProtoContract]

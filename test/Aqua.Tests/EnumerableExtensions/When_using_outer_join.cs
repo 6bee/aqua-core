@@ -4,7 +4,6 @@ namespace Aqua.Tests.EnumerableExtensions;
 
 using Aqua.EnumerableExtensions;
 using Shouldly;
-using System.Linq;
 using Xunit;
 
 public class When_using_outer_join

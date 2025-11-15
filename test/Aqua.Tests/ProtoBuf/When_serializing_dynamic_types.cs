@@ -7,11 +7,8 @@ using Aqua.ProtoBuf;
 using Aqua.TypeExtensions;
 using Aqua.TypeSystem;
 using Shouldly;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Xunit;
 using static Aqua.Tests.Serialization.ProtobufNetSerializationHelper;
 

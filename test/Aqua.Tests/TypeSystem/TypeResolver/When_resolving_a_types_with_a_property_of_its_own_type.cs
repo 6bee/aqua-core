@@ -4,7 +4,6 @@ namespace Aqua.Tests.TypeSystem.TypeResolver;
 
 using Aqua.TypeSystem;
 using Shouldly;
-using System;
 using Xunit;
 
 public class When_resolving_a_types_with_a_property_of_its_own_type

@@ -4,8 +4,6 @@ namespace Aqua.Tests.Dynamic.Property;
 
 using Aqua.Dynamic;
 using Shouldly;
-using System;
-using System.Collections.Generic;
 using Xunit;
 
 public class When_creating_property

@@ -5,7 +5,6 @@ namespace Aqua.Tests.TypeSystem.TypeResolver;
 using Aqua.TypeSystem;
 using Aqua.TypeSystem.Emit;
 using Shouldly;
-using System;
 using Xunit;
 using TypeInfo = Aqua.TypeSystem.TypeInfo;
 

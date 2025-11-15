@@ -3,7 +3,6 @@
 namespace Aqua.Tests.Serialization;
 
 using Shouldly;
-using System;
 using Xunit;
 
 public abstract class When_serializing

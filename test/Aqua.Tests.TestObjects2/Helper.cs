@@ -3,7 +3,6 @@
 namespace Aqua.Tests.TestObjects2;
 
 using Aqua.Tests.TestObjects;
-using System;
 
 public static class Helper
 {

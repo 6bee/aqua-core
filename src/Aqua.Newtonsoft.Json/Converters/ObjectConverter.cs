@@ -3,10 +3,7 @@
 namespace Aqua.Newtonsoft.Json.Converters;
 
 using global::Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using TypeInfo = Aqua.TypeSystem.TypeInfo;

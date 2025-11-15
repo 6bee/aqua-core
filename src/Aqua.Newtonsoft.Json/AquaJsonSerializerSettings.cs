@@ -3,8 +3,6 @@
 namespace Aqua.Newtonsoft.Json;
 
 using global::Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 public class AquaJsonSerializerSettings : JsonSerializerSettings

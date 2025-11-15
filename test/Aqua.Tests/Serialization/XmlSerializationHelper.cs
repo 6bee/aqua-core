@@ -2,7 +2,6 @@
 
 namespace Aqua.Tests.Serialization;
 
-using System;
 using System.IO;
 using System.Numerics;
 using System.Xml.Serialization;

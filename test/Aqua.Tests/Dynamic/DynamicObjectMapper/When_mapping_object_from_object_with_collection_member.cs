@@ -4,8 +4,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper;
 
 using Aqua.Dynamic;
 using Shouldly;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 public class When_mapping_object_from_object_with_collection_member

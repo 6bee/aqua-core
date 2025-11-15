@@ -4,7 +4,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper;
 
 using Aqua.Dynamic;
 using Shouldly;
-using System;
 using Xunit;
 
 public class When_using_type_safety_checker

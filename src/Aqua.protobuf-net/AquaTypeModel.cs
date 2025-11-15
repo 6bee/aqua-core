@@ -5,7 +5,6 @@ namespace Aqua.ProtoBuf;
 using Aqua.Dynamic;
 using Aqua.TypeExtensions;
 using global::ProtoBuf.Meta;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 public class AquaTypeModel

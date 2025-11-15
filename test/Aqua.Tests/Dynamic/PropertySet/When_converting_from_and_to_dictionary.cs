@@ -4,7 +4,6 @@ namespace Aqua.Tests.Dynamic.PropertySet;
 
 using Aqua.Dynamic;
 using Shouldly;
-using System.Collections.Generic;
 using Xunit;
 
 public class When_converting_from_and_to_dictionary

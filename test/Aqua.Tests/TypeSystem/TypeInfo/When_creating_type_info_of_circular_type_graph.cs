@@ -4,7 +4,6 @@ namespace Aqua.Tests.TypeSystem.TypeInfo;
 
 using Aqua.TypeSystem;
 using Shouldly;
-using System.Linq;
 using Xunit;
 
 public class When_creating_type_info_of_circular_type_graph

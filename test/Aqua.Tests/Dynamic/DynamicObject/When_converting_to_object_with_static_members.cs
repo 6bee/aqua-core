@@ -5,7 +5,6 @@ namespace Aqua.Tests.Dynamic.DynamicObject;
 using Aqua.Dynamic;
 using Shouldly;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Xunit;

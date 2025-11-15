@@ -7,8 +7,6 @@ using Aqua.Newtonsoft.Json.Converters;
 using Aqua.TypeSystem;
 using global::Newtonsoft.Json;
 using global::Newtonsoft.Json.Serialization;
-using System;
-using System.Linq;
 using System.Runtime.Serialization;
 
 public sealed class AquaContractResolver : DefaultContractResolver

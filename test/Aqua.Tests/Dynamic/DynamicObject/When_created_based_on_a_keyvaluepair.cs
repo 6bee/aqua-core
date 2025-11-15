@@ -4,7 +4,6 @@ namespace Aqua.Tests.Dynamic.DynamicObject;
 
 using Aqua.Dynamic;
 using Shouldly;
-using System.Collections.Generic;
 using Xunit;
 
 public class When_created_based_on_a_keyvaluepair

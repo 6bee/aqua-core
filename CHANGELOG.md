@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump _protobuf-net_ from 2.4.8 to 2.4.9 (concerns _Aqua.protobuf-net_)
 - Type resolution prioritize publicly visible types in case of multiple matching candidates [#36][issue#36]
 - Declare members of `DynamicObject`, `PropertySet`, and `Property` virtual
-- Deprecate aqua-core-text-json and integrate code in aqua-core package
+- Deprecate aqua-core-text-json and integrate code into aqua-core package
 
 ### Deprecated
 

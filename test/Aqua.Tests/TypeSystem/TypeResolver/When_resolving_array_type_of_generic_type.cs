@@ -4,7 +4,6 @@ namespace Aqua.Tests.TypeSystem.TypeResolver;
 
 using Aqua.TypeSystem;
 using Shouldly;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
 

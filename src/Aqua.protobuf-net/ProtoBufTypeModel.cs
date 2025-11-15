@@ -6,8 +6,6 @@ using Aqua.EnumerableExtensions;
 using Aqua.ProtoBuf.Dynamic;
 using Aqua.ProtoBuf.TypeSystem;
 using global::ProtoBuf.Meta;
-using System;
-using System.Collections.Generic;
 
 public static class ProtoBufTypeModel
 {

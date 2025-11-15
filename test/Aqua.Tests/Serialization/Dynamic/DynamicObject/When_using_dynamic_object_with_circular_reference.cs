@@ -4,7 +4,6 @@ namespace Aqua.Tests.Serialization.Dynamic.DynamicObject;
 
 using Aqua.Dynamic;
 using Shouldly;
-using System;
 using Xunit;
 
 public abstract class When_using_dynamic_object_with_circular_reference

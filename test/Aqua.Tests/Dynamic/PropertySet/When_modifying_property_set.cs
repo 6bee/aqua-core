@@ -4,7 +4,6 @@ namespace Aqua.Tests.Dynamic.PropertySet;
 
 using Aqua.Dynamic;
 using Shouldly;
-using System;
 using Xunit;
 
 public class When_modifying_property_set

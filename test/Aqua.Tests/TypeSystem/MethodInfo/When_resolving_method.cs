@@ -5,7 +5,6 @@ namespace Aqua.Tests.TypeSystem.MethodInfo;
 using Aqua.Tests.Serialization;
 using Aqua.TypeSystem;
 using Shouldly;
-using System.Linq;
 using Xunit;
 using BindingFlags = System.Reflection.BindingFlags;
 

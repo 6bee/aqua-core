@@ -4,7 +4,6 @@ namespace Aqua.Tests.TypeSystem.MethodInfo;
 
 using Aqua.TypeSystem;
 using Shouldly;
-using System;
 using Xunit;
 using BindingFlags = System.Reflection.BindingFlags;
 

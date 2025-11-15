@@ -5,9 +5,7 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper;
 using Aqua.Dynamic;
 using Aqua.TypeExtensions;
 using Shouldly;
-using System;
 using System.Collections;
-using System.Linq;
 using System.Reflection;
 using Xunit;
 

@@ -20,7 +20,7 @@ using System.Xml.Serialization;
 [JsonConverter(typeof(TypeInfoConverter))]
 public class TypeInfo
 {
-    private static readonly Regex _arrayNameRegex = new Regex(@"^.*\[,*\]$");
+    private static readonly Regex _arrayNameRegex = new(@"^.*\[,*\]$");
 
     [IgnoreDataMember]
     [Unmapped]

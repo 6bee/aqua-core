@@ -5,8 +5,6 @@ namespace Aqua.Tests.TypeSystem.Emit.TypeEmitter.Cache;
 using Aqua.TypeSystem;
 using Aqua.TypeSystem.Emit;
 using Shouldly;
-using System;
-using System.Linq;
 using Xunit;
 
 public class When_emitting_multiple_times

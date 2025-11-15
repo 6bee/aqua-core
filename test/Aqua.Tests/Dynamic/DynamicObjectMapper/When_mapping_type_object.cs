@@ -5,7 +5,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper;
 using Aqua.Dynamic;
 using Aqua.TypeSystem;
 using Shouldly;
-using System;
 using Xunit;
 
 public class When_mapping_type_object

@@ -4,7 +4,6 @@ namespace Aqua.Tests.Serialization.TypeSystem.TypeInfo;
 
 using Aqua.TypeSystem;
 using Shouldly;
-using System;
 using Xunit;
 
 public abstract class When_using_typeinfo_with_circular_reference_with_anonymous_type

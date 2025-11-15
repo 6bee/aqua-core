@@ -4,7 +4,6 @@ namespace Aqua.Tests.Dynamic.DynamicObjectMapper;
 
 using Aqua.Dynamic;
 using Shouldly;
-using System.Linq;
 using Xunit;
 
 public class When_mapping_int_array

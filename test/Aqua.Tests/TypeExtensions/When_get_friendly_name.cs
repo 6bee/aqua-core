@@ -4,9 +4,6 @@ namespace Aqua.Tests.TypeExtensions;
 
 using Aqua.TypeExtensions;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 public class When_get_friendly_name
