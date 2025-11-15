@@ -2,8 +2,6 @@
 
 namespace Aqua.TypeSystem;
 
-using System;
-
 [Serializable]
 [Flags]
 public enum MemberTypes

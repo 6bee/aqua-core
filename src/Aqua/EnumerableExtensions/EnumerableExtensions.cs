@@ -2,13 +2,10 @@
 
 namespace Aqua.EnumerableExtensions;
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class EnumerableExtensions

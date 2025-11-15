@@ -2,7 +2,6 @@
 
 namespace Aqua.TypeSystem;
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 public static class TypeResolverExtensions

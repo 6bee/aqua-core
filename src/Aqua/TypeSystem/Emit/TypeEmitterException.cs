@@ -2,8 +2,6 @@
 
 namespace Aqua.TypeSystem.Emit;
 
-using System;
-
 [Serializable]
 public class TypeEmitterException : Exception
 {

@@ -4,11 +4,8 @@ namespace Aqua.TypeSystem.Emit;
 
 using Aqua.EnumerableExtensions;
 using Aqua.Utils;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 partial class TypeEmitter
 {

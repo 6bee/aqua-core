@@ -3,7 +3,6 @@
 namespace Aqua.TypeSystem.Extensions;
 
 using Aqua.TypeExtensions;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;

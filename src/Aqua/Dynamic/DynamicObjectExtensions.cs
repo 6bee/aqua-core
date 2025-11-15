@@ -2,9 +2,7 @@
 
 namespace Aqua.Dynamic;
 
-using System;
 using System.ComponentModel;
-using System.Linq;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class DynamicObjectExtensions

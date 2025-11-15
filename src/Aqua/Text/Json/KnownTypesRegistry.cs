@@ -4,10 +4,7 @@ namespace Aqua.Text.Json;
 
 using Aqua.Dynamic;
 using Aqua.TypeSystem;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 /// <summary>
 /// When serializing type information for known types, the type key is written to json as a substitution of the former.

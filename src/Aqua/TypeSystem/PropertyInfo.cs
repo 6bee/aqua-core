@@ -4,7 +4,6 @@ namespace Aqua.TypeSystem;
 
 using Aqua.Dynamic;
 using Aqua.Text.Json.Converters;
-using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;

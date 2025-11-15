@@ -2,8 +2,6 @@
 
 namespace Aqua.TypeSystem;
 
-using System;
-
 [Serializable]
 public class TypeResolverException : Exception
 {

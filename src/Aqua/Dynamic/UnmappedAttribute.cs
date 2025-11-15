@@ -2,8 +2,6 @@
 
 namespace Aqua.Dynamic;
 
-using System;
-
 /// <summary>
 /// Prevents annotated members to be mapped into <see cref="DynamicObject"/>
 /// using <see cref="DynamicObjectMapper"/>.

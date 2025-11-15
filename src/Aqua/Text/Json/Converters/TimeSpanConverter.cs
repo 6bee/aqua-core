@@ -2,7 +2,6 @@
 
 namespace Aqua.Text.Json.Converters;
 
-using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 

@@ -2,8 +2,6 @@
 
 namespace Aqua.Dynamic;
 
-using System;
-
 public interface IDynamicObjectFactory
 {
     DynamicObject CreateDynamicObject(Type? type, object instance);

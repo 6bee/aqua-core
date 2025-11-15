@@ -4,7 +4,6 @@ namespace Aqua;
 
 using Aqua.TypeExtensions;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 
 internal static class MethodInfos

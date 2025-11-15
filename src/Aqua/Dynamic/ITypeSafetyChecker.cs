@@ -2,8 +2,6 @@
 
 namespace Aqua.Dynamic;
 
-using System;
-
 /// <summary>
 /// Denotes a type that allows to assert type safety for instace creation on mapping from <see cref="DynamicObject"/> in reference to OWASP A8:2017-Insecure Deserialization.
 /// </summary>

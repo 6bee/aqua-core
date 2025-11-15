@@ -3,7 +3,6 @@
 namespace Aqua.Text.Json.Converters;
 
 using Aqua.TypeSystem;
-using System;
 using System.Text.Json;
 
 public class TypeInfoConverter(KnownTypesRegistry knownTypes) : ObjectConverter<TypeInfo>(knownTypes)

@@ -2,8 +2,6 @@
 
 namespace Aqua.Dynamic;
 
-using System;
-
 [Serializable]
 public class DynamicObjectMapperException : Exception
 {
