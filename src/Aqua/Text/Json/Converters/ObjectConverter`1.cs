@@ -74,6 +74,11 @@ public class ObjectConverter<T>(KnownTypesRegistry knownTypes, bool handleSubtyp
     {
     }
 
+    public ObjectConverter()
+        : this(KnownTypesRegistry.Default)
+    {
+    }
+
     protected KnownTypesRegistry KnownTypesRegistry { get; } = knownTypes.CheckNotNull();
 
     public Func<string, Type?>? DefaultTypeResolver { get; set; }

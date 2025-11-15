@@ -20,6 +20,8 @@ using System.Text.Json.Serialization;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class JsonSerializerOptionsExtensions
 {
+    // NOTE: while aqua types declare JsonConverter we still require ConfigureAqua to set AquaReferenceHandler in case circular references need to be serialized
+
     /// <summary>
     /// Configures <see cref="JsonSerializerOptions"/> and adds <see cref="JsonConverter"/>s for <i>Aqua</i> types.
     /// </summary>
@@ -43,32 +45,32 @@ public static class JsonSerializerOptionsExtensions
 
         knownTypesRegistry ??= KnownTypesRegistry.Default;
 
-        if (!options.Converters.Any(static x => x is DynamicObjectConverter))
+        if (!options.Converters.Any(c => c.CanConvert(typeof(DynamicObject))))
         {
             options.Converters.Add(new DynamicObjectConverter(knownTypesRegistry));
         }
 
-        if (!options.Converters.Any(static x => x is TypeInfoConverter))
+        if (!options.Converters.Any(c => c.CanConvert(typeof(TypeInfo))))
         {
             options.Converters.Add(new TypeInfoConverter(knownTypesRegistry));
         }
 
-        // Workaround: there seems to be no proper way to deal with converters for abtract base types,
-        // hence we register for abstract as well as non-abstract types.
         typeof(MemberInfo).Assembly
             .GetTypes()
             .Where(static x => !x.IsAbstract)
             .Where(typeof(MemberInfo).IsAssignableFrom)
             .RegisterJsonConverter(typeof(MemberInfoConverter<>), options, knownTypesRegistry);
-        if (!options.Converters.Any(static x => x is MemberInfoConverter))
+
+        if (!options.Converters.Any(c => c.CanConvert(typeof(MemberInfo))))
         {
-            options.Converters.Add(new MemberInfoConverter(knownTypesRegistry));
+            options.Converters.Add(new MemberInfoConverter<MemberInfo>(knownTypesRegistry, true));
         }
 
         typeof(DynamicObject).Assembly
             .GetTypes()
             .Where(static x => x.IsClass && !x.IsAbstract && !x.IsGenericType)
             .Where(static x => x.GetCustomAttributes(typeof(DataContractAttribute), false).Length > 0)
+            .Where(static x => x.GetCustomAttributes(typeof(JsonConverterAttribute), false).Length is 0)
             .RegisterJsonConverter(typeof(ObjectConverter<>), options, knownTypesRegistry);
 
         return options;

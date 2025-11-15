@@ -3,13 +3,16 @@
 namespace Aqua.TypeSystem;
 
 using Aqua.Dynamic;
+using Aqua.Text.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 [Serializable]
 [DataContract(Name = "Constructor", IsReference = true)]
+[JsonConverter(typeof(MemberInfoConverter<ConstructorInfo>))]
 [DebuggerDisplay("Constructor: {Name,nq}")]
 public class ConstructorInfo : MethodBaseInfo
 {

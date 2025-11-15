@@ -203,6 +203,12 @@ public static class JsonConverterHelper
     {
         writer.AssertNotNull();
         options.AssertNotNull();
+
+        if (options.ReferenceHandler is not AquaReferenceHandler)
+        {
+            return false;
+        }
+
         var referenceResolver = options.ReferenceHandler?.CreateResolver();
         if (referenceResolver is null)
         {

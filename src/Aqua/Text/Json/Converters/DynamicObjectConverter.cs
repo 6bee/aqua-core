@@ -17,6 +17,11 @@ public class DynamicObjectConverter(KnownTypesRegistry knownTypes) : ObjectConve
     private const string ValuesProperty = "Values";
     private const string ItemsProperty = "Items";
 
+    public DynamicObjectConverter()
+        : this(KnownTypesRegistry.Default)
+    {
+    }
+
     protected override void ReadObjectProperties(ref Utf8JsonReader reader, DynamicObject result, Dictionary<string, Property> properties, JsonSerializerOptions options)
     {
         reader.Advance();

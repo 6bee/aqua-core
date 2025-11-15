@@ -8,6 +8,11 @@ using System.Text.Json;
 
 public class TypeInfoConverter(KnownTypesRegistry knownTypes) : ObjectConverter<TypeInfo>(knownTypes)
 {
+    public TypeInfoConverter()
+        : this(KnownTypesRegistry.Default)
+    {
+    }
+
     protected override TypeInfo? ReadJson(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType is JsonTokenType.String &&

@@ -4,6 +4,7 @@ namespace Aqua.TypeSystem;
 
 using Aqua.Dynamic;
 using Aqua.EnumerableExtensions;
+using Aqua.Text.Json.Converters;
 using Aqua.TypeExtensions;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
@@ -18,6 +20,7 @@ using System.Xml.Serialization;
 [DataContract(Name = "Type", IsReference = true)]
 [DebuggerDisplay("Type: {FullName,nq}")]
 [KnownType(typeof(TypeInfo[])), XmlInclude(typeof(TypeInfo[]))]
+[JsonConverter(typeof(TypeInfoConverter))]
 public class TypeInfo
 {
     private static readonly Regex _arrayNameRegex = new Regex(@"^.*\[,*\]$");

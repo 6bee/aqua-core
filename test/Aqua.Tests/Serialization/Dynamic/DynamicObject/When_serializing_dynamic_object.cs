@@ -32,13 +32,7 @@ public abstract class When_serializing_dynamic_object
         }
     }
 
-    public class With_system_text_json_serializer : When_serializing_dynamic_object
-    {
-        public With_system_text_json_serializer()
-            : base(SystemTextJsonSerializationHelper.Clone)
-        {
-        }
-    }
+    public class With_system_text_json_serializer() : When_serializing_dynamic_object(SystemTextJsonSerializationHelper.Clone);
 
     public class With_data_contract_serializer : When_serializing_dynamic_object
     {

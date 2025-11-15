@@ -9,7 +9,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class EnumerableExtensions

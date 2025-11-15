@@ -2,12 +2,14 @@
 
 namespace Aqua.Dynamic;
 
+using Aqua.Text.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 
 [Serializable]
@@ -19,6 +21,7 @@ using System.Xml.Serialization;
 [KnownType(typeof(DateTimeOffset)), XmlInclude(typeof(DateTimeOffset))]
 [KnownType(typeof(BigInteger)), XmlInclude(typeof(BigInteger))]
 [KnownType(typeof(Complex)), XmlInclude(typeof(Complex))]
+[JsonConverter(typeof(ObjectConverter<Property>))]
 [DebuggerDisplay("Property {Name,nq}: {Value}")]
 [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Preferred name")]
 public class Property
