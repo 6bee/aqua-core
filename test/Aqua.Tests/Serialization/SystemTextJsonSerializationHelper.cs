@@ -6,6 +6,7 @@ using Aqua.Text.Json.Converters;
 using System;
 using System.Numerics;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Xunit;
 
 public static class SystemTextJsonSerializationHelper
@@ -13,9 +14,8 @@ public static class SystemTextJsonSerializationHelper
     /// <summary>
     /// Gets pre-configured <see cref="JsonSerializerOptions"/> for <i>Aqua</i> types.
     /// </summary>
-    public static JsonSerializerOptions SerializerOptions => new JsonSerializerOptions { WriteIndented = true }
-        .AddConverter(new TimeSpanConverter())
-        .ConfigureAqua();
+    public static JsonSerializerOptions SerializerOptions => new JsonSerializerOptions { WriteIndented = true, ReferenceHandler = ReferenceHandler.IgnoreCycles }
+        .AddConverter(new TimeSpanConverter());
 
     public static T Clone<T>(this T graph)
         => Clone(graph, SerializerOptions);

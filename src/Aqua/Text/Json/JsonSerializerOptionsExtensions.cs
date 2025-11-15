@@ -20,8 +20,6 @@ using System.Text.Json.Serialization;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class JsonSerializerOptionsExtensions
 {
-    // NOTE: while aqua types declare JsonConverter we still require ConfigureAqua to set AquaReferenceHandler in case circular references need to be serialized
-
     /// <summary>
     /// Configures <see cref="JsonSerializerOptions"/> and adds <see cref="JsonConverter"/>s for <i>Aqua</i> types.
     /// </summary>
@@ -110,13 +108,23 @@ public static class JsonSerializerOptionsExtensions
     /// </summary>
     internal static JsonSerializerOptions ToSessionOptions(this JsonSerializerOptions options)
     {
-        var referenceHandler = options.ReferenceHandler as AquaReferenceHandler;
-        if (referenceHandler?.IsRoot is true)
+        var referenceHandler = options.ReferenceHandler;
+        if (referenceHandler is not null)
         {
-            return new(options)
+            if (referenceHandler is not AquaReferenceHandler aquaReferenceHandler)
             {
-                ReferenceHandler = new AquaReferenceHandler(referenceHandler),
-            };
+                // ensure we continue with a AquaReferenceHandler since the framework implementations ReferenceHandler.Preserve and  ReferenceHandler.IgnoreCycles
+                // prevent custom converters take part in the reference handling game.
+                aquaReferenceHandler = AquaReferenceHandler.Root;
+            }
+
+            if (aquaReferenceHandler.IsRoot)
+            {
+                options = new(options)
+                {
+                    ReferenceHandler = new AquaReferenceHandler(aquaReferenceHandler),
+                };
+            }
         }
 
         return options;

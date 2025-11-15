@@ -2,6 +2,7 @@
 
 namespace Aqua.Text.Json;
 
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 internal sealed class AquaReferenceHandler : ReferenceHandler
@@ -11,22 +12,25 @@ internal sealed class AquaReferenceHandler : ReferenceHandler
     private AquaReferenceHandler()
         => _referenceResolver = null;
 
-    public AquaReferenceHandler(AquaReferenceHandler referenceHandler)
+    internal AquaReferenceHandler(AquaReferenceHandler referenceHandler)
     {
         referenceHandler.AssertNotNull();
         _referenceResolver = referenceHandler.CreateResolver();
     }
 
+    // NOTE: in contrast to ReferenceHandler.Preserve we allow to grab ReferenceResolver anytime
+    //       to enable custom json converters take part in the reference handling game
     public override ReferenceResolver CreateResolver()
         => _referenceResolver ?? new AquaReferenceResolver();
 
-    public static AquaReferenceHandler Root => new();
-
     /// <summary>
-    /// Gets <see langword="true"/> if <see cref="CreateResolver"/> returns a new instance on every call,
-    /// <see langword="false"/> if the same instance is served everytime.
+    /// Gets a value indicating whether the current instance is a root reference handler.
     /// </summary>
-#pragma warning disable SA1623 // Property summary documentation should match accessors
-    public bool IsRoot => _referenceResolver is null;
-#pragma warning restore SA1623 // Property summary documentation should match accessors
+    /// <remarks>
+    /// Returns <see langword="true"/> if <see cref="CreateResolver"/> returns a new instance on every call,
+    /// <see langword="false"/> if the same instance is served everytime.
+    /// </remarks>
+    internal bool IsRoot => _referenceResolver is null;
+
+    internal static AquaReferenceHandler Root => new();
 }
