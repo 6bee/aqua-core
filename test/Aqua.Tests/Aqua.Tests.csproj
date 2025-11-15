@@ -10,7 +10,6 @@
     <ProjectReference Include="..\..\src\Aqua\Aqua.csproj" />
     <ProjectReference Include="..\..\src\Aqua.Newtonsoft.Json\Aqua.Newtonsoft.Json.csproj" />
     <ProjectReference Include="..\..\src\Aqua.protobuf-net\Aqua.protobuf-net.csproj" />
-    <ProjectReference Include="..\..\src\Aqua.Text.Json\Aqua.Text.Json.csproj" />
     <ProjectReference Include="..\Aqua.Tests.TestObjects1\Aqua.Tests.TestObjects1.csproj" />
     <ProjectReference Include="..\Aqua.Tests.TestObjects2\Aqua.Tests.TestObjects2.csproj" />
   </ItemGroup>

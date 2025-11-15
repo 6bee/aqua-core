@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!--
+  NOTE: this project is kept for v5.5.0 to mark the package as deprecated on nuget.org and will be removed afterwards
+  -->
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0;net10.0</TargetFrameworks>
     <PackageId>aqua-core-text-json</PackageId>
@@ -11,10 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Aqua\Aqua.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netStandard2.0' ">
-    <PackageReference Include="System.Text.Json" Version="10.0.0" />
   </ItemGroup>
 
 </Project>
