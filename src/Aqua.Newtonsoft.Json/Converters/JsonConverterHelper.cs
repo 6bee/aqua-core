@@ -108,8 +108,7 @@ public static class JsonConverterHelper
         if (type is not null && _typeReaders.TryGetValue(type, out var read))
         {
             result = read(reader);
-            return reader.TokenType is not JsonToken.EndArray
-                && reader.TokenType is not JsonToken.EndObject;
+            return reader.TokenType is not JsonToken.EndArray and not JsonToken.EndObject;
         }
 
         reader.Advance($"Expected token object of type '{type}'.");

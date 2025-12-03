@@ -147,15 +147,12 @@ public class ObjectConverter<T>(KnownTypesRegistry knownTypes, bool handleSubtyp
         }
 
         Type? type = null;
-        if (reader.IsProperty(JsonMetadata.TypeToken))
+        if (reader.IsProperty(JsonMetadata.TypeToken) &&
+            reader.ReadString() is string { Length: > 0 } typeName)
         {
-            var typeName = reader.ReadString();
-            if (typeName is not null && typeName.Length > 0)
-            {
-                type = KnownTypesRegistry.TryGetTypeInfo(typeName, out var typeInfo)
-                    ? typeInfo.ToType()
-                    : ResolveType(typeName) ?? throw reader.CreateException($"Failed to resolve type '{typeName}'");
-            }
+            type = KnownTypesRegistry.TryGetTypeInfo(typeName, out var typeInfo)
+                ? typeInfo.ToType()
+                : ResolveType(typeName) ?? throw reader.CreateException($"Failed to resolve type '{typeName}'");
         }
 
         type ??= typeToConvert;

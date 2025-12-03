@@ -32,7 +32,7 @@ public static class AssemblyExtensions
             }
             catch (ReflectionTypeLoadException ex)
             {
-                return ex.Types.Where(x => x is not null)!;
+                return ex.Types.Where(static x => x is not null)!;
             }
         }
     }

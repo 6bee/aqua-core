@@ -105,8 +105,7 @@ public static class JsonSerializerOptionsExtensions
     /// </summary>
     internal static JsonSerializerOptions ToSessionOptions(this JsonSerializerOptions options)
     {
-        var referenceHandler = options.ReferenceHandler;
-        if (referenceHandler is not null)
+        if (options.ReferenceHandler is { } referenceHandler)
         {
             if (referenceHandler is not AquaReferenceHandler aquaReferenceHandler)
             {

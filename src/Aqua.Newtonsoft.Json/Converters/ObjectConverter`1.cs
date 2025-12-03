@@ -52,21 +52,15 @@ public class ObjectConverter<T> : ObjectConverter
         }
 
         Type? type = null;
-        if (reader.IsProperty(JsonConverterHelper.TypeToken))
+        if (reader.IsProperty(JsonConverterHelper.TypeToken) &&
+            reader.ReadAsString() is string { Length: > 0 } typeName)
         {
-            var typeName = reader.ReadAsString();
-            if (typeName is not null && typeName.Length > 0)
-            {
-                type = KnownTypesRegistry.TryGetTypeInfo(typeName, out var typeInfo)
-                    ? typeInfo.ToType()
-                    : ResolveType(typeName) ?? throw reader.CreateException($"Failed to resolve type '{typeName}'");
-            }
+            type = KnownTypesRegistry.TryGetTypeInfo(typeName, out var typeInfo)
+                ? typeInfo.ToType()
+                : ResolveType(typeName) ?? throw reader.CreateException($"Failed to resolve type '{typeName}'");
         }
 
-        if (type is null)
-        {
-            type = objectType;
-        }
+        type ??= objectType;
 
         var result = CreateObject(type) ?? throw reader.CreateException($"Failed create instance of type {type.FullName}");
         if (!string.IsNullOrWhiteSpace(reference) && referenceResolver is not null)

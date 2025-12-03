@@ -28,8 +28,7 @@ public static class TypeHelper
             return type.GetElementType()!;
         }
 
-        var enumerableType = FindIEnumerable(type);
-        if (enumerableType is not null)
+        if (FindIEnumerable(type) is { } enumerableType)
         {
             return enumerableType.GetGenericArguments()[0];
         }
@@ -61,21 +60,18 @@ public static class TypeHelper
             }
         }
 
-        var interfaces = type.GetInterfaces();
-        if (interfaces is not null && interfaces.Length is not 0)
+        if (type.GetInterfaces() is { Length: > 0 } interfaces)
         {
             foreach (var interfaceType in interfaces)
             {
-                var enumerableType = FindIEnumerable(interfaceType);
-                if (enumerableType is not null)
+                if (FindIEnumerable(interfaceType) is { } enumerableType)
                 {
                     return enumerableType;
                 }
             }
         }
 
-        var baseType = type.BaseType;
-        if (baseType is not null && baseType != typeof(object))
+        if (type.BaseType is { } baseType && baseType != typeof(object))
         {
             return FindIEnumerable(baseType);
         }
