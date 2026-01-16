@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- Force version 4.3.1 of _System.Text.RegularExpressions_ due to known vulnerability.
+
 ## [5.4.2][5.4.2] - 2024-11-19
 
 ### Security

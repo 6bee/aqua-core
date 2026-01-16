@@ -19,6 +19,10 @@
             and no workaround has been found yet. Contributions are welcome ;)
     -->    
     <PackageReference Include="protobuf-net" Version="2.4.9" />
+    <!--
+      NOTE: Force newer version of System.Text.RegularExpression due to known vulnerability.
+    -->
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>
