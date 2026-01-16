@@ -8,21 +8,9 @@ using Xunit;
 
 public abstract class When_created_using_copyconstructor
 {
-    public class With_deep_copy : When_created_using_copyconstructor
-    {
-        public With_deep_copy()
-            : base(true)
-        {
-        }
-    }
+    public class With_deep_copy() : When_created_using_copyconstructor(true);
 
-    public class With_shallow_copy : When_created_using_copyconstructor
-    {
-        public With_shallow_copy()
-            : base(false)
-        {
-        }
-    }
+    public class With_shallow_copy() : When_created_using_copyconstructor(false);
 
     protected When_created_using_copyconstructor(bool deepCopy)
     {
