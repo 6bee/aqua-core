@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [5.5.0][5.5.0] -  2026-01-16
+
+### Added
+
 - Add support for `System.Int128`, `System.UInt128`, `System.DateOnly`, `System.TimeOnly`
 - Add .NET 10.0 framework target
 - add `Assembly.GetLoadedTypes()` extension method
@@ -21,8 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Type resolution prioritize publicly visible types in case of multiple matching candidates [#36][issue#36]
 - Declare members of `DynamicObject`, `PropertySet`, and `Property` virtual
 - Deprecate aqua-core-text-json and integrate code into aqua-core package
-
-### Deprecated
 
 ### Removed
 
@@ -123,7 +135,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Introduced `ITypeSafetyChecker` to enable type checking before instantiation by `DynamicObjectMapper`.
 
-[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/v5.4.2...main
+[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/v5.5.0...main
+[5.5.0]: https://github.com/6bee/aqua-core/compare/v5.4.2...v5.5.0
 [5.4.2]: https://github.com/6bee/aqua-core/compare/v5.4.1...v5.4.2
 [5.4.1]: https://github.com/6bee/aqua-core/compare/v5.4.0...v5.4.1
 [5.4.0]: https://github.com/6bee/aqua-core/compare/5.3.0...v5.4.0
