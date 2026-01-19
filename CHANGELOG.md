@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [5.5.1][5.5.1] - 2026-01-19
+
+### Fixed
+
+- Re-add type registrations for DateOnly, TimeOnly, Int128, UInt128
+
 ## [5.5.0][5.5.0] - 2026-01-16
 
 ### Added
@@ -135,7 +141,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Introduced `ITypeSafetyChecker` to enable type checking before instantiation by `DynamicObjectMapper`.
 
-[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/v5.5.0...main
+[vnext-unreleased]: https://github.com/6bee/aqua-core/compare/v5.5.1...main
+[5.5.1]: https://github.com/6bee/aqua-core/compare/v5.5.0...v5.5.1
 [5.5.0]: https://github.com/6bee/aqua-core/compare/v5.4.2...v5.5.0
 [5.4.2]: https://github.com/6bee/aqua-core/compare/v5.4.1...v5.4.2
 [5.4.1]: https://github.com/6bee/aqua-core/compare/v5.4.0...v5.4.1

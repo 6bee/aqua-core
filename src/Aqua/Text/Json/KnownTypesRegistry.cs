@@ -51,8 +51,8 @@ public sealed class KnownTypesRegistry
             typeof(TimeOnly),
 #endif // NET6_0_OR_GREATER
 #if NET7_0_OR_GREATER
-            ////typeof(Int128),
-            ////typeof(UInt128),
+            typeof(Int128),
+            typeof(UInt128),
 #endif // NET7_0_OR_GREATER
         }
         .Select(static x =>
