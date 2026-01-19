@@ -8,13 +8,9 @@ using Xunit;
 
 public class When_created_based_on_object_with_abstract_properties_with_type_information
 {
-    private abstract class BaseA
-    {
-    }
+    private abstract class BaseA;
 
-    private class A : BaseA
-    {
-    }
+    private class A : BaseA;
 
     private class ClassWithAbstractProperties
     {

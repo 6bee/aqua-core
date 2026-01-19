@@ -44,7 +44,7 @@ public class When_resolving_hidden_member
 
         System.Reflection.TypeInfo type = typeof(TypeHiding).GetTypeInfo();
         System.Reflection.PropertyInfo propertyInfo = type.GetDeclaredProperty(nameof(TypeHiding.Property));
-        Aqua.TypeSystem.PropertyInfo mappedProperty = new Aqua.TypeSystem.PropertyInfo(propertyInfo);
+        Aqua.TypeSystem.PropertyInfo mappedProperty = new(propertyInfo);
         System.Reflection.PropertyInfo resolvedProperty = mappedProperty.ResolveProperty(typeResolver);
 
         resolvedProperty.ShouldBe(propertyInfo);
@@ -57,7 +57,7 @@ public class When_resolving_hidden_member
 
         System.Reflection.TypeInfo type = typeof(TypeHiding).GetTypeInfo();
         System.Reflection.PropertyInfo propertyInfo = type.GetDeclaredProperty(nameof(TypeHiding.Property));
-        Aqua.TypeSystem.PropertyInfo mappedProperty = new Aqua.TypeSystem.PropertyInfo(propertyInfo);
+        Aqua.TypeSystem.PropertyInfo mappedProperty = new(propertyInfo);
         System.Reflection.MemberInfo resolvedMember = mappedProperty.ResolveMemberInfo(typeResolver);
 
         resolvedMember.ShouldBe(propertyInfo);
@@ -70,7 +70,7 @@ public class When_resolving_hidden_member
 
         System.Reflection.TypeInfo type = typeof(TypeHiding).GetTypeInfo();
         System.Reflection.FieldInfo fieldInfo = type.GetDeclaredField(nameof(TypeHiding.Field));
-        Aqua.TypeSystem.FieldInfo mappedField = new Aqua.TypeSystem.FieldInfo(fieldInfo);
+        Aqua.TypeSystem.FieldInfo mappedField = new(fieldInfo);
         System.Reflection.FieldInfo resolvedField = mappedField.ResolveField(typeResolver);
 
         resolvedField.ShouldBe(fieldInfo);
@@ -83,7 +83,7 @@ public class When_resolving_hidden_member
 
         System.Reflection.TypeInfo type = typeof(TypeHiding).GetTypeInfo();
         System.Reflection.FieldInfo fieldInfo = type.GetDeclaredField(nameof(TypeHiding.Field));
-        Aqua.TypeSystem.FieldInfo mappedField = new Aqua.TypeSystem.FieldInfo(fieldInfo);
+        Aqua.TypeSystem.FieldInfo mappedField = new(fieldInfo);
         System.Reflection.MemberInfo resolvedMember = mappedField.ResolveMemberInfo(typeResolver);
 
         resolvedMember.ShouldBe(fieldInfo);
@@ -96,7 +96,7 @@ public class When_resolving_hidden_member
 
         System.Reflection.TypeInfo type = typeof(TypeHiding).GetTypeInfo();
         System.Reflection.MethodInfo methodInfo = type.GetDeclaredMethod(nameof(TypeHiding.Method));
-        Aqua.TypeSystem.MethodInfo mappedMethod = new Aqua.TypeSystem.MethodInfo(methodInfo);
+        Aqua.TypeSystem.MethodInfo mappedMethod = new(methodInfo);
         System.Reflection.MethodInfo resolvedMethod = mappedMethod.ResolveMethod(typeResolver);
 
         resolvedMethod.ShouldBe(methodInfo);
@@ -109,7 +109,7 @@ public class When_resolving_hidden_member
 
         System.Reflection.TypeInfo type = typeof(TypeHiding).GetTypeInfo();
         System.Reflection.MethodInfo methodInfo = type.GetDeclaredMethod(nameof(TypeHiding.Method));
-        Aqua.TypeSystem.MethodInfo mappedMethod = new Aqua.TypeSystem.MethodInfo(methodInfo);
+        Aqua.TypeSystem.MethodInfo mappedMethod = new(methodInfo);
         System.Reflection.MemberInfo resolvedMember = mappedMethod.ResolveMemberInfo(typeResolver);
 
         resolvedMember.ShouldBe(methodInfo);

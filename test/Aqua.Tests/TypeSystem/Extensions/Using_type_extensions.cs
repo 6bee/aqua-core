@@ -8,9 +8,7 @@ using Xunit;
 
 public class Using_type_extensions
 {
-    private class CustomType
-    {
-    }
+    private class CustomType;
 
     [Fact]
     public void Is_anonymous_should_return_true_for_anonymous_type()

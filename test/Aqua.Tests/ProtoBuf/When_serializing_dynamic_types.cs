@@ -220,13 +220,13 @@ public class When_serializing_dynamic_types
     {
         var entity = new DynamicObjectMapper().MapCollection(new List<ProductEntity>
         {
-            new ProductEntity
+            new()
             {
                 Id = 1,
                 Name = "Product E. Name",
                 Price = 1234.56m,
             },
-            new ProductEntity
+            new()
             {
                 Id = 2,
                 Name = "Noname",
@@ -278,9 +278,9 @@ public class When_serializing_dynamic_types
         var entity = new DynamicObjectMapper().MapObject(new OrderEntity
         {
             Id = 1,
-            Items = new List<OrderItemEntity>
-            {
-                new OrderItemEntity
+            Items =
+            [
+                new()
                 {
                     ProductId = 11,
                     Quantity = 2,
@@ -291,7 +291,7 @@ public class When_serializing_dynamic_types
                         Price = 1234.56m,
                     },
                 },
-                new OrderItemEntity
+                new()
                 {
                     ProductId = 22,
                     Quantity = 4,
@@ -302,7 +302,7 @@ public class When_serializing_dynamic_types
                         Price = 78.9m,
                     },
                 },
-            },
+            ],
         });
 
         var copy = entity.Clone();

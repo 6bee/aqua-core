@@ -8,9 +8,7 @@ using Xunit;
 
 public class When_resolving_type
 {
-    private class A
-    {
-    }
+    private class A;
 
     [Fact]
     public void Resolved_type_should_be_original()

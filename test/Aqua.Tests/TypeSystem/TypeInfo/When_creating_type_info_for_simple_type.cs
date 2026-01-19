@@ -15,12 +15,7 @@ public class When_creating_type_info_for_simple_type
         public string StringValue { get; set; }
     }
 
-    private readonly TypeInfo typeInfo;
-
-    public When_creating_type_info_for_simple_type()
-    {
-        typeInfo = new TypeInfo(typeof(A));
-    }
+    private readonly TypeInfo typeInfo = new(typeof(A));
 
     [Fact]
     public void Type_info_should_have_is_array_false()

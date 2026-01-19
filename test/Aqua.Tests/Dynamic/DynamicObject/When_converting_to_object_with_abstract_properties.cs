@@ -8,13 +8,9 @@ using Xunit;
 
 public class When_converting_to_object_with_abstract_properties
 {
-    private abstract class BaseA
-    {
-    }
+    private abstract class BaseA;
 
-    private class A : BaseA
-    {
-    }
+    private class A : BaseA;
 
     private class ClassWithAbstractProperties
     {

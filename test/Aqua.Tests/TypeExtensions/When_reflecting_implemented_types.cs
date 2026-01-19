@@ -10,17 +10,11 @@ using Xunit;
 
 public class When_reflecting_implemented_types
 {
-    public class TestInterface
-    {
-    }
+    public class TestInterface;
 
-    public class TestBaseClass : TestInterface
-    {
-    }
+    public class TestBaseClass : TestInterface;
 
-    public class TestSubClass : TestBaseClass
-    {
-    }
+    public class TestSubClass : TestBaseClass;
 
     public class TestQueryable<T> : IQueryable<T>
     {
@@ -35,9 +29,7 @@ public class When_reflecting_implemented_types
         IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
     }
 
-    public class GenericSubClass<TNew, TBase> : TestQueryable<TBase>
-    {
-    }
+    public class GenericSubClass<TNew, TBase> : TestQueryable<TBase>;
 
     [Fact]
     public void Should_reflect_base_interface()

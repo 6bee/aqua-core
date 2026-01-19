@@ -8,12 +8,9 @@ using Xunit;
 
 public class When_mapping_object_from_immutable_value_type
 {
-    private struct CustomValueType
+    private struct CustomValueType(long int64Property)
     {
-        public CustomValueType(long int64Property)
-            => Int64Property = int64Property;
-
-        public long Int64Property { get; }
+        public long Int64Property { get; } = int64Property;
     }
 
     private readonly DynamicObject dynamicObject;

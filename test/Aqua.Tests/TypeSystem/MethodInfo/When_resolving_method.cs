@@ -24,9 +24,7 @@ public class When_resolving_method
         public override string Method<T>(T t) => base.Method(t);
     }
 
-    private class SubSubtype : Subtype
-    {
-    }
+    private class SubSubtype : Subtype;
 
     private static class StaticClass
     {

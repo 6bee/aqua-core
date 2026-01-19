@@ -33,7 +33,7 @@ public class When_created_based_on_object_with_fields_and_properties
     private const double DoubleValue = 12.3456789;
     private const string StringValue1 = "Foo";
     private const string StringValue2 = "Bar";
-    private static readonly DateTime DateValue = new DateTime(2002, 2, 13);
+    private static readonly DateTime DateValue = new(2002, 2, 13);
 
     private readonly DynamicObject dynamicObject;
 

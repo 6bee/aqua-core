@@ -18,12 +18,7 @@ public class When_creating_type_info_of_circular_type_graph
         public A A { get; set; }
     }
 
-    private readonly TypeInfo typeInfo;
-
-    public When_creating_type_info_of_circular_type_graph()
-    {
-        typeInfo = new TypeInfo(typeof(A));
-    }
+    private readonly TypeInfo typeInfo = new(typeof(A));
 
     [Fact]
     public void Type_should_be_A()

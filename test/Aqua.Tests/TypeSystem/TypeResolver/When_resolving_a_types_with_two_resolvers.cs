@@ -22,11 +22,12 @@ public class When_resolving_a_types_with_two_resolvers
     {
         var a = new A { Int32Value = 0, StringValue = string.Empty };
 
-        var typeInfo = new TypeInfo(a.GetType());
-
-        typeInfo.Name = "TestTypeName";
-        typeInfo.Namespace = "TestNamespace";
-        typeInfo.DeclaringType = null;
+        var typeInfo = new TypeInfo(a.GetType())
+        {
+            Name = "TestTypeName",
+            Namespace = "TestNamespace",
+            DeclaringType = null,
+        };
 
         resolvedType1 = new TypeResolver().ResolveType(typeInfo);
 

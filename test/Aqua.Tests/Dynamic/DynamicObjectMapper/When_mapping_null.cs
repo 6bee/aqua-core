@@ -8,9 +8,7 @@ using Xunit;
 
 public class When_mapping_null
 {
-    private class CustomClass
-    {
-    }
+    private class CustomClass;
 
     [Fact]
     public void Map_should_be_null_for_null_dynamic_object()
@@ -38,9 +36,9 @@ public class When_mapping_null
     {
         var dynamicObjects = new DynamicObject[]
         {
-            new DynamicObject(new CustomClass()),
+            new(new CustomClass()),
             null,
-            new DynamicObject(new CustomClass()),
+            new(new CustomClass()),
         };
 
         var mapper = new DynamicObjectMapper();
@@ -58,9 +56,9 @@ public class When_mapping_null
     {
         var dynamicObjects = new DynamicObject[]
         {
-            new DynamicObject(new CustomClass()),
+            new(new CustomClass()),
             null,
-            new DynamicObject(new CustomClass()),
+            new(new CustomClass()),
         };
 
         var mapper = new DynamicObjectMapper();

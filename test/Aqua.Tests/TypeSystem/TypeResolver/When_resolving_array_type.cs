@@ -8,9 +8,7 @@ using Xunit;
 
 public class When_resolving_array_type
 {
-    private class A
-    {
-    }
+    private class A;
 
     private readonly Type type;
 

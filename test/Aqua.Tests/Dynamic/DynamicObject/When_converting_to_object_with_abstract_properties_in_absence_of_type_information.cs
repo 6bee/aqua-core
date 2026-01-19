@@ -21,13 +21,9 @@ public class When_converting_to_object_with_abstract_properties_in_absence_of_ty
         }
     }
 
-    private abstract class BaseA
-    {
-    }
+    private abstract class BaseA;
 
-    private class A : BaseA
-    {
-    }
+    private class A : BaseA;
 
     private class ClassWithAbstractProperties
     {

@@ -13,13 +13,9 @@ public class When_mapping_object_with_type_info_mapper
         public Type MapType(Type type) => typeof(B);
     }
 
-    private class A
-    {
-    }
+    private class A;
 
-    private class B
-    {
-    }
+    private class B;
 
     private readonly DynamicObject dynamicObject;
 

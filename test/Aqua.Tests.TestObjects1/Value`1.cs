@@ -2,6 +2,4 @@
 
 namespace Aqua.Tests.TestObjects;
 
-public struct Value<T>
-{
-}
+public struct Value<T>;

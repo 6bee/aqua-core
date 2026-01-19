@@ -8,7 +8,7 @@ using Xunit;
 
 public class When_created_using_parameterless_constructor
 {
-    private readonly DynamicObject dynamicObject = new DynamicObject();
+    private readonly DynamicObject dynamicObject = new();
 
     [Fact]
     public void Should_be_empty()

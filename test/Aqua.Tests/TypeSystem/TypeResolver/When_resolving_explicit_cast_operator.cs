@@ -16,7 +16,7 @@ public class When_resolving_explicit_cast_operator
 
         Expression<Func<decimal?, double?>> expr = x => (double?)x;
         System.Reflection.MethodInfo methodInfo = ((UnaryExpression)expr.Body).Method;
-        Aqua.TypeSystem.MethodInfo mappedMethod = new Aqua.TypeSystem.MethodInfo(methodInfo);
+        Aqua.TypeSystem.MethodInfo mappedMethod = new(methodInfo);
         System.Reflection.MethodInfo resolvedMethod = mappedMethod.ResolveMethod(typeResolver);
 
         resolvedMethod.ShouldBe(methodInfo);

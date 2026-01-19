@@ -18,12 +18,7 @@ public class When_creating_type_info_of_generic_type
         public string StringValue { get; set; }
     }
 
-    private readonly TypeInfo typeInfo;
-
-    public When_creating_type_info_of_generic_type()
-    {
-        typeInfo = new TypeInfo(typeof(A<B>));
-    }
+    private readonly TypeInfo typeInfo = new(typeof(A<B>));
 
     [Fact]
     public void Type_info_should_have_is_array_false()

@@ -8,20 +8,11 @@ using Xunit;
 
 public class When_creating_type_info_for_array_type_of_generic_type
 {
-    private class A<T>
-    {
-    }
+    private class A<T>;
 
-    private class B
-    {
-    }
+    private class B;
 
-    private readonly TypeInfo typeInfo;
-
-    public When_creating_type_info_for_array_type_of_generic_type()
-    {
-        typeInfo = new TypeInfo(typeof(A<B>[]));
-    }
+    private readonly TypeInfo typeInfo = new(typeof(A<B>[]));
 
     [Fact]
     public void Type_info_should_have_is_array_true()

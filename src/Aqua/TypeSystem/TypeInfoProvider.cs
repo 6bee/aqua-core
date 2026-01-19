@@ -96,5 +96,5 @@ public class TypeInfoProvider : ITypeInfoProvider
 
     private static Dictionary<T, TypeInfo> CreateReferenceTracker<T>()
         where T : notnull
-        => new Dictionary<T, TypeInfo>(ReferenceEqualityComparer<T>.Default);
+        => new(ReferenceEqualityComparer<T>.Default);
 }

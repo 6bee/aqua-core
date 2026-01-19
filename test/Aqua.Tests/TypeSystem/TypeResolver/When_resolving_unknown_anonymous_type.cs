@@ -19,10 +19,11 @@ public class When_resolving_unknown_anonymous_type
 
         actualType = instance.GetType();
 
-        var typeInfo = new TypeInfo(actualType);
-
-        typeInfo.Name = "UnknowTestClass";
-        typeInfo.Namespace = "Unkown.Test.Namespace";
+        var typeInfo = new TypeInfo(actualType)
+        {
+            Name = "UnknowTestClass",
+            Namespace = "Unkown.Test.Namespace",
+        };
 
         emitedType = new TypeResolver().ResolveType(typeInfo);
     }

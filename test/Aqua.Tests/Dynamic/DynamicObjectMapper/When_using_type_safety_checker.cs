@@ -8,13 +8,9 @@ using Xunit;
 
 public class When_using_type_safety_checker
 {
-    public class SafeType
-    {
-    }
+    public class SafeType;
 
-    public class UnsafeType
-    {
-    }
+    public class UnsafeType;
 
     public class TypeSafetyChecker : ITypeSafetyChecker
     {
@@ -54,5 +50,5 @@ public class When_using_type_safety_checker
     }
 
     private static DynamicObjectMapper CreateMapper()
-        => new DynamicObjectMapper(typeSafetyChecker: new TypeSafetyChecker());
+        => new(typeSafetyChecker: new TypeSafetyChecker());
 }

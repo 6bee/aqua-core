@@ -13,11 +13,9 @@ public class When_mapping_object_with_collection_property
         public IEnumerable<T> Items { get; set; }
     }
 
-    private class Item
-    {
-    }
+    private class Item;
 
-    private static CustomType<T> CreateObject<T>(IEnumerable<T> items) => new CustomType<T> { Items = items };
+    private static CustomType<T> CreateObject<T>(IEnumerable<T> items) => new() { Items = items };
 
     [Fact]
     public void Should_preserve_int_array_type()
@@ -113,7 +111,7 @@ public class When_mapping_object_with_collection_property
     [Fact]
     public void Should_map_custom_type_list_to_object_array()
     {
-        var obj = CreateObject(new List<Item> { new Item() });
+        var obj = CreateObject(new List<Item> { new() });
 
         var dynamicObject = new DynamicObjectMapper().MapObject(obj);
 

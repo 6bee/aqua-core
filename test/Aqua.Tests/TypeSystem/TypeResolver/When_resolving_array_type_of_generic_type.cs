@@ -10,13 +10,9 @@ using Xunit;
 public class When_resolving_array_type_of_generic_type
 {
     [SuppressMessage("Major Code Smell", "S2326:Unused type parameters should be removed", Justification = "Generic type required for testing")]
-    private class A<T>
-    {
-    }
+    private class A<T>;
 
-    private class B
-    {
-    }
+    private class B;
 
     private readonly Type type;
 

@@ -8,14 +8,9 @@ using Xunit;
 
 public class When_converting_to_type_requiring_ctor_and_property_setter
 {
-    private class Data
+    private class Data(int id)
     {
-        private readonly int _id;
-
-        public Data(int id)
-            => _id = id;
-
-        public int Id => _id;
+        public int Id => id;
 
         public double DoubleProperty { get; set; }
 

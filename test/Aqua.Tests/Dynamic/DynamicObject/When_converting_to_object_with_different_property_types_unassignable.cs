@@ -11,28 +11,18 @@ using Xunit;
 /// </summary>
 public class When_converting_to_object_with_different_property_types_unassignable
 {
-    private class A
-    {
-    }
+    private class A;
 
-    private class B
-    {
-    }
+    private class B;
 
     private class C
     {
-        public static explicit operator C(A a)
-        {
-            return new C();
-        }
+        public static explicit operator C(A a) => new();
     }
 
     private class D
     {
-        public static implicit operator D(A a)
-        {
-            return new D();
-        }
+        public static implicit operator D(A a) => new();
     }
 
     private class CustomType

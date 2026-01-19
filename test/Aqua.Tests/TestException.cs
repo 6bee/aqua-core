@@ -2,10 +2,4 @@
 
 namespace Aqua.Tests;
 
-public class TestException : Exception
-{
-    public TestException(string message)
-        : base(message)
-    {
-    }
-}
+public class TestException(string message) : Exception(message);

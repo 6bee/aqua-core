@@ -21,11 +21,12 @@ public class When_resolving_unknown_type
 
     public When_resolving_unknown_type()
     {
-        var typeInfo = new TypeInfo(typeof(A));
-
-        typeInfo.Name = "UnknowTestClass";
-        typeInfo.Namespace = "Unkown.Test.Namespace";
-        typeInfo.DeclaringType = null;
+        var typeInfo = new TypeInfo(typeof(A))
+        {
+            Name = "UnknowTestClass",
+            Namespace = "Unkown.Test.Namespace",
+            DeclaringType = null,
+        };
 
         emitedType = new TypeResolver().ResolveType(typeInfo);
     }

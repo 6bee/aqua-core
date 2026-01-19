@@ -18,25 +18,15 @@ public class When_resolving_types_with_circular_reference
         public A A { get; set; }
     }
 
-    private interface IOrigin<T>
-    {
-    }
+    private interface IOrigin<T>;
 
-    private class Egg : Egg<Chicken>, IOrigin<Chicken>
-    {
-    }
+    private class Egg : Egg<Chicken>, IOrigin<Chicken>;
 
-    private class Chicken : Chicken<Egg>, IOrigin<Egg>
-    {
-    }
+    private class Chicken : Chicken<Egg>, IOrigin<Egg>;
 
-    private class Egg<T> : IOrigin<T>
-    {
-    }
+    private class Egg<T> : IOrigin<T>;
 
-    private class Chicken<T> : IOrigin<T>
-    {
-    }
+    private class Chicken<T> : IOrigin<T>;
 
     [Theory]
     [InlineData(typeof(A), typeof(B))]

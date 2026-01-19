@@ -8,13 +8,9 @@ using Xunit;
 
 public class When_resolving_generic_type
 {
-    private class A<T>
-    {
-    }
+    private class A<T>;
 
-    private class B
-    {
-    }
+    private class B;
 
     private readonly Type type;
 
