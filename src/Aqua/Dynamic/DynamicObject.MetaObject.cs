@@ -12,7 +12,8 @@ partial class DynamicObject : IDynamicMetaObjectProvider
     DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter)
         => new MetaObject(parameter, BindingRestrictions.GetInstanceRestriction(parameter, this), this);
 
-    private sealed class MetaObject : DynamicMetaObject
+    private sealed class MetaObject(Expression expression, BindingRestrictions restrictions, DynamicObject dynamicObject)
+        : DynamicMetaObject(expression, restrictions, dynamicObject)
     {
         private static readonly MethodInfo _getMethod = typeof(DynamicObject).GetMethodEx(
             nameof(Get),
@@ -22,11 +23,6 @@ partial class DynamicObject : IDynamicMetaObjectProvider
             nameof(Set),
             typeof(string),
             typeof(object));
-
-        public MetaObject(Expression expression, BindingRestrictions restrictions, DynamicObject dynamicObject)
-            : base(expression, restrictions, dynamicObject)
-        {
-        }
 
         public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
         {
@@ -48,8 +44,8 @@ partial class DynamicObject : IDynamicMetaObjectProvider
         }
 
         public override IEnumerable<string> GetDynamicMemberNames()
-            => Value is DynamicObject dynamicObject
-            ? dynamicObject.GetPropertyNames()
-            : Enumerable.Empty<string>();
+            => Value is DynamicObject dynamicObjectValue
+            ? dynamicObjectValue.GetPropertyNames()
+            : [];
     }
 }

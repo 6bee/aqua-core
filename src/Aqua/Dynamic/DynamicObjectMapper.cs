@@ -27,9 +27,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
         /// <summary>
         /// Type definition used in generic type filters.
         /// </summary>
-        private sealed class TElement
-        {
-        }
+        private sealed class TElement;
 #pragma warning restore S2094 // Classes should not be empty
 
         public static readonly MethodInfo AddAllMethodInfo = typeof(Helper).GetMethodEx(
@@ -43,14 +41,9 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             => source.ForEach(x => addMethod.Invoke(target, [(object?)x]));
     }
 
-    private sealed class InternalDynamicObjectFactory : IDynamicObjectFactory
+    private sealed class InternalDynamicObjectFactory(ITypeInfoProvider? typeInfoProvider = null) : IDynamicObjectFactory
     {
-        private readonly ITypeInfoProvider _typeInfoProvider;
-
-        public InternalDynamicObjectFactory(ITypeInfoProvider? typeInfoProvider)
-        {
-            _typeInfoProvider = typeInfoProvider ?? new TypeInfoProvider();
-        }
+        private readonly ITypeInfoProvider _typeInfoProvider = typeInfoProvider ?? new TypeInfoProvider();
 
         public DynamicObject CreateDynamicObject(Type? type, object instance)
         {
@@ -60,17 +53,11 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
     }
 
     [DebuggerDisplay("{Type} {Value}")]
-    private readonly struct ReferenceMapKey : IEquatable<ReferenceMapKey>
+    private readonly struct ReferenceMapKey(Type type, DynamicObject value) : IEquatable<ReferenceMapKey>
     {
-        public ReferenceMapKey(Type type, DynamicObject value)
-        {
-            Type = type;
-            Value = value;
-        }
+        public Type Type { get; } = type;
 
-        public Type Type { get; }
-
-        public DynamicObject Value { get; }
+        public DynamicObject Value { get; } = value;
 
         public override bool Equals(object? obj)
             => obj is ReferenceMapKey other
@@ -97,16 +84,10 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
     /// <summary>
     /// Execution context used for mapping to <see cref="DynamicObject"/>s.
     /// </summary>
-    private sealed class ToContext : IMappingContext
+    private sealed class ToContext(ITypeMapper? typeMapper) : IMappingContext
     {
-        private readonly Func<Type, Type> _dynamicObjectTypeInfoMapper;
-        private readonly Dictionary<object, DynamicObject> _referenceMap;
-
-        public ToContext(ITypeMapper? typeMapper)
-        {
-            _dynamicObjectTypeInfoMapper = typeMapper is null ? (static t => t) : typeMapper.MapType;
-            _referenceMap = new Dictionary<object, DynamicObject>(ReferenceEqualityComparer<object>.Default);
-        }
+        private readonly Func<Type, Type> _dynamicObjectTypeInfoMapper = typeMapper is null ? (static t => t) : typeMapper.MapType;
+        private readonly Dictionary<object, DynamicObject> _referenceMap = new(ReferenceEqualityComparer<object>.Default);
 
         /// <summary>
         /// Returns an existing instance if found in the reference map, creates a new instance otherwise.
@@ -142,18 +123,11 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
     /// <summary>
     /// Execution context used for mapping from <see cref="DynamicObject"/>s.
     /// </summary>
-    private sealed class FromContext : IMappingContext
+    private sealed class FromContext(ITypeSafetyChecker? typeSafetyChecker) : IMappingContext
     {
-        private readonly Dictionary<ReferenceMapKey, object> _referenceMap;
-        private readonly HashSet<Type> _safeTypes;
-        private readonly ITypeSafetyChecker? _typeSafetyChecker;
-
-        public FromContext(ITypeSafetyChecker? typeSafetyChecker)
-        {
-            _referenceMap = [];
-            _safeTypes = [];
-            _typeSafetyChecker = typeSafetyChecker;
-        }
+        private readonly Dictionary<ReferenceMapKey, object> _referenceMap = [];
+        private readonly HashSet<Type> _safeTypes = [];
+        private readonly ITypeSafetyChecker? _typeSafetyChecker = typeSafetyChecker;
 
         /// <summary>
         /// Returns an existing instance if found in the reference map, creates a new instance otherwise.
@@ -193,7 +167,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
     private const string NumericPattern = @"([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?";
 
-    private static readonly string ComplexNumberParserRegexPattern = $"^(?<Re>[+-]?({NumericPattern}))(?<Sign>[+-])[iI](?<Im>{NumericPattern})$";
+    private const string ComplexNumberParserRegexPattern = $"^(?<Re>[+-]?({NumericPattern}))(?<Sign>[+-])[iI](?<Im>{NumericPattern})$";
 
     private static readonly Type _genericDictionaryType = typeof(Dictionary<,>);
 
@@ -239,35 +213,34 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
         .Contains;
 
     private static readonly Dictionary<Type, HashSet<Type>> _implicitNumericConversionsTable =
-        new Dictionary<Type, Type[]>
+        new()
         {
             // source: http://msdn.microsoft.com/en-us/library/y5b434w4.aspx
-            { typeof(sbyte), new[] { typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal) } },
-            { typeof(byte), new[] { typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal) } },
-            { typeof(short), new[] { typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal) } },
-            { typeof(ushort), new[] { typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal) } },
-            { typeof(int), new[] { typeof(long), typeof(float), typeof(double), typeof(decimal) } },
-            { typeof(uint), new[] { typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal) } },
-            { typeof(long), new[] { typeof(float), typeof(double), typeof(decimal) } },
-            { typeof(char), new[] { typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal) } },
-            { typeof(float), new[] { typeof(double) } },
-            { typeof(ulong), new[] { typeof(float), typeof(double), typeof(decimal) } },
+            [typeof(sbyte)] = [typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal)],
+            [typeof(byte)] = [typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal)],
+            [typeof(short)] = [typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal)],
+            [typeof(ushort)] = [typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal)],
+            [typeof(int)] = [typeof(long), typeof(float), typeof(double), typeof(decimal)],
+            [typeof(uint)] = [typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal)],
+            [typeof(long)] = [typeof(float), typeof(double), typeof(decimal)],
+            [typeof(char)] = [typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal)],
+            [typeof(float)] = [typeof(double)],
+            [typeof(ulong)] = [typeof(float), typeof(double), typeof(decimal)],
 #if NET7_0_OR_GREATER
             // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_implicit
-            { typeof(Int128), new[] { typeof(sbyte), typeof(ulong), typeof(uint), typeof(ushort), typeof(int), typeof(short), typeof(long), typeof(char), typeof(byte) } },
+            [typeof(Int128)] = [typeof(sbyte), typeof(ulong), typeof(uint), typeof(ushort), typeof(int), typeof(short), typeof(long), typeof(char), typeof(byte)],
 
             // source: https://learn.microsoft.com/en-us/dotnet/api/system.uint128.op_implicit
-            { typeof(UInt128), new[] { typeof(byte), typeof(char), typeof(ushort), typeof(uint), typeof(ulong) } },
+            [typeof(UInt128)] = [typeof(byte), typeof(char), typeof(ushort), typeof(uint), typeof(ulong)],
 #endif // NET7_0_OR_GREATER
-        }
-        .ToDictionary(static x => x.Key, static x => x.Value.ToHashSet());
+        };
 
     private static readonly Dictionary<Type, Dictionary<Type, Func<object, object>>> _explicitConversionsTable =
         new()
         {
             // source: https://msdn.microsoft.com/en-us/library/yht2cx7b.aspx
             {
-                typeof(sbyte), new Dictionary<Type, Func<object, object>>
+                typeof(sbyte), new()
                 {
                     { typeof(byte), static x => checked((byte)(sbyte)x) },
                     { typeof(ushort), static x => checked((ushort)(sbyte)x) },
@@ -282,7 +255,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(byte), new Dictionary<Type, Func<object, object>>
+                typeof(byte), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(byte)x) },
                     { typeof(char), static x => checked((char)(byte)x) },
@@ -290,7 +263,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(short), new Dictionary<Type, Func<object, object>>
+                typeof(short), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(short)x) },
                     { typeof(byte), static x => checked((byte)(short)x) },
@@ -306,7 +279,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(ushort), new Dictionary<Type, Func<object, object>>
+                typeof(ushort), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(ushort)x) },
                     { typeof(byte), static x => checked((byte)(ushort)x) },
@@ -316,7 +289,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(int), new Dictionary<Type, Func<object, object>>
+                typeof(int), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(int)x) },
                     { typeof(byte), static x => checked((byte)(int)x) },
@@ -333,7 +306,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(uint), new Dictionary<Type, Func<object, object>>
+                typeof(uint), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(uint)x) },
                     { typeof(byte), static x => checked((byte)(uint)x) },
@@ -344,7 +317,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(long), new Dictionary<Type, Func<object, object>>
+                typeof(long), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(long)x) },
                     { typeof(byte), static x => checked((byte)(long)x) },
@@ -362,7 +335,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(ulong), new Dictionary<Type, Func<object, object>>
+                typeof(ulong), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(ulong)x) },
                     { typeof(byte), static x => checked((byte)(ulong)x) },
@@ -376,7 +349,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(char), new Dictionary<Type, Func<object, object>>
+                typeof(char), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(char)x) },
                     { typeof(byte), static x => checked((byte)(char)x) },
@@ -385,7 +358,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(float), new Dictionary<Type, Func<object, object>>
+                typeof(float), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(float)x) },
                     { typeof(byte), static x => checked((byte)(float)x) },
@@ -407,7 +380,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(double), new Dictionary<Type, Func<object, object>>
+                typeof(double), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(double)x) },
                     { typeof(byte), static x => checked((byte)(double)x) },
@@ -431,7 +404,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(decimal), new Dictionary<Type, Func<object, object>>
+                typeof(decimal), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(decimal)x) },
                     { typeof(byte), static x => checked((byte)(decimal)x) },
@@ -455,7 +428,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(System.Numerics.BigInteger), new Dictionary<Type, Func<object, object>>
+                typeof(System.Numerics.BigInteger), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(System.Numerics.BigInteger)x) },
                     { typeof(byte), static x => checked((byte)(System.Numerics.BigInteger)x) },
@@ -472,7 +445,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(DateTime), new Dictionary<Type, Func<object, object>>
+                typeof(DateTime), new()
                 {
                     {
                         typeof(DateTimeOffset),
@@ -486,7 +459,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             },
 #if NET5_0_OR_GREATER
             {
-                typeof(Half), new Dictionary<Type, Func<object, object>>
+                typeof(Half), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(Half)x) },
                     { typeof(byte), static x => checked((byte)(Half)x) },
@@ -505,7 +478,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 #if NET7_0_OR_GREATER
             {
                 // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
-                typeof(Int128), new Dictionary<Type, Func<object, object>>
+                typeof(Int128), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(Int128)x) },
                     { typeof(byte), static x => checked((byte)(Int128)x) },
@@ -525,7 +498,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             },
             {
                 // source: https://learn.microsoft.com/en-us/dotnet/api/system.uint128.op_explicit
-                typeof(UInt128), new Dictionary<Type, Func<object, object>>
+                typeof(UInt128), new()
                 {
                     { typeof(sbyte), static x => checked((sbyte)(UInt128)x) },
                     { typeof(byte), static x => checked((byte)(UInt128)x) },
@@ -592,7 +565,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             ? static _ => false
             : isKnownTypeProvider.IsKnownType;
 
-        _createDynamicObject = (dynamicObjectFactory ?? new InternalDynamicObjectFactory(null)).CreateDynamicObject;
+        _createDynamicObject = (dynamicObjectFactory ?? new InternalDynamicObjectFactory()).CreateDynamicObject;
     }
 
     /// <summary>
