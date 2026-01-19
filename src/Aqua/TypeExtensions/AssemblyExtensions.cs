@@ -18,11 +18,9 @@ public static class AssemblyExtensions
     public static IEnumerable<Type> GetLoadedTypes(this Assembly assembly)
     {
         var m = assembly.GetModules(false);
-        return m.Length switch
-        {
-            1 => GetTypes(m[0]),
-            _ => m.SelectMany(GetTypes),
-        };
+        return m.Length is 1
+            ? GetTypes(m[0])
+            : m.SelectMany(GetTypes);
 
         static IEnumerable<Type> GetTypes(Module module)
         {

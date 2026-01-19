@@ -185,14 +185,14 @@ public static class EnumerableExtensions
 
     public static IEnumerable CastCollectionToArrayOfType(this IEnumerable items, Type elementType)
     {
-        var castedItems = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
+        var castedItems = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, [items]);
         var array = MethodInfos.Enumerable.ToArray.MakeGenericMethod(elementType).Invoke(null, [castedItems]);
         return (IEnumerable)array!;
     }
 
     public static IEnumerable CastCollectionToListOfType(this IEnumerable items, Type elementType)
     {
-        var castedItems = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
+        var castedItems = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, [items]);
         var list = MethodInfos.Enumerable.ToList.MakeGenericMethod(elementType).Invoke(null, [castedItems]);
         return (IEnumerable)list!;
     }
