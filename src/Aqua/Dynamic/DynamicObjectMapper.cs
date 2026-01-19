@@ -991,13 +991,13 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             return dynamicObject;
         }
 
-        Func<Type?, object, Func<Type, bool>, DynamicObject> facotry;
+        Func<Type?, object, Func<Type, bool>, DynamicObject> factory;
         Action<Type, object, DynamicObject, Func<Type, bool>>? initializer = null;
 
         var sourceType = obj.GetType();
         if (_isNativeType(sourceType) || _isKnownType(sourceType) || sourceType.IsEnum())
         {
-            facotry = (t, o, f) =>
+            factory = (t, o, f) =>
             {
                 var value = MapToDynamicObjectIfRequired(o, f);
                 var dynamicObject = _createDynamicObject(t, o);
@@ -1007,7 +1007,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
         }
         else if (obj.IsCollection(out var collection) && !ShouldMapToDynamicObject(collection))
         {
-            facotry = (t, o, f) =>
+            factory = (t, o, f) =>
             {
                 var list = ((IEnumerable)o)
                     .Cast<object>()
@@ -1021,52 +1021,52 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
         else if (obj is Type t)
         {
             var typeInfo = new Lazy<TypeSystem.TypeInfo>(() => new TypeSystem.TypeInfo(t, false, false));
-            facotry = (t, o, f) => _createDynamicObject(typeof(Type), typeInfo.Value);
-            initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo.Value, to, f);
+            factory = (_, _, _) => _createDynamicObject(typeof(Type), typeInfo.Value);
+            initializer = (_, _, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo.Value, to, f);
         }
         else if (obj is TypeInfo ti)
         {
             var typeInfo = new Lazy<TypeSystem.TypeInfo>(() => new TypeSystem.TypeInfo(ti.AsType(), false, false));
-            facotry = (t, o, f) => _createDynamicObject(typeof(TypeInfo), typeInfo.Value);
-            initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo.Value, to, f);
+            factory = (_, _, _) => _createDynamicObject(typeof(TypeInfo), typeInfo.Value);
+            initializer = (_, _, to, f) => PopulateObjectMembers(typeof(TypeSystem.TypeInfo), typeInfo.Value, to, f);
         }
         else if (obj is MethodInfo mi)
         {
             var methodInfo = new Lazy<TypeSystem.MethodInfo>(() => new TypeSystem.MethodInfo(mi));
-            facotry = (t, o, f) => _createDynamicObject(typeof(MethodInfo), methodInfo.Value);
-            initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.MethodInfo), methodInfo.Value, to, f);
+            factory = (_, _, _) => _createDynamicObject(typeof(MethodInfo), methodInfo.Value);
+            initializer = (_, _, to, f) => PopulateObjectMembers(typeof(TypeSystem.MethodInfo), methodInfo.Value, to, f);
         }
         else if (obj is PropertyInfo pi)
         {
             var propertyInfo = new Lazy<TypeSystem.PropertyInfo>(() => new TypeSystem.PropertyInfo(pi));
-            facotry = (t, o, f) => _createDynamicObject(typeof(PropertyInfo), propertyInfo.Value);
-            initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.PropertyInfo), propertyInfo.Value, to, f);
+            factory = (_, _, _) => _createDynamicObject(typeof(PropertyInfo), propertyInfo.Value);
+            initializer = (_, _, to, f) => PopulateObjectMembers(typeof(TypeSystem.PropertyInfo), propertyInfo.Value, to, f);
         }
         else if (obj is FieldInfo fi)
         {
             var fieldInfo = new Lazy<TypeSystem.FieldInfo>(() => new TypeSystem.FieldInfo(fi));
-            facotry = (t, o, f) => _createDynamicObject(typeof(FieldInfo), fieldInfo.Value);
-            initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.FieldInfo), fieldInfo.Value, to, f);
+            factory = (_, _, _) => _createDynamicObject(typeof(FieldInfo), fieldInfo.Value);
+            initializer = (_, _, to, f) => PopulateObjectMembers(typeof(TypeSystem.FieldInfo), fieldInfo.Value, to, f);
         }
         else if (obj is ConstructorInfo ci)
         {
             var constructorInfo = new Lazy<TypeSystem.ConstructorInfo>(() => new TypeSystem.ConstructorInfo(ci));
-            facotry = (t, o, f) => _createDynamicObject(typeof(ConstructorInfo), constructorInfo.Value);
-            initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.ConstructorInfo), constructorInfo.Value, to, f);
+            factory = (_, _, _) => _createDynamicObject(typeof(ConstructorInfo), constructorInfo.Value);
+            initializer = (_, _, to, f) => PopulateObjectMembers(typeof(TypeSystem.ConstructorInfo), constructorInfo.Value, to, f);
         }
         else if (obj is Delegate d)
         {
             var methodInfo = new Lazy<TypeSystem.MethodInfo>(() => new TypeSystem.MethodInfo(d.Method));
-            facotry = (t, o, f) => _createDynamicObject(typeof(MethodInfo), methodInfo.Value);
-            initializer = (t, o, to, f) => PopulateObjectMembers(typeof(TypeSystem.MethodInfo), methodInfo.Value, to, f);
+            factory = (_, _, _) => _createDynamicObject(typeof(MethodInfo), methodInfo.Value);
+            initializer = (_, _, to, f) => PopulateObjectMembers(typeof(TypeSystem.MethodInfo), methodInfo.Value, to, f);
         }
         else
         {
-            facotry = (t, o, f) => _createDynamicObject(t, o);
+            factory = (t, o, _) => _createDynamicObject(t, o);
             initializer = PopulateObjectMembers;
         }
 
-        return _toContext.TryGetOrCreateNew(sourceType, obj, facotry, initializer, setTypeInformation);
+        return _toContext.TryGetOrCreateNew(sourceType, obj, factory, initializer, setTypeInformation);
     }
 
     private object MapInternal(DynamicObject obj, Type? sourceType, Type targetType)
@@ -1092,7 +1092,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 #if !NET8_0_OR_GREATER
         else if (_settings.UtilizeFormatterServices && targetType.IsSerializable)
         {
-            factory = (t, item) => GetUninitializedObject(t);
+            factory = (t, _) => GetUninitializedObject(t);
             initializer = PopulateObjectMembers;
         }
 #endif // NET8_0_OR_GREATER
@@ -1134,7 +1134,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
                 if (constructor is not null)
                 {
-                    factory = (t, item) =>
+                    factory = (_, _) =>
                     {
                         var arguments = constructor.Parameters
                             .Select(x => x.Property?.Value)
@@ -1149,7 +1149,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 else if (targetType.IsValueType)
 #endif // NET8_0_OR_GREATER
                 {
-                    factory = static (t, item) => Activator.CreateInstance(t) ?? throw new DynamicObjectMapperException($"Failed to create instance of type {t.FullName}");
+                    factory = static (t, _) => Activator.CreateInstance(t) ?? throw new DynamicObjectMapperException($"Failed to create instance of type {t.FullName}");
                 }
                 else
                 {
