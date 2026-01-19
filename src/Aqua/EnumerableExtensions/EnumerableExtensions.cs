@@ -445,7 +445,7 @@ public static class EnumerableExtensions
     }
 
 #if NETSTANDARD2_0
-    internal static HashSet<T> ToHashSet<T>(this IEnumerable<T> source) => new(source);
+    internal static HashSet<T> ToHashSet<T>(this IEnumerable<T> source) => [.. source];
 #endif // NETSTANDARD2_0
 
     [SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "Indeed the parameters are being used")]

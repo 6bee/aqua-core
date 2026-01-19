@@ -65,7 +65,7 @@ public class When_converting_to_object_with_static_members
             .Where(x => x.GetCustomAttribute<CompilerGeneratedAttribute>() is null)
             .Select(x => x.Name)
             .Select(x => new Property(x, $"{x.Replace("BackingField", null)}Value"));
-        var dynamicObject = new DynamicObject { Properties = new PropertySet(properties) };
+        var dynamicObject = new DynamicObject { Properties = [.. properties] };
         obj = dynamicObject.CreateObject<TestType>();
     }
 

@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 /// </summary>
 public sealed class KnownTypesRegistry
 {
-    private static readonly IReadOnlyCollection<(Type Type, string Key)> _defaultTypes =
+    private static readonly IReadOnlyCollection<(Type Type, string Key)> _defaultTypes = [..
         new[]
         {
             typeof(string),
@@ -73,8 +73,7 @@ public sealed class KnownTypesRegistry
                 x.Type.IsValueType ? (typeof(Nullable<>).MakeGenericType(x.Type), $"{x.Key}?") : x,
                 (x.Type.MakeArrayType(), $"{x.Key}[]"),
             })
-        .Distinct()
-        .ToArray();
+        .Distinct()];
 
     private readonly Dictionary<Type, string> _keyLookup;
     private readonly Dictionary<string, TypeInfo> _typeLookup;

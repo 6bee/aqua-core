@@ -13,13 +13,9 @@ using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
 public sealed partial class TypeEmitter
 {
-    private sealed class TypeResolverScope : ITypeResolver
+    private sealed class TypeResolverScope(ITypeResolver typeResolver) : ITypeResolver
     {
         private readonly HashSet<TypeInfo> _references = new(ReferenceEqualityComparer<TypeInfo>.Default);
-        private readonly ITypeResolver _typeResolver;
-
-        public TypeResolverScope(ITypeResolver typeResolver)
-            => _typeResolver = typeResolver;
 
         Type? ITypeResolver.ResolveType(TypeInfo? type)
         {
@@ -37,7 +33,7 @@ public sealed partial class TypeEmitter
                         throw new TypeEmitterException($"Cannot emit type with circular reference: '{type}'");
                     }
 
-                    return _typeResolver.ResolveType(type);
+                    return typeResolver.ResolveType(type);
                 }
                 finally
                 {

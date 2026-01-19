@@ -33,7 +33,7 @@ public class DynamicObjectConverter : ObjectConverter<DynamicObject>
             result.Type = typeInfo;
             if (properties?.Any() is true)
             {
-                result.Properties = new PropertySet(properties);
+                result.Properties = [.. properties];
             }
         }
 

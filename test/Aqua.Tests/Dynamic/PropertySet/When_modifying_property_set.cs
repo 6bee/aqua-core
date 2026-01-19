@@ -17,7 +17,7 @@ public class When_modifying_property_set
     public When_modifying_property_set()
     {
         initialProperty = new Property(PropertyName, InitialValue);
-        propertySet = new PropertySet(new[] { initialProperty });
+        propertySet = [initialProperty];
     }
 
     [Fact]

@@ -11,13 +11,13 @@ partial class TypeEmitter
 {
     private sealed class PropertyList
     {
-        private readonly ReadOnlyCollection<string> _properties;
+        private readonly IReadOnlyList<string> _properties;
         private readonly Lazy<int> _hash;
 
         internal PropertyList(IEnumerable<string> properties)
         {
-            _properties = properties.ToList().AsReadOnly();
-            _hash = new Lazy<int>(_properties.GetCollectionHashCode);
+            _properties = [..properties];
+            _hash = new(_properties.GetCollectionHashCode);
         }
 
         public override bool Equals(object? obj)

@@ -12,23 +12,17 @@ internal static class MethodInfos
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    private sealed class TElement
-    {
-    }
+    private sealed class TElement;
 
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    private sealed class TResult
-    {
-    }
+    private sealed class TResult;
 
     /// <summary>
     /// Type definition used in generic type filters.
     /// </summary>
-    private sealed class TSource
-    {
-    }
+    private sealed class TSource;
 #pragma warning restore S2094 // Classes should not be empty
 
     internal static class Enumerable

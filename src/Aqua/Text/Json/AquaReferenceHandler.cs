@@ -2,7 +2,6 @@
 
 namespace Aqua.Text.Json;
 
-using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 internal sealed class AquaReferenceHandler : ReferenceHandler

@@ -7,6 +7,4 @@ namespace Aqua.Dynamic;
 /// using <see cref="DynamicObjectMapper"/>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, Inherited = true)]
-public sealed class UnmappedAttribute : Attribute
-{
-}
+public sealed class UnmappedAttribute : Attribute;

@@ -31,7 +31,7 @@ public class DynamicObjectConverter(KnownTypesRegistry knownTypes) : ObjectConve
             result.Type = typeInfo;
             if (properties?.Any() is true)
             {
-                result.Properties = new PropertySet(properties);
+                result.Properties = [.. properties];
             }
         }
 

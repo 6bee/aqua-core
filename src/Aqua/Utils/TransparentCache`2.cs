@@ -8,29 +8,17 @@ using Aqua.EnumerableExtensions;
 /// A weak-reference cache that can be hooked-in method calls to serve cached instances
 /// or transparently create the requested value if not contained in cache.
 /// </summary>
-public class TransparentCache<TKey, TValue>
+public class TransparentCache<TKey, TValue>(int cleanupDelay = 2000, IEqualityComparer<TKey>? comparer = null)
     where TKey : notnull
     where TValue : class
 {
-    private readonly Dictionary<TKey, WeakReference> _cache;
-    private readonly int _cleanupDelay;
+    private readonly Dictionary<TKey, WeakReference> _cache = new(comparer);
+
+    private readonly int _cleanupDelay = cleanupDelay < -1
+        ? throw new ArgumentOutOfRangeException(nameof(cleanupDelay), "expected values equal or greater than -1")
+        : cleanupDelay;
+
     private volatile bool _isCleanupScheduled;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TransparentCache{TKey, TValue}"/> class.
-    /// </summary>
-    /// <param name="cleanupDelay">Number of milliseconds to delay the task to clean-up stale references. Set to -1 to suppress clean-up or 0 to run clean-up synchronously.</param>
-    /// <param name="comparer">Optional comparer for cache keys.</param>
-    public TransparentCache(int cleanupDelay = 2000, IEqualityComparer<TKey>? comparer = null)
-    {
-        if (cleanupDelay < -1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(cleanupDelay), "expected values equal or greater than -1");
-        }
-
-        _cleanupDelay = cleanupDelay;
-        _cache = new Dictionary<TKey, WeakReference>(comparer);
-    }
 
     /// <summary>
     /// Returns the cached value if it's contained in the cache, otherwise it creates and adds the value to the cache.
