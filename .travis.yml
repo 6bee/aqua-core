@@ -39,4 +39,4 @@ before_script:
   - dotnet --info
 
 script:
-  - dotnet test Aqua.sln -c $CONFIGURATION -f net10.0
+  - dotnet test Aqua.slnx -c $CONFIGURATION -f net10.0

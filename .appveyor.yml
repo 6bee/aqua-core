@@ -20,10 +20,10 @@ before_build:
   - curl https://uploader.codecov.io/latest/windows/codecov.exe -o codecov.exe
 
 build_script:
-  - dotnet build Aqua.sln
+  - dotnet build Aqua.slnx
 
 test_script:
-  - dotnet test Aqua.sln --settings coverlet.runsettings
+  - dotnet test Aqua.slnx --settings coverlet.runsettings
 
 after_test:
   - codecov -f **\coverage.cobertura.xml
