@@ -3,7 +3,7 @@
 [![GitHub license][lic-badge]][lic-link]
 [![Github Workflow][pub-badge]][pub-link]
 
-| branch | CI-Tests                                                   | Codecov.io         | Codacy                  | CodeFactor             |
+| branch | CI Build                                                   | Codecov.io         | Codacy                  | CodeFactor             |
 | ---    | ---                                                        | ---                | ---                     | ---                    |
 | `main` | [![Github CI-Build Status][ci-tests-badge]][ci-tests-link] | [![codecov][5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] |
 
