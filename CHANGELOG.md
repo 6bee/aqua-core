@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `Aqua.Text.Json.KnownTypesRegistry` generates derived type key for generic types (except `Nullable<T>`) including generic type arguments which is potentially a breaking change.
+
 ### Deprecated
 
 ### Removed
@@ -31,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add support for `System.Int128`, `System.UInt128`, `System.DateOnly`, `System.TimeOnly`
 - Add .NET 10.0 framework target
-- add `Assembly.GetLoadedTypes()` extension method
+- Add `Assembly.GetLoadedTypes()` extension method
 
 ### Changed
 

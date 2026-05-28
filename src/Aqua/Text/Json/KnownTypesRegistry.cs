@@ -3,7 +3,9 @@
 namespace Aqua.Text.Json;
 
 using Aqua.Dynamic;
+using Aqua.TypeExtensions;
 using Aqua.TypeSystem;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
@@ -55,25 +57,27 @@ public sealed class KnownTypesRegistry
             typeof(UInt128),
 #endif // NET7_0_OR_GREATER
         }
-        .Select(static x =>
+        .SelectMany(static type =>
         {
-            var name = x switch
+            if (Nullable.GetUnderlyingType(type) is not null)
             {
-                Type t when t == typeof(TypeInfo) => "type",
-                Type t when t == typeof(DynamicObject) => "dynamic",
-                Type t when t.Assembly == typeof(DynamicObject).Assembly => x.Name,
-                _ => x.Name.ToLowerInvariant(),
-            };
+                throw new InvalidEnumArgumentException($"Nullable types are created automatically and must not be specified in base list ({type.GetFriendlyName()})");
+            }
 
-            return (Type: x, Key: name);
-        })
-        .SelectMany(static x => new[]
+            if (type.IsArray)
             {
-                x,
-                x.Type.IsValueType ? (typeof(Nullable<>).MakeGenericType(x.Type), $"{x.Key}?") : x,
-                (x.Type.MakeArrayType(), $"{x.Key}[]"),
-            })
-        .Distinct()];
+                throw new InvalidEnumArgumentException($"Array types are created automatically and must not be specified in base list ({type.GetFriendlyName()})");
+            }
+
+            return new[]
+            {
+                type,
+                type.IsValueType ? typeof(Nullable<>).MakeGenericType(type) : type,
+                type.MakeArrayType(),
+            };
+        })
+        .Distinct()
+        .Select(static type => (Type: type, Key: GetDefaultTypeName(type)))];
 
     private readonly Dictionary<Type, string> _keyLookup;
     private readonly Dictionary<string, TypeInfo> _typeLookup;
@@ -99,13 +103,18 @@ public sealed class KnownTypesRegistry
     /// <summary>
     /// Register specified <see cref="Type"/> as known type, unless <paramref name="type"/> or <paramref name="typeKey"/> have already been registered.
     /// </summary>
-    /// <returns><see langword="true"/> is type was successfully registered,
+    /// <returns><see langword="true"/> if type was successfully registered,
     /// <see langword="false"/> if either <paramref name="type"/> or <paramref name="typeKey"/> are already registered.</returns>
     public bool TryRegister(Type type, string? typeKey = null)
     {
         type.AssertNotNull();
 
-        typeKey ??= type.Name.ToLowerInvariant();
+        if (type.IsGenericTypeDefinition)
+        {
+            throw new ArgumentException($"Open generic types are not allowed: {type.GetFriendlyName()}");
+        }
+
+        typeKey ??= GetDefaultTypeName(type);
 
         lock (_keyLookup)
         {
@@ -133,6 +142,17 @@ public sealed class KnownTypesRegistry
     public bool TryGetTypeKey(Type type, [MaybeNullWhen(false)] out string typeKey) => _keyLookup.TryGetValue(type, out typeKey);
 
     private static TypeInfo CreateTypeInfo(Type type) => new(type, false, false);
+
+    private static string GetDefaultTypeName(Type type)
+        => type switch
+        {
+            Type t when t == typeof(TypeInfo) => "type",
+            Type t when t == typeof(DynamicObject) => "dynamic",
+            Type t when t.Assembly == typeof(DynamicObject).Assembly => type.Name,
+            Type t when t.IsArray => $"{GetDefaultTypeName(t.GetElementType()!)}[]",
+            Type t when Nullable.GetUnderlyingType(t) is { } underlyingType => $"{GetDefaultTypeName(underlyingType)}?",
+            _ => type.GetFriendlyName(includeNamespance: false, includeDeclaringType: false).ToLowerInvariant(),
+        };
 
     /// <summary>
     /// Gets a new instance of the <see cref="KnownTypesRegistry"/> class with the default set of know types.
