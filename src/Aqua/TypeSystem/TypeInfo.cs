@@ -163,9 +163,9 @@ public class TypeInfo
 
     [IgnoreDataMember]
     [Unmapped]
-    internal string NameWithoutNameSpace
+    internal string NameWithoutNamespace
         => IsNested
-            ? $"{DeclaringType!.NameWithoutNameSpace}+{Name}"
+            ? $"{DeclaringType!.NameWithoutNamespace}+{Name}"
             : Name ?? string.Empty;
 
     /// <summary>
@@ -194,7 +194,7 @@ public class TypeInfo
         var typeName = includeNamespance
             ? FullName
             : includeDeclaringType
-            ? NameWithoutNameSpace
+            ? NameWithoutNamespace
             : Name;
 
         if (typeName?.Length > 2 && IsArray)
