@@ -33,20 +33,20 @@ public static class ProtobufNetSerializationHelper
 
     public static void SkipUnsupportedDataType(Type type, object value)
     {
-        Skip.If(type.Is<DateTimeOffset>(), $"{type} not supported by out-of-the-box protobuf-net");
-        Skip.If(type.Is<BigInteger>(), $"{type} not supported by out-of-the-box protobuf-net");
-        Skip.If(type.Is<Complex>(), $"{type} not supported by out-of-the-box protobuf-net");
-        Skip.If(type.IsNotPublic(), $"Not-public {type} not supported protobuf-net");
+        Assert.SkipWhen(type.Is<DateTimeOffset>(), $"{type} not supported by out-of-the-box protobuf-net");
+        Assert.SkipWhen(type.Is<BigInteger>(), $"{type} not supported by out-of-the-box protobuf-net");
+        Assert.SkipWhen(type.Is<Complex>(), $"{type} not supported by out-of-the-box protobuf-net");
+        Assert.SkipWhen(type.IsNotPublic(), $"Not-public {type} not supported protobuf-net");
 #if NET5_0_OR_GREATER
-        Skip.If(type.Is<Half>(), $"{type} serialization is not supported.");
+        Assert.SkipWhen(type.Is<Half>(), $"{type} serialization is not supported.");
 #endif // NET5_0_OR_GREATER
 #if NET6_0_OR_GREATER
-        Skip.If(type.Is<DateOnly>(), $"{type} serialization is not supported.");
-        Skip.If(type.Is<TimeOnly>(), $"{type} serialization is not supported.");
+        Assert.SkipWhen(type.Is<DateOnly>(), $"{type} serialization is not supported.");
+        Assert.SkipWhen(type.Is<TimeOnly>(), $"{type} serialization is not supported.");
 #endif // NET6_0_OR_GREATER
 #if NET7_0_OR_GREATER
-        Skip.If(type.Is<Int128>(), $"{type} serialization is not supported.");
-        Skip.If(type.Is<UInt128>(), $"{type} serialization is not supported.");
+        Assert.SkipWhen(type.Is<Int128>(), $"{type} serialization is not supported.");
+        Assert.SkipWhen(type.Is<UInt128>(), $"{type} serialization is not supported.");
 #endif // NET7_0_OR_GREATER
     }
 }

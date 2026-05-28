@@ -3,12 +3,16 @@
 namespace Aqua.Tests;
 
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 // source: http://lostechies.com/jimmybogard/2013/06/20/run-tests-explicitly-in-xunit-net/
-public class RunnableInDebugOnlyAttribute : FactAttribute
+public sealed class RunnableInDebugOnlyAttribute : FactAttribute
 {
-    public RunnableInDebugOnlyAttribute()
+    public RunnableInDebugOnlyAttribute(
+        [CallerFilePath] string sourceFilePath = null,
+        [CallerLineNumber] int sourceLineNumber = -1)
+        : base(sourceFilePath, sourceLineNumber)
     {
         if (!Debugger.IsAttached)
         {

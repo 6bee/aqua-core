@@ -10,11 +10,34 @@
     <EnableSonarAnalyzers>false</EnableSonarAnalyzers>
   </PropertyGroup>
 
+  <!--
+  Unit test settings
+  -->
+  <PropertyGroup Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">
+    <OutputType>Exe</OutputType>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+  </PropertyGroup>
+
+  <!--
+  Unit test global namespace imports
+  -->
+  <ItemGroup Condition=" $(MSBuildProjectName.EndsWith('.Tests')) And '$(SuppressGlobalUsings)' != 'true' ">
+    <Using Include="Shouldly" Global="true" />
+    <Using Include="Xunit" Global="true" />
+  </ItemGroup>
+
+  <!--
+  Unit test runner config
+  -->
   <ItemGroup Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" PrivateAssets="all" />
-    <PackageReference Include="xunit" Version="2.9.3" PrivateAssets="all" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" PrivateAssets="all" />
-    <PackageReference Include="Xunit.SkippableFact" Version="1.5.23" PrivateAssets="all" />
+    <Content Include="$(MSBuildThisFileDirectory)../xunit.runner.json" Condition=" Exists('$(MSBuildThisFileDirectory)../xunit.runner.json')" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!--
+  Unit test packages
+  -->
+  <ItemGroup Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">
+    <PackageReference Include="xunit.v3" Version="3.2.2" PrivateAssets="all" />
     <PackageReference Include="Shouldly" Version="4.3.0" PrivateAssets="all" />
   </ItemGroup>
 

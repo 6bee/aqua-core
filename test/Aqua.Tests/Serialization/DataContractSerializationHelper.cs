@@ -146,15 +146,15 @@ public static class DataContractSerializationHelper
     public static void SkipUnsupportedDataType(Type type, object value)
     {
 #if NET5_0_OR_GREATER
-        Skip.If(type.Is<Half>(), $"{type} serialization is not supported.");
+        Assert.SkipWhen(type.Is<Half>(), $"{type} serialization is not supported.");
 #endif // NET5_0_OR_GREATER
 #if NET6_0_OR_GREATER
-        Skip.If(type.Is<DateOnly>(), $"{type} serialization is not supported.");
-        Skip.If(type.Is<TimeOnly>(), $"{type} serialization is not supported.");
+        Assert.SkipWhen(type.Is<DateOnly>(), $"{type} serialization is not supported.");
+        Assert.SkipWhen(type.Is<TimeOnly>(), $"{type} serialization is not supported.");
 #endif // NET6_0_OR_GREATER
 #if NET7_0_OR_GREATER
-        Skip.If(type.Is<Int128>(), $"{type} serialization is not supported.");
-        Skip.If(type.Is<UInt128>(), $"{type} serialization is not supported.");
+        Assert.SkipWhen(type.Is<Int128>(), $"{type} serialization is not supported.");
+        Assert.SkipWhen(type.Is<UInt128>(), $"{type} serialization is not supported.");
 #endif // NET7_0_OR_GREATER
     }
 }

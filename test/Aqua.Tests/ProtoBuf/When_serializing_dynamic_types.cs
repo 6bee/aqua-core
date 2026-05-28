@@ -19,7 +19,7 @@ public class When_serializing_dynamic_types
         public A Reference { get; set; }
     }
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
     public void Should_serialize_scalar_property(Type type, object value, CultureInfo culture)
     {
@@ -36,7 +36,7 @@ public class When_serializing_dynamic_types
         copy.Value.ShouldBe(value);
     }
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
     public void Should_serialize_collection_property(Type type, object value, CultureInfo culture)
@@ -75,7 +75,7 @@ public class When_serializing_dynamic_types
         copy["p3"].ShouldBe(1);
     }
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
@@ -99,7 +99,7 @@ public class When_serializing_dynamic_types
         copy["p1"].ShouldBe(value);
     }
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
     public void Should_serialize_dynamic_object(Type type, object value, CultureInfo culture)
     {
@@ -117,7 +117,7 @@ public class When_serializing_dynamic_types
         c.ShouldBe(value);
     }
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
     public void Should_serialize_dynamic_object_collection(Type type, IEnumerable value, CultureInfo culture)

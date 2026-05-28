@@ -36,7 +36,7 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
 
     private const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
@@ -68,7 +68,7 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
         result.ShouldBe(value, $"type: {type.FullName}");
     }
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
@@ -84,7 +84,7 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
+        Assert.SkipWhen(this.TestIs<With_xml_serializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
 
         using var cultureContext = culture.CreateContext();
 
@@ -92,7 +92,7 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
         result.ShouldBe(value, $"type: {type.FullName}");
     }
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
@@ -113,7 +113,7 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-        Skip.If(this.TestIs<With_xml_serializer>(), "XmlSerializer has limited type support.");
+        Assert.SkipWhen(this.TestIs<With_xml_serializer>(), "XmlSerializer has limited type support.");
 
         using var cultureContext = culture.CreateContext();
 
@@ -121,13 +121,13 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
         result.ShouldBe(value, $"type: {type.FullName}");
     }
 
-    [SkippableTheory]
+    [Theory]
     [MemberData(nameof(TestData.TestValues), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueArrays), MemberType = typeof(TestData))]
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
     public void Should_serialize_value_as_property_when_using_string_formatting(Type type, object value, CultureInfo culture)
     {
-        Skip.If(this.TestIs<With_xml_serializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
+        Assert.SkipWhen(this.TestIs<With_xml_serializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
 
         using var cultureContext = culture.CreateContext();
 
@@ -189,11 +189,11 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
         result.ShouldBeNull();
     }
 
-    [SkippableFact]
+    [Fact]
     public void Should_serialize_DateTimeOffset_as_property()
     {
-        Skip.If(this.TestIs<With_protobuf_net_serializer>(), "DateTimeOffset is not supported by XmlSerializer.");
-        Skip.If(this.TestIs<With_xml_serializer>(), "DateTimeOffset is not supported by XmlSerializer.");
+        Assert.SkipWhen(this.TestIs<With_protobuf_net_serializer>(), "DateTimeOffset is not supported by XmlSerializer.");
+        Assert.SkipWhen(this.TestIs<With_xml_serializer>(), "DateTimeOffset is not supported by XmlSerializer.");
 
         var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
         var result = SerializeAsProperty(value.GetType(), value);

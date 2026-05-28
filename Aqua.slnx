@@ -13,6 +13,7 @@
     <File Path="Style.ruleset" />
     <File Path="Style.Tests.ruleset" />
     <File Path="Stylecop.json" />
+    <File Path="xunit.runner.json" />
   </Folder>
   <Folder Name="/src/">
     <File Path="src/Directory.Build.props" />

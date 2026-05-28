@@ -27,7 +27,7 @@ public static class SystemTextJsonSerializationHelper
 
     public static void SkipUnsupportedDataType(Type type, object value)
     {
-        Skip.If(type.Is<BigInteger>(), $"{type} not supported by out-of-the-box System.Text.Json");
-        Skip.If(type.Is<Complex>(), $"{type} not supported by out-of-the-box System.Text.Json");
+        Assert.SkipWhen(type.Is<BigInteger>(), $"{type} not supported by out-of-the-box System.Text.Json");
+        Assert.SkipWhen(type.Is<Complex>(), $"{type} not supported by out-of-the-box System.Text.Json");
     }
 }
