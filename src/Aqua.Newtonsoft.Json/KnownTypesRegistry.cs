@@ -76,14 +76,8 @@ public sealed class KnownTypesRegistry
         .Distinct()
         .ToArray();
 
-    private readonly Dictionary<Type, string> _keyLookup;
-    private readonly Dictionary<string, TypeInfo> _typeLookup;
-
-    public KnownTypesRegistry()
-    {
-        _keyLookup = _defaultTypes.ToDictionary(static x => x.Type, static x => x.Key);
-        _typeLookup = _defaultTypes.ToDictionary(static x => x.Key, static x => CreateTypeInfo(x.Type), StringComparer.InvariantCultureIgnoreCase);
-    }
+    private readonly Dictionary<Type, string> _keyLookup = _defaultTypes.ToDictionary(static x => x.Type, static x => x.Key);
+    private readonly Dictionary<string, TypeInfo> _typeLookup = _defaultTypes.ToDictionary(static x => x.Key, static x => CreateTypeInfo(x.Type), StringComparer.InvariantCultureIgnoreCase);
 
     /// <summary>
     /// Register specified <see cref="Type"/> as known type, unless <typeparamref name="T"/> or <paramref name="typeKey"/> have already been registered.
