@@ -1,0 +1,14 @@
+name: CI-Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Test
+    runs-on: windows-latest
+    steps:
+      - run: dotnet --info
+      - uses: actions/checkout@v5
+      - run: dotnet test
