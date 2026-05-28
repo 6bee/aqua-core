@@ -3,9 +3,9 @@
 [![GitHub license][lic-badge]][lic-link]
 [![Github Workflow][pub-badge]][pub-link]
 
-| branch | AppVeyor                         | Travis CI                      | Codecov.io         | Codacy                  | CodeFactor             |
-| ---    | ---                              | ---                            | ---                | ---                     | ---                    |
-| `main` | [![AppVeyor Build Status][1]][2] | [![Travis Build Status][3]][4] | [![codecov][5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] |
+| branch | CI-Tests                                                   | Codecov.io         | Codacy                  | CodeFactor             |
+| ---    | ---                                                        | ---                | ---                     | ---                    |
+| `main` | [![Github CI-Build Status][ci-tests-badge]][ci-tests-link] | [![codecov][5]][6] | [![Codacy Badge][7]][8] | [![CodeFactor][9]][10] |
 
 | package                     | nuget                    | myget                          |
 | ---                         | ---                      | ---                            |
@@ -93,6 +93,9 @@ Blog restoredBlog = new DynamicObjectMapper().Map(dynamicObject) as Blog;
 
 [lic-badge]: https://img.shields.io/github/license/6bee/aqua-core.svg
 [lic-link]: https://github.com/6bee/aqua-core/blob/main/license.txt
+
+[ci-tests-badge]: https://github.com/6bee/aqua-core/actions/workflows/ci-tests.yml/badge.svg
+[ci-tests-link]: https://github.com/6bee/aqua-core/actions/workflows/ci-tests.yml
 
 [pub-badge]: https://github.com/6bee/aqua-core/actions/workflows/publish.yml/badge.svg
 [pub-link]: https://github.com/6bee/aqua-core/actions/workflows/publish.yml
