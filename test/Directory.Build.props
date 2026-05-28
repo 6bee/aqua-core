@@ -15,6 +15,7 @@
   -->
   <PropertyGroup Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">
     <OutputType>Exe</OutputType>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
 
@@ -37,8 +38,9 @@
   Unit test packages
   -->
   <ItemGroup Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">
-    <PackageReference Include="xunit.v3" Version="3.2.2" PrivateAssets="all" />
-    <PackageReference Include="Shouldly" Version="4.3.0" PrivateAssets="all" />
+    <PackageReference Include="coverlet.MTP" Version="10.0.1 " />
+    <PackageReference Include="Shouldly" Version="4.3.0" />
+    <PackageReference Include="xunit.v3.mtp-v2" Version="3.2.2" />
   </ItemGroup>
 
 </Project>
