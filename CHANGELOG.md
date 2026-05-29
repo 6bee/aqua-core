@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `Aqua.Text.Json.KnownTypesRegistry` generates derived type key for generic types (except `Nullable<T>`) including generic type arguments which is potentially a breaking change.
+- Bump _System.Text.Json_ from 10.0.0 to 10.0.8 (netstandard2.0) (concerns _Aqua.Text.Json_)
 
 ### Deprecated
 
