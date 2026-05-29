@@ -46,6 +46,38 @@ public class When_resolving_property
         ShouldThrowOnResolve(propertyInfo);
     }
 
+    [Fact]
+    public void Should_allow_explicit_cast_to_member_info()
+    {
+        MemberInfo aquaMemberInfo = new PropertyInfo(nameof(A.Property), typeof(string), typeof(A));
+        var systemMemberInfo = (System.Reflection.MemberInfo)aquaMemberInfo;
+        systemMemberInfo.ShouldBeAssignableTo<System.Reflection.MemberInfo>();
+    }
+
+    [Fact]
+    public void Should_allow_explicit_cast_to_null_member_info()
+    {
+        MemberInfo aquaMemberInfo = default(PropertyInfo);
+        var systemMemberInfo = (System.Reflection.MemberInfo)aquaMemberInfo;
+        systemMemberInfo.ShouldBeNull();
+    }
+
+    [Fact]
+    public void Should_allow_explicit_cast_to_field_info()
+    {
+        var aquaPropertyInfo = new PropertyInfo(nameof(A.Property), typeof(string), typeof(A));
+        var systemPropertyInfo = (System.Reflection.PropertyInfo)aquaPropertyInfo;
+        systemPropertyInfo.ShouldBeAssignableTo<System.Reflection.PropertyInfo>();
+    }
+
+    [Fact]
+    public void Should_allow_explicit_cast_to_null_field_info()
+    {
+        var aquaPropertyInfo = default(PropertyInfo);
+        var systemPropertyInfo = (System.Reflection.PropertyInfo)aquaPropertyInfo;
+        systemPropertyInfo.ShouldBeNull();
+    }
+
     private static void ShouldThrowOnResolve(PropertyInfo propertyInfo)
         => Should.Throw<TypeResolverException>(() =>
         {

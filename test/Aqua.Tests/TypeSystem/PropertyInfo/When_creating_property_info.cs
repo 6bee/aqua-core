@@ -41,4 +41,18 @@ public class When_creating_property_info
     {
         new PropertyInfo(nameof(A.Property), typeof(string), typeof(A)).IsStatic.ShouldBeNull();
     }
+
+    [Fact]
+    public void Should_crerate_via_memberinfo_facory_method()
+    {
+        var property = typeof(A).GetProperty(nameof(A.Property));
+        MemberInfo.Create(property).ShouldBeOfType<PropertyInfo>();
+    }
+
+    [Fact]
+    public void To_string_should_return_member_name()
+    {
+        var property = new PropertyInfo(typeof(A).GetProperty(nameof(A.Property)));
+        property.ToString().ShouldBe("Aqua.Tests.TypeSystem.PropertyInfo.When_creating_property_info+A.Property");
+    }
 }

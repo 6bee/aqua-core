@@ -51,4 +51,18 @@ public class When_creating_constructor_info
     {
         new ConstructorInfo(".ctor", typeof(A)).IsStatic.ShouldBeNull();
     }
+
+    [Fact]
+    public void Should_crerate_via_memberinfo_facory_method()
+    {
+        var ctor = typeof(A).GetConstructor(Type.EmptyTypes);
+        MemberInfo.Create(ctor).ShouldBeOfType<ConstructorInfo>();
+    }
+
+    [Fact]
+    public void To_string_should_return_member_name()
+    {
+        var ctor = new ConstructorInfo(typeof(A).GetConstructor(Type.EmptyTypes));
+        ctor.ToString().ShouldBe("Aqua.Tests.TypeSystem.ConstructorInfo.When_creating_constructor_info+A..ctor()");
+    }
 }

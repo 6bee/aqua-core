@@ -48,4 +48,18 @@ public class When_creating_field_info
     {
         new FieldInfo("field", typeof(A)).IsStatic.ShouldBeNull();
     }
+
+    [Fact]
+    public void Should_crerate_via_memberinfo_facory_method()
+    {
+        var field = typeof(A).GetField("field", PrivateInstance);
+        MemberInfo.Create(field).ShouldBeOfType<FieldInfo>();
+    }
+
+    [Fact]
+    public void To_string_should_return_member_name()
+    {
+        var field = new FieldInfo(typeof(A).GetField("field", PrivateInstance));
+        field.ToString().ShouldBe("Aqua.Tests.TypeSystem.FieldInfo.When_creating_field_info+A.field");
+    }
 }

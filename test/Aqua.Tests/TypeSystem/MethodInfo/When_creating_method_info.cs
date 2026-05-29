@@ -41,4 +41,18 @@ public class When_creating_method_info
     {
         new MethodInfo(nameof(A.Method), typeof(A)).IsStatic.ShouldBeNull();
     }
+
+    [Fact]
+    public void Should_crerate_via_memberinfo_facory_method()
+    {
+        var method = typeof(A).GetMethod(nameof(A.Method));
+        MemberInfo.Create(method).ShouldBeOfType<MethodInfo>();
+    }
+
+    [Fact]
+    public void To_string_should_return_member_name()
+    {
+        var method = new MethodInfo(typeof(A).GetMethod(nameof(A.Method)));
+        method.ToString().ShouldBe("System.String Aqua.Tests.TypeSystem.MethodInfo.When_creating_method_info+A.Method()");
+    }
 }

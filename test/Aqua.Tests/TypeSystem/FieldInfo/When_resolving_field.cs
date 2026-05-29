@@ -53,6 +53,38 @@ public class When_resolving_field
         ShouldThrowOnResolve(fieldInfo);
     }
 
+    [Fact]
+    public void Should_allow_explicit_cast_to_member_info()
+    {
+        MemberInfo aquaMemberInfo = new FieldInfo("field", typeof(A));
+        var systemMemberInfo = (System.Reflection.MemberInfo)aquaMemberInfo;
+        systemMemberInfo.ShouldBeAssignableTo<System.Reflection.MemberInfo>();
+    }
+
+    [Fact]
+    public void Should_allow_explicit_cast_to_null_member_info()
+    {
+        MemberInfo aquaMemberInfo = default(FieldInfo);
+        var systemMemberInfo = (System.Reflection.MemberInfo)aquaMemberInfo;
+        systemMemberInfo.ShouldBeNull();
+    }
+
+    [Fact]
+    public void Should_allow_explicit_cast_to_field_info()
+    {
+        var aquaFieldInfo = new FieldInfo("field", typeof(A));
+        var systemFieldInfo = (System.Reflection.FieldInfo)aquaFieldInfo;
+        systemFieldInfo.ShouldBeAssignableTo<System.Reflection.FieldInfo>();
+    }
+
+    [Fact]
+    public void Should_allow_explicit_cast_to_null_field_info()
+    {
+        var aquaFieldInfo = default(FieldInfo);
+        var systemFieldInfo = (System.Reflection.FieldInfo)aquaFieldInfo;
+        systemFieldInfo.ShouldBeNull();
+    }
+
     private static void ShouldThrowOnResolve(FieldInfo fieldInfo)
         => Should.Throw<TypeResolverException>(() =>
         {
