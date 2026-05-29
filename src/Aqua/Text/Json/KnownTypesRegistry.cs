@@ -104,7 +104,7 @@ public sealed class KnownTypesRegistry
     /// Register specified <see cref="Type"/> as known type, unless <paramref name="type"/> or <paramref name="typeKey"/> have already been registered.
     /// </summary>
     /// <returns><see langword="true"/> if type was successfully registered,
-    /// <see langword="false"/> if either <paramref name="type"/> or <paramref name="typeKey"/> are already registered.</returns>
+    /// <see langword="false"/> otherwise as either <paramref name="type"/> or <paramref name="typeKey"/> are already registered.</returns>
     public bool TryRegister(Type type, string? typeKey = null)
     {
         type.AssertNotNull();
