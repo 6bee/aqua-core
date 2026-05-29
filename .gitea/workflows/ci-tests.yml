@@ -1,5 +1,5 @@
 # .gitea/workflows/ci-tests.yml
-name: CI-Tests
+name: CI Tests
 
 on:
   push:
@@ -8,11 +8,29 @@ on:
 jobs:
   test:
     name: Test
+
     runs-on: dotnet-10
+
     strategy:
       matrix:
         framework: [net8.0, net10.0]
+
     steps:
-      - run: dotnet --info
-      - uses: actions/checkout@v5
-      - run: dotnet test -f ${{ matrix.framework }}
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Run tests
+        run: dotnet test -f ${{ matrix.framework }} /bl
+
+      - name: Upload build log
+        uses: actions/upload-artifact@v3
+        with:
+          name: msbuild_log_${{ matrix.framework }}
+          path: msbuild.binlog
+          if-no-files-found: error
