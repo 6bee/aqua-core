@@ -22,7 +22,7 @@ jobs:
 
       - name: Run tests with coverage
         run: >
-          dotnet test --no-build `
+          dotnet test Aqua.slnx --no-build `
             --coverlet `
             --results-directory TestResults `
             --coverlet-output-format json `

@@ -25,8 +25,8 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Run tests
-        run: dotnet test -f ${{ matrix.framework }} /bl
+      - name: Build and run tests
+        run: dotnet test Aqua.slnx -f ${{ matrix.framework }} /bl
 
       - name: Upload build log
         uses: actions/upload-artifact@v3
