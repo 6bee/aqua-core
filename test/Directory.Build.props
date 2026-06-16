@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project>
 
   <Import Project="$(MSBuildThisFileDirectory)../$(MSBuildThisFile)" />
@@ -38,9 +38,9 @@
   Unit test packages
   -->
   <ItemGroup Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">
-    <PackageReference Include="coverlet.MTP" Version="10.0.1 " />
-    <PackageReference Include="Shouldly" Version="4.3.0" />
-    <PackageReference Include="xunit.v3.mtp-v2" Version="3.2.2" />
+    <PackageReference Include="coverlet.MTP" />
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="xunit.v3.mtp-v2" />
   </ItemGroup>
 
 </Project>
