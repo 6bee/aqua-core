@@ -17,18 +17,11 @@ public static class FluentAssertions
     }
 
     [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "Used in private scope only")]
-    private sealed class ExpectedAnnotationException : Xunit.Sdk.XunitException
+    private sealed class ExpectedAnnotationException(Type type, Type attributeType) : Xunit.Sdk.XunitException(null)
     {
-        public ExpectedAnnotationException(Type type, Type attributeType)
-            : base(null)
-        {
-            Type = type;
-            AttributeType = attributeType;
-        }
+        public Type Type { get; } = type;
 
-        public Type Type { get; }
-
-        public Type AttributeType { get; }
+        public Type AttributeType { get; } = attributeType;
 
         public override string Message
         {
