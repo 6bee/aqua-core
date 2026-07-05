@@ -1,10 +1,8 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.TypeExtensions;
 
 using Aqua.TypeExtensions;
-using Shouldly;
-using Xunit;
 
 public class When_get_friendly_name
 {

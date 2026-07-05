@@ -1,19 +1,22 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.Serialization.Dynamic.DynamicObject;
 
 using Aqua.Dynamic;
-using Shouldly;
+
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
-using Xunit;
 
 public abstract class When_using_dynamic_object_for_object_with_polymorphism
 {
     public class With_newtown_json_serializer() : When_using_dynamic_object_for_object_with_polymorphism(NewtonsoftJsonSerializationHelper.Clone);
 
     public class With_system_text_json_serializer() : When_using_dynamic_object_for_object_with_polymorphism(SystemTextJsonSerializationHelper.Clone);
+
+    public class With_messagepack_serializer() : When_using_dynamic_object_for_complex_object_tree(MessagePackSerializationHelper.Clone);
+
+    public class With_protobuf_serializer() : When_using_dynamic_object_for_complex_object_tree(ProtobufSerializationHelper.Clone);
 
     public class With_system_text_json_serializer_with_polymorphism_options() : When_using_dynamic_object_for_object_with_polymorphism(static x => SystemTextJsonSerializationHelper.Clone(x, CreateOptions()))
     {

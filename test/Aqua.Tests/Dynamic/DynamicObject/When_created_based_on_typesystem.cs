@@ -1,12 +1,11 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.Dynamic.DynamicObject;
 
 using Aqua.Dynamic;
-using Shouldly;
+
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using Xunit;
 
 [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Public fields required by test scenario")]
 public class When_created_based_on_typesystem

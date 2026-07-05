@@ -1,9 +1,7 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.TypeSystem.TypeInfo;
 
-using Shouldly;
-using Xunit;
 using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
 public class When_creating_type_info_of_generic_type_definition

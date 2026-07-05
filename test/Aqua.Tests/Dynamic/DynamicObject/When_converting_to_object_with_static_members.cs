@@ -1,13 +1,12 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.Dynamic.DynamicObject;
 
 using Aqua.Dynamic;
-using Shouldly;
+
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Xunit;
 
 public class When_converting_to_object_with_static_members
 {
@@ -109,11 +108,11 @@ public class When_converting_to_object_with_static_members
 
     private object GetPropertyValue(string propertyName)
         => typeof(TestType)
-            .GetProperty(propertyName, Any)
-            .GetValue(obj);
+                .GetProperty(propertyName, Any)
+                .GetValue(obj);
 
     private object GetFieldValue(string propertyName)
         => typeof(TestType)
-            .GetField(propertyName, Any)
-            .GetValue(obj);
+                .GetField(propertyName, Any)
+                .GetValue(obj);
 }

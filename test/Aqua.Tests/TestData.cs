@@ -1,8 +1,7 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests;
 
-using Aqua.Dynamic;
 using System.Globalization;
 using System.Numerics;
 using System.Reflection;
@@ -61,9 +60,10 @@ public static class TestData
     private const BindingFlags PublicStatic = BindingFlags.Static | BindingFlags.Public;
     private const BindingFlags PrivateStatic = BindingFlags.NonPublic | BindingFlags.Static;
 
-    private static IEnumerable<(Type Type, object Value, CultureInfo Culture)> GenerateTestValueSet() => new object[]
+    private static IEnumerable<(Type Type, object Value, CultureInfo Culture)> GenerateTestValueSet()
+        => new object[]
         {
-            $"Test values treated as native types in {nameof(DynamicObjectMapper)}",
+            "literal string",
             byte.MinValue,
             byte.MaxValue,
             sbyte.MinValue,
@@ -153,21 +153,22 @@ public static class TestData
             // TODO: consider support for custom tuples
             // (Name: "NegativePi", Value: -Math.PI),
         }
-        .SelectMany(x => new (Type Type, object Value)[]
-        {
-            (x.GetType(), x),
-            (x.GetType(), CreateDefault(x.GetType())),
-            (x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
-            (x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), null),
-        })
+        .SelectMany(
+            static x => new (Type Type, object Value)[]
+            {
+                (x.GetType(), x),
+                (x.GetType(), CreateDefault(x.GetType())),
+                (x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), x),
+                (x.GetType().IsClass ? x.GetType() : typeof(Nullable<>).MakeGenericType(x.GetType()), null),
+            })
         .Distinct()
         .SelectMany(
-            _ => new[]
+            static _ => new[]
             {
                 CultureInfo.InvariantCulture,
                 CultureInfo.GetCultureInfo("de"),
             },
-            (x, c) => (x.Type, x.Value, c));
+            static (x, c) => (x.Type, x.Value, c));
 
     private static object CreateDefault(Type t)
         => typeof(TestData).GetMethods(PrivateStatic)

@@ -1,9 +1,6 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Newtonsoft.Json.Converters;
-
-using Aqua.TypeSystem;
-using global::Newtonsoft.Json;
 
 public static class JsonConverterHelper
 {
@@ -18,7 +15,7 @@ public static class JsonConverterHelper
             (typeof(int), static r => r.ReadAsInt32()),
             (typeof(string), static r => r.ReadAsString()),
         }
-        .SelectMany(x => x.Type.IsClass
+        .SelectMany(static x => x.Type.IsClass
             ? new[] { x }
             : new[] { x, (Type: typeof(Nullable<>).MakeGenericType(x.Type), x.Reader) })
         .ToDictionary(static x => x.Type, static x => x.Reader);

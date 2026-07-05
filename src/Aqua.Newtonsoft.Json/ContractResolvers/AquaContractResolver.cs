@@ -1,11 +1,8 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Newtonsoft.Json.ContractResolvers;
 
-using Aqua.Dynamic;
 using Aqua.Newtonsoft.Json.Converters;
-using Aqua.TypeSystem;
-using global::Newtonsoft.Json;
 using global::Newtonsoft.Json.Serialization;
 using System.Runtime.Serialization;
 

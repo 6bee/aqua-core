@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.Serialization;
 
@@ -6,7 +6,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
-using Xunit;
 
 public static class DataContractSerializationHelper
 {
@@ -116,7 +115,10 @@ public static class DataContractSerializationHelper
         }
     }
 
-    public static T Clone<T>(this T graph) => Clone(graph, null);
+    public static T Clone<T>(this T graph)
+    {
+        return Clone(graph, null);
+    }
 
     [SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out", Justification = "Debugging purpose")]
     public static T Clone<T>(this T graph, Type[] knownTypes)

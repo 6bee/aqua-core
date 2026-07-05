@@ -11,11 +11,14 @@
 | ---                         | ---                      | ---                            |
 | `aqua-core`                 | [![NuGet Badge][13]][14] | [![MyGet Pre Release][15]][16] |
 | `aqua-core-newtonsoft-json` | [![NuGet Badge][17]][18] | [![MyGet Pre Release][19]][20] |
-| `aqua-core-protobuf-net`    | [![NuGet Badge][21]][22] | [![MyGet Pre Release][23]][24] |
+| `aqua-core-messagepack`     | [![NuGet Badge][21]][22] | [![MyGet Pre Release][23]][24] |
+| `aqua-core-protobuf`        | [![NuGet Badge][25]][26] | [![MyGet Pre Release][27]][28] |
 
-Transform any object-graph into a dynamic, composed dictionaries like structure, holding serializable values and type information.
+> „Be water, my friend“ – Bruce Lee
 
-Aqua-core provides a bunch of serializable classes:
+Transform any object-graph into a dynamic, _composed dictionaries_ like structure, holding serializable values and type information.
+
+Aqua-core provides a number of serializable classes:
 
 - `DynamicObject`
 - `TypeInfo`
@@ -83,10 +86,15 @@ Blog restoredBlog = new DynamicObjectMapper().Map(dynamicObject) as Blog;
 [19]: https://img.shields.io/myget/aqua/vpre/aqua-core-newtonsoft-json.svg?label=myget
 [20]: https://www.myget.org/feed/aqua/package/nuget/aqua-core-newtonsoft-json
 
-[21]: https://img.shields.io/nuget/v/aqua-core-protobuf-net.svg
-[22]: https://www.nuget.org/packages/aqua-core-protobuf-net
-[23]: https://img.shields.io/myget/aqua/vpre/aqua-core-protobuf-net.svg?label=myget
-[24]: https://www.myget.org/feed/aqua/package/nuget/aqua-core-protobuf-net
+[21]: https://img.shields.io/nuget/v/aqua-core-messagepack.svg
+[22]: https://www.nuget.org/packages/aqua-core-messagepack
+[23]: https://img.shields.io/myget/aqua/vpre/aqua-core-messagepack.svg?label=myget
+[24]: https://www.myget.org/feed/aqua/package/nuget/aqua-core-messagepack
+
+[25]: https://img.shields.io/nuget/v/aqua-core-protobuf.svg
+[26]: https://www.nuget.org/packages/aqua-core-protobuf
+[27]: https://img.shields.io/myget/aqua/vpre/aqua-core-protobuf.svg?label=myget
+[28]: https://www.myget.org/feed/aqua/package/nuget/aqua-core-protobuf
 
 [lic-badge]: https://img.shields.io/github/license/6bee/aqua-core.svg
 [lic-link]: https://github.com/6bee/aqua-core/blob/main/license.txt

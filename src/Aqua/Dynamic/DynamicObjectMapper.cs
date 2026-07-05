@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Dynamic;
 
@@ -10,6 +10,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Numerics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using static Aqua.Dynamic.UnmappedAttributeHelper;
@@ -193,8 +194,8 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             typeof(DateTime),
             typeof(TimeSpan),
             typeof(DateTimeOffset),
-            typeof(System.Numerics.BigInteger),
-            typeof(System.Numerics.Complex),
+            typeof(BigInteger),
+            typeof(Complex),
             typeof(byte[]),
 #if NET5_0_OR_GREATER
             typeof(Half),
@@ -247,7 +248,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(uint), static x => checked((uint)(sbyte)x) },
                     { typeof(ulong), static x => checked((ulong)(sbyte)x) },
                     { typeof(char), static x => checked((char)(sbyte)x) },
-                    { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(sbyte)x) },
+                    { typeof(BigInteger), static x => checked((BigInteger)(sbyte)x) },
 #if NET7_0_OR_GREATER
                     // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
                     { typeof(UInt128), static x => checked((UInt128)(sbyte)x) },
@@ -259,7 +260,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 {
                     { typeof(sbyte), static x => checked((sbyte)(byte)x) },
                     { typeof(char), static x => checked((char)(byte)x) },
-                    { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(byte)x) },
+                    { typeof(BigInteger), static x => checked((BigInteger)(byte)x) },
                 }
             },
             {
@@ -271,7 +272,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(uint), static x => checked((uint)(short)x) },
                     { typeof(ulong), static x => checked((ulong)(short)x) },
                     { typeof(char), static x => checked((char)(short)x) },
-                    { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(short)x) },
+                    { typeof(BigInteger), static x => checked((BigInteger)(short)x) },
 #if NET7_0_OR_GREATER
                     // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
                     { typeof(UInt128), static x => checked((UInt128)(short)x) },
@@ -285,7 +286,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(byte), static x => checked((byte)(ushort)x) },
                     { typeof(short), static x => checked((short)(ushort)x) },
                     { typeof(char), static x => checked((char)(ushort)x) },
-                    { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(ushort)x) },
+                    { typeof(BigInteger), static x => checked((BigInteger)(ushort)x) },
                 }
             },
             {
@@ -298,7 +299,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(uint), static x => checked((uint)(int)x) },
                     { typeof(ulong), static x => checked((ulong)(int)x) },
                     { typeof(char), static x => checked((char)(int)x) },
-                    { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(int)x) },
+                    { typeof(BigInteger), static x => checked((BigInteger)(int)x) },
 #if NET7_0_OR_GREATER
                     // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
                     { typeof(UInt128), static x => checked((UInt128)(int)x) },
@@ -327,7 +328,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(uint), static x => checked((uint)(long)x) },
                     { typeof(ulong), static x => checked((ulong)(long)x) },
                     { typeof(char), static x => checked((char)(long)x) },
-                    { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(long)x) },
+                    { typeof(BigInteger), static x => checked((BigInteger)(long)x) },
 #if NET7_0_OR_GREATER
                     // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
                     { typeof(UInt128), static x => checked((UInt128)(long)x) },
@@ -345,7 +346,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(uint), static x => checked((uint)(ulong)x) },
                     { typeof(long), static x => checked((long)(ulong)x) },
                     { typeof(char), static x => checked((char)(ulong)x) },
-                    { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(ulong)x) },
+                    { typeof(BigInteger), static x => checked((BigInteger)(ulong)x) },
                 }
             },
             {
@@ -354,7 +355,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(sbyte), static x => checked((sbyte)(char)x) },
                     { typeof(byte), static x => checked((byte)(char)x) },
                     { typeof(short), static x => checked((short)(char)x) },
-                    { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(char)x) },
+                    { typeof(BigInteger), static x => checked((BigInteger)(char)x) },
                 }
             },
             {
@@ -370,7 +371,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(ulong), static x => checked((ulong)(float)x) },
                     { typeof(char), static x => checked((char)(float)x) },
                     { typeof(decimal), static x => checked((decimal)(float)x) },
-                    { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(float)x) },
+                    { typeof(BigInteger), static x => checked((BigInteger)(float)x) },
 #if NET7_0_OR_GREATER
                     { typeof(Int128), static x => checked((Int128)(float)x) },
 
@@ -393,7 +394,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(char), static x => checked((char)(double)x) },
                     { typeof(float), static x => checked((float)(double)x) },
                     { typeof(decimal), static x => checked((decimal)(double)x) },
-                    { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(double)x) },
+                    { typeof(BigInteger), static x => checked((BigInteger)(double)x) },
 #if NET7_0_OR_GREATER
                     // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
                     { typeof(Int128), static x => checked((Int128)(double)x) },
@@ -417,7 +418,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(char), static x => checked((char)(decimal)x) },
                     { typeof(float), static x => checked((float)(decimal)x) },
                     { typeof(double), static x => checked((double)(decimal)x) },
-                    { typeof(System.Numerics.BigInteger), static x => checked((System.Numerics.BigInteger)(decimal)x) },
+                    { typeof(BigInteger), static x => checked((BigInteger)(decimal)x) },
 #if NET7_0_OR_GREATER
                     // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
                     { typeof(Int128), static x => checked((Int128)(decimal)x) },
@@ -428,20 +429,20 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 }
             },
             {
-                typeof(System.Numerics.BigInteger), new()
+                typeof(BigInteger), new()
                 {
-                    { typeof(sbyte), static x => checked((sbyte)(System.Numerics.BigInteger)x) },
-                    { typeof(byte), static x => checked((byte)(System.Numerics.BigInteger)x) },
-                    { typeof(short), static x => checked((short)(System.Numerics.BigInteger)x) },
-                    { typeof(ushort), static x => checked((ushort)(System.Numerics.BigInteger)x) },
-                    { typeof(int), static x => checked((int)(System.Numerics.BigInteger)x) },
-                    { typeof(uint), static x => checked((uint)(System.Numerics.BigInteger)x) },
-                    { typeof(long), static x => checked((long)(System.Numerics.BigInteger)x) },
-                    { typeof(ulong), static x => checked((ulong)(System.Numerics.BigInteger)x) },
-                    { typeof(char), static x => checked((char)(System.Numerics.BigInteger)x) },
-                    { typeof(float), static x => checked((float)(System.Numerics.BigInteger)x) },
-                    { typeof(double), static x => checked((double)(System.Numerics.BigInteger)x) },
-                    { typeof(decimal), static x => checked((decimal)(System.Numerics.BigInteger)x) },
+                    { typeof(sbyte), static x => checked((sbyte)(BigInteger)x) },
+                    { typeof(byte), static x => checked((byte)(BigInteger)x) },
+                    { typeof(short), static x => checked((short)(BigInteger)x) },
+                    { typeof(ushort), static x => checked((ushort)(BigInteger)x) },
+                    { typeof(int), static x => checked((int)(BigInteger)x) },
+                    { typeof(uint), static x => checked((uint)(BigInteger)x) },
+                    { typeof(long), static x => checked((long)(BigInteger)x) },
+                    { typeof(ulong), static x => checked((ulong)(BigInteger)x) },
+                    { typeof(char), static x => checked((char)(BigInteger)x) },
+                    { typeof(float), static x => checked((float)(BigInteger)x) },
+                    { typeof(double), static x => checked((double)(BigInteger)x) },
+                    { typeof(decimal), static x => checked((decimal)(BigInteger)x) },
                 }
             },
             {
@@ -1300,19 +1301,19 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             return TimeSpan.Parse(value, CultureInfo.InvariantCulture);
         }
 
-        if (targetType == typeof(System.Numerics.BigInteger))
+        if (targetType == typeof(BigInteger))
         {
             return System.Numerics.BigInteger.Parse(value, CultureInfo.InvariantCulture);
         }
 
-        if (targetType == typeof(System.Numerics.Complex))
+        if (targetType == typeof(Complex))
         {
             var m = Regex.Match(value, ComplexNumberParserRegexPattern);
             if (m.Success)
             {
                 var re = double.Parse(m.Groups["Re"].Value, CultureInfo.InvariantCulture);
                 var im = double.Parse(m.Groups["Sign"].Value + m.Groups["Im"].Value, CultureInfo.InvariantCulture);
-                return new System.Numerics.Complex(re, im);
+                return new Complex(re, im);
             }
             else
             {
@@ -1508,14 +1509,14 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             return ((decimal)obj).ToString(CultureInfo.InvariantCulture);
         }
 
-        if (type == typeof(System.Numerics.BigInteger) || type == typeof(System.Numerics.BigInteger?))
+        if (type == typeof(BigInteger) || type == typeof(BigInteger?))
         {
-            return ((System.Numerics.BigInteger)obj).ToString("R", CultureInfo.InvariantCulture);
+            return ((BigInteger)obj).ToString("R", CultureInfo.InvariantCulture);
         }
 
-        if (type == typeof(System.Numerics.Complex) || type == typeof(System.Numerics.Complex?))
+        if (type == typeof(Complex) || type == typeof(Complex?))
         {
-            var c = (System.Numerics.Complex)obj;
+            var c = (Complex)obj;
             return
 #if NET8_0_OR_GREATER
                 string.Create(

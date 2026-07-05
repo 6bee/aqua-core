@@ -1,18 +1,13 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.Serialization.Dynamic.DynamicObject;
 
 using Aqua.Dynamic;
-using Shouldly;
-using Xunit;
 
 public abstract class When_using_dynamic_object_with_circular_reference
 {
     // XML serialization doesn't support circular references
     // protobuf-net doesn't support circular references
-#if !NET8_0_OR_GREATER
-    public class With_binary_formatter() : When_using_dynamic_object_with_circular_reference(BinarySerializationHelper.Clone);
-#endif // NET8_0_OR_GREATER
 
     public class With_newtown_json_serializer() : When_using_dynamic_object_with_circular_reference(NewtonsoftJsonSerializationHelper.Clone);
 
@@ -20,7 +15,13 @@ public abstract class When_using_dynamic_object_with_circular_reference
 
     public class With_data_contract_serializer() : When_using_dynamic_object_with_circular_reference(DataContractSerializationHelper.Clone);
 
+    public class With_messagepack_serializer() : When_using_dynamic_object_for_complex_object_tree(MessagePackSerializationHelper.Clone);
+
+    public class With_protobuf_serializer() : When_using_dynamic_object_for_complex_object_tree(ProtobufSerializationHelper.Clone);
+
 #if NETFRAMEWORK
+    public class With_binary_formatter() : When_using_dynamic_object_with_circular_reference(BinarySerializationHelper.Clone);
+
     public class With_net_data_contract_serializer() : When_using_dynamic_object_with_circular_reference(NetDataContractSerializationHelper.Clone);
 #endif // NETFRAMEWORK
 

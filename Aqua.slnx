@@ -18,15 +18,18 @@
   </Folder>
   <Folder Name="/src/">
     <File Path="src/Directory.Build.props" />
-    <Project Path="src/Aqua/Aqua.csproj" />
+    <Project Path="src/Aqua.MessagePack/Aqua.MessagePack.csproj" />
     <Project Path="src/Aqua.Newtonsoft.Json/Aqua.Newtonsoft.Json.csproj" />
-    <Project Path="src/Aqua.protobuf-net/Aqua.protobuf-net.csproj" />
+    <Project Path="src/Aqua.Protobuf/Aqua.Protobuf.csproj" />
+    <Project Path="src/Aqua/Aqua.csproj" />
   </Folder>
   <Folder Name="/test/">
     <File Path="test/Directory.Build.props" />
-    <Project Path="test/Aqua.Tests/Aqua.Tests.csproj" />
+    <Project Path="test/Aqua.MessagePack.Tests/Aqua.MessagePack.Tests.csproj" />
+    <Project Path="test/Aqua.Protobuf.Tests/Aqua.Protobuf.Tests.csproj" Id="7a544b69-1a0a-490a-b59d-3209f01757bb" />
     <Project Path="test/Aqua.Tests.TestObjects1/Aqua.Tests.TestObjects1.csproj" />
     <Project Path="test/Aqua.Tests.TestObjects2/Aqua.Tests.TestObjects2.csproj" />
+    <Project Path="test/Aqua.Tests/Aqua.Tests.csproj" />
     <Project Path="test/Aqua.VBNet.Tests/Aqua.VBNet.Tests.vbproj" />
   </Folder>
 </Solution>

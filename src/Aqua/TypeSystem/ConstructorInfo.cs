@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.TypeSystem;
 
@@ -12,7 +12,7 @@ using System.Text.Json.Serialization;
 [DataContract(Name = "Constructor", IsReference = true)]
 [JsonConverter(typeof(MemberInfoConverter<ConstructorInfo>))]
 [DebuggerDisplay("Constructor: {Name,nq}")]
-public class ConstructorInfo : MethodBaseInfo
+public sealed class ConstructorInfo : MethodBaseInfo
 {
     private const string DefaultStaticConstructorName = ".cctor";
 
@@ -46,7 +46,7 @@ public class ConstructorInfo : MethodBaseInfo
         }
     }
 
-    protected ConstructorInfo(ConstructorInfo constructor)
+    private ConstructorInfo(ConstructorInfo constructor)
         : base(constructor, new TypeInfoProvider())
     {
     }

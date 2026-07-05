@@ -16,4 +16,10 @@
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="Aqua.Dynamic" Global="true" />
+    <Using Include="Aqua.TypeSystem" Global="true" />
+    <Using Include="Newtonsoft.Json" Global="true" />
+  </ItemGroup>
+
 </Project>

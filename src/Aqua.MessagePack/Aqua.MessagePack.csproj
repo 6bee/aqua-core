@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0;net10.0</TargetFrameworks>
+    <PackageId>aqua-core-messagepack</PackageId>
+    <PackageTags>aqua-core;messagepack;msgpack;binary;serialization</PackageTags>
+    <Description>Provides MessagePack serialization for Aqua types.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Aqua.MessagePack.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100953fd5a46105ee9924e16998b8d7cad276601925390edd925c567e11a6d22ad43f35db27a94b2b3288886ddbb56053f3310bb7707ea653b2aed436936aea7aa6ddea4598a4eb9516aafcc3e26ff3e370a57634380aa7af3a678e96c00aacca6d460cbb7c9d2bdbed375a40cf89430a404314bec9b7f4498b24017548f3dd92ed" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Aqua\Aqua.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MessagePack" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Aqua.Dynamic" Global="true" />
+    <Using Include="Aqua.TypeSystem" Global="true" />
+    <Using Include="MessagePack" Global="true" />
+    <Using Include="MessagePack.Formatters" Global="true" />
+  </ItemGroup>
+
+</Project>

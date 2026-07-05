@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.TypeSystem;
 
@@ -12,11 +12,11 @@ using System.Xml.Serialization;
 [KnownType(typeof(MethodInfo)), XmlInclude(typeof(MethodInfo))]
 public abstract class MethodBaseInfo : MemberInfo
 {
-    protected MethodBaseInfo()
+    protected private MethodBaseInfo()
     {
     }
 
-    protected MethodBaseInfo(System.Reflection.MethodBase method, TypeInfoProvider typeInfoProvider)
+    protected private MethodBaseInfo(System.Reflection.MethodBase method, TypeInfoProvider typeInfoProvider)
         : base(method, typeInfoProvider)
     {
         var genericArguments = method.CheckNotNull().IsGenericMethod ? method.GetGenericArguments() : null;
@@ -31,7 +31,7 @@ public abstract class MethodBaseInfo : MemberInfo
             .ToList();
     }
 
-    protected MethodBaseInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes, TypeInfoProvider typeInfoProvider)
+    protected private MethodBaseInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes, TypeInfoProvider typeInfoProvider)
         : this(
         name,
         typeInfoProvider.CheckNotNull().GetTypeInfo(declaringType, includePropertyInfos: false, setMemberDeclaringTypes: false),
@@ -40,7 +40,7 @@ public abstract class MethodBaseInfo : MemberInfo
     {
     }
 
-    protected MethodBaseInfo(string name, TypeInfo declaringType, IEnumerable<TypeInfo>? genericArguments, IEnumerable<TypeInfo>? parameterTypes)
+    protected private MethodBaseInfo(string name, TypeInfo declaringType, IEnumerable<TypeInfo>? genericArguments, IEnumerable<TypeInfo>? parameterTypes)
         : base(name, declaringType)
     {
         GenericArgumentTypes = genericArguments
@@ -51,7 +51,7 @@ public abstract class MethodBaseInfo : MemberInfo
             .ToList();
     }
 
-    protected MethodBaseInfo(MethodBaseInfo method, TypeInfoProvider typeInfoProvider)
+    protected private MethodBaseInfo(MethodBaseInfo method, TypeInfoProvider typeInfoProvider)
         : base(method, typeInfoProvider)
     {
         GenericArgumentTypes = method.CheckNotNull().GenericArgumentTypes

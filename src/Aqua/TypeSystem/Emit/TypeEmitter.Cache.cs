@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.TypeSystem.Emit;
 
@@ -135,13 +135,8 @@ partial class TypeEmitter
         }
     }
 
-    private sealed class TypeCache : TransparentCache<object, Type>
+    private sealed class TypeCache(ITypeResolver typeResolver) : TransparentCache<object, Type>
     {
-        private readonly ITypeResolver _typeResolver;
-
-        public TypeCache(ITypeResolver typeResolver)
-            => _typeResolver = typeResolver;
-
         internal Type GetOrCreate(IEnumerable<string> properties, Func<IEnumerable<string>, Type> factory)
         {
             var key = new PropertyList(properties);
@@ -150,7 +145,7 @@ partial class TypeEmitter
 
         internal Type GetOrCreate(TypeInfo typeInfo, Func<TypeInfo, Type> factory)
         {
-            var key = new TypeWithPropertyList(typeInfo, _typeResolver);
+            var key = new TypeWithPropertyList(typeInfo, typeResolver);
             return GetOrCreate(key, x => factory(typeInfo));
         }
     }

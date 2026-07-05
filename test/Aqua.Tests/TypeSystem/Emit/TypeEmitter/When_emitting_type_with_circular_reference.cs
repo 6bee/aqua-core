@@ -1,10 +1,9 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.TypeSystem.Emit.TypeEmitter;
 
 using Aqua.TypeSystem.Emit;
-using Shouldly;
-using Xunit;
+
 using PropertyInfo = Aqua.TypeSystem.PropertyInfo;
 using TypeInfo = Aqua.TypeSystem.TypeInfo;
 

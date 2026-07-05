@@ -5,6 +5,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
 
   <ItemGroup>

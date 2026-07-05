@@ -1,12 +1,10 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.TypeSystem.MethodInfo;
 
 using Aqua.Tests.TestObjects;
 using Aqua.TypeExtensions;
 using Aqua.TypeSystem;
-using Shouldly;
-using Xunit;
 
 public class When_resolving_method2
 {

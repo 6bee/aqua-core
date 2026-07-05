@@ -1,23 +1,15 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Newtonsoft.Json.Converters;
 
-using Aqua.Dynamic;
 using Aqua.EnumerableExtensions;
-using Aqua.TypeSystem;
-using global::Newtonsoft.Json;
 using DynamicProperty = Aqua.Dynamic.Property;
 
-public class DynamicObjectConverter : ObjectConverter<DynamicObject>
+public class DynamicObjectConverter(KnownTypesRegistry knownTypes) : ObjectConverter<DynamicObject>(knownTypes)
 {
     private const string ValueProperty = "Value";
     private const string ValuesProperty = "Values";
     private const string ItemsProperty = "Items";
-
-    public DynamicObjectConverter(KnownTypesRegistry knownTypes)
-        : base(knownTypes)
-    {
-    }
 
     protected override void ReadObjectProperties(JsonReader reader, DynamicObject result, Dictionary<string, Property> properties, JsonSerializer serializer)
     {

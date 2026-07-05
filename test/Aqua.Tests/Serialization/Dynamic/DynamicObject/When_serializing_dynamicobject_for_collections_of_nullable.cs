@@ -1,32 +1,30 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.Serialization.Dynamic.DynamicObject;
 
 using Aqua.Dynamic;
-using Shouldly;
 using System.Collections;
 using System.Linq.Expressions;
-using Xunit;
 
 public abstract class When_serializing_dynamicobject_for_collections_of_nullable(Func<DynamicObject, DynamicObject> serialize)
 {
-#if !NET8_0_OR_GREATER
-    public class With_binary_formatter() : When_serializing_dynamicobject_for_collections_of_nullable(BinarySerializationHelper.Clone);
-#endif // NET8_0_OR_GREATER
-
     public class With_data_contract_serializer() : When_serializing_dynamicobject_for_collections_of_nullable(DataContractSerializationHelper.Clone);
 
     public class With_newtown_json_serializer() : When_serializing_dynamicobject_for_collections_of_nullable(NewtonsoftJsonSerializationHelper.Clone);
 
     public class With_system_text_json_serializer() : When_serializing_dynamicobject_for_collections_of_nullable(SystemTextJsonSerializationHelper.Clone);
 
-#if NETFRAMEWORK
-    public class With_net_data_contract_serializer() : When_serializing_dynamicobject_for_collections_of_nullable(NetDataContractSerializationHelper.Clone);
-#endif // NETFRAMEWORK
+    public class With_messagepack_serializer() : When_serializing_dynamicobject_for_collections_of_nullable(MessagePackSerializationHelper.Clone);
 
-    public class With_protobuf_net_serializer() : When_serializing_dynamicobject_for_collections_of_nullable(ProtobufNetSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_dynamicobject_for_collections_of_nullable(ProtobufSerializationHelper.Clone);
 
     public class With_xml_serializer() : When_serializing_dynamicobject_for_collections_of_nullable(XmlSerializationHelper.Serialize);
+
+#if NETFRAMEWORK
+    public class With_binary_formatter() : When_serializing_dynamicobject_for_collections_of_nullable(BinarySerializationHelper.Clone);
+
+    public class With_net_data_contract_serializer() : When_serializing_dynamicobject_for_collections_of_nullable(NetDataContractSerializationHelper.Clone);
+#endif // NETFRAMEWORK
 
     public sealed class QueryableProxy<T>(IQueryable<T> source) : IQueryable<T>
     {

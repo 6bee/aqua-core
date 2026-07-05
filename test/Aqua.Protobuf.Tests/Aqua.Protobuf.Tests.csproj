@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Tests for aqua-core-protobuf</Description>
+    <TargetFrameworks>net48;net8.0;net10.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Aqua.Protobuf\Aqua.Protobuf.csproj" />
+  </ItemGroup>
+  
+</Project>

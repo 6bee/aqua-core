@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.TypeSystem;
 
@@ -12,7 +12,7 @@ using System.Text.Json.Serialization;
 [DataContract(Name = "Property", IsReference = true)]
 [JsonConverter(typeof(MemberInfoConverter<PropertyInfo>))]
 [DebuggerDisplay("Property: {Name,nq}")]
-public class PropertyInfo : MemberInfo
+public sealed class PropertyInfo : MemberInfo
 {
     [IgnoreDataMember]
     [Unmapped]
@@ -40,7 +40,7 @@ public class PropertyInfo : MemberInfo
         PropertyType = propertyType;
     }
 
-    protected PropertyInfo(PropertyInfo property)
+    private PropertyInfo(PropertyInfo property)
         : base(property, new TypeInfoProvider())
     {
     }

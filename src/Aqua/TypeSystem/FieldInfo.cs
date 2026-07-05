@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.TypeSystem;
 
@@ -12,7 +12,7 @@ using System.Text.Json.Serialization;
 [DataContract(Name = "Field", IsReference = true)]
 [JsonConverter(typeof(MemberInfoConverter<FieldInfo>))]
 [DebuggerDisplay("Field: {Name,nq}")]
-public class FieldInfo : MemberInfo
+public sealed class FieldInfo : MemberInfo
 {
     [IgnoreDataMember]
     [Unmapped]
@@ -45,7 +45,7 @@ public class FieldInfo : MemberInfo
     {
     }
 
-    protected FieldInfo(FieldInfo field)
+    private FieldInfo(FieldInfo field)
         : base(field, new TypeInfoProvider())
     {
     }

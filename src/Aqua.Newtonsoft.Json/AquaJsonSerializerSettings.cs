@@ -1,8 +1,10 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
-namespace Aqua.Newtonsoft.Json;
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace Newtonsoft.Json;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
-using global::Newtonsoft.Json;
+using Aqua;
 using System.Reflection;
 
 public class AquaJsonSerializerSettings : JsonSerializerSettings
@@ -17,7 +19,7 @@ public class AquaJsonSerializerSettings : JsonSerializerSettings
         settings.AssertNotNull();
         KnownTypesRegistry = knownTypesRegistry
             ?? (settings as AquaJsonSerializerSettings)?.KnownTypesRegistry
-            ?? new KnownTypesRegistry();
+            ?? KnownTypesRegistry.Default;
         Copy(settings);
     }
 

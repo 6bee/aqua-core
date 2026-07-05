@@ -1,33 +1,32 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.Serialization.Dynamic.DynamicObject;
 
 using Aqua.Dynamic;
-using Shouldly;
 using System.Globalization;
 using System.Reflection;
-using Xunit;
+
 using TypeInfo = Aqua.TypeSystem.TypeInfo;
 
 public abstract class When_serializing_dynamic_object(Func<DynamicObject, DynamicObject> serialize)
 {
-#if !NET8_0_OR_GREATER
-    public class With_binary_formatter() : When_serializing_dynamic_object(BinarySerializationHelper.Clone);
-#endif // NET8_0_OR_GREATER
-
     public class With_newtonsoft_json_serializer() : When_serializing_dynamic_object(NewtonsoftJsonSerializationHelper.Clone);
 
     public class With_system_text_json_serializer() : When_serializing_dynamic_object(SystemTextJsonSerializationHelper.Clone);
 
     public class With_data_contract_serializer() : When_serializing_dynamic_object(DataContractSerializationHelper.Clone);
 
-#if NETFRAMEWORK
-    public class With_net_data_contract_serializer() : When_serializing_dynamic_object(NetDataContractSerializationHelper.Clone);
-#endif // NETFRAMEWORK
+    public class With_messagepack_serializer() : When_serializing_dynamic_object(MessagePackSerializationHelper.Clone);
 
-    public class With_protobuf_net_serializer() : When_serializing_dynamic_object(ProtobufNetSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_dynamic_object(ProtobufSerializationHelper.Clone);
 
     public class With_xml_serializer() : When_serializing_dynamic_object(XmlSerializationHelper.Serialize);
+
+#if NETFRAMEWORK
+    public class With_binary_formatter() : When_serializing_dynamic_object(BinarySerializationHelper.Clone);
+
+    public class With_net_data_contract_serializer() : When_serializing_dynamic_object(NetDataContractSerializationHelper.Clone);
+#endif // NETFRAMEWORK
 
     private class A<T>
     {
@@ -47,14 +46,19 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
             DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-        if (this.TestIs<With_protobuf_net_serializer>())
-        {
-            ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
-        }
-
         if (this.TestIs<With_system_text_json_serializer>())
         {
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
+        }
+
+        if (this.TestIs<With_messagepack_serializer>())
+        {
+            MessagePackSerializationHelper.PatchTestData(type, ref value);
+        }
+
+        if (this.TestIs<With_protobuf_serializer>())
+        {
+            ProtobufSerializationHelper.PatchTestData(type, ref value);
         }
 
         if (this.TestIs<With_xml_serializer>())
@@ -74,17 +78,12 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
     public void Should_serialize_value_when_using_string_formatting(Type type, object value, CultureInfo culture)
     {
-        if (this.TestIs<With_protobuf_net_serializer>())
-        {
-            ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
-        }
-
         if (this.TestIs<With_system_text_json_serializer>())
         {
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-        Assert.SkipWhen(this.TestIs<With_xml_serializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
+        Assert.SkipWhen(this.TestIs<With_xml_serializer>() && type.Is<char>(), "Only characters valid in xml may be supported by XmlSerializer.");
 
         using var cultureContext = culture.CreateContext();
 
@@ -103,14 +102,19 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
             DataContractSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-        if (this.TestIs<With_protobuf_net_serializer>())
-        {
-            ProtobufNetSerializationHelper.SkipUnsupportedDataType(type, value);
-        }
-
         if (this.TestIs<With_system_text_json_serializer>())
         {
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
+        }
+
+        if (this.TestIs<With_messagepack_serializer>())
+        {
+            MessagePackSerializationHelper.PatchTestData(type, ref value);
+        }
+
+        if (this.TestIs<With_protobuf_serializer>())
+        {
+            ProtobufSerializationHelper.PatchTestData(type, ref value);
         }
 
         Assert.SkipWhen(this.TestIs<With_xml_serializer>(), "XmlSerializer has limited type support.");
@@ -127,7 +131,7 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
     [MemberData(nameof(TestData.TestValueLists), MemberType = typeof(TestData))]
     public void Should_serialize_value_as_property_when_using_string_formatting(Type type, object value, CultureInfo culture)
     {
-        Assert.SkipWhen(this.TestIs<With_xml_serializer>() && type.Is<char>(), "Only characters which are valid in xml may be supported by XmlSerializer.");
+        Assert.SkipWhen(this.TestIs<With_xml_serializer>() && type.Is<char>(), "Only characters valid in xml may be supported by XmlSerializer.");
 
         using var cultureContext = culture.CreateContext();
 
@@ -192,10 +196,9 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
     [Fact]
     public void Should_serialize_DateTimeOffset_as_property()
     {
-        Assert.SkipWhen(this.TestIs<With_protobuf_net_serializer>(), "DateTimeOffset is not supported by XmlSerializer.");
         Assert.SkipWhen(this.TestIs<With_xml_serializer>(), "DateTimeOffset is not supported by XmlSerializer.");
 
-        var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0));
+        var value = new DateTimeOffset(2, 1, 2, 10, 0, 0, 300, new TimeSpan(1, 30, 0)).ToUniversalTime();
         var result = SerializeAsProperty(value.GetType(), value);
         result.ShouldBe(value);
     }
@@ -405,7 +408,9 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
     }
 
     private T SerializeAsProperty<T>(T value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
-        => Serialize<A<T>, A<T>>(new A<T> { Value = value }, setTypeFromGenericArgument, formatValuesAsStrings).Value;
+    {
+        return Serialize<A<T>, A<T>>(new A<T> { Value = value }, setTypeFromGenericArgument, formatValuesAsStrings).Value;
+    }
 
     private object Serialize(Type type, object value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
     {
@@ -416,7 +421,9 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
     }
 
     private T Serialize<T>(T value, bool setTypeFromGenericArgument, bool formatValuesAsStrings)
-        => Serialize<T, T>(value, setTypeFromGenericArgument, formatValuesAsStrings);
+    {
+        return Serialize<T, T>(value, setTypeFromGenericArgument, formatValuesAsStrings);
+    }
 
     private TResult Serialize<TSource, TResult>(TSource value, bool setTypeFromGenericArgument = true, bool formatValuesAsStrings = false)
     {

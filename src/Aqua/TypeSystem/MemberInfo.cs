@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.TypeSystem;
 
@@ -23,11 +23,11 @@ public abstract class MemberInfo
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private System.Reflection.MemberInfo? _member;
 
-    protected MemberInfo()
+    protected private MemberInfo()
     {
     }
 
-    protected MemberInfo(System.Reflection.MemberInfo member, TypeInfoProvider typeInfoProvider)
+    protected private MemberInfo(System.Reflection.MemberInfo member, TypeInfoProvider typeInfoProvider)
     {
         _member = member;
         Name = member.CheckNotNull().Name;
@@ -44,13 +44,13 @@ public abstract class MemberInfo
             : default(bool?);
     }
 
-    protected MemberInfo(string name, TypeInfo? declaringType)
+    protected private MemberInfo(string name, TypeInfo? declaringType)
     {
         Name = name;
         DeclaringType = declaringType;
     }
 
-    protected MemberInfo(MemberInfo member, TypeInfoProvider typeInfoProvider)
+    protected private MemberInfo(MemberInfo member, TypeInfoProvider typeInfoProvider)
     {
         Name = member.CheckNotNull().Name;
         DeclaringType = typeInfoProvider.CheckNotNull().Get(member.DeclaringType);

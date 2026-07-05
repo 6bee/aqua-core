@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.TypeSystem;
 
@@ -12,7 +12,7 @@ using System.Text.Json.Serialization;
 [DataContract(Name = "Method", IsReference = true)]
 [JsonConverter(typeof(MemberInfoConverter<MethodInfo>))]
 [DebuggerDisplay("Method: {Name,nq}")]
-public class MethodInfo : MethodBaseInfo
+public sealed class MethodInfo : MethodBaseInfo
 {
     [IgnoreDataMember]
     [Unmapped]
@@ -58,7 +58,7 @@ public class MethodInfo : MethodBaseInfo
         ReturnType = returnType;
     }
 
-    protected MethodInfo(MethodInfo method)
+    private MethodInfo(MethodInfo method)
         : base(method, new TypeInfoProvider())
     {
     }

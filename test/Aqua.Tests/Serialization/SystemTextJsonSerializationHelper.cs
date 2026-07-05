@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.Serialization;
 
@@ -6,7 +6,6 @@ using Aqua.Text.Json.Converters;
 using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Xunit;
 
 public static class SystemTextJsonSerializationHelper
 {

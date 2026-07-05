@@ -1,11 +1,10 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.Dynamic.DynamicObject;
 
 using Aqua.Dynamic;
-using Shouldly;
+
 using System.Diagnostics.CodeAnalysis;
-using Xunit;
 
 public class When_converting_to_different_target_type
 {

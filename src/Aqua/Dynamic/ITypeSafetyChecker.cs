@@ -1,9 +1,10 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Dynamic;
 
 /// <summary>
-/// Denotes a type that allows to assert type safety for instace creation on mapping from <see cref="DynamicObject"/> in reference to OWASP A8:2017-Insecure Deserialization.
+/// Denotes a type that allows to assert type safety for instace creation on mapping from <see cref="DynamicObject"/> in reference to
+/// <see href="https://owasp.org/www-project-top-ten/2017/A8_2017-Insecure_Deserialization">OWASP A8:2017-Insecure Deserialization</see>.
 /// </summary>
 public interface ITypeSafetyChecker
 {

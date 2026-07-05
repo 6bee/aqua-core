@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Dynamic;
 
@@ -9,10 +9,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 /// <summary>
+/// A <see cref="PropertySet"/> represents <see cref="DynamicObject"/> properties.
+/// </summary>
+/// <remarks>
 /// A set of properties where property names are considered as set keys.
 /// However, since <see cref="Property" /> is not immutable a <see cref="PropertySet"/> may technically not be considered a set
 /// and does not guarantee uniqueness of property names.
-/// </summary>
+/// </remarks>
 [Serializable]
 [CollectionDataContract]
 [DebuggerDisplay("PropertySet {GetDebuggerDisplay(),nq}")]

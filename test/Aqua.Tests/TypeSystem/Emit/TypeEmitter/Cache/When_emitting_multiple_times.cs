@@ -1,11 +1,9 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.TypeSystem.Emit.TypeEmitter.Cache;
 
 using Aqua.TypeSystem;
 using Aqua.TypeSystem.Emit;
-using Shouldly;
-using Xunit;
 
 public class When_emitting_multiple_times
 {

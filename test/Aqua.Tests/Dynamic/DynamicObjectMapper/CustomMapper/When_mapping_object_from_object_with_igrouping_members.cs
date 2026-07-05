@@ -1,13 +1,12 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper.CustomMapper;
 
 using Aqua.Dynamic;
 using Aqua.TypeExtensions;
-using Shouldly;
+
 using System.Collections;
 using System.Reflection;
-using Xunit;
 
 public class When_mapping_object_from_object_with_igrouping_members
 {

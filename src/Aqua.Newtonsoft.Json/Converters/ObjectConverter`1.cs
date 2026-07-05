@@ -1,18 +1,12 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Newtonsoft.Json.Converters;
 
-using global::Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
 
-public class ObjectConverter<T> : ObjectConverter
+public class ObjectConverter<T>(KnownTypesRegistry knownTypes) : ObjectConverter(knownTypes)
     where T : class
 {
-    public ObjectConverter(KnownTypesRegistry knownTypes)
-        : base(knownTypes)
-    {
-    }
-
     public Func<string, Type?>? DefaultTypeResolver { get; set; }
 
     public Func<Type, T?>? DefaultObjectFactory { get; set; }

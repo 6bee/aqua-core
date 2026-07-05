@@ -1,8 +1,8 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.Text.Json.KnownTypesRegistry;
 
-using Aqua.Text.Json;
+using Aqua;
 
 public sealed class When_registrying_type
 {

@@ -1,9 +1,8 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.Dynamic.DynamicObject;
 
 using Aqua.Dynamic;
-using Xunit;
 
 public class When_used_as_dynamic_type
 {

@@ -1,0 +1,104 @@
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+
+syntax = "proto3";
+
+package aqua;
+
+option csharp_namespace = "Aqua.Protobuf.Schema";
+
+// Self-describing, type-safe representation of an Aqua leaf-value union.
+// The 'kind' oneof mirrors the nine MessagePack formatter tags so both
+// back-ends share the same logical model. Type identity is carried as
+// registry wire keys and enforced through KnownTypeKeyResolver on decode.
+message Value {
+  oneof kind {
+    NullValue null = 1;
+    string string = 2;
+    Scalar scalar = 3;
+    PackedArray packed_array = 4;
+    Collection collection = 5;
+    // Tensor tensor = 6
+    DynamicObject dynamic_object = 7;
+    TypeInfo type_info = 8;
+  }
+}
+
+// Explicit null marker so a null leaf round-trips distinctly from an unset value.
+message NullValue {
+}
+
+// A registry-backed scalar leaf. 'data' is the deterministic little-endian
+// encoding for 'type_key' as produced by the scalar codec.
+message Scalar {
+  DataType type = 1;
+  bytes data = 2;
+}
+
+// A packed 1-D array of a fixed-width blittable primitive. 'data' is the
+// little-endian byte payload; 'element_type_key' resolves the element type.
+message PackedArray {
+  DataType element_type = 1;
+  bytes data = 2;
+}
+
+// A heterogeneous or null-bearing collection of leaf values.
+message Collection {
+  repeated Value items = 1;
+}
+
+// Aqua.Dynamic.DynamicObject. 'has_properties' distinguishes a null property
+// set (IsNull) from an empty one.
+message DynamicObject {
+  TypeInfo type = 1;
+  bool has_properties = 2;
+  map<string, Value> properties = 3;
+}
+
+// Aqua.TypeSystem.TypeInfo metadata graph.
+message TypeInfo {
+  string name = 1;
+  string namespace = 2;
+  TypeInfo declaring_type = 3;
+  repeated TypeInfo generic_arguments = 4;
+  bool is_anonymous_type = 5;
+  bool is_generic_type = 6;
+  repeated PropertyInfo properties = 7;
+}
+
+// Aqua.TypeSystem.PropertyInfo as referenced by TypeInfo.Properties.
+message PropertyInfo {
+  string name = 1;
+  TypeInfo declaring_type = 2;
+  TypeInfo property_type = 3;
+  optional bool is_static = 4;
+}
+
+enum DataType {
+    Undefined = 0;
+
+    UInt8 = 1;
+    Int8 = 2;
+    Int16 = 3;
+    UInt16 = 4;
+    Int32 = 5;
+    UInt32 = 6;
+    Int64 = 7;
+    UInt64 = 8;
+    Int128 = 9;
+    UInt128 = 10;
+    Float16 = 11;
+    Float32 = 12;
+    Float64 = 13;
+    BigInt = 14;
+//  Complex64 = 15;
+    Complex128 = 16;
+    Bool = 17;
+    Char = 18;
+    Decimal = 19;
+    Uuid = 20;
+    DateTime = 21;
+    DateTimeOffset = 22;
+    TimeSpan = 23;
+    DateOnly = 24;
+    TimeOnly = 25;
+}

@@ -1,11 +1,10 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.Tests.Serialization;
 
 using System.IO;
 using System.Numerics;
 using System.Xml.Serialization;
-using Xunit;
 
 public static class XmlSerializationHelper
 {

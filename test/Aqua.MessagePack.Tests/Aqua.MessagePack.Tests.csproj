@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Tests for aqua-core-messagepack</Description>
+    <TargetFrameworks>net48;net8.0;net10.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Buffers" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Aqua.MessagePack\Aqua.MessagePack.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="MessagePack" Global="true" />
+  </ItemGroup>
+
+  <ItemGroup Label="borrow polyfill type from protobuf project">
+    <Compile Include="..\..\src\Aqua.Protobuf\ArrayBufferWriter`1.cs" Link="ArrayBufferWriter`1.cs" />
+  </ItemGroup>
+  
+</Project>

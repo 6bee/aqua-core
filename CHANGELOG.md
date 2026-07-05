@@ -9,14 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add `Aqua.MessagePack` project with full MessagePack serialization support (scalar codec, value formatter, dynamic object/property/propertyset/typeinfo formatters)
+- Add `Aqua.Protobuf` project with full Protobuf serialization support (scalar codec, packed array serializer, value mapper, aqua.proto schema)
+- Add `Aqua.Dynamic.TypeSafety` static helper with `TypeSafety.AllowAny` (no-op `ITypeSafetyChecker`) and `TypeSafety.AllowList(...)` (opt-in allow-list checker backed by its own type set, throwing `TypeSafetyException`) in reference to [OWASP A8:2017-Insecure Deserialization][CWE-502]
+- Add `Aqua.Dynamic.TypeSafetyException` as the dedicated exception thrown by `TypeSafety.AllowList` checkers
+- Add `System.Numerics.BigInteger` and `System.Numerics.Complex` to `KnownTypesRegistry` default types (keys: `bigint`, `complex`)
+
 ### Changed
 
-- `Aqua.Text.Json.KnownTypesRegistry` generates derived type key for generic types (except `Nullable<T>`) including generic type arguments which is potentially a breaking change.
+- Consolidate `KnownTypesRegistry` from `Aqua.Text.Json` into root namespace `Aqua.KnownTypesRegistry`
+- `Aqua.KnownTypesRegistry` generates derived type key for generic types (except `Nullable<T>`) including generic type arguments which is potentially a breaking change.
+- Replace `Aqua.protobuf-net` serialization backend with new `Aqua.Protobuf` project
+- Update `Aqua.Newtonsoft.Json` project: remove (replace) `KnownTypesRegistry`, update converters and contract resolvers
 - Bump _System.Text.Json_ from 10.0.0 to 10.0.9 (netstandard2.0) (concerns _Aqua.Text.Json_)
 
-### Deprecated
-
 ### Removed
+
+- Remove project `Aqua.protobuf-net` (fully replaced by new `Aqua.Protobuf` project)
+- Remove `KnownTypesRegistry` from `Aqua.Newtonsoft.Json` (consolidated into `Aqua.KnownTypesRegistry`)
+- Remove abstract types `Aqua.TypeSystem.MemberInfo` and `Aqua.TypeSystem.MethodBaseInfo` from `KnownTypesRegistry` default types (they cannot be concrete deserialization targets)
+- Remove obsolete `AssemblyInfo.cs` files across projects
+
+### Deprecated
 
 ### Fixed
 
@@ -166,3 +180,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [syslib0050]: https://learn.microsoft.com/en-us/dotnet/fundamentals/syslib-diagnostics/syslib0050
 [CVE-2024-30105]: https://github.com/advisories/GHSA-hh2w-p6rv-4g7w
 [CVE-2024-43485]: https://github.com/advisories/GHSA-8g4q-xg66-9fp4
+[CWE-502]: https://cwe.mitre.org/data/definitions/502.html

@@ -1,19 +1,28 @@
-# Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
 
-# C# files
-[*.cs]
-
-#### Core EditorConfig Options ####
-
-# Indentation and spacing
-indent_size = 4
+[*]
+end_of_line = lf
+charset = utf-8
+insert_final_newline = true
 indent_style = space
+
+[*.{sh}]
+end_of_line = lf
+indent_size = 2
+tab_width = 2
+
+[*.{ps1}]
+indent_size = 2
+tab_width = 2
+
+[*.{*proj,xml,props,targets,tasks}]
+indent_size = 2
+tab_width = 2
+
+[*.cs]
+indent_size = 4
 tab_width = 4
 
-# New line preferences
-end_of_line = crlf
-insert_final_newline = false
 
 #### .NET Coding Conventions ####
 
@@ -256,9 +265,6 @@ dotnet_style_collection_initializer = true:suggestion
 dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
 dotnet_style_prefer_conditional_expression_over_assignment = true:silent
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
-tab_width = 4
-indent_size = 4
-end_of_line = crlf
 dotnet_style_prefer_inferred_tuple_names = true:suggestion
 dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
 dotnet_style_namespace_match_folder = true:warning

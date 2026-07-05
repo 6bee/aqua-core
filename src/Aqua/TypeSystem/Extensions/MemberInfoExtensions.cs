@@ -1,4 +1,4 @@
-﻿// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
+// Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
 namespace Aqua.TypeSystem.Extensions;
 
@@ -13,7 +13,7 @@ public static class MemberInfoExtensions
     private static readonly Dictionary<MemberInfo, BindingFlags> _bindingFlagsCache = [];
 
     [return: NotNullIfNotNull(nameof(member))]
-    public static Aqua.TypeSystem.MemberTypes? GetMemberType(this MemberInfo? member) => (Aqua.TypeSystem.MemberTypes?)member?.MemberType;
+    public static TypeSystem.MemberTypes? GetMemberType(this MemberInfo? member) => (TypeSystem.MemberTypes?)member?.MemberType;
 
     [return: NotNullIfNotNull(nameof(member))]
     internal static BindingFlags? GetBindingFlags(this MemberInfo? member)
