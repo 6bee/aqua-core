@@ -8,6 +8,7 @@
     <Nullable>disable</Nullable>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)../Style.Tests.ruleset</CodeAnalysisRuleSet>
     <EnableSonarAnalyzers>false</EnableSonarAnalyzers>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <!--

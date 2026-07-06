@@ -110,7 +110,7 @@ public static class JsonSerializerOptionsExtensions
         {
             if (referenceHandler is not AquaReferenceHandler aquaReferenceHandler)
             {
-                // ensure we continue with a AquaReferenceHandler since the framework implementations ReferenceHandler.Preserve and  ReferenceHandler.IgnoreCycles
+                // ensure we continue with a AquaReferenceHandler since the framework implementations ReferenceHandler.Preserve and ReferenceHandler.IgnoreCycles
                 // prevent custom converters take part in the reference handling game.
                 aquaReferenceHandler = AquaReferenceHandler.Root;
             }

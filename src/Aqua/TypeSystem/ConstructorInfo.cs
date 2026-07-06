@@ -38,7 +38,12 @@ public sealed class ConstructorInfo : MethodBaseInfo
     }
 
     public ConstructorInfo(string name, Type declaringType, IEnumerable<Type>? parameterTypes = null)
-        : base(name, declaringType, null, parameterTypes, new TypeInfoProvider())
+        : this(name, declaringType, null, parameterTypes)
+    {
+    }
+
+    public ConstructorInfo(string name, Type declaringType, IEnumerable<Type>? genericArguments, IEnumerable<Type>? parameterTypes)
+        : base(name, declaringType, genericArguments, parameterTypes, new TypeInfoProvider())
     {
         if (string.Equals(name, DefaultStaticConstructorName, StringComparison.Ordinal))
         {

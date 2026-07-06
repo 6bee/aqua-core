@@ -28,7 +28,7 @@ internal static class DataTypeExtensions
 #endif
             _ when type == typeof(float) => Proto.DataType.Float32,
             _ when type == typeof(double) => Proto.DataType.Float64,
-            _ when type == typeof(BigInteger) => Proto.DataType.BigInt,
+            _ when type == typeof(BigInteger) => Proto.DataType.BigInteger,
             _ when type == typeof(Complex) => Proto.DataType.Complex128,
             _ when type == typeof(bool) => Proto.DataType.Bool,
             _ when type == typeof(char) => Proto.DataType.Char,
@@ -63,7 +63,7 @@ internal static class DataTypeExtensions
 #endif
             Proto.DataType.Float32 => typeof(float),
             Proto.DataType.Float64 => typeof(double),
-            Proto.DataType.BigInt => typeof(BigInteger),
+            Proto.DataType.BigInteger => typeof(BigInteger),
             Proto.DataType.Complex128 => typeof(Complex),
             Proto.DataType.Bool => typeof(bool),
             Proto.DataType.Char => typeof(char),

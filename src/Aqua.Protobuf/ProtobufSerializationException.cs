@@ -5,17 +5,8 @@ namespace Aqua.Protobuf;
 [Serializable]
 public class ProtobufSerializationException : Exception
 {
-    public ProtobufSerializationException()
-    {
-    }
-
-    public ProtobufSerializationException(string message)
+    public ProtobufSerializationException(string? message)
         : base(message)
-    {
-    }
-
-    public ProtobufSerializationException(string message, Exception innerException)
-        : base(message, innerException)
     {
     }
 

@@ -11,7 +11,6 @@ public static class ProtobufSerializationHelper
     {
         var data = AquaProtobufSerializer.Serialize(graph);
         var copy = AquaProtobufSerializer.Deserialize<T>(data);
-
         return copy;
     }
 

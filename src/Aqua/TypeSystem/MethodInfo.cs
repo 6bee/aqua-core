@@ -65,7 +65,7 @@ public sealed class MethodInfo : MethodBaseInfo
 
     public override MemberTypes MemberType => MemberTypes.Method;
 
-    [DataMember(Order = 7, IsRequired = false, EmitDefaultValue = false)]
+    [DataMember(Order = 6, IsRequired = false, EmitDefaultValue = false)]
     public TypeInfo? ReturnType { get; set; }
 
     public override string ToString()

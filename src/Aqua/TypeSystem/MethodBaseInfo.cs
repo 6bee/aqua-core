@@ -64,10 +64,10 @@ public abstract class MethodBaseInfo : MemberInfo
             .ToList();
     }
 
-    [DataMember(Order = 5, IsRequired = false, EmitDefaultValue = false)]
+    [DataMember(Order = 4, IsRequired = false, EmitDefaultValue = false)]
     public List<TypeInfo>? GenericArgumentTypes { get; set; }
 
-    [DataMember(Order = 6, IsRequired = false, EmitDefaultValue = false)]
+    [DataMember(Order = 5, IsRequired = false, EmitDefaultValue = false)]
     public List<TypeInfo>? ParameterTypes { get; set; }
 
     public bool IsGenericMethod => GenericArgumentTypes?.Count > 0;

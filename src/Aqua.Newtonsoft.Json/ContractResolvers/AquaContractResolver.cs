@@ -47,11 +47,10 @@ public sealed class AquaContractResolver : DefaultContractResolver
         {
             contract.IsReference = true;
             contract.ItemReferenceLoopHandling = ReferenceLoopHandling.Serialize;
-            contract.Converter = typeof(DynamicObject).IsAssignableFrom(objectType)
-                ? new DynamicObjectConverter(_knownTypes)
-                : typeof(TypeInfo).IsAssignableFrom(objectType)
-                    ? new TypeInfoConverter(_knownTypes)
-                    : CreateObjectConverter(objectType, _knownTypes);
+            contract.Converter
+                = typeof(DynamicObject).IsAssignableFrom(objectType) ? new DynamicObjectConverter(_knownTypes)
+                : typeof(TypeInfo).IsAssignableFrom(objectType) ? new TypeInfoConverter(_knownTypes)
+                : CreateObjectConverter(objectType, _knownTypes);
             foreach (var property in contract.Properties.Where(static x => !x.Writable || !x.Readable))
             {
                 property.Ignored = true;

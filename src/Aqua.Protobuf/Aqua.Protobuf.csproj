@@ -23,11 +23,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\aqua.proto" GrpcServices="None" Access="Internal" />
+    <Protobuf Include="Protos\aqua.proto" ProtoRoot="Protos" GrpcServices="None" Access="Public" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Google.Protobuf" Global="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Protos\**\*.proto" Pack="true" PackagePath="content/protos/%(RecursiveDir)" />
+    <None Include="BuildTransitive\**" Pack="true" PackagePath="buildTransitive/%(RecursiveDir)" />
   </ItemGroup>
 
 </Project>

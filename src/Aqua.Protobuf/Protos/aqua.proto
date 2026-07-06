@@ -1,5 +1,7 @@
 // Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+// TODO: consider circular reference support
+
 syntax = "proto3";
 
 package aqua;
@@ -7,9 +9,6 @@ package aqua;
 option csharp_namespace = "Aqua.Protobuf.Schema";
 
 // Self-describing, type-safe representation of an Aqua leaf-value union.
-// The 'kind' oneof mirrors the nine MessagePack formatter tags so both
-// back-ends share the same logical model. Type identity is carried as
-// registry wire keys and enforced through KnownTypeKeyResolver on decode.
 message Value {
   oneof kind {
     NullValue null = 1;
@@ -18,8 +17,17 @@ message Value {
     PackedArray packed_array = 4;
     Collection collection = 5;
     // Tensor tensor = 6
-    DynamicObject dynamic_object = 7;
-    TypeInfo type_info = 8;
+
+    // dynamic
+    DynamicObject dynamic_object = 80;
+
+    // type system
+    TypeInfo type_info = 81;
+    MemberInfo member_info = 82;
+    PropertyInfo property_info = 83;
+    FieldInfo field_info = 84;
+    ConstructorInfo constructor_info = 85;
+    MethodInfo method_info = 86;
   }
 }
 
@@ -35,7 +43,7 @@ message Scalar {
 }
 
 // A packed 1-D array of a fixed-width blittable primitive. 'data' is the
-// little-endian byte payload; 'element_type_key' resolves the element type.
+// little-endian byte payload; 'element_type' resolves the element type.
 message PackedArray {
   DataType element_type = 1;
   bytes data = 2;
@@ -46,18 +54,16 @@ message Collection {
   repeated Value items = 1;
 }
 
-// Aqua.Dynamic.DynamicObject. 'has_properties' distinguishes a null property
-// set (IsNull) from an empty one.
+// 'has_properties' distinguishes a null property set (IsNull) from an empty one.
 message DynamicObject {
   TypeInfo type = 1;
   bool has_properties = 2;
   map<string, Value> properties = 3;
 }
 
-// Aqua.TypeSystem.TypeInfo metadata graph.
 message TypeInfo {
-  string name = 1;
-  string namespace = 2;
+  optional string name = 1;
+  optional string namespace = 2;
   TypeInfo declaring_type = 3;
   repeated TypeInfo generic_arguments = 4;
   bool is_anonymous_type = 5;
@@ -65,40 +71,79 @@ message TypeInfo {
   repeated PropertyInfo properties = 7;
 }
 
-// Aqua.TypeSystem.PropertyInfo as referenced by TypeInfo.Properties.
+message MemberInfo {
+  oneof kind {
+    PropertyInfo property = 1;
+    FieldInfo field = 2;
+    ConstructorInfo constructor = 3;
+    MethodInfo method = 4;
+  }
+}
+
 message PropertyInfo {
+  // MemberInfo
   string name = 1;
   TypeInfo declaring_type = 2;
-  TypeInfo property_type = 3;
-  optional bool is_static = 4;
+  optional bool is_static = 3;
+  // PropertyInfo
+  TypeInfo property_type = 4;
+}
+
+message FieldInfo {
+  // MemberInfo
+  string name = 1;
+  TypeInfo declaring_type = 2;
+  optional bool is_static = 3;
+  // FieldInfo
+}
+
+message ConstructorInfo {
+  // MemberInfo
+  string name = 1;
+  TypeInfo declaring_type = 2;
+  optional bool is_static = 3;
+  // MethodBaseInfo
+  repeated TypeInfo generic_argument_types = 4;
+  repeated TypeInfo parameter_types = 5;
+}
+
+message MethodInfo {
+  // MemberInfo
+  string name = 1;
+  TypeInfo declaring_type = 2;
+  optional bool is_static = 3;
+  // MethodBaseInfo
+  repeated TypeInfo generic_argument_types = 4;
+  repeated TypeInfo parameter_types = 5;
+  // MethodInfo
+  TypeInfo return_type = 6;
 }
 
 enum DataType {
-    Undefined = 0;
-
-    UInt8 = 1;
-    Int8 = 2;
-    Int16 = 3;
-    UInt16 = 4;
-    Int32 = 5;
-    UInt32 = 6;
-    Int64 = 7;
-    UInt64 = 8;
-    Int128 = 9;
-    UInt128 = 10;
-    Float16 = 11;
-    Float32 = 12;
-    Float64 = 13;
-    BigInt = 14;
-//  Complex64 = 15;
-    Complex128 = 16;
-    Bool = 17;
-    Char = 18;
-    Decimal = 19;
-    Uuid = 20;
-    DateTime = 21;
-    DateTimeOffset = 22;
-    TimeSpan = 23;
-    DateOnly = 24;
-    TimeOnly = 25;
+    undefined = 0;
+    uint8 = 1;
+    int8 = 2;
+    int16 = 3;
+    uint16 = 4;
+    int32 = 5;
+    uint32 = 6;
+    int64 = 7;
+    uint64 = 8;
+    int128 = 9;
+    uint128 = 10;
+    float16 = 11;
+    float32 = 12;
+    float64 = 13;
+    big_integer = 14;
+//  complex64 = 15;
+    complex128 = 16;
+    bool = 17;
+    char = 18;
+    decimal = 19;
+    uuid = 20;
+    date_time = 21;
+    date_time_offset = 22;
+    time_span = 23;
+    date_only = 24;
+    time_only = 25;
 }
