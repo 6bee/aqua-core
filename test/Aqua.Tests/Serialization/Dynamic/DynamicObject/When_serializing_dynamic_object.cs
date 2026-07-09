@@ -51,11 +51,6 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
         }
 
-        if (this.TestIs<With_messagepack_serializer>())
-        {
-            MessagePackSerializationHelper.PatchTestData(type, ref value);
-        }
-
         if (this.TestIs<With_protobuf_serializer>())
         {
             ProtobufSerializationHelper.PatchTestData(type, ref value);
@@ -105,11 +100,6 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
         if (this.TestIs<With_system_text_json_serializer>())
         {
             SystemTextJsonSerializationHelper.SkipUnsupportedDataType(type, value);
-        }
-
-        if (this.TestIs<With_messagepack_serializer>())
-        {
-            MessagePackSerializationHelper.PatchTestData(type, ref value);
         }
 
         if (this.TestIs<With_protobuf_serializer>())

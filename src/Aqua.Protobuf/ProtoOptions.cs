@@ -4,6 +4,10 @@ namespace Aqua.Protobuf;
 
 public sealed class ProtoOptions
 {
+    public DateTimeEncoding DateTimeEncoding { get; init; }
+
+    public TimeSpanEncoding TimeSpanEncoding { get; init; }
+
     public IReferenceTracker Tracker
     {
         get => field ??= new ReferenceTracker();

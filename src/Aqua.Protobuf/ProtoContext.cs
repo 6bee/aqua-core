@@ -2,16 +2,13 @@
 
 namespace Aqua.Protobuf;
 
-public sealed class ProtoContext
+public sealed class ProtoContext(ProtoOptions? options = null)
 {
-    public ProtoContext(ProtoOptions? options = null)
-    {
-        options ??= new();
-        Tracker = options.Tracker;
-        Resolver = options.Resolver;
-    }
+    private readonly ProtoOptions _options = options ?? new();
 
-    public IReferenceTracker Tracker { get; }
+    public ProtoOptions Options => _options;
 
-    public IMapperResolver Resolver { get; }
+    public IReferenceTracker Tracker => _options.Tracker;
+
+    public IMapperResolver Resolver => _options.Resolver;
 }

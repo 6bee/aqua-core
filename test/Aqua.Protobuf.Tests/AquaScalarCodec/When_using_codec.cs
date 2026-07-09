@@ -16,14 +16,14 @@ public class When_using_codec
         using var stream = new MemoryStream();
         var writer = PipeWriter.Create(stream);
 
-        AquaScalarCodec.Encode(writer, value);
+        AquaScalarCodec.Encode(writer, value, new());
 
         await writer.FlushAsync(TestContext.Current.CancellationToken);
         var encoded = stream.ToArray();
 
         // decode
         var type = value.GetType();
-        var decoded = AquaScalarCodec.Decode(encoded, type);
+        var decoded = AquaScalarCodec.Decode(encoded, type, new());
 
         // assert
         decoded.ShouldBe(value, $"type: {type}");

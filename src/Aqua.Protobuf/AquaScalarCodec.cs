@@ -6,20 +6,18 @@ using System.Buffers;
 using System.Buffers.Binary;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Text;
-
-//// TODO: encode time lossless
-////       message Duration {
-////         int64 seconds = 1;
-////         int32 nanos = 2;
-////       }
 
 /// <summary>
 /// Deterministic byte encoding for the scalar leaf types.
 /// </summary>
 internal static class AquaScalarCodec
 {
-    public static void Encode(IBufferWriter<byte> writer, object value)
+    private const byte MicrosecondsTag = 1;
+    private const byte NanosecondsTag = 2;
+
+    public static void Encode(IBufferWriter<byte> writer, object value, ProtoOptions options)
     {
         switch (value)
         {
@@ -37,9 +35,9 @@ internal static class AquaScalarCodec
             case double v: writer.Write(v); return;
             case decimal v: writer.Write(v); return;
             case Guid v: writer.Write(v); return;
-            case DateTime v: writer.Write(v); return;
-            case DateTimeOffset v: writer.Write(v); return;
-            case TimeSpan v: writer.Write(v); return;
+            case DateTime v: writer.Write(v, options); return;
+            case DateTimeOffset v: writer.Write(v, options); return;
+            case TimeSpan v: writer.Write(v, options); return;
             case BigInteger v: writer.Write(v); return;
             case Complex v: writer.Write(v); return;
 #if NET5_0_OR_GREATER
@@ -59,7 +57,7 @@ internal static class AquaScalarCodec
         throw new InvalidOperationException($"Scalar type '{type}' is not supported by the Aqua protobuf scalar codec.");
     }
 
-    public static object Decode(scoped ReadOnlySpan<byte> data, Type type)
+    public static object Decode(scoped ReadOnlySpan<byte> data, Type type, ProtoOptions options)
     {
         if (type == typeof(bool))
         {
@@ -133,17 +131,17 @@ internal static class AquaScalarCodec
 
         if (type == typeof(DateTime))
         {
-            return data.ReadDateTime();
+            return data.ReadDateTime(options);
         }
 
         if (type == typeof(DateTimeOffset))
         {
-            return data.ReadDateTimeOffset();
+            return data.ReadDateTimeOffset(options);
         }
 
         if (type == typeof(TimeSpan))
         {
-            return data.ReadTimeSpan();
+            return data.ReadTimeSpan(options);
         }
 
         if (type == typeof(BigInteger))
@@ -300,12 +298,6 @@ internal static class AquaScalarCodec
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void Write(TimeSpan value)
-        {
-            writer.Write(value.Ticks / 10L); // microseconds
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Write(Complex value)
         {
             writer.Write(value.Real);
@@ -357,17 +349,89 @@ internal static class AquaScalarCodec
             writer.Write(bytes);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void Write(DateTime value)
+        private void Write(TimeSpan value, ProtoOptions options)
         {
-            writer.Write(value.ToUniversalTime().ToUnixMicroseconds());
+            switch (options.TimeSpanEncoding)
+            {
+                case TimeSpanEncoding.Auto:
+                    {
+                        var ticks = value.Ticks;
+                        if (TimeSpanHelper.FitsInNanoseconds(ticks) &&
+                            ticks % 10 != 0)
+                        {
+                            writer.Write(NanosecondsTag);
+                            writer.Write(TimeSpanHelper.TicksToNanoseconds(ticks)); // nanoseconds
+                        }
+                        else
+                        {
+                            writer.Write(MicrosecondsTag);
+                            writer.Write(TimeSpanHelper.TicksToMioseconds(ticks)); // microseconds
+                        }
+
+                        break;
+                    }
+
+                case TimeSpanEncoding.Microseconds:
+                    writer.Write(TimeSpanHelper.TicksToMioseconds(value.Ticks)); // microseconds
+                    break;
+
+                case TimeSpanEncoding.Nanoseconds:
+                    writer.Write(TimeSpanHelper.TicksToNanoseconds(value.Ticks)); // nanoseconds
+                    break;
+
+                default:
+                    throw new ProtobufSerializationException($"Timespan encoding option {options.TimeSpanEncoding} is not supported");
+            }
+        }
+
+        private void Write(DateTime value, ProtoOptions options)
+        {
+            if (value.Kind is not DateTimeKind.Utc)
+            {
+                value = value.ToUniversalTime();
+            }
+
+            switch (options.DateTimeEncoding)
+            {
+                case DateTimeEncoding.Auto:
+                    {
+                        // Encode as Unix nanoseconds only if required to preserve sub-microsecond precision.
+                        // DateTime ticks are 100ns units; 10 ticks = 1 μs.
+                        var ticks = value.Ticks;
+                        if (ticks >= DateTime.UnixNanosecondsMinTicks &&
+                            ticks <= DateTime.UnixNanosecondsMaxTicks &&
+                            ticks % 10 != 0)
+                        {
+                            writer.Write(NanosecondsTag); // Unix nanoseconds
+                            writer.Write(value.ToUnixNanoseconds());
+                        }
+                        else
+                        {
+                            writer.Write(MicrosecondsTag); // Unix microseconds
+                            writer.Write(value.ToUnixMicroseconds());
+                        }
+
+                        break;
+                    }
+
+                case DateTimeEncoding.UnixMicroseconds:
+                    writer.Write(value.ToUnixMicroseconds());
+                    break;
+
+                case DateTimeEncoding.UnixNanoseconds:
+                    writer.Write(value.ToUnixNanoseconds());
+                    break;
+
+                default:
+                    throw new ProtobufSerializationException($"Datetime encoding option {options.DateTimeEncoding} is not supported");
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void Write(DateTimeOffset value)
+        private void Write(DateTimeOffset value, ProtoOptions options)
         {
             // We're writing a *local* DateTime value in msgpack encoding as if it were UTC time
-            writer.Write(new DateTime(value.Ticks, DateTimeKind.Utc).ToUnixMicroseconds());
+            writer.Write(new DateTime(value.Ticks, DateTimeKind.Utc), options);
             writer.Write((short)value.Offset.TotalMinutes);
         }
 
@@ -494,12 +558,6 @@ internal static class AquaScalarCodec
             var value = BinaryPrimitives.ReadInt64LittleEndian(span);
             span = span[sizeof(long)..];
             return value;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private TimeSpan ReadTimeSpan()
-        {
-            return TimeSpan.FromTicks(span.ReadInt64() * 10L);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -631,19 +689,72 @@ internal static class AquaScalarCodec
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private DateTime ReadDateTime()
+        private TimeSpan ReadTimeSpan(ProtoOptions options)
+        {
+            switch (options.TimeSpanEncoding)
+            {
+                case TimeSpanEncoding.Microseconds:
+                    return TimeSpanHelper.FromMicroseconds(span.ReadInt64());
+
+                case TimeSpanEncoding.Nanoseconds:
+                    return TimeSpanHelper.FromNanoseconds(span.ReadInt64());
+
+                case TimeSpanEncoding.Auto:
+                    {
+                        var kind = span.ReadByte();
+                        return kind switch
+                        {
+                            MicrosecondsTag => TimeSpanHelper.FromMicroseconds(span.ReadInt64()),
+                            NanosecondsTag => TimeSpanHelper.FromNanoseconds(span.ReadInt64()),
+                            _ => throw new ProtobufSerializationException($"Timespan auto-encoding kind {kind} is not supported"),
+                        };
+                    }
+
+                default:
+                    throw new ProtobufSerializationException($"Timespan encoding option {options.TimeSpanEncoding} is not supported");
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private DateTime ReadDateTime(ProtoOptions options)
         {
             return new DateTime(
-                DateTime.TicksFromUnixMicroseconds(span.ReadInt64()),
+                span.ReadDateTimeTicks(options),
                 DateTimeKind.Utc);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private DateTimeOffset ReadDateTimeOffset()
+        private DateTimeOffset ReadDateTimeOffset(ProtoOptions options)
         {
             return new DateTimeOffset(
-                DateTime.TicksFromUnixMicroseconds(span.ReadInt64()),
+                span.ReadDateTimeTicks(options),
                 TimeSpan.FromMinutes(span.ReadInt16()));
+        }
+
+        private long ReadDateTimeTicks(ProtoOptions options)
+        {
+            switch (options.DateTimeEncoding)
+            {
+                case DateTimeEncoding.UnixMicroseconds:
+                    return DateTime.TicksFromUnixMicroseconds(span.ReadInt64());
+
+                case DateTimeEncoding.UnixNanoseconds:
+                    return DateTime.TicksFromUnixNanoseconds(span.ReadInt64());
+
+                case DateTimeEncoding.Auto:
+                    {
+                        var kind = span.ReadByte();
+                        return kind switch
+                        {
+                            MicrosecondsTag => DateTime.TicksFromUnixMicroseconds(span.ReadInt64()),
+                            NanosecondsTag => DateTime.TicksFromUnixNanoseconds(span.ReadInt64()),
+                            _ => throw new ProtobufSerializationException($"Datetime auto-encoding kind {kind} is not supported"),
+                        };
+                    }
+
+                default:
+                    throw new ProtobufSerializationException($"Datetime encoding option {options.DateTimeEncoding} is not supported");
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

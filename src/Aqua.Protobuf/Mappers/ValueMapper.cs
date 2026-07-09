@@ -19,7 +19,7 @@ public class ValueMapper : ProtoMapper<object?, Proto.Value>
         {
             Proto.Value.KindOneofCase.Null => null,
             Proto.Value.KindOneofCase.String => proto.String,
-            Proto.Value.KindOneofCase.Scalar => FromScalarProto(proto.Scalar),
+            Proto.Value.KindOneofCase.Scalar => FromScalarProto(proto.Scalar, context.Options),
             Proto.Value.KindOneofCase.PackedArray => FromPackedArray(proto.PackedArray),
             Proto.Value.KindOneofCase.Collection => FromCollection(proto.Collection, context),
 
@@ -52,10 +52,10 @@ public class ValueMapper : ProtoMapper<object?, Proto.Value>
             MethodInfo methodInfo => new() { MethodInfo = MethodInfoMapper.Instance.ToProto(methodInfo, context) },
             MemberInfo memberInfo => new() { MemberInfo = MemberInfoMapper.Instance.ToProto(memberInfo, context) },
 
-            _ => FromScalarValue(value),
+            _ => FromScalarValue(value, context.Options),
         };
 
-    protected virtual Proto.Value FromScalarValue(object value)
+    protected virtual Proto.Value FromScalarValue(object value, ProtoOptions options)
     {
         var type = value.GetType();
         if (type.IsEnum)
@@ -64,11 +64,11 @@ public class ValueMapper : ProtoMapper<object?, Proto.Value>
             value = Convert.ChangeType(value, Enum.GetUnderlyingType(type));
         }
 
-        var typeCode = Proto.DataType.FromType(type) ?? throw SerializationException($"Value of type {value.GetType().GetFriendlyName()} is not supported.");
+        var typeCode = Proto.Scalar.Types.DataType.FromType(type) ?? throw SerializationException($"Value of type {value.GetType().GetFriendlyName()} is not supported.");
 
         var buffer = new ArrayBufferWriter<byte>();
 
-        AquaScalarCodec.Encode(buffer, value);
+        AquaScalarCodec.Encode(buffer, value, options);
 
         return new Proto.Value
         {
@@ -80,10 +80,11 @@ public class ValueMapper : ProtoMapper<object?, Proto.Value>
         };
     }
 
-    protected virtual object FromScalarProto(Proto.Scalar scalar)
+    protected virtual object FromScalarProto(Proto.Scalar scalar, ProtoOptions options)
     {
-        var type = Proto.DataType.ToType(scalar.Type) ?? throw SerializationException($"Unsupported data type {scalar.Type}.");
-        return AquaScalarCodec.Decode(scalar.Data.Span, type);
+        var type = Proto.Scalar.Types.DataType.ToType(scalar.Type)
+            ?? throw SerializationException($"Unsupported data type {scalar.Type}.");
+        return AquaScalarCodec.Decode(scalar.Data.Span, type, options);
     }
 
     private Proto.Value FromArray(Array array, ProtoContext context)
@@ -102,7 +103,7 @@ public class ValueMapper : ProtoMapper<object?, Proto.Value>
 
         return new Proto.Value { Collection = ToCollection(array, context) };
 
-        static bool TryPackArray(Array array, [NotNullWhen(true)] out Proto.DataType? elementTypeKey, [NotNullWhen(true)] out byte[]? bytes)
+        static bool TryPackArray(Array array, [NotNullWhen(true)] out Proto.PackedArray.Types.ElementType? elementTypeKey, [NotNullWhen(true)] out byte[]? bytes)
         {
             elementTypeKey = null;
             bytes = null;
@@ -123,7 +124,7 @@ public class ValueMapper : ProtoMapper<object?, Proto.Value>
                 return false;
             }
 
-            elementTypeKey = Proto.DataType.FromType(elementType);
+            elementTypeKey = (Proto.PackedArray.Types.ElementType?)(int?)Proto.Scalar.Types.DataType.FromType(elementType);
             if (elementTypeKey is null)
             {
                 return false;
@@ -143,7 +144,8 @@ public class ValueMapper : ProtoMapper<object?, Proto.Value>
 
     private static object FromPackedArray(Proto.PackedArray packedArray)
     {
-        var elementType = Proto.DataType.ToType(packedArray.ElementType) ?? throw SerializationException($"Unsupported data type {packedArray.ElementType}.");
+        var elementType = Proto.Scalar.Types.DataType.ToType((Proto.Scalar.Types.DataType)packedArray.ElementType)
+            ?? throw SerializationException($"Unsupported data type {packedArray.ElementType}.");
         if (!PackedArraySerializer.IsEligibleElementType(elementType))
         {
             throw SerializationException($"{packedArray.ElementType} does not denote a packed-array-eligible element type.");

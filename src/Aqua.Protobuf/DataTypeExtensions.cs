@@ -7,74 +7,74 @@ using Proto = Aqua.Protobuf.Schema;
 
 internal static class DataTypeExtensions
 {
-    extension(Proto.DataType)
+    extension(Proto.Scalar.Types.DataType)
     {
-        public static Proto.DataType? FromType(Type type) => type switch
+        public static Proto.Scalar.Types.DataType? FromType(Type type) => type switch
         {
-            _ when type == typeof(byte) => Proto.DataType.Uint8,
-            _ when type == typeof(sbyte) => Proto.DataType.Int8,
-            _ when type == typeof(short) => Proto.DataType.Int16,
-            _ when type == typeof(ushort) => Proto.DataType.Uint16,
-            _ when type == typeof(int) => Proto.DataType.Int32,
-            _ when type == typeof(uint) => Proto.DataType.Uint32,
-            _ when type == typeof(long) => Proto.DataType.Int64,
-            _ when type == typeof(ulong) => Proto.DataType.Uint64,
+            _ when type == typeof(byte) => Proto.Scalar.Types.DataType.Uint8,
+            _ when type == typeof(sbyte) => Proto.Scalar.Types.DataType.Int8,
+            _ when type == typeof(short) => Proto.Scalar.Types.DataType.Int16,
+            _ when type == typeof(ushort) => Proto.Scalar.Types.DataType.Uint16,
+            _ when type == typeof(int) => Proto.Scalar.Types.DataType.Int32,
+            _ when type == typeof(uint) => Proto.Scalar.Types.DataType.Uint32,
+            _ when type == typeof(long) => Proto.Scalar.Types.DataType.Int64,
+            _ when type == typeof(ulong) => Proto.Scalar.Types.DataType.Uint64,
 #if NET7_0_OR_GREATER
-            _ when type == typeof(Int128) => Proto.DataType.Int128,
-            _ when type == typeof(UInt128) => Proto.DataType.Uint128,
+            _ when type == typeof(Int128) => Proto.Scalar.Types.DataType.Int128,
+            _ when type == typeof(UInt128) => Proto.Scalar.Types.DataType.Uint128,
 #endif
 #if NET5_0_OR_GREATER
-            _ when type == typeof(Half) => Proto.DataType.Float16,
+            _ when type == typeof(Half) => Proto.Scalar.Types.DataType.Float16,
 #endif
-            _ when type == typeof(float) => Proto.DataType.Float32,
-            _ when type == typeof(double) => Proto.DataType.Float64,
-            _ when type == typeof(BigInteger) => Proto.DataType.BigInteger,
-            _ when type == typeof(Complex) => Proto.DataType.Complex128,
-            _ when type == typeof(bool) => Proto.DataType.Bool,
-            _ when type == typeof(char) => Proto.DataType.Char,
-            _ when type == typeof(decimal) => Proto.DataType.Decimal,
-            _ when type == typeof(Guid) => Proto.DataType.Uuid,
-            _ when type == typeof(DateTime) => Proto.DataType.DateTime,
-            _ when type == typeof(DateTimeOffset) => Proto.DataType.DateTimeOffset,
-            _ when type == typeof(TimeSpan) => Proto.DataType.TimeSpan,
+            _ when type == typeof(float) => Proto.Scalar.Types.DataType.Float32,
+            _ when type == typeof(double) => Proto.Scalar.Types.DataType.Float64,
+            _ when type == typeof(BigInteger) => Proto.Scalar.Types.DataType.BigInteger,
+            _ when type == typeof(Complex) => Proto.Scalar.Types.DataType.Complex128,
+            _ when type == typeof(bool) => Proto.Scalar.Types.DataType.Bool,
+            _ when type == typeof(char) => Proto.Scalar.Types.DataType.Char,
+            _ when type == typeof(decimal) => Proto.Scalar.Types.DataType.Decimal,
+            _ when type == typeof(Guid) => Proto.Scalar.Types.DataType.Uuid,
+            _ when type == typeof(DateTime) => Proto.Scalar.Types.DataType.DateTime,
+            _ when type == typeof(DateTimeOffset) => Proto.Scalar.Types.DataType.DateTimeOffset,
+            _ when type == typeof(TimeSpan) => Proto.Scalar.Types.DataType.TimeSpan,
 #if NET6_0_OR_GREATER
-            _ when type == typeof(DateOnly) => Proto.DataType.DateOnly,
-            _ when type == typeof(TimeOnly) => Proto.DataType.TimeOnly,
+            _ when type == typeof(DateOnly) => Proto.Scalar.Types.DataType.DateOnly,
+            _ when type == typeof(TimeOnly) => Proto.Scalar.Types.DataType.TimeOnly,
 #endif
             _ => null,
         };
 
-        public static Type? ToType(Proto.DataType dataType) => dataType switch
+        public static Type? ToType(Proto.Scalar.Types.DataType dataType) => dataType switch
         {
-            Proto.DataType.Uint8 => typeof(byte),
-            Proto.DataType.Int8 => typeof(sbyte),
-            Proto.DataType.Int16 => typeof(short),
-            Proto.DataType.Uint16 => typeof(ushort),
-            Proto.DataType.Int32 => typeof(int),
-            Proto.DataType.Uint32 => typeof(uint),
-            Proto.DataType.Int64 => typeof(long),
-            Proto.DataType.Uint64 => typeof(ulong),
+            Proto.Scalar.Types.DataType.Uint8 => typeof(byte),
+            Proto.Scalar.Types.DataType.Int8 => typeof(sbyte),
+            Proto.Scalar.Types.DataType.Int16 => typeof(short),
+            Proto.Scalar.Types.DataType.Uint16 => typeof(ushort),
+            Proto.Scalar.Types.DataType.Int32 => typeof(int),
+            Proto.Scalar.Types.DataType.Uint32 => typeof(uint),
+            Proto.Scalar.Types.DataType.Int64 => typeof(long),
+            Proto.Scalar.Types.DataType.Uint64 => typeof(ulong),
 #if NET7_0_OR_GREATER
-            Proto.DataType.Int128 => typeof(Int128),
-            Proto.DataType.Uint128 => typeof(UInt128),
+            Proto.Scalar.Types.DataType.Int128 => typeof(Int128),
+            Proto.Scalar.Types.DataType.Uint128 => typeof(UInt128),
 #endif
 #if NET5_0_OR_GREATER
-            Proto.DataType.Float16 => typeof(Half),
+            Proto.Scalar.Types.DataType.Float16 => typeof(Half),
 #endif
-            Proto.DataType.Float32 => typeof(float),
-            Proto.DataType.Float64 => typeof(double),
-            Proto.DataType.BigInteger => typeof(BigInteger),
-            Proto.DataType.Complex128 => typeof(Complex),
-            Proto.DataType.Bool => typeof(bool),
-            Proto.DataType.Char => typeof(char),
-            Proto.DataType.Decimal => typeof(decimal),
-            Proto.DataType.Uuid => typeof(Guid),
-            Proto.DataType.DateTime => typeof(DateTime),
-            Proto.DataType.DateTimeOffset => typeof(DateTimeOffset),
-            Proto.DataType.TimeSpan => typeof(TimeSpan),
+            Proto.Scalar.Types.DataType.Float32 => typeof(float),
+            Proto.Scalar.Types.DataType.Float64 => typeof(double),
+            Proto.Scalar.Types.DataType.BigInteger => typeof(BigInteger),
+            Proto.Scalar.Types.DataType.Complex128 => typeof(Complex),
+            Proto.Scalar.Types.DataType.Bool => typeof(bool),
+            Proto.Scalar.Types.DataType.Char => typeof(char),
+            Proto.Scalar.Types.DataType.Decimal => typeof(decimal),
+            Proto.Scalar.Types.DataType.Uuid => typeof(Guid),
+            Proto.Scalar.Types.DataType.DateTime => typeof(DateTime),
+            Proto.Scalar.Types.DataType.DateTimeOffset => typeof(DateTimeOffset),
+            Proto.Scalar.Types.DataType.TimeSpan => typeof(TimeSpan),
 #if NET6_0_OR_GREATER
-            Proto.DataType.DateOnly => typeof(DateOnly),
-            Proto.DataType.TimeOnly => typeof(TimeOnly),
+            Proto.Scalar.Types.DataType.DateOnly => typeof(DateOnly),
+            Proto.Scalar.Types.DataType.TimeOnly => typeof(TimeOnly),
 #endif
             _ => null,
         };

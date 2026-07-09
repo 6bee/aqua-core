@@ -40,13 +40,62 @@ message NullValue {
 message Scalar {
   DataType type = 1;
   bytes data = 2;
+  
+  enum DataType {
+    undefined = 0;
+    uint8 = 1;
+    int8 = 2;
+    int16 = 3;
+    uint16 = 4;
+    int32 = 5;
+    uint32 = 6;
+    int64 = 7;
+    uint64 = 8;
+    int128 = 9;
+    uint128 = 10;
+    float16 = 11;
+    float32 = 12;
+    float64 = 13;
+    bool = 14;
+    char = 15;
+    decimal = 16;
+    big_integer = 17;
+//  complex64 = 18;
+    complex128 = 19;
+    uuid = 20;
+    date_time = 21;
+    date_time_offset = 22;
+    time_span = 23;
+    date_only = 24;
+    time_only = 25;
+  }
 }
 
 // A packed 1-D array of a fixed-width blittable primitive. 'data' is the
 // little-endian byte payload; 'element_type' resolves the element type.
 message PackedArray {
-  DataType element_type = 1;
+  ElementType element_type = 1;
   bytes data = 2;
+  
+  // PackedArray.ElementType is a subset of Scalar.DataType
+  enum ElementType {
+    undefined = 0;
+    uint8 = 1;
+    int8 = 2;
+    int16 = 3;
+    uint16 = 4;
+    int32 = 5;
+    uint32 = 6;
+    int64 = 7;
+    uint64 = 8;
+    int128 = 9;
+    uint128 = 10;
+    float16 = 11;
+    float32 = 12;
+    float64 = 13;
+    bool = 14;
+    char = 15;
+  }
 }
 
 // A heterogeneous or null-bearing collection of leaf values.
@@ -117,33 +166,4 @@ message MethodInfo {
   repeated TypeInfo parameter_types = 5;
   // MethodInfo
   TypeInfo return_type = 6;
-}
-
-enum DataType {
-    undefined = 0;
-    uint8 = 1;
-    int8 = 2;
-    int16 = 3;
-    uint16 = 4;
-    int32 = 5;
-    uint32 = 6;
-    int64 = 7;
-    uint64 = 8;
-    int128 = 9;
-    uint128 = 10;
-    float16 = 11;
-    float32 = 12;
-    float64 = 13;
-    big_integer = 14;
-//  complex64 = 15;
-    complex128 = 16;
-    bool = 17;
-    char = 18;
-    decimal = 19;
-    uuid = 20;
-    date_time = 21;
-    date_time_offset = 22;
-    time_span = 23;
-    date_only = 24;
-    time_only = 25;
 }

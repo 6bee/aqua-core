@@ -11,12 +11,13 @@ public static class ProtobufSerializationHelper
     {
         var data = AquaProtobufSerializer.Serialize(graph);
         var copy = AquaProtobufSerializer.Deserialize<T>(data);
+
         return copy;
     }
 
     private static readonly Dictionary<Type, Func<object, object>> _transformers = new()
     {
-        [typeof(DateTime)] = v => ((DateTime)v).ToUniversalTime().ToMicrosecondPrecision(),
+        [typeof(DateTime)] = v => ((DateTime)v).ToMicrosecondPrecision(),
         [typeof(DateTimeOffset)] = v => ((DateTimeOffset)v).ToMicrosecondPrecision(),
         [typeof(TimeSpan)] = v => ((TimeSpan)v).ToMicrosecondPrecision(),
     };

@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Hand-written MessagePack formatter for the Aqua leaf-value union (<see cref="object"/>?).
+/// MessagePack formatter for the Aqua leaf-value union (<see cref="object"/>?).
 /// </summary>
 /// <remarks>
 /// <para>

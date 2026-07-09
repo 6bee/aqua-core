@@ -219,63 +219,6 @@ internal static class AquaScalarCodec
 
     extension(ref MessagePackWriter writer)
     {
-        private void Write(DateTimeOffset value)
-        {
-            Span<byte> buffer = stackalloc byte[15 + 3];
-
-            // We're writing a *local* DateTime value in msgpack encoding as if it were UTC time as is done by MessagePack formater for DateTimeOffset
-            // This does not strictly match the MessagePack spec’s intended timestamp semantics, but preserves both the UTC instant and the original DateTimeOffset offset.
-            MessagePackPrimitives.TryWrite(buffer, new DateTime(value.Ticks, DateTimeKind.Utc), out var size);
-
-            var offsetMinutes = (short)value.Offset.TotalMinutes;
-            switch (offsetMinutes)
-            {
-                case > 0 and <= byte.MaxValue:
-                    {
-                        MessagePackPrimitives.TryWriteUInt8(buffer[size..], (byte)offsetMinutes, out var sizeOffset);
-                        size += sizeOffset;
-                        break;
-                    }
-
-                case >= sbyte.MinValue and <= sbyte.MaxValue:
-                    {
-                        MessagePackPrimitives.TryWriteInt8(buffer[size..], (sbyte)offsetMinutes, out var sizeOffset);
-                        size += sizeOffset;
-                        break;
-                    }
-
-                case not 0:
-                    {
-                        MessagePackPrimitives.TryWriteInt16(buffer[size..], offsetMinutes, out var sizeOffset);
-                        size += sizeOffset;
-                        break;
-                    }
-            }
-
-            writer.WriteExtensionFormatHeader(new(ExtType.DateTimeOffset, size));
-
-            var span = writer.GetSpan(size);
-            buffer.CopyTo(span);
-            writer.Advance(size);
-        }
-
-        private void Write(Complex value)
-        {
-            var size = value.Imaginary == 0 ? 8 : 16;
-            writer.WriteExtensionFormatHeader(new(ExtType.Complex, size));
-
-            var span = writer.GetSpan(size);
-
-            BinaryPrimitives.WriteInt64BigEndian(span, BitConverter.DoubleToInt64Bits(value.Real));
-
-            if (value.Imaginary != 0)
-            {
-                BinaryPrimitives.WriteInt64BigEndian(span[8..], BitConverter.DoubleToInt64Bits(value.Imaginary));
-            }
-
-            writer.Advance(size);
-        }
-
         private void Write(decimal value)
         {
             // Offset  Size   Meaning
@@ -350,6 +293,40 @@ internal static class AquaScalarCodec
                     }
             }
 
+            writer.Advance(size);
+        }
+
+        private void Write(Complex value)
+        {
+            var size = value.Imaginary == 0 ? 8 : 16;
+            writer.WriteExtensionFormatHeader(new(ExtType.Complex, size));
+
+            var span = writer.GetSpan(size);
+
+            BinaryPrimitives.WriteInt64BigEndian(span, BitConverter.DoubleToInt64Bits(value.Real));
+
+            if (value.Imaginary != 0)
+            {
+                BinaryPrimitives.WriteInt64BigEndian(span[8..], BitConverter.DoubleToInt64Bits(value.Imaginary));
+            }
+
+            writer.Advance(size);
+        }
+
+        private void Write(BigInteger value)
+        {
+#if NETSTANDARD2_0
+            var array = value.ToByteArray();
+            var size = array.Length;
+            writer.WriteExtensionFormatHeader(new(ExtType.BigInteger, size));
+            var span = writer.GetSpan(size);
+            array.CopyTo(span);
+#else
+            var size = value.GetByteCount();
+            writer.WriteExtensionFormatHeader(new(ExtType.BigInteger, size));
+            var span = writer.GetSpan(size);
+            _ = value.TryWriteBytes(span, out _);
+#endif // NETSTANDARD2_0
             writer.Advance(size);
         }
 
@@ -432,20 +409,43 @@ internal static class AquaScalarCodec
             writer.Advance(12);
         }
 
-        private void Write(BigInteger value)
+        private void Write(DateTimeOffset value)
         {
-#if NETSTANDARD2_0
-            var array = value.ToByteArray();
-            var size = array.Length;
-            writer.WriteExtensionFormatHeader(new(ExtType.BigInteger, size));
+            Span<byte> buffer = stackalloc byte[15 + 3];
+
+            // We're writing a *local* DateTime value in msgpack encoding as if it were UTC time as is done by MessagePack formater for DateTimeOffset
+            // This does not strictly match the MessagePack spec’s intended timestamp semantics, but preserves both the UTC instant and the original DateTimeOffset offset.
+            MessagePackPrimitives.TryWrite(buffer, new DateTime(value.Ticks, DateTimeKind.Utc), out var size);
+
+            var offsetMinutes = (short)value.Offset.TotalMinutes;
+            switch (offsetMinutes)
+            {
+                case > 0 and <= byte.MaxValue:
+                    {
+                        MessagePackPrimitives.TryWriteUInt8(buffer[size..], (byte)offsetMinutes, out var sizeOffset);
+                        size += sizeOffset;
+                        break;
+                    }
+
+                case >= sbyte.MinValue and <= sbyte.MaxValue:
+                    {
+                        MessagePackPrimitives.TryWriteInt8(buffer[size..], (sbyte)offsetMinutes, out var sizeOffset);
+                        size += sizeOffset;
+                        break;
+                    }
+
+                case not 0:
+                    {
+                        MessagePackPrimitives.TryWriteInt16(buffer[size..], offsetMinutes, out var sizeOffset);
+                        size += sizeOffset;
+                        break;
+                    }
+            }
+
+            writer.WriteExtensionFormatHeader(new(ExtType.DateTimeOffset, size));
+
             var span = writer.GetSpan(size);
-            array.CopyTo(span);
-#else
-            var size = value.GetByteCount();
-            writer.WriteExtensionFormatHeader(new(ExtType.BigInteger, size));
-            var span = writer.GetSpan(size);
-            _ = value.TryWriteBytes(span, out _);
-#endif // NETSTANDARD2_0
+            buffer.CopyTo(span);
             writer.Advance(size);
         }
 
@@ -540,6 +540,182 @@ internal static class AquaScalarCodec
 
     extension(ref MessagePackReader reader)
     {
+        private ReadOnlySequence<byte> ReadExtension(sbyte type, long? size = null)
+        {
+            var ext = reader.ReadExtensionFormat();
+
+            if (ext.TypeCode != type)
+            {
+                throw SerializationException($"Unexpected ext type {ext.TypeCode}");
+            }
+
+            if (size.HasValue && ext.Data.Length != size)
+            {
+                throw InvalidExtSizeException(type, ext.Data.Length);
+            }
+
+            return ext.Data;
+        }
+
+        private decimal ReadDecimal()
+        {
+            // [0] scale (0–28), [1] sign (0=+,1=-), [2-13] big-endian UInt96 magnitude
+            var ext = reader.ReadExtension(ExtType.Decimal);
+            switch (ext.Length)
+            {
+                case 14:
+                    {
+                        Span<byte> span = stackalloc byte[14];
+                        ext.Read(span, "decimal");
+                        byte scale = span[0];
+                        bool sign = span[1] != 0;
+                        int hi = BinaryPrimitives.ReadInt32BigEndian(span[2..6]);
+                        int mid = BinaryPrimitives.ReadInt32BigEndian(span[6..10]);
+                        int lo = BinaryPrimitives.ReadInt32BigEndian(span[10..14]);
+                        return new decimal(lo, mid, hi, sign, scale);
+                    }
+
+                case 10:
+                    {
+                        Span<byte> span = stackalloc byte[10];
+                        ext.Read(span, "decimal");
+                        byte scale = span[0];
+                        bool sign = span[1] != 0;
+                        int mid = BinaryPrimitives.ReadInt32BigEndian(span[2..6]);
+                        int lo = BinaryPrimitives.ReadInt32BigEndian(span[6..10]);
+                        return new decimal(lo, mid, 0, sign, scale);
+                    }
+
+                case 6:
+                    {
+                        Span<byte> span = stackalloc byte[6];
+                        ext.Read(span, "decimal");
+                        byte scale = span[0];
+                        bool sign = span[1] != 0;
+                        int lo = BinaryPrimitives.ReadInt32BigEndian(span[2..6]);
+                        return new decimal(lo, 0, 0, sign, scale);
+                    }
+
+                case 1:
+                    {
+                        Span<byte> span = stackalloc byte[1];
+                        ext.Read(span, "decimal");
+                        if (span[0] != 0)
+                        {
+                            throw SerializationException("Zero value expected");
+                        }
+
+                        return 0m;
+                    }
+
+                default:
+                    throw InvalidExtSizeException(ExtType.TimeSpan, ext.Length);
+            }
+        }
+
+        private BigInteger ReadBigInteger()
+        {
+            var ext = reader.ReadExtension(ExtType.BigInteger);
+            Span<byte> span = ext.Length <= 256
+                ? stackalloc byte[(int)ext.Length]
+                : new byte[ext.Length];
+            ext.Read(span, "bigint");
+#if NETSTANDARD2_0
+            return new BigInteger(span.ToArray());
+#else
+            return new BigInteger(span);
+#endif // NETSTANDARD2_0
+        }
+
+        private Complex ReadComplex()
+        {
+            var ext = reader.ReadExtension(ExtType.Complex);
+            switch (ext.Length)
+            {
+                case 16:
+                    {
+                        Span<byte> span = stackalloc byte[16];
+                        ext.Read(span, "complex");
+                        double real = BitConverter.Int64BitsToDouble(BinaryPrimitives.ReadInt64BigEndian(span));
+                        double imaginary = BitConverter.Int64BitsToDouble(BinaryPrimitives.ReadInt64BigEndian(span[8..]));
+                        return new Complex(real, imaginary);
+                    }
+
+                case 8:
+                    {
+                        Span<byte> span = stackalloc byte[8];
+                        ext.Read(span, "complex");
+                        double real = BitConverter.Int64BitsToDouble(BinaryPrimitives.ReadInt64BigEndian(span));
+                        return new Complex(real, 0);
+                    }
+
+                default:
+                    throw InvalidExtSizeException(ExtType.Complex, ext.Length);
+            }
+        }
+
+        private Guid ReadGuid()
+        {
+            var ext = reader.ReadExtension(ExtType.Guid, 16);
+            Span<byte> span = stackalloc byte[16];
+            ext.Read(span, "guid");
+#if NETSTANDARD2_0
+            var data = span.ToArray();
+            Array.Reverse(data, 0, 4);
+            Array.Reverse(data, 4, 2);
+            Array.Reverse(data, 6, 2);
+            return new Guid(data);
+#else
+            return new Guid(span, true);
+#endif // NETSTANDARD2_0
+        }
+
+        private TimeSpan ReadTimeSpan()
+        {
+            var ext = reader.ReadExtension(ExtType.TimeSpan);
+
+            switch (ext.Length)
+            {
+                // --- milliseconds ---
+                case 4:
+                    {
+                        Span<byte> span = stackalloc byte[4];
+                        ext.Read(span, "milliseconds");
+                        int ms = BinaryPrimitives.ReadInt32BigEndian(span);
+                        return TimeSpan.FromMilliseconds(ms);
+                    }
+
+                // --- nanoseconds ---
+                case 8:
+                    {
+                        Span<byte> span = stackalloc byte[8];
+                        ext.Read(span, "nanoseconds");
+                        long ns = BinaryPrimitives.ReadInt64BigEndian(span);
+                        return TimeSpan.FromTicks(ns / TimeConstants.NanosecondsPerTick);
+                    }
+
+                // --- seconds + nanos ---
+                case 12:
+                    {
+                        Span<byte> span = stackalloc byte[12];
+                        ext.Read(span, "seconds + nanos");
+                        long seconds = BinaryPrimitives.ReadInt64BigEndian(span[..8]);
+                        uint nanos = BinaryPrimitives.ReadUInt32BigEndian(span[8..12]);
+
+                        if (nanos >= TimeConstants.NanosecondsPerSecond)
+                        {
+                            throw SerializationException("Invalid nanoseconds.");
+                        }
+
+                        long ticks = (seconds * TimeSpan.TicksPerSecond) + (nanos / TimeConstants.NanosecondsPerTick);
+                        return TimeSpan.FromTicks(ticks);
+                    }
+
+                default:
+                    throw InvalidExtSizeException(ExtType.TimeSpan, ext.Length);
+            }
+        }
+
         private DateTimeOffset ReadDateTimeOffset()
         {
             var ext = reader.ReadExtension(ExtType.DateTimeOffset);
@@ -599,188 +775,6 @@ internal static class AquaScalarCodec
             }
 
             return new DateTimeOffset(dateTime.Ticks, TimeSpan.FromMinutes(offsetMinutes));
-        }
-
-        private Complex ReadComplex()
-        {
-            var ext = reader.ReadExtension(ExtType.Complex);
-            switch (ext.Length)
-            {
-                case 16:
-                    {
-                        Span<byte> span = stackalloc byte[16];
-                        ext.Read(span, "complex");
-                        double real = BitConverter.Int64BitsToDouble(BinaryPrimitives.ReadInt64BigEndian(span));
-                        double imaginary = BitConverter.Int64BitsToDouble(BinaryPrimitives.ReadInt64BigEndian(span[8..]));
-                        return new Complex(real, imaginary);
-                    }
-
-                case 8:
-                    {
-                        Span<byte> span = stackalloc byte[8];
-                        ext.Read(span, "complex");
-                        double real = BitConverter.Int64BitsToDouble(BinaryPrimitives.ReadInt64BigEndian(span));
-                        return new Complex(real, 0);
-                    }
-
-                default:
-                    throw InvalidExtSizeException(ExtType.Complex, ext.Length);
-            }
-        }
-
-        private decimal ReadDecimal()
-        {
-            // [0] scale (0–28), [1] sign (0=+,1=-), [2-13] big-endian UInt96 magnitude
-            var ext = reader.ReadExtension(ExtType.Decimal);
-            switch (ext.Length)
-            {
-                case 14:
-                    {
-                        Span<byte> span = stackalloc byte[14];
-                        ext.Read(span, "decimal");
-                        byte scale = span[0];
-                        bool sign = span[1] != 0;
-                        int hi = BinaryPrimitives.ReadInt32BigEndian(span[2..6]);
-                        int mid = BinaryPrimitives.ReadInt32BigEndian(span[6..10]);
-                        int lo = BinaryPrimitives.ReadInt32BigEndian(span[10..14]);
-                        return new decimal(lo, mid, hi, sign, scale);
-                    }
-
-                case 10:
-                    {
-                        Span<byte> span = stackalloc byte[10];
-                        ext.Read(span, "decimal");
-                        byte scale = span[0];
-                        bool sign = span[1] != 0;
-                        int mid = BinaryPrimitives.ReadInt32BigEndian(span[2..6]);
-                        int lo = BinaryPrimitives.ReadInt32BigEndian(span[6..10]);
-                        return new decimal(lo, mid, 0, sign, scale);
-                    }
-
-                case 6:
-                    {
-                        Span<byte> span = stackalloc byte[6];
-                        ext.Read(span, "decimal");
-                        byte scale = span[0];
-                        bool sign = span[1] != 0;
-                        int lo = BinaryPrimitives.ReadInt32BigEndian(span[2..6]);
-                        return new decimal(lo, 0, 0, sign, scale);
-                    }
-
-                case 1:
-                    {
-                        Span<byte> span = stackalloc byte[1];
-                        ext.Read(span, "decimal");
-                        if (span[0] != 0)
-                        {
-                            throw SerializationException("Zero value expected");
-                        }
-
-                        return 0m;
-                    }
-
-                default:
-                    throw InvalidExtSizeException(ExtType.TimeSpan, ext.Length);
-            }
-        }
-
-        private Guid ReadGuid()
-        {
-            var ext = reader.ReadExtension(ExtType.Guid, 16);
-            Span<byte> span = stackalloc byte[16];
-            ext.Read(span, "guid");
-#if NETSTANDARD2_0
-            var data = span.ToArray();
-            Array.Reverse(data, 0, 4);
-            Array.Reverse(data, 4, 2);
-            Array.Reverse(data, 6, 2);
-            return new Guid(data);
-#else
-            return new Guid(span, true);
-#endif // NETSTANDARD2_0
-        }
-
-        private ReadOnlySequence<byte> ReadExtension(sbyte type, long? size = null)
-        {
-            var ext = reader.ReadExtensionFormat();
-
-            if (ext.TypeCode != type)
-            {
-                throw SerializationException($"Unexpected ext type {ext.TypeCode}");
-            }
-
-            if (size.HasValue && ext.Data.Length != size)
-            {
-                throw InvalidExtSizeException(type, ext.Data.Length);
-            }
-
-            return ext.Data;
-        }
-
-        private TimeSpan ReadTimeSpan()
-        {
-            var ext = reader.ReadExtension(ExtType.TimeSpan);
-
-            switch (ext.Length)
-            {
-                // --- milliseconds ---
-                case 4:
-                    {
-                        Span<byte> span = stackalloc byte[4];
-                        ext.Read(span, "milliseconds");
-                        int ms = BinaryPrimitives.ReadInt32BigEndian(span);
-                        return TimeSpan.FromMilliseconds(ms);
-                    }
-
-                // --- nanoseconds ---
-                case 8:
-                    {
-                        Span<byte> span = stackalloc byte[8];
-                        ext.Read(span, "nanoseconds");
-                        long ns = BinaryPrimitives.ReadInt64BigEndian(span);
-
-                        if (ns % TimeConstants.NanosecondsPerTick != 0)
-                        {
-                            throw SerializationException("Nanoseconds not representable as TimeSpan.");
-                        }
-
-                        return TimeSpan.FromTicks(ns / TimeConstants.NanosecondsPerTick);
-                    }
-
-                // --- seconds + nanos ---
-                case 12:
-                    {
-                        Span<byte> span = stackalloc byte[12];
-                        ext.Read(span, "seconds + nanos");
-                        long seconds = BinaryPrimitives.ReadInt64BigEndian(span[..8]);
-                        uint nanos = BinaryPrimitives.ReadUInt32BigEndian(span[8..12]);
-
-                        if (nanos >= TimeConstants.NanosecondsPerSecond)
-                        {
-                            throw SerializationException("Invalid nanoseconds.");
-                        }
-
-                        long ticks = (seconds * TimeSpan.TicksPerSecond) + (nanos / TimeConstants.NanosecondsPerTick);
-                        return TimeSpan.FromTicks(ticks);
-                    }
-
-                default:
-                    throw InvalidExtSizeException(ExtType.TimeSpan, ext.Length);
-            }
-        }
-
-        private BigInteger ReadBigInteger()
-        {
-            var ext = reader.ReadExtension(ExtType.BigInteger);
-            Span<byte> span = ext.Length <= 256
-                ? stackalloc byte[(int)ext.Length]
-                : new byte[ext.Length];
-            ext.Read(span, "bigint");
-#if NETSTANDARD2_0
-            return new BigInteger(span.ToArray());
-#else
-            return new BigInteger(span);
-#endif // NETSTANDARD2_0
         }
 
 #if NET5_0_OR_GREATER
@@ -929,6 +923,12 @@ internal static class AquaScalarCodec
 
     extension(ReadOnlySequence<byte> sequence)
     {
+        /// <summary>
+        /// Copy <paramref name="sequence"/> into <paramref name="destination"/>.
+        /// </summary>
+        /// <param name="destination">The span to write to.</param>
+        /// <param name="typeName">The type name to be given in a potential exception message.</param>
+        /// <exception cref="MessagePackSerializationException">Thrown if <paramref name="sequence"/> and <paramref name="destination"/> are not equal in size.</exception>
         private void Read(scoped Span<byte> destination, string typeName)
         {
             if (sequence.Length != destination.Length)
