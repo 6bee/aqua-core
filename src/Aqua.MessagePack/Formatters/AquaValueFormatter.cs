@@ -5,6 +5,8 @@ namespace Aqua.MessagePack.Formatters;
 using Aqua.TypeExtensions;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 
 /// <summary>
 /// MessagePack formatter for the Aqua leaf-value union (<see cref="object"/>?).
@@ -17,10 +19,9 @@ using System.Collections.Generic;
 /// <list type="bullet">
 /// <item><description><c>0</c> Null.</description></item>
 /// <item><description><c>1</c> String.</description></item>
-/// <item><description><c>2</c> Scalar — payload <c>[type_key, bin]</c> where <c>bin</c> is the
-/// scalar encoded via <see cref="AquaScalarCodec"/>.</description></item>
-/// <item><description><c>3</c> PackedArray — payload <c>[element_type_key, bin]</c> (little-endian)
-/// for eligible fixed-width primitive arrays and <c>byte[]</c>.</description></item>
+/// <item><description><c>2</c> Scalar — payload <c>[type_key, msgpack]</c>.</description></item>
+/// <item><description><c>3</c> PackedArray — payload <c>[element_type_key, msgpack]</c>
+/// for eligible fixed-width primitive arrays.</description></item>
 /// <item><description><c>4</c> Collection — payload is a MessagePack array of leaf values
 /// (used for ineligible/null-bearing arrays and lists).</description></item>
 /// <item><description><c>5</c> DynamicObject.</description></item>
@@ -43,29 +44,29 @@ public sealed class AquaValueFormatter : IMessagePackFormatter<object?>
         {
             case null:
                 writer.WriteArrayHeader(1);
-                writer.Write((byte)ValueTag.Null);
+                writer.Write((byte)ValueKind.Null);
                 return;
 
             case string s:
                 writer.WriteArrayHeader(2);
-                writer.Write((byte)ValueTag.String);
+                writer.Write((byte)ValueKind.String);
                 writer.Write(s);
                 return;
 
             case DynamicObject dynamicObject:
-                WriteTagged(ref writer, ValueTag.DynamicObject, dynamicObject, options.Resolver.GetFormatterWithVerify<DynamicObject?>(), options);
+                WriteTagged(ref writer, ValueKind.DynamicObject, dynamicObject, options.Resolver.GetFormatterWithVerify<DynamicObject?>(), options);
                 return;
 
             case PropertySet propertySet:
-                WriteTagged(ref writer, ValueTag.PropertySet, propertySet, options.Resolver.GetFormatterWithVerify<PropertySet?>(), options);
+                WriteTagged(ref writer, ValueKind.PropertySet, propertySet, options.Resolver.GetFormatterWithVerify<PropertySet?>(), options);
                 return;
 
             case Property property:
-                WriteTagged(ref writer, ValueTag.Property, property, options.Resolver.GetFormatterWithVerify<Property?>(), options);
+                WriteTagged(ref writer, ValueKind.Property, property, options.Resolver.GetFormatterWithVerify<Property?>(), options);
                 return;
 
             case TypeInfo typeInfo:
-                WriteTagged(ref writer, ValueTag.TypeInfo, typeInfo, options.Resolver.GetFormatterWithVerify<TypeInfo?>(), options);
+                WriteTagged(ref writer, ValueKind.TypeInfo, typeInfo, options.Resolver.GetFormatterWithVerify<TypeInfo?>(), options);
                 return;
 
             ////case Array array:
@@ -77,7 +78,7 @@ public sealed class AquaValueFormatter : IMessagePackFormatter<object?>
                 return;
 
             default:
-                WriteScalar(ref writer, value);
+                WriteScalar(ref writer, value, options);
                 return;
         }
     }
@@ -99,23 +100,23 @@ public sealed class AquaValueFormatter : IMessagePackFormatter<object?>
                 return null;
             }
 
-            var tag = (ValueTag)reader.ReadByte();
+            var tag = (ValueKind)reader.ReadByte();
             object? result = tag switch
             {
-                ValueTag.Null => null,
-                ValueTag.String => count > 1 ? reader.ReadString() : null,
-                ValueTag.Scalar => ReadScalar(ref reader),
-                ValueTag.PackedArray => throw SerializationException("Packed array are not supported"),
+                ValueKind.Null => null,
+                ValueKind.String => count > 1 ? reader.ReadString() : null,
+                ValueKind.Scalar => ReadScalar(ref reader, options),
+                ValueKind.PackedArray => throw SerializationException("Packed array are not supported"),
                 ////ValueTag.PackedArray => ReadPackedArray(ref reader),
-                ValueTag.Collection => ReadCollection(ref reader, options),
-                ValueTag.DynamicObject => options.Resolver.GetFormatterWithVerify<DynamicObject?>().Deserialize(ref reader, options),
-                ValueTag.Property => options.Resolver.GetFormatterWithVerify<Property?>().Deserialize(ref reader, options),
-                ValueTag.PropertySet => options.Resolver.GetFormatterWithVerify<PropertySet?>().Deserialize(ref reader, options),
-                ValueTag.TypeInfo => options.Resolver.GetFormatterWithVerify<TypeInfo?>().Deserialize(ref reader, options),
+                ValueKind.Collection => ReadCollection(ref reader, options),
+                ValueKind.DynamicObject => options.Resolver.GetFormatterWithVerify<DynamicObject?>().Deserialize(ref reader, options),
+                ValueKind.Property => options.Resolver.GetFormatterWithVerify<Property?>().Deserialize(ref reader, options),
+                ValueKind.PropertySet => options.Resolver.GetFormatterWithVerify<PropertySet?>().Deserialize(ref reader, options),
+                ValueKind.TypeInfo => options.Resolver.GetFormatterWithVerify<TypeInfo?>().Deserialize(ref reader, options),
                 _ => throw SerializationException($"Unknown Aqua value tag '{tag}'."),
             };
 
-            var skip = tag == ValueTag.Null ? 1 : 2;
+            var skip = tag == ValueKind.Null ? 1 : 2;
             for (var i = skip; i < count; i++)
             {
                 reader.Skip();
@@ -129,10 +130,10 @@ public sealed class AquaValueFormatter : IMessagePackFormatter<object?>
         }
     }
 
-    private static void WriteTagged<T>(ref MessagePackWriter writer, ValueTag tag, T value, IMessagePackFormatter<T> formatter, MessagePackSerializerOptions options)
+    private static void WriteTagged<T>(ref MessagePackWriter writer, ValueKind kind, T value, IMessagePackFormatter<T> formatter, MessagePackSerializerOptions options)
     {
         writer.WriteArrayHeader(2);
-        writer.Write((byte)tag);
+        writer.Write((byte)kind);
         formatter.Serialize(ref writer, value, options);
     }
 
@@ -160,7 +161,7 @@ public sealed class AquaValueFormatter : IMessagePackFormatter<object?>
         }
 
         writer.WriteArrayHeader(2);
-        writer.Write((byte)ValueTag.Collection);
+        writer.Write((byte)ValueKind.Collection);
         writer.WriteArrayHeader(buffer.Count);
         foreach (var item in buffer)
         {
@@ -180,24 +181,93 @@ public sealed class AquaValueFormatter : IMessagePackFormatter<object?>
         return result;
     }
 
-    private static void WriteScalar(ref MessagePackWriter writer, object value)
+    private static void WriteScalar(ref MessagePackWriter writer, object value, MessagePackSerializerOptions options)
     {
         var type = value.GetType();
         var dataType = DataType.FromType(type) ?? throw SerializationException($"Value of type {type.GetFriendlyName()} is not supported.");
 
         writer.WriteArrayHeader(2);
-        writer.Write((byte)ValueTag.Scalar);
+        writer.Write((byte)ValueKind.Scalar);
         writer.WriteArrayHeader(2);
         writer.Write((byte)dataType);
-        AquaScalarCodec.Write(ref writer, value);
+        switch (dataType)
+        {
+            case DataType.Bool: writer.Write((bool)value); return;
+            case DataType.UInt8: writer.Write((byte)value); return;
+            case DataType.Int8: writer.Write((sbyte)value); return;
+            case DataType.Int16: writer.Write((short)value); return;
+            case DataType.UInt16: writer.Write((ushort)value); return;
+            case DataType.Int32: writer.Write((int)value); return;
+            case DataType.UInt32: writer.Write((uint)value); return;
+            case DataType.Int64: writer.Write((long)value); return;
+            case DataType.UInt64: writer.Write((ulong)value); return;
+            case DataType.Float32: writer.Write((float)value); return;
+            case DataType.Float64: writer.Write((double)value); return;
+            case DataType.Char: writer.Write((char)value); return;
+            case DataType.Decimal: Serialize<decimal>(ref writer, value, options); return;
+            case DataType.Uuid: Serialize<Guid>(ref writer, value, options); return;
+            case DataType.DateTime: Serialize<DateTime>(ref writer, value, options); return;
+            case DataType.DateTimeOffset: Serialize<DateTimeOffset>(ref writer, value, options); return;
+            case DataType.TimeSpan: Serialize<TimeSpan>(ref writer, value, options); return;
+            case DataType.BigInteger: Serialize<BigInteger>(ref writer, value, options); return;
+            case DataType.Complex128: Serialize<Complex>(ref writer, value, options); return;
+#if NET5_0_OR_GREATER
+            case DataType.Float16: Serialize<Half>(ref writer, value, options); return;
+#endif // NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
+            case DataType.DateOnly: Serialize<DateOnly>(ref writer, value, options); return;
+            case DataType.TimeOnly: Serialize<TimeOnly>(ref writer, value, options); return;
+#endif // NET6_0_OR_GREATER
+#if NET7_0_OR_GREATER
+            case DataType.Int128: Serialize<Int128>(ref writer, value, options); return;
+            case DataType.UInt128: Serialize<UInt128>(ref writer, value, options); return;
+#endif // NET7_0_OR_GREATER
+            default: throw SerializationException($"Value of type {value.GetType().GetFriendlyName()} is not supported.");
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static void Serialize<T>(ref MessagePackWriter writer, object value, MessagePackSerializerOptions options)
+            => options.Resolver.GetFormatterWithVerify<T>().Serialize(ref writer, (T)value, options);
     }
 
-    private static object ReadScalar(ref MessagePackReader reader)
+    private static object ReadScalar(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
         var count = reader.ReadArrayHeader();
         var dataType = (DataType)reader.ReadByte();
-        var type = DataType.ToType(dataType) ?? throw SerializationException($"Unsupported data type {dataType}.");
-        var value = AquaScalarCodec.Read(ref reader, type);
+        object value = dataType switch
+        {
+            DataType.UInt8 => reader.ReadByte(),
+            DataType.Int8 => reader.ReadSByte(),
+            DataType.Int16 => reader.ReadInt16(),
+            DataType.UInt16 => reader.ReadUInt16(),
+            DataType.Int32 => reader.ReadInt32(),
+            DataType.UInt32 => reader.ReadUInt32(),
+            DataType.Int64 => reader.ReadInt64(),
+            DataType.UInt64 => reader.ReadUInt64(),
+#if NET7_0_OR_GREATER
+            DataType.Int128 => Deserialize<Int128>(ref reader, options),
+            DataType.UInt128 => Deserialize<UInt128>(ref reader, options),
+#endif
+#if NET5_0_OR_GREATER
+            DataType.Float16 => Deserialize<Half>(ref reader, options),
+#endif
+            DataType.Float32 => reader.ReadSingle(),
+            DataType.Float64 => reader.ReadDouble(),
+            DataType.Bool => reader.ReadBoolean(),
+            DataType.Char => reader.ReadChar(),
+            DataType.BigInteger => Deserialize<BigInteger>(ref reader, options),
+            DataType.Complex128 => Deserialize<Complex>(ref reader, options),
+            DataType.Decimal => Deserialize<decimal>(ref reader, options),
+            DataType.Uuid => Deserialize<Guid>(ref reader, options),
+            DataType.DateTime => Deserialize<DateTime>(ref reader, options),
+            DataType.DateTimeOffset => Deserialize<DateTimeOffset>(ref reader, options),
+            DataType.TimeSpan => Deserialize<TimeSpan>(ref reader, options),
+#if NET6_0_OR_GREATER
+            DataType.DateOnly => Deserialize<DateOnly>(ref reader, options),
+            DataType.TimeOnly => Deserialize<TimeOnly>(ref reader, options),
+#endif
+            _ => throw SerializationException($"Unsupported data type {dataType}."),
+        };
 
         for (var i = 2; i < count; i++)
         {
@@ -205,6 +275,10 @@ public sealed class AquaValueFormatter : IMessagePackFormatter<object?>
         }
 
         return value;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static T Deserialize<T>(ref MessagePackReader reader, MessagePackSerializerOptions options)
+            => options.Resolver.GetFormatterWithVerify<T>().Deserialize(ref reader, options);
     }
 
     ////private object ReadPackedArray(ref MessagePackReader reader)

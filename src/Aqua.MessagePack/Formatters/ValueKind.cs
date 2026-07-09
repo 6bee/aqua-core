@@ -2,15 +2,15 @@
 
 namespace Aqua.MessagePack.Formatters;
 
-internal enum ValueTag : byte
+internal enum ValueKind : byte
 {
     Null = 1,
     String = 2,
     Scalar = 3,
     PackedArray = 4,
     Collection = 5,
-    DynamicObject = 6,
-    Property = 7,
-    PropertySet = 8,
-    TypeInfo = 9,
+    DynamicObject = 80,
+    Property = 81,
+    PropertySet = 82,
+    TypeInfo = 93,
 }
