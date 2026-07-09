@@ -8,7 +8,8 @@ using Aqua.TypeSystem;
 public abstract class When_serializing_typeinfo_of_dynamicobject
 {
     // XmlSerializer doesn't support circular references
-    // protobuf-net doesn't support circular references
+    // msgpack doesn't support circular references
+    // protobuf doesn't support circular references
 
     public class With_data_contract_serializer() : When_serializing_typeinfo_of_dynamicobject(DataContractSerializationHelper.Clone);
 

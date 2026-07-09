@@ -7,7 +7,8 @@ using Aqua.Dynamic;
 public abstract class When_using_dynamic_object_with_circular_reference
 {
     // XML serialization doesn't support circular references
-    // protobuf-net doesn't support circular references
+    // msgpack doesn't support circular references
+    // protobuf doesn't support circular references
 
     public class With_newtown_json_serializer() : When_using_dynamic_object_with_circular_reference(NewtonsoftJsonSerializationHelper.Clone);
 

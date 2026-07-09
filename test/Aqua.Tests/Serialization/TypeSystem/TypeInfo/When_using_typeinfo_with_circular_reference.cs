@@ -7,7 +7,8 @@ using Aqua.TypeSystem;
 public abstract class When_using_typeinfo_with_circular_reference(Func<TypeInfo, TypeInfo> serialize)
 {
     // XmlSerializer doesn't support circular references
-    // protobuf-net doesn't support circular references
+    // msgpack doesn't support circular references
+    // protobuf doesn't support circular references
 
     public class With_data_contract_serializer() : When_using_typeinfo_with_circular_reference(DataContractSerializationHelper.Clone);
 
