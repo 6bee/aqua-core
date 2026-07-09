@@ -110,7 +110,7 @@ public static class TestData
             true,
             false,
             Guid.Empty,
-            Guid.NewGuid(),
+            Guid.Parse("0c67c9c9-245d-4d5b-ac7e-0803ca118f4c"),
             default(DateTime),
             DateTime.MinValue.ToUniversalTime(),
             DateTime.MaxValue.ToUniversalTime(),
