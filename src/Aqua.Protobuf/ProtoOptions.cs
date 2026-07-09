@@ -2,7 +2,7 @@
 
 namespace Aqua.Protobuf;
 
-public sealed class ProtoOptions
+public sealed record class ProtoOptions
 {
     public DateTimeEncoding DateTimeEncoding { get; init; }
 
