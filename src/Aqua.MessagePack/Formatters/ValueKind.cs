@@ -12,5 +12,5 @@ internal enum ValueKind : byte
     DynamicObject = 80,
     Property = 81,
     PropertySet = 82,
-    TypeInfo = 93,
+    TypeInfo = 83,
 }
