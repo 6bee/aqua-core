@@ -3,8 +3,6 @@
 namespace Aqua.Tests.Dynamic.DynamicObject;
 
 using Aqua.Dynamic;
-
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 public class When_created_based_on_typesystem
