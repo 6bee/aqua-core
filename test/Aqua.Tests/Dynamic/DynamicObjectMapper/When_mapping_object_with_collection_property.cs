@@ -163,7 +163,6 @@ public class When_mapping_object_with_collection_property
     [Fact]
     public void Should_map_multidimensional_int_array_to_int_array()
     {
-#pragma warning disable SA1500 // Braces for multi-line statements should not share line
         var obj = new
         {
             Items = new int[,,]
@@ -182,7 +181,6 @@ public class When_mapping_object_with_collection_property
                 },
             },
         };
-#pragma warning restore SA1500 // Braces for multi-line statements should not share line
 
         var dynamicObject = new DynamicObjectMapper().MapObject(obj);
 

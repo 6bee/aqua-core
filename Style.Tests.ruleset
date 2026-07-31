@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Aqua.Tests" Description=" " ToolsVersion="17.0">
   <Include Path="Style.NoDoc.ruleset" Action="Default" />
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
@@ -48,10 +48,5 @@
     <Rule Id="S4487" Action="Info" />
     <Rule Id="S5773" Action="None" />
     <Rule Id="S6561" Action="None" />
-  </Rules>
-  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
-    <Rule Id="SA1306" Action="Info" />
-    <Rule Id="SA1401" Action="Info" />
-    <Rule Id="SA1512" Action="Info" />
   </Rules>
 </RuleSet>

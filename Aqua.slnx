@@ -13,7 +13,6 @@
     <File Path="Style.NoDoc.ruleset" />
     <File Path="Style.ruleset" />
     <File Path="Style.Tests.ruleset" />
-    <File Path="Stylecop.json" />
     <File Path="xunit.runner.json" />
   </Folder>
   <Folder Name="/src/">

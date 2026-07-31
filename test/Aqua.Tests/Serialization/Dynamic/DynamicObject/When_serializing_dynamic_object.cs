@@ -272,7 +272,6 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
     [Fact]
     public void Three_dimensional_array_of_nullable_int_should_serialize()
     {
-#pragma warning disable SA1500 // Braces for multi-line statements should not share line
         var array = new int?[,,]
         {
             {
@@ -284,7 +283,6 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
                 { null, 4, 1, 1, 1 }, { 1, 4, 1, 1, 1 }, { 11, 4, 1, 1, 1 },
             },
         };
-#pragma warning restore SA1500 // Braces for multi-line statements should not share line
 
         var result = Serialize<int?[,,], int?[]>(array);
         result.Length.ShouldBe(60);

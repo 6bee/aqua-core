@@ -779,7 +779,6 @@ internal static class AquaScalarCodec
     }
 }
 
-#pragma warning disable SA1402 // File may only contain a single type
 #if NETSTANDARD2_0
 file static class BitConverter
 {

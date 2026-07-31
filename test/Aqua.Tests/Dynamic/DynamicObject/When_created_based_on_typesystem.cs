@@ -7,7 +7,6 @@ using Aqua.Dynamic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Public fields required by test scenario")]
 public class When_created_based_on_typesystem
 {
     private const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;

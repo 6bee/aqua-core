@@ -10,9 +10,7 @@ public class When_resolving_hidden_member
 {
     private class TypeHidingBase
     {
-#pragma warning disable SA1401 // Fields should be private
         public string Field = string.Empty;
-#pragma warning restore SA1401 // Fields should be private
 
         public string Property { get; }
 
@@ -24,9 +22,7 @@ public class When_resolving_hidden_member
 
     private class TypeHiding : TypeHidingBase
     {
-#pragma warning disable SA1401 // Fields should be private
         public new string Field = string.Empty;
-#pragma warning restore SA1401 // Fields should be private
 
         public new int Property { get; }
 

@@ -23,9 +23,7 @@ public class When_created_based_on_delegate
     [Fact]
     public void Should_map_action()
     {
-#pragma warning disable SA1130 // Use lambda syntax
         Action a = delegate { };
-#pragma warning restore SA1130 // Use lambda syntax
         var o = new DynamicObject(a);
         var r = new DynamicObjectMapper().Map<Action>(o);
         r();
@@ -37,9 +35,7 @@ public class When_created_based_on_delegate
     [Fact]
     public void Should_map_action2()
     {
-#pragma warning disable SA1130 // Use lambda syntax
         Action<int> a = delegate(int i) { };
-#pragma warning restore SA1130 // Use lambda syntax
         var o = new DynamicObject(a);
         var r = new DynamicObjectMapper().Map<Action<int>>(o);
         r(2);
@@ -51,9 +47,7 @@ public class When_created_based_on_delegate
     [Fact]
     public void Should_map_func()
     {
-#pragma warning disable SA1130 // Use lambda syntax
         Func<int> f = delegate { return 1; };
-#pragma warning restore SA1130 // Use lambda syntax
         var o = new DynamicObject(f);
         var r = new DynamicObjectMapper().Map<Func<int>>(o);
         var x = r();
@@ -63,9 +57,7 @@ public class When_created_based_on_delegate
     [Fact]
     public void Should_map_func2()
     {
-#pragma warning disable SA1130 // Use lambda syntax
         Func<int, int> f = delegate(int i) { return i * i; };
-#pragma warning restore SA1130 // Use lambda syntax
         var o = new DynamicObject(f);
         var r = new DynamicObjectMapper().Map<Func<int, int>>(o);
         var x = r(2);
@@ -75,9 +67,7 @@ public class When_created_based_on_delegate
     [Fact]
     public void Should_map_delegate()
     {
-#pragma warning disable SA1130 // Use lambda syntax
         F0 f = delegate { return 1; };
-#pragma warning restore SA1130 // Use lambda syntax
         var o = new DynamicObject(f);
         var r = new DynamicObjectMapper().Map<F0>(o);
         var x = r();

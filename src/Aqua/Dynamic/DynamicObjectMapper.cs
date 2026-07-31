@@ -936,7 +936,6 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
     /// </summary>
     /// <returns>If overriden in a derived class, returns a list of <see cref="PropertyInfo"/> for a given type or <see langword="null"/> if defaul behaviour should be applied.</returns>
     [SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null", Justification = "Null has special meaning")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:Element parameters should be documented", Justification = "Null has special meaning")]
     protected virtual IEnumerable<PropertyInfo>? GetPropertiesForMapping(Type type) => null;
 
     /// <summary>
@@ -944,7 +943,6 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
     /// </summary>
     /// <returns>If overriden in a derived class, returns a list of <see cref="FieldInfo"/> for a given type or <see langword="null"/> if defaul behaviour should be applied.</returns>
     [SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null", Justification = "Null has special meaning")]
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:Element parameters should be documented", Justification = "Null has special meaning")]
     protected virtual IEnumerable<FieldInfo>? GetFieldsForMapping(Type type) => null;
 
     /// <summary>

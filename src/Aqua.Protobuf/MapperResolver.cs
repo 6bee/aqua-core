@@ -29,9 +29,7 @@ public sealed class MapperResolver : IMapperResolver
 }
 
 #if NETSTANDARD2_0
-#pragma warning disable SA1402 // File may only contain a single type
 file static class Pilyfill
-#pragma warning restore SA1402 // File may only contain a single type
 {
     extension<TKey, TValue>(IDictionary<TKey, TValue> dictionary)
     {

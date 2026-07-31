@@ -21,9 +21,7 @@ internal sealed class OptimizedMapperResolver(IMapperResolver resolver) : IMappe
     private static class Cache<T>
     {
 #pragma warning disable S2223 // Non-constant static fields should not be visible
-#pragma warning disable SA1401 // Fields should be private
         public static IProtoMapper<T>? Mapper;
-#pragma warning restore SA1401 // Fields should be private
 #pragma warning restore S2223 // Non-constant static fields should not be visible
     }
 }

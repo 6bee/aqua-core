@@ -126,7 +126,6 @@ public static class TypeExtensions
     /// <param name="type">The type to be examined.</param>
     /// <param name="interfaceType">The actualy type to be checked for.</param>
     /// <param name="genericTypeArguments">Out parameter with array of generic argument types, in case <paramref name="interfaceType"/> is an open generic type.</param>
-    [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1011:Closing square brackets should be spaced correctly", Justification = "False positive")]
     public static bool Implements(this Type type, Type interfaceType, [NotNullWhen(true)] out Type[]? genericTypeArguments)
     {
         type.AssertNotNull();
