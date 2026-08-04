@@ -3,7 +3,7 @@
 namespace Aqua.MessagePack.Formatters;
 
 /// <summary>
-/// Hand-written MessagePack formatter for <see cref="DynamicObject"/>.
+/// MessagePack formatter for <see cref="DynamicObject"/>.
 /// </summary>
 /// <remarks>
 /// Encodes as a fixed-length array <c>[Type, Properties]</c> matching the declared
@@ -13,47 +13,39 @@ namespace Aqua.MessagePack.Formatters;
 /// </remarks>
 public sealed class DynamicObjectFormatter : IMessagePackFormatter<DynamicObject?>
 {
+    /// <summary>
+    /// Gets the singleton instance of the <see cref="DynamicObjectFormatter"/>.
+    /// </summary>
+    public static readonly DynamicObjectFormatter Instance = new();
+
     private const int FieldCount = 2;
 
     /// <inheritdoc/>
     public void Serialize(ref MessagePackWriter writer, DynamicObject? value, MessagePackSerializerOptions options)
     {
-        if (value is null)
-        {
-            writer.WriteNil();
-            return;
-        }
+        writer.SerializeReferenceValue(FieldCount, value, options, SerializeMembers);
 
-        writer.WriteArrayHeader(FieldCount);
-        options.Resolver.GetFormatterWithVerify<TypeInfo?>().Serialize(ref writer, value.Type, options);
-        options.Resolver.GetFormatterWithVerify<PropertySet?>().Serialize(ref writer, value.Properties, options);
+        static void SerializeMembers(ref MessagePackWriter writer, DynamicObject value, MessagePackSerializerOptions options)
+        {
+            TypeInfoFormatter.Instance.Serialize(ref writer, value.Type, options);
+            PropertySetFormatter.Instance.Serialize(ref writer, value.Properties, options);
+        }
     }
 
     /// <inheritdoc/>
     public DynamicObject? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
-        if (reader.TryReadNil())
-        {
-            return null;
-        }
+        return reader.DeserializeReferenceValue<DynamicObject>(options, DeserializeMembers);
 
-        options.Security.DepthStep(ref reader);
-        try
+        static void DeserializeMembers(ref MessagePackReader reader, uint fieldCount, DynamicObject value, MessagePackSerializerOptions options)
         {
-            var count = reader.ReadArrayHeader();
-            var type = count > 0 ? options.Resolver.GetFormatterWithVerify<TypeInfo?>().Deserialize(ref reader, options) : null;
-            var properties = count > 1 ? options.Resolver.GetFormatterWithVerify<PropertySet?>().Deserialize(ref reader, options) : null;
+            value.Type = fieldCount > 0 ? TypeInfoFormatter.Instance.Deserialize(ref reader, options) : null;
+            value.Properties = fieldCount > 1 ? PropertySetFormatter.Instance.Deserialize(ref reader, options) : null;
 
-            for (var i = FieldCount; i < count; i++)
+            for (var i = FieldCount; i < fieldCount; i++)
             {
                 reader.Skip();
             }
-
-            return new DynamicObject(type, properties);
-        }
-        finally
-        {
-            reader.Depth--;
         }
     }
 }

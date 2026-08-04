@@ -6,33 +6,30 @@ syntax = "proto3";
 
 package aqua;
 
+import "google/protobuf/struct.proto";
+
 option csharp_namespace = "Aqua.Protobuf.Schema";
 
 // Self-describing, type-safe representation of an Aqua leaf-value union.
 message Value {
   oneof kind {
-    NullValue null = 1;
+    google.protobuf.NullValue null = 1;
     string string = 2;
     Scalar scalar = 3;
     PackedArray packed_array = 4;
     Collection collection = 5;
-    // Tensor tensor = 6
+    // Tensor tensor = 6;
 
     // dynamic
     DynamicObject dynamic_object = 80;
 
     // type system
-    TypeInfo type_info = 81;
-    MemberInfo member_info = 82;
-    PropertyInfo property_info = 83;
-    FieldInfo field_info = 84;
-    ConstructorInfo constructor_info = 85;
-    MethodInfo method_info = 86;
+    TypeInfo type_info = 90;
+    FieldInfo field_info = 91;
+    PropertyInfo property_info = 92;
+    ConstructorInfo constructor_info = 93;
+    MethodInfo method_info = 94;
   }
-}
-
-// Explicit null marker so a null leaf round-trips distinctly from an unset value.
-message NullValue {
 }
 
 // A registry-backed scalar leaf. 'data' is the deterministic little-endian
@@ -103,67 +100,127 @@ message Collection {
   repeated Value items = 1;
 }
 
-// 'has_properties' distinguishes a null property set (IsNull) from an empty one.
 message DynamicObject {
-  TypeInfo type = 1;
-  bool has_properties = 2;
-  map<string, Value> properties = 3;
+  oneof node {
+    google.protobuf.NullValue null = 1;
+    DynamicObjectValue value = 2;
+    Ref ref = 3;
+  }
+}
+
+// 'has_properties' distinguishes a null property set (IsNull) from an empty one.
+message DynamicObjectValue {
+  uint32 id = 1;
+  TypeInfo type = 2;
+  bool has_properties = 3;
+  map<string, Value> properties = 4;
 }
 
 message TypeInfo {
-  optional string name = 1;
-  optional string namespace = 2;
-  TypeInfo declaring_type = 3;
-  repeated TypeInfo generic_arguments = 4;
-  bool is_anonymous_type = 5;
-  bool is_generic_type = 6;
-  repeated PropertyInfo properties = 7;
+  oneof node {
+    google.protobuf.NullValue null = 1;
+    TypeInfoValue value = 2;
+    Ref ref = 3;
+  }
+}
+
+message TypeInfoValue {
+  uint32 id = 1;
+  optional string name = 2;
+  optional string namespace = 3;
+  TypeInfo declaring_type = 4;
+  repeated TypeInfo generic_arguments = 5;
+  bool is_anonymous_type = 6;
+  bool is_generic_type = 7;
+  repeated PropertyInfo properties = 8;
 }
 
 message MemberInfo {
   oneof kind {
-    PropertyInfo property = 1;
+    google.protobuf.NullValue null = 1;
     FieldInfo field = 2;
-    ConstructorInfo constructor = 3;
-    MethodInfo method = 4;
+    PropertyInfo property = 3;
+    ConstructorInfo constructor = 4;
+    MethodInfo method = 5;
+    Ref ref = 6;
   }
 }
 
 message PropertyInfo {
+  oneof node {
+    google.protobuf.NullValue null = 1;
+    PropertyInfoValue value = 2;
+    Ref ref = 3;
+  }
+}
+
+message PropertyInfoValue {
+  uint32 id = 1;
   // MemberInfo
-  string name = 1;
-  TypeInfo declaring_type = 2;
-  optional bool is_static = 3;
+  string name = 2;
+  TypeInfo declaring_type = 3;
+  optional bool is_static = 4;
   // PropertyInfo
-  TypeInfo property_type = 4;
+  TypeInfo property_type = 5;
 }
 
 message FieldInfo {
+  oneof node {
+    google.protobuf.NullValue null = 1;
+    FieldInfoValue value = 2;
+    Ref ref = 3;
+  }
+}
+
+message FieldInfoValue {
+  uint32 id = 1;
   // MemberInfo
-  string name = 1;
-  TypeInfo declaring_type = 2;
-  optional bool is_static = 3;
+  string name = 2;
+  TypeInfo declaring_type = 3;
+  optional bool is_static = 4;
   // FieldInfo
 }
 
 message ConstructorInfo {
+  oneof node {
+    google.protobuf.NullValue null = 1;
+    ConstructorInfoValue value = 2;
+    Ref ref = 3;
+  }
+}
+
+message ConstructorInfoValue {
+  uint32 id = 1;
   // MemberInfo
-  string name = 1;
-  TypeInfo declaring_type = 2;
-  optional bool is_static = 3;
+  string name = 2;
+  TypeInfo declaring_type = 3;
+  optional bool is_static = 4;
   // MethodBaseInfo
-  repeated TypeInfo generic_argument_types = 4;
-  repeated TypeInfo parameter_types = 5;
+  repeated TypeInfo generic_argument_types = 5;
+  repeated TypeInfo parameter_types = 6;
 }
 
 message MethodInfo {
+  oneof node {
+    google.protobuf.NullValue null = 1;
+    MethodInfoValue value = 2;
+    Ref ref = 3;
+  }
+}
+
+message MethodInfoValue {
+  uint32 id = 1;
   // MemberInfo
-  string name = 1;
-  TypeInfo declaring_type = 2;
-  optional bool is_static = 3;
+  string name = 2;
+  TypeInfo declaring_type = 3;
+  optional bool is_static = 4;
   // MethodBaseInfo
-  repeated TypeInfo generic_argument_types = 4;
-  repeated TypeInfo parameter_types = 5;
+  repeated TypeInfo generic_argument_types = 5;
+  repeated TypeInfo parameter_types = 6;
   // MethodInfo
-  TypeInfo return_type = 6;
+  TypeInfo return_type = 7;
+}
+
+message Ref {
+  uint32 id = 1;
 }

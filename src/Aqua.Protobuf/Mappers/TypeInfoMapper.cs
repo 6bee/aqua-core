@@ -3,6 +3,7 @@
 namespace Aqua.Protobuf.Mappers;
 
 using Aqua.TypeSystem;
+using static Aqua.Protobuf.Schema.TypeInfo;
 using Proto = Aqua.Protobuf.Schema;
 
 public sealed class TypeInfoMapper : ProtoMapper<TypeInfo, Proto.TypeInfo>
@@ -10,42 +11,55 @@ public sealed class TypeInfoMapper : ProtoMapper<TypeInfo, Proto.TypeInfo>
     public static readonly TypeInfoMapper Instance = new();
 
     public override TypeInfo FromProto(Proto.TypeInfo proto, ProtoContext context)
-        => proto is null ? null! : new()
+    {
+        return proto?.NodeCase switch
         {
-            Name = proto.Name.Length == 0 ? null : proto.Name,
-            Namespace = proto.Namespace.Length == 0 ? null : proto.Namespace,
-            DeclaringType = FromProto(proto.DeclaringType, context),
-            IsAnonymousType = proto.IsAnonymousType,
-            IsGenericType = proto.IsGenericType,
-            GenericArguments = this.FromProto(proto.GenericArguments, context).ToListOrNull(),
-            Properties = PropertyInfoMapper.Instance.FromProto(proto.Properties, context).ToListOrNull(),
+            null or
+            NodeOneofCase.Null => null!,
+            NodeOneofCase.Value => context.Resolve<TypeInfo, Proto.TypeInfoValue>(proto.Value, FromProto),
+            NodeOneofCase.Ref => context.Resolve<TypeInfo>(proto.Ref),
+            _ => throw new NotSupportedException($"{proto.NodeCase} is not supported"),
         };
+
+        static void FromProto(TypeInfo value, Proto.TypeInfoValue proto, ProtoContext context)
+        {
+            value.Name = proto.Name.Length == 0 ? null : proto.Name;
+            value.Namespace = proto.Namespace.Length == 0 ? null : proto.Namespace;
+            value.IsAnonymousType = proto.IsAnonymousType;
+            value.IsGenericType = proto.IsGenericType;
+            value.DeclaringType = TypeInfoMapper.Instance.FromProto(proto.DeclaringType, context);
+            value.GenericArguments = TypeInfoMapper.Instance.FromProto(proto.GenericArguments, context).ToListOrNull();
+            value.Properties = PropertyInfoMapper.Instance.FromProto(proto.Properties, context).ToListOrNull();
+        }
+    }
 
     public override Proto.TypeInfo ToProto(TypeInfo value, ProtoContext context)
     {
         if (value is null)
         {
-            return null!;
+            return new() { Null = Google.Protobuf.WellKnownTypes.NullValue.NullValue };
         }
 
-        var result = new Proto.TypeInfo
-        {
-            DeclaringType = ToProto(value.DeclaringType!, context),
-            IsAnonymousType = value.IsAnonymousType,
-            IsGenericType = value.IsGenericType,
-        };
-        if (value.Name?.Length > 0)
-        {
-            result.Name = value.Name;
-        }
+        return context.ToReferenceProto<Proto.TypeInfo, Proto.TypeInfoValue, TypeInfo>(value, ToProto);
 
-        if (value.Namespace?.Length > 0)
+        static void ToProto(Proto.TypeInfoValue proto, TypeInfo value, ProtoContext context)
         {
-            result.Namespace = value.Namespace;
-        }
+            if (value.Name?.Length > 0)
+            {
+                proto.Name = value.Name;
+            }
 
-        this.ToProto(result.GenericArguments, value.GenericArguments, context);
-        PropertyInfoMapper.Instance.ToProto(result.Properties, value.Properties, context);
-        return result;
+            if (value.Namespace?.Length > 0)
+            {
+                proto.Namespace = value.Namespace;
+            }
+
+            proto.IsAnonymousType = value.IsAnonymousType;
+            proto.IsGenericType = value.IsGenericType;
+
+            proto.DeclaringType = TypeInfoMapper.Instance.ToProto(value.DeclaringType!, context);
+            TypeInfoMapper.Instance.ToProto(proto.GenericArguments, value.GenericArguments, context);
+            PropertyInfoMapper.Instance.ToProto(proto.Properties, value.Properties, context);
+        }
     }
 }

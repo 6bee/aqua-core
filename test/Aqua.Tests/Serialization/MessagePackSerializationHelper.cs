@@ -9,7 +9,9 @@ public static class MessagePackSerializationHelper
 {
     public static T Clone<T>(this T graph)
     {
-        var options = MessagePackSerializerOptions.Standard.ConfigureAqua();
+        var options = MessagePackSerializerOptions.Standard
+            .ConfigureAqua()
+            .WithPreserveReferences();
 
         using var stream = new MemoryStream();
         MessagePackSerializer.Serialize(stream, graph, options);

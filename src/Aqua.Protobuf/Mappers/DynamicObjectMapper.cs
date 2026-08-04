@@ -4,6 +4,7 @@ namespace Aqua.Protobuf.Mappers;
 
 using Aqua.Dynamic;
 using Google.Protobuf.Collections;
+using static Aqua.Protobuf.Schema.DynamicObject;
 using Proto = Aqua.Protobuf.Schema;
 
 public sealed class DynamicObjectMapper : ProtoMapper<DynamicObject, Proto.DynamicObject>
@@ -12,48 +13,50 @@ public sealed class DynamicObjectMapper : ProtoMapper<DynamicObject, Proto.Dynam
 
     public override DynamicObject FromProto(Proto.DynamicObject proto, ProtoContext context)
     {
-        if (proto is null)
+        return proto?.NodeCase switch
         {
-            return null!;
-        }
+            null or
+            NodeOneofCase.Null => null!,
+            NodeOneofCase.Value => context.Resolve<DynamicObject, Proto.DynamicObjectValue>(proto.Value, FromProto),
+            NodeOneofCase.Ref => context.Resolve<DynamicObject>(proto.Ref),
+            _ => throw new NotSupportedException($"{proto.NodeCase} is not supported"),
+        };
 
-        var type = TypeInfoMapper.Instance.FromProto(proto.Type, context);
-        var properties = proto.HasProperties ? FromPropertySet(proto.Properties, context) : null;
-        return new DynamicObject(type, properties);
+        static void FromProto(DynamicObject value, Proto.DynamicObjectValue proto, ProtoContext context)
+        {
+            value.Type = TypeInfoMapper.Instance.FromProto(proto.Type, context);
+            value.Properties = proto.HasProperties ? FromPropertySet(proto.Properties, context) : null;
+
+            static PropertySet FromPropertySet(MapField<string, Proto.Value> value, ProtoContext context)
+            {
+                var properties = new List<Property>(value.Count);
+                foreach (var item in value)
+                {
+                    properties.Add(new(item.Key, ValueMapper.Instance.FromProto(item.Value, context)));
+                }
+
+                return new(properties);
+            }
+        }
     }
 
     public override Proto.DynamicObject ToProto(DynamicObject value, ProtoContext context)
     {
-        if (value is null)
-        {
-            return null!;
-        }
+        return context.ToReferenceProto<Proto.DynamicObject,Proto.DynamicObjectValue,  DynamicObject>(value, ToProto);
 
-        var result = new Proto.DynamicObject
+        static void ToProto(Proto.DynamicObjectValue proto, DynamicObject value, ProtoContext context)
         {
-            Type = TypeInfoMapper.Instance.ToProto(value.Type!, context),
-            HasProperties = value.Properties is not null,
-        };
+            proto.Type = TypeInfoMapper.Instance.ToProto(value.Type!, context);
 
-        if (value.Properties is { } properties)
-        {
-            foreach (var property in properties)
+            proto.HasProperties = value.Properties is not null;
+
+            if (value.Properties is { } properties)
             {
-                result.Properties.Add(property.Name, ValueMapper.Instance.ToProto(property.Value, context));
+                foreach (var property in properties)
+                {
+                    proto.Properties.Add(property.Name, ValueMapper.Instance.ToProto(property.Value, context));
+                }
             }
         }
-
-        return result;
-    }
-
-    private static PropertySet FromPropertySet(MapField<string, Proto.Value> value, ProtoContext context)
-    {
-        var properties = new List<Property>(value.Count);
-        foreach (var item in value)
-        {
-            properties.Add(new(item.Key, ValueMapper.Instance.FromProto(item.Value, context)));
-        }
-
-        return new(properties);
     }
 }

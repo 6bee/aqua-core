@@ -9,6 +9,7 @@ using System.Buffers;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using Proto = Aqua.Protobuf.Schema;
+using NullValue = Google.Protobuf.WellKnownTypes.NullValue;
 
 public class ValueMapper : ProtoMapper<object?, Proto.Value>
 {
@@ -26,7 +27,6 @@ public class ValueMapper : ProtoMapper<object?, Proto.Value>
             Proto.Value.KindOneofCase.DynamicObject => DynamicObjectMapper.Instance.FromProto(proto.DynamicObject, context),
 
             Proto.Value.KindOneofCase.TypeInfo => TypeInfoMapper.Instance.FromProto(proto.TypeInfo, context),
-            Proto.Value.KindOneofCase.MemberInfo => MemberInfoMapper.Instance.FromProto(proto.MemberInfo, context),
             Proto.Value.KindOneofCase.PropertyInfo => PropertyInfoMapper.Instance.FromProto(proto.PropertyInfo, context),
             Proto.Value.KindOneofCase.FieldInfo => FieldInfoMapper.Instance.FromProto(proto.FieldInfo, context),
             Proto.Value.KindOneofCase.ConstructorInfo => ConstructorInfoMapper.Instance.FromProto(proto.ConstructorInfo, context),
@@ -38,7 +38,7 @@ public class ValueMapper : ProtoMapper<object?, Proto.Value>
     public override Proto.Value ToProto(object? value, ProtoContext context)
         => value switch
         {
-            null => new() { Null = new Proto.NullValue() },
+            null => new() { Null = NullValue.NullValue },
             string s => new() { String = s },
             Array array => FromArray(array, context),
             IEnumerable enumerable when value is not IFormattable => new() { Collection = ToCollection(enumerable, context) },
@@ -50,7 +50,6 @@ public class ValueMapper : ProtoMapper<object?, Proto.Value>
             FieldInfo fieldInfo => new() { FieldInfo = FieldInfoMapper.Instance.ToProto(fieldInfo, context) },
             ConstructorInfo constructorInfo => new() { ConstructorInfo = ConstructorInfoMapper.Instance.ToProto(constructorInfo, context) },
             MethodInfo methodInfo => new() { MethodInfo = MethodInfoMapper.Instance.ToProto(methodInfo, context) },
-            MemberInfo memberInfo => new() { MemberInfo = MemberInfoMapper.Instance.ToProto(memberInfo, context) },
 
             _ => FromScalarValue(value, context.Options),
         };
@@ -158,9 +157,9 @@ public class ValueMapper : ProtoMapper<object?, Proto.Value>
     {
         var result = this.FromProto(collection.Items, context);
 
-        if (result.Length > 0 && Array.TrueForAll(result, static x => x is DynamicObject))
+        if (result.Length > 0 && Array.TrueForAll(result, static x => x is null or DynamicObject) /*&& !Array.TrueForAll(result, static x => x is null)*/)
         {
-            return result.OfType<DynamicObject>().ToArray();
+            return result.Cast<DynamicObject>().ToArray();
         }
 
         return result;

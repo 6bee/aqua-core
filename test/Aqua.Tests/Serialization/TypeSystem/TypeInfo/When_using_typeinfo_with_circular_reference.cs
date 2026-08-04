@@ -7,14 +7,16 @@ using Aqua.TypeSystem;
 public abstract class When_using_typeinfo_with_circular_reference(Func<TypeInfo, TypeInfo> serialize)
 {
     // XmlSerializer doesn't support circular references
-    // msgpack doesn't support circular references
-    // protobuf doesn't support circular references
 
     public class With_data_contract_serializer() : When_using_typeinfo_with_circular_reference(DataContractSerializationHelper.Clone);
 
     public class With_newtown_json_serializer() : When_using_typeinfo_with_circular_reference(NewtonsoftJsonSerializationHelper.Clone);
 
     public class With_system_text_json_serializer() : When_using_typeinfo_with_circular_reference(SystemTextJsonSerializationHelper.Clone);
+
+    public class With_messagepack_serializer() : When_using_typeinfo_with_circular_reference(MessagePackSerializationHelper.Clone);
+
+    public class With_protobuf_serializer() : When_using_typeinfo_with_circular_reference(ProtobufSerializationHelper.Clone);
 
 #if NETFRAMEWORK
     public class With_binary_formatter() : When_using_typeinfo_with_circular_reference(BinarySerializationHelper.Clone);

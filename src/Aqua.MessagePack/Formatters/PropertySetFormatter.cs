@@ -3,13 +3,13 @@
 namespace Aqua.MessagePack.Formatters;
 
 /// <summary>
-/// Hand-written MessagePack formatter for <see cref="PropertySet"/>.
+/// MessagePack formatter for <see cref="PropertySet"/>.
 /// </summary>
 /// <remarks>
 /// Encodes as a MessagePack array of <see cref="Property"/> values. A <see langword="null"/>
 /// property set is written as <c>nil</c>.
 /// </remarks>
-public sealed class PropertySetFormatter : IMessagePackFormatter<PropertySet?>
+internal sealed class PropertySetFormatter : IMessagePackFormatter<PropertySet?>
 {
     /// <summary>
     /// Gets the singleton instance of the <see cref="PropertySetFormatter"/>.
@@ -25,11 +25,11 @@ public sealed class PropertySetFormatter : IMessagePackFormatter<PropertySet?>
             return;
         }
 
-        var propertyFormatter = options.Resolver.GetFormatterWithVerify<Property?>();
         writer.WriteArrayHeader(value.Count);
+
         foreach (var property in value)
         {
-            propertyFormatter.Serialize(ref writer, property, options);
+            PropertyFormatter.Instance.Serialize(ref writer, property, options);
         }
     }
 
@@ -44,12 +44,12 @@ public sealed class PropertySetFormatter : IMessagePackFormatter<PropertySet?>
         options.Security.DepthStep(ref reader);
         try
         {
-            var propertyFormatter = options.Resolver.GetFormatterWithVerify<Property?>();
             var count = reader.ReadArrayHeader();
+
             var properties = new List<Property>(count);
             for (var i = 0; i < count; i++)
             {
-                var property = propertyFormatter.Deserialize(ref reader, options);
+                var property = PropertyFormatter.Instance.Deserialize(ref reader, options);
                 if (property is not null)
                 {
                     properties.Add(property);

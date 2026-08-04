@@ -3,10 +3,12 @@
 namespace Aqua.Protobuf;
 
 using Aqua.Protobuf.Mappers;
+using Aqua.Protobuf.Schema;
 using Aqua.TypeExtensions;
 using System.Buffers;
 using System.ComponentModel;
 using System.IO;
+using NullValue = Google.Protobuf.WellKnownTypes.NullValue;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class ProtoContextExtensions
@@ -65,6 +67,14 @@ public static class ProtoContextExtensions
         }
 
         /// <summary>
+        /// Serializes <typeparamref name="T"/> to the given <paramref name="stream"/>.
+        /// </summary>
+        public void Serialize<T>(T value, Stream stream)
+        {
+            context.ToProto(value).WriteTo(stream);
+        }
+
+        /// <summary>
         /// Deserializes <typeparamref name="T"/> from the given <paramref name="data"/>.
         /// </summary>
         public T Deserialize<T>(byte[] data)
@@ -110,6 +120,76 @@ public static class ProtoContextExtensions
             var parser = mapper.GetMessageParser();
             var message = parser.ParseFrom(stream);
             return mapper.FromProto(message, context);
+        }
+
+        /// <summary>
+        /// Creates a value proto and a reference proto type for the specified <paramref name="value"/> or,
+        /// if <see cref="ReferenceHandler.Preserve"/> and the value can be substituted, creates a reference proto with the reference proto set instead of the value.
+        /// </summary>
+        /// <typeparam name="TReferenceProto">The reference proto type to be returned.</typeparam>
+        /// <typeparam name="TProto">The value proto type that carries to values payload.</typeparam>
+        /// <typeparam name="T">The reference value type.</typeparam>
+        /// <param name="value">The reference value to be written to proto data.</param>
+        /// <param name="set">The callback for populating the value proto payload.</param>
+        /// <returns>The reference proto.</returns>
+        public TReferenceProto ToReferenceProto<TReferenceProto, TProto, T>(T value, Action<TProto, T, ProtoContext> set)
+            where TReferenceProto : class, IReferenceProto<TProto>, new()
+            where TProto : class, IHaveId, new()
+            where T : class
+        {
+            if (value is null)
+            {
+                return new() { Null = NullValue.NullValue };
+            }
+
+            var tracker = context.SerializationTracker;
+            using (tracker.Scope())
+            {
+                if (tracker.TryRegister(value, out var id))
+                {
+                    // write value
+                    var proto = new TProto { Id = id };
+                    set(proto, value, context);
+                    return new() { Value = proto };
+                }
+
+                if (tracker.ReferenceHandler is ReferenceHandler.Preserve)
+                {
+                    // write reference
+                    return new() { Ref = new() { Id = id } };
+                }
+
+                // ignore cycle
+                return null!;
+            }
+        }
+
+        /// <summary>
+        /// Resolves a reference proto.
+        /// </summary>
+        /// <typeparam name="T">The reference type to be resolved.</typeparam>
+        /// <param name="reference">The reference proto to be resolved.</param>
+        /// <returns>The reference value that was resolved.</returns>
+        public T Resolve<T>(Ref reference)
+            where T : class
+            => context.DeserializationTracker.Resolve<T>(reference.Id);
+
+        /// <summary>
+        /// Resolves a reference value from a value proto.
+        /// </summary>
+        /// <typeparam name="T">The reference type to be resolved.</typeparam>
+        /// <typeparam name="TProto">The value proto tye.</typeparam>
+        /// <param name="proto">The value proto to be read from</param>
+        /// <param name="set">The callback action to populate the reference value payload from the value proto.</param>
+        /// <returns>The resolved reference value.</returns>
+        public T Resolve<T, TProto>(TProto proto, Action<T, TProto, ProtoContext> set)
+            where T : class, new()
+            where TProto : class, IHaveId
+        {
+            var value = new T();
+            context.DeserializationTracker.Register(value, proto.Id);
+            set(value, proto, context);
+            return value;
         }
     }
 

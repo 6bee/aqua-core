@@ -29,7 +29,7 @@ public sealed class MapperResolver : IMapperResolver
 }
 
 #if NETSTANDARD2_0
-file static class Pilyfill
+file static class Polyfill
 {
     extension<TKey, TValue>(IDictionary<TKey, TValue> dictionary)
     {

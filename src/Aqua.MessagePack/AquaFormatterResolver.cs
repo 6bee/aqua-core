@@ -11,18 +11,21 @@ using global::MessagePack.Resolvers;
 /// <see cref="PropertySet"/>, <see cref="TypeInfo"/>, and the leaf-value union), falling back to
 /// <see cref="StandardResolver"/> for all other types.
 /// </summary>
-public sealed class AquaFormatterResolver : IFormatterResolver
+public sealed class AquaFormatterResolver(IFormatterResolver? fallback = null) : IFormatterResolver
 {
     public static readonly AquaFormatterResolver Instance = new();
 
-    private readonly Dictionary<Type, object> _formatters = new()
+    private readonly IFormatterResolver _fallback = fallback ?? StandardResolver.Instance;
+
+    private readonly static Dictionary<Type, object> _formatters = new()
     {
         [typeof(object)] = AquaValueFormatter.Instance,
-        [typeof(DynamicObject)] = new DynamicObjectFormatter(),
-        [typeof(Property)] = new PropertyFormatter(),
-        [typeof(PropertySet)] = PropertySetFormatter.Instance,
+        [typeof(DynamicObject)] = DynamicObjectFormatter.Instance,
         [typeof(TypeInfo)] = TypeInfoFormatter.Instance,
+        [typeof(FieldInfo)] = FieldInfoFormatter.Instance,
         [typeof(PropertyInfo)] = PropertyInfoFormatter.Instance,
+        [typeof(ConstructorInfo)] = ConstructorInfoFormatter.Instance,
+        [typeof(MethodInfo)] = MethodInfoFormatter.Instance,
     };
 
     /// <inheritdoc/>
@@ -33,6 +36,6 @@ public sealed class AquaFormatterResolver : IFormatterResolver
             return (IMessagePackFormatter<T>)formatter;
         }
 
-        return StandardResolver.Instance.GetFormatter<T>();
+        return _fallback.GetFormatter<T>();
     }
 }

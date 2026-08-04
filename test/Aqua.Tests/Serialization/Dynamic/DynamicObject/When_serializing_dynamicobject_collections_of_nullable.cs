@@ -14,9 +14,9 @@ public abstract class When_serializing_dynamicobject_collections_of_nullable(Fun
 
     public class With_system_text_json_serializer() : When_serializing_dynamicobject_collections_of_nullable(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_serializing_dynamicobject_collections_of_notnullable(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_serializing_dynamicobject_collections_of_nullable(MessagePackSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_serializing_dynamicobject_collections_of_notnullable(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_serializing_dynamicobject_collections_of_nullable(ProtobufSerializationHelper.Clone);
 
     public class With_xml_serializer() : When_serializing_dynamicobject_collections_of_nullable(x => XmlSerializationHelper.Serialize(x.ToArray()));
 

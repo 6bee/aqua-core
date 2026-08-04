@@ -14,9 +14,9 @@ public abstract class When_using_dynamic_object_for_object_with_polymorphism
 
     public class With_system_text_json_serializer() : When_using_dynamic_object_for_object_with_polymorphism(SystemTextJsonSerializationHelper.Clone);
 
-    public class With_messagepack_serializer() : When_using_dynamic_object_for_complex_object_tree(MessagePackSerializationHelper.Clone);
+    public class With_messagepack_serializer() : When_using_dynamic_object_for_object_with_polymorphism(MessagePackSerializationHelper.Clone);
 
-    public class With_protobuf_serializer() : When_using_dynamic_object_for_complex_object_tree(ProtobufSerializationHelper.Clone);
+    public class With_protobuf_serializer() : When_using_dynamic_object_for_object_with_polymorphism(ProtobufSerializationHelper.Clone);
 
     public class With_system_text_json_serializer_with_polymorphism_options() : When_using_dynamic_object_for_object_with_polymorphism(static x => SystemTextJsonSerializationHelper.Clone(x, CreateOptions()))
     {
@@ -66,12 +66,12 @@ public abstract class When_using_dynamic_object_for_object_with_polymorphism
         public IInterfaceForStructs SomeStruct { get; init; }
     }
 
-    private sealed class IsKnownTypeProvider : IIsKnownTypeProvider
-    {
-        public bool IsKnownType(Type type)
-            => type == typeof(StructA)
-            || type == typeof(StructB);
-    }
+    ////private sealed class IsKnownTypeProvider : IIsKnownTypeProvider
+    ////{
+    ////    public bool IsKnownType(Type type)
+    ////        => type == typeof(StructA)
+    ////        || type == typeof(StructB);
+    ////}
 
     private const int Value = 12;
     private readonly ObjectWithStruct serializedObject;
@@ -80,11 +80,11 @@ public abstract class When_using_dynamic_object_for_object_with_polymorphism
     {
         var originalObject = new ObjectWithStruct { SomeStruct = new StructB { Value = Value } };
 
-        var dynamicObject = new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider()).MapObject(originalObject);
+        var dynamicObject = new DynamicObjectMapper(/*isKnownTypeProvider: new IsKnownTypeProvider()*/).MapObject(originalObject);
 
         var serializedDynamicObject = serialize(dynamicObject);
 
-        serializedObject = new DynamicObjectMapper(isKnownTypeProvider: new IsKnownTypeProvider()).Map<ObjectWithStruct>(serializedDynamicObject);
+        serializedObject = new DynamicObjectMapper(/*isKnownTypeProvider: new IsKnownTypeProvider()*/).Map<ObjectWithStruct>(serializedDynamicObject);
     }
 
     [Fact]

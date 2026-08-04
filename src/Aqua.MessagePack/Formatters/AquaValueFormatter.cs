@@ -57,19 +57,27 @@ public sealed class AquaValueFormatter : IMessagePackFormatter<object?>
                 return;
 
             case DynamicObject dynamicObject:
-                WriteTagged(ref writer, ValueKind.DynamicObject, dynamicObject, options.Resolver.GetFormatterWithVerify<DynamicObject?>(), options);
-                return;
-
-            case PropertySet propertySet:
-                WriteTagged(ref writer, ValueKind.PropertySet, propertySet, options.Resolver.GetFormatterWithVerify<PropertySet?>(), options);
-                return;
-
-            case Property property:
-                WriteTagged(ref writer, ValueKind.Property, property, options.Resolver.GetFormatterWithVerify<Property?>(), options);
+                WriteTagged(ref writer, ValueKind.DynamicObject, dynamicObject, DynamicObjectFormatter.Instance, options);
                 return;
 
             case TypeInfo typeInfo:
-                WriteTagged(ref writer, ValueKind.TypeInfo, typeInfo, options.Resolver.GetFormatterWithVerify<TypeInfo?>(), options);
+                WriteTagged(ref writer, ValueKind.TypeInfo, typeInfo, TypeInfoFormatter.Instance, options);
+                return;
+
+            case FieldInfo fieldInfo:
+                WriteTagged(ref writer, ValueKind.FieldInfo, fieldInfo, FieldInfoFormatter.Instance, options);
+                return;
+
+            case PropertyInfo propertyInfo:
+                WriteTagged(ref writer, ValueKind.PropertyInfo, propertyInfo, PropertyInfoFormatter.Instance, options);
+                return;
+
+            case ConstructorInfo constructorInfo:
+                WriteTagged(ref writer, ValueKind.ConstructorInfo, constructorInfo, ConstructorInfoFormatter.Instance, options);
+                return;
+
+            case MethodInfo methodInfo:
+                WriteTagged(ref writer, ValueKind.MethodInfo, methodInfo, MethodInfoFormatter.Instance, options);
                 return;
 
             case Array array:
@@ -111,10 +119,12 @@ public sealed class AquaValueFormatter : IMessagePackFormatter<object?>
                 ValueKind.Scalar => ReadScalar(ref reader, options),
                 ValueKind.PackedArray => ReadPackedArray(ref reader, options),
                 ValueKind.Collection => ReadCollection(ref reader, options),
-                ValueKind.DynamicObject => options.Resolver.GetFormatterWithVerify<DynamicObject?>().Deserialize(ref reader, options),
-                ValueKind.Property => options.Resolver.GetFormatterWithVerify<Property?>().Deserialize(ref reader, options),
-                ValueKind.PropertySet => options.Resolver.GetFormatterWithVerify<PropertySet?>().Deserialize(ref reader, options),
-                ValueKind.TypeInfo => options.Resolver.GetFormatterWithVerify<TypeInfo?>().Deserialize(ref reader, options),
+                ValueKind.DynamicObject => DynamicObjectFormatter.Instance.Deserialize(ref reader, options),
+                ValueKind.TypeInfo => TypeInfoFormatter.Instance.Deserialize(ref reader, options),
+                ValueKind.FieldInfo => FieldInfoFormatter.Instance.Deserialize(ref reader, options),
+                ValueKind.PropertyInfo => PropertyInfoFormatter.Instance.Deserialize(ref reader, options),
+                ValueKind.ConstructorInfo => ConstructorInfoFormatter.Instance.Deserialize(ref reader, options),
+                ValueKind.MethodInfo => MethodInfoFormatter.Instance.Deserialize(ref reader, options),
                 _ => throw SerializationException($"Unknown Aqua value tag '{kind}'."),
             };
 
@@ -391,4 +401,24 @@ public sealed class AquaValueFormatter : IMessagePackFormatter<object?>
     }
 
     private static MessagePackSerializationException SerializationException(string message) => new(message);
+
+    private enum ValueKind : byte
+    {
+        Null = 1,
+        String = 2,
+        Scalar = 3,
+        PackedArray = 4,
+        Collection = 5,
+        // Tensor = 6,
+
+        // dynamic
+        DynamicObject = 80,
+
+        // type system
+        TypeInfo = 90,
+        FieldInfo = 91,
+        PropertyInfo = 92,
+        ConstructorInfo = 93,
+        MethodInfo = 94,
+    }
 }

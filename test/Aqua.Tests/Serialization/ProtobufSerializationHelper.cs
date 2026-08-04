@@ -7,11 +7,12 @@ using Aqua.TypeExtensions;
 
 public static class ProtobufSerializationHelper
 {
+    private static readonly ProtoOptions _protoOptions = new() { ReferenceHandler = ReferenceHandler.Preserve };
+
     public static T Clone<T>(this T graph)
     {
-        var data = AquaProtobufSerializer.Serialize(graph);
-        var copy = AquaProtobufSerializer.Deserialize<T>(data);
-
+        var data = AquaProtobufSerializer.Serialize(graph, _protoOptions);
+        var copy = AquaProtobufSerializer.Deserialize<T>(data, _protoOptions);
         return copy;
     }
 

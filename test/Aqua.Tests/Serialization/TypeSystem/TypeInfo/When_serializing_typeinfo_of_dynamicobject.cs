@@ -8,14 +8,16 @@ using Aqua.TypeSystem;
 public abstract class When_serializing_typeinfo_of_dynamicobject
 {
     // XmlSerializer doesn't support circular references
-    // msgpack doesn't support circular references
-    // protobuf doesn't support circular references
 
     public class With_data_contract_serializer() : When_serializing_typeinfo_of_dynamicobject(DataContractSerializationHelper.Clone);
 
     public class With_newtown_json_serializer() : When_serializing_typeinfo_of_dynamicobject(NewtonsoftJsonSerializationHelper.Clone);
 
     public class With_system_text_json_serializer() : When_serializing_typeinfo_of_dynamicobject(SystemTextJsonSerializationHelper.Clone);
+
+    public class With_messagepack_serializer() : When_serializing_typeinfo_of_dynamicobject(MessagePackSerializationHelper.Clone);
+
+    public class With_protobuf_serializer() : When_serializing_typeinfo_of_dynamicobject(ProtobufSerializationHelper.Clone);
 
 #if NETFRAMEWORK
     public class With_binary_formatter() : When_serializing_typeinfo_of_dynamicobject(BinarySerializationHelper.Clone);

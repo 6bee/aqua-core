@@ -3,6 +3,7 @@
 namespace Aqua.Protobuf.Mappers;
 
 using Aqua.TypeSystem;
+using static Aqua.Protobuf.Schema.PropertyInfo;
 using Proto = Aqua.Protobuf.Schema;
 
 public sealed class PropertyInfoMapper : ProtoMapper<PropertyInfo, Proto.PropertyInfo>
@@ -10,37 +11,43 @@ public sealed class PropertyInfoMapper : ProtoMapper<PropertyInfo, Proto.Propert
     public static readonly PropertyInfoMapper Instance = new();
 
     public override PropertyInfo FromProto(Proto.PropertyInfo proto, ProtoContext context)
-        => proto is null ? null! : new()
+    {
+        return proto?.NodeCase switch
         {
-            Name = proto.Name,
-            PropertyType = TypeInfoMapper.Instance.FromProto(proto.PropertyType, context),
-            DeclaringType = TypeInfoMapper.Instance.FromProto(proto.DeclaringType, context),
-            IsStatic = proto.HasIsStatic ? proto.IsStatic : null,
+            null or
+            NodeOneofCase.Null => null!,
+            NodeOneofCase.Value => context.Resolve<PropertyInfo, Proto.PropertyInfoValue>(proto.Value, FromProto),
+            NodeOneofCase.Ref => context.Resolve<PropertyInfo>(proto.Ref),
+            _ => throw new NotSupportedException($"{proto.NodeCase} is not supported"),
         };
+
+        static void FromProto(PropertyInfo value, Proto.PropertyInfoValue proto, ProtoContext context)
+        {
+            value.Name = proto.Name;
+            value.IsStatic = proto.HasIsStatic ? proto.IsStatic : null;
+            value.DeclaringType = TypeInfoMapper.Instance.FromProto(proto.DeclaringType, context);
+            value.PropertyType = TypeInfoMapper.Instance.FromProto(proto.PropertyType, context);
+        }
+    }
 
     public override Proto.PropertyInfo ToProto(PropertyInfo value, ProtoContext context)
     {
-        if (value is null)
+        return context.ToReferenceProto<Proto.PropertyInfo, Proto.PropertyInfoValue, PropertyInfo>(value, ToProto);
+
+        static void ToProto(Proto.PropertyInfoValue proto, PropertyInfo value, ProtoContext context)
         {
-            return null!;
+            if (value.Name?.Length > 0)
+            {
+                proto.Name = value.Name;
+            }
+
+            if (value.IsStatic.HasValue)
+            {
+                proto.IsStatic = value.IsStatic.Value;
+            }
+
+            proto.DeclaringType = TypeInfoMapper.Instance.ToProto(value.DeclaringType!, context);
+            proto.PropertyType = TypeInfoMapper.Instance.ToProto(value.PropertyType!, context);
         }
-
-        var result = new Proto.PropertyInfo
-        {
-            DeclaringType = TypeInfoMapper.Instance.ToProto(value.DeclaringType!, context),
-            PropertyType = TypeInfoMapper.Instance.ToProto(value.PropertyType!, context),
-        };
-
-        if (value.Name?.Length > 0)
-        {
-            result.Name = value.Name;
-        }
-
-        if (value.IsStatic.HasValue)
-        {
-            result.IsStatic = value.IsStatic.Value;
-        }
-
-        return result;
     }
 }

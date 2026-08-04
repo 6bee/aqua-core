@@ -3,6 +3,7 @@
 namespace Aqua.Protobuf.Mappers;
 
 using Aqua.TypeSystem;
+using static Aqua.Protobuf.Schema.ConstructorInfo;
 using Proto = Aqua.Protobuf.Schema;
 
 public sealed class ConstructorInfoMapper : ProtoMapper<ConstructorInfo, Proto.ConstructorInfo>
@@ -10,40 +11,44 @@ public sealed class ConstructorInfoMapper : ProtoMapper<ConstructorInfo, Proto.C
     public static readonly ConstructorInfoMapper Instance = new();
 
     public override ConstructorInfo FromProto(Proto.ConstructorInfo proto, ProtoContext context)
-        => proto is null ? null! : new()
+    {
+        return proto is null ? null! : proto.NodeCase switch
         {
-            Name = proto.Name,
-            IsStatic = proto.HasIsStatic ? proto.IsStatic : null,
-            DeclaringType = TypeInfoMapper.Instance.FromProto(proto.DeclaringType, context),
-            ParameterTypes = TypeInfoMapper.Instance.FromProto(proto.ParameterTypes, context).ToListOrNull(),
-            GenericArgumentTypes = TypeInfoMapper.Instance.FromProto(proto.GenericArgumentTypes, context).ToListOrNull(),
+            NodeOneofCase.Value => context.Resolve<ConstructorInfo, Proto.ConstructorInfoValue>(proto.Value, FromProto),
+            NodeOneofCase.Ref => context.Resolve<ConstructorInfo>(proto.Ref),
+            _ => throw new NotSupportedException($"{proto.NodeCase} is not supported"),
         };
+
+        static void FromProto(ConstructorInfo value, Proto.ConstructorInfoValue proto, ProtoContext context)
+        {
+            value.Name = proto.Name;
+            value.IsStatic = proto.HasIsStatic ? proto.IsStatic : null;
+            value.DeclaringType = TypeInfoMapper.Instance.FromProto(proto.DeclaringType, context);
+            value.ParameterTypes = TypeInfoMapper.Instance.FromProto(proto.ParameterTypes, context).ToListOrNull();
+            value.GenericArgumentTypes = TypeInfoMapper.Instance.FromProto(proto.GenericArgumentTypes, context).ToListOrNull();
+        }
+    }
 
     public override Proto.ConstructorInfo ToProto(ConstructorInfo value, ProtoContext context)
     {
-        if (value is null)
+        return context.ToReferenceProto<Proto.ConstructorInfo, Proto.ConstructorInfoValue, ConstructorInfo>(value, ToProto);
+
+        static void ToProto(Proto.ConstructorInfoValue proto, ConstructorInfo value, ProtoContext context)
         {
-            return null!;
+            if (value.Name?.Length > 0)
+            {
+                proto.Name = value.Name;
+            }
+
+            if (value.IsStatic.HasValue)
+            {
+                proto.IsStatic = value.IsStatic.Value;
+            }
+
+            proto.DeclaringType = TypeInfoMapper.Instance.ToProto(value.DeclaringType!, context);
+
+            TypeInfoMapper.Instance.ToProto(proto.ParameterTypes, value.ParameterTypes, context);
+            TypeInfoMapper.Instance.ToProto(proto.GenericArgumentTypes, value.GenericArgumentTypes, context);
         }
-
-        var result = new Proto.ConstructorInfo
-        {
-            DeclaringType = TypeInfoMapper.Instance.ToProto(value.DeclaringType!, context),
-        };
-
-        if (value.Name?.Length > 0)
-        {
-            result.Name = value.Name;
-        }
-
-        if (value.IsStatic.HasValue)
-        {
-            result.IsStatic = value.IsStatic.Value;
-        }
-
-        TypeInfoMapper.Instance.ToProto(result.GenericArgumentTypes, value.GenericArgumentTypes, context);
-        TypeInfoMapper.Instance.ToProto(result.ParameterTypes, value.ParameterTypes, context);
-
-        return result;
     }
 }

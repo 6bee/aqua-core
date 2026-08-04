@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add `Aqua.MessagePack` project with full MessagePack serialization support (scalar codec, value formatter, dynamic object/property/propertyset/typeinfo formatters)
+- Add `Aqua.MessagePack` project with full MessagePack serialization support (scalar codec, value formatter, aqua type formatters)
 - Add `Aqua.Protobuf` project with full Protobuf serialization support (scalar codec, packed array serializer, value mapper, aqua.proto schema)
 - Add `Aqua.Dynamic.TypeSafety` static helper with `TypeSafety.AllowAny` (no-op `ITypeSafetyChecker`) and `TypeSafety.AllowList(...)` (opt-in allow-list checker backed by its own type set, throwing `TypeSafetyException`) in reference to [OWASP A8:2017-Insecure Deserialization][CWE-502]
 - Add `Aqua.Dynamic.TypeSafetyException` as the dedicated exception thrown by `TypeSafety.AllowList` checkers

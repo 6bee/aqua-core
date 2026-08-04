@@ -3,14 +3,19 @@
 namespace Aqua.MessagePack.Formatters;
 
 /// <summary>
-/// Hand-written MessagePack formatter for <see cref="Property"/>.
+/// MessagePack formatter for <see cref="Property"/>.
 /// </summary>
 /// <remarks>
 /// Encodes as a fixed-length array <c>[Name, Value]</c>, where <c>Value</c> is written via the
 /// Aqua leaf-value union (see <see cref="AquaValueFormatter"/>).
 /// </remarks>
-public sealed class PropertyFormatter : IMessagePackFormatter<Property?>
+internal sealed class PropertyFormatter : IMessagePackFormatter<Property?>
 {
+    /// <summary>
+    /// Gets the singleton instance of the <see cref="PropertyFormatter"/>.
+    /// </summary>
+    public static readonly PropertyFormatter Instance = new();
+
     private const int FieldCount = 2;
 
     /// <inheritdoc/>

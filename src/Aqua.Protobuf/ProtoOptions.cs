@@ -8,11 +8,7 @@ public sealed record class ProtoOptions
 
     public TimeSpanEncoding TimeSpanEncoding { get; init; }
 
-    public IReferenceTracker Tracker
-    {
-        get => field ??= new ReferenceTracker();
-        init => field = value.CheckNotNull();
-    }
+    public ReferenceHandler ReferenceHandler { get; init; }
 
     public IMapperResolver Resolver
     {
