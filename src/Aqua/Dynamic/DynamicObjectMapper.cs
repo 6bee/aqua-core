@@ -1142,11 +1142,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                         return instance;
                     };
                 }
-#if NET8_0_OR_GREATER
-                else if (targetType.IsValueType && targetType.GetCustomAttribute<System.Runtime.CompilerServices.IsReadOnlyAttribute>() is null)
-#else
                 else if (targetType.IsValueType)
-#endif // NET8_0_OR_GREATER
                 {
                     factory = static (t, _) => Activator.CreateInstance(t) ?? throw new DynamicObjectMapperException($"Failed to create instance of type {t.FullName}");
                 }
