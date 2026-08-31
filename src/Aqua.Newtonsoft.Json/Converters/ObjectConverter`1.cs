@@ -59,7 +59,7 @@ public class ObjectConverter<T>(KnownTypesRegistry knownTypes) : ObjectConverter
         var result = CreateObject(type) ?? throw reader.CreateException($"Failed create instance of type {type.FullName}");
         if (!string.IsNullOrWhiteSpace(reference) && referenceResolver is not null)
         {
-            referenceResolver.AddReference(serializer, reference!, result);
+            referenceResolver.AddReference(serializer, reference, result);
         }
 
         var properties = GetProperties(type);

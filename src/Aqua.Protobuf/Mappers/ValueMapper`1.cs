@@ -21,5 +21,5 @@ internal sealed class ValueMapper<T> : ProtoMapper<T, Proto.Value>
         => (T)ValueMapper.Instance.FromProto(proto, context)!;
 
     public override Proto.Value ToProto(T value, ProtoContext context)
-        => ValueMapper.Instance.ToProto(value, context)!;
+        => ValueMapper.Instance.ToProto(value, context);
 }

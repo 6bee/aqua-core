@@ -170,6 +170,8 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
     private const string ComplexNumberParserRegexPattern = $"^(?<Re>[+-]?({NumericPattern}))(?<Sign>[+-])[iI](?<Im>{NumericPattern})$";
 
+    private static readonly Regex _complexNumberParserRegex = new(ComplexNumberParserRegexPattern);
+
     private static readonly Type _genericDictionaryType = typeof(Dictionary<,>);
 
     private static readonly Type _genericKeyValuePairType = typeof(KeyValuePair<,>);
@@ -1297,22 +1299,20 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
         if (targetType == typeof(BigInteger))
         {
-            return System.Numerics.BigInteger.Parse(value, CultureInfo.InvariantCulture);
+            return BigInteger.Parse(value, CultureInfo.InvariantCulture);
         }
 
         if (targetType == typeof(Complex))
         {
-            var m = Regex.Match(value, ComplexNumberParserRegexPattern);
+            var m = _complexNumberParserRegex.Match(value);
             if (m.Success)
             {
                 var re = double.Parse(m.Groups["Re"].Value, CultureInfo.InvariantCulture);
                 var im = double.Parse(m.Groups["Sign"].Value + m.Groups["Im"].Value, CultureInfo.InvariantCulture);
                 return new Complex(re, im);
             }
-            else
-            {
-                throw new DynamicObjectMapperException(new FormatException($"Value '{value}' cannot be parsed into complex number."));
-            }
+
+            throw new DynamicObjectMapperException(new FormatException($"Value '{value}' cannot be parsed into complex number."));
         }
 
         if (targetType == typeof(byte[]))

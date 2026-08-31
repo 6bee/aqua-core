@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Aqua.KnownTypesRegistry` generates derived type key for generic types (except `Nullable<T>`) including generic type arguments which is potentially a breaking change.
 - Replace `Aqua.protobuf-net` serialization backend with new `Aqua.Protobuf` project
 - Update `Aqua.Newtonsoft.Json` project: remove (replace) `KnownTypesRegistry`, update converters and contract resolvers
-- Bump _System.Text.Json_ from 10.0.0 to 10.0.9 (netstandard2.0) (concerns _Aqua.Text.Json_)
+- Bump _System.Text.Json_ from 10.0.0 to 10.0.10 (netstandard2.0;netstandard2.1)
 
 ### Removed
 

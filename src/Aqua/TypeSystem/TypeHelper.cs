@@ -192,7 +192,7 @@ public static class TypeHelper
                     var paramTypes = m.GetParameters();
                     for (int i = 0; i < paramTypes.Length; i++)
                     {
-                        if (paramTypes[i].ParameterType != parameterTypes![i])
+                        if (paramTypes[i].ParameterType != parameterTypes[i])
                         {
                             return false;
                         }
@@ -225,7 +225,7 @@ public static class TypeHelper
         var isStatic = field.IsStatic ?? false;
         return bindingFlags => declaringType
             .GetField(fieldName, bindingFlags)
-            .If(x => x!.IsStatic == isStatic);
+            .If(x => x.IsStatic == isStatic);
     }
 
     private static Func<BindingFlags, System.Reflection.MethodInfo?> CreateMethodResolver(MethodInfo method, ITypeResolver typeResolver)
@@ -357,7 +357,7 @@ public static class TypeHelper
         var isStatic = property.IsStatic ?? false;
         return bindingFlags => declaringType
             .GetProperty(propertyName, bindingFlags)
-            .If(x => (x!.GetGetMethod(true) ?? x!.GetSetMethod(true))!.IsStatic == isStatic);
+            .If(x => (x.GetGetMethod(true) ?? x.GetSetMethod(true)!).IsStatic == isStatic);
     }
 
     /// <summary>

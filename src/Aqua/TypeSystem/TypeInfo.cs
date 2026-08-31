@@ -145,14 +145,7 @@ public class TypeInfo
 
     [IgnoreDataMember]
     [Unmapped]
-    public bool IsArray
-    {
-        get
-        {
-            var name = Name;
-            return name is not null && _arrayNameRegex.IsMatch(name);
-        }
-    }
+    public bool IsArray => Name is { } name && _arrayNameRegex.IsMatch(name);
 
     [IgnoreDataMember]
     [Unmapped]

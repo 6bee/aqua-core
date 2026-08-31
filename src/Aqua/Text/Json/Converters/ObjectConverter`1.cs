@@ -25,7 +25,7 @@ public class ObjectConverter<T>(KnownTypesRegistry knownTypes, bool handleSubtyp
             _knownTypes = knownTypes.CheckNotNull();
             IsIgnored = propertyInfo.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Length > 0;
             DataMemberAttribute = (DataMemberAttribute?)propertyInfo.GetCustomAttributes(typeof(DataMemberAttribute), false)?.FirstOrDefault();
-            Name = string.IsNullOrWhiteSpace(DataMemberAttribute?.Name) ? propertyInfo.Name : DataMemberAttribute!.Name;
+            Name = string.IsNullOrWhiteSpace(DataMemberAttribute?.Name) ? propertyInfo.Name : DataMemberAttribute.Name;
             EmitDefaultValue = DataMemberAttribute?.EmitDefaultValue is true;
             if (!EmitDefaultValue && propertyInfo.PropertyType.IsValueType)
             {
@@ -161,7 +161,7 @@ public class ObjectConverter<T>(KnownTypesRegistry knownTypes, bool handleSubtyp
         var result = CreateObject(type) ?? throw reader.CreateException($"Failed create instance of type {type.FullName}");
         if (!string.IsNullOrWhiteSpace(reference) && referenceResolver is not null)
         {
-            referenceResolver.AddReference(reference!, result);
+            referenceResolver.AddReference(reference, result);
         }
 
         var properties = GetProperties(type);

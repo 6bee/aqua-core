@@ -123,15 +123,11 @@ partial class TypeEmitter
                 throw new ArgumentException("Property name missing");
             }
 
-            var propertyTypeInfo = property.PropertyType;
-            if (propertyTypeInfo is null)
-            {
-                throw new ArgumentException($"Property type missing for property '{propertyName}'");
-            }
-
+            var propertyTypeInfo = property.PropertyType
+                ?? throw new ArgumentException($"Property type missing for property '{propertyName}'");
             var propertyType = propertyTypeInfo.ResolveType(typeResolver);
 
-            return new Tuple<string, Type>(propertyName!, propertyType);
+            return new Tuple<string, Type>(propertyName, propertyType);
         }
     }
 
@@ -140,13 +136,13 @@ partial class TypeEmitter
         internal Type GetOrCreate(IEnumerable<string> properties, Func<IEnumerable<string>, Type> factory)
         {
             var key = new PropertyList(properties);
-            return GetOrCreate(key, x => factory(properties));
+            return GetOrCreate(key, _ => factory(properties));
         }
 
         internal Type GetOrCreate(TypeInfo typeInfo, Func<TypeInfo, Type> factory)
         {
             var key = new TypeWithPropertyList(typeInfo, typeResolver);
-            return GetOrCreate(key, x => factory(typeInfo));
+            return GetOrCreate(key, _ => factory(typeInfo));
         }
     }
 }

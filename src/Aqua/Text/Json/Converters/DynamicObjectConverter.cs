@@ -168,7 +168,7 @@ public class DynamicObjectConverter(KnownTypesRegistry knownTypes) : ObjectConve
 
             if (!string.IsNullOrWhiteSpace(reference))
             {
-                referenceResolver?.AddReference(reference!, valueArray);
+                referenceResolver?.AddReference(reference, valueArray);
 
                 reader.AssertEndObject();
             }

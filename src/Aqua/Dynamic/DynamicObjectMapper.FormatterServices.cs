@@ -12,7 +12,7 @@ using static Aqua.Dynamic.UnmappedAttributeHelper;
 
 partial class DynamicObjectMapper
 {
-    private const string BackingFieldRegexPattern = @"^(.+\+)?\<(?<name>.+)\>k__BackingField$";
+    private static readonly Regex _backingFieldRegex = new(@"^(.+\+)?\<(?<name>.+)\>k__BackingField$");
 
     /// <summary>
     /// Gets an uninitialized instance of the specified type by using <see cref="FormatterServices" />.
@@ -93,13 +93,13 @@ partial class DynamicObjectMapper
     {
         var memberName = member.Name;
 
-        var match = Regex.Match(memberName, BackingFieldRegexPattern);
+        var match = _backingFieldRegex.Match(memberName);
         if (match.Success)
         {
             memberName = match.Groups["name"].Value;
         }
 
-        if (member.MemberType != MemberTypes.Property)
+        if (member.MemberType is not MemberTypes.Property)
         {
             var property = member.DeclaringType!.GetProperty(memberName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
             if (property is not null)

@@ -3,6 +3,11 @@
 
   <Import Project="$(MSBuildThisFileDirectory)../$(MSBuildThisFile)" />
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard2.1' ">
+    <!-- Suppress nullability warnings for netstandard to align compilation with newer .NET targets -->
+    <NoWarn>$(NoWarn);CS8602;CS8603;CS8604;S8969</NoWarn>
+  </PropertyGroup>
+
   <PropertyGroup>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <CLSCompliant>true</CLSCompliant>
