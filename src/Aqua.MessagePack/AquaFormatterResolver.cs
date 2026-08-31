@@ -22,6 +22,7 @@ public sealed class AquaFormatterResolver(IFormatterResolver? fallback = null) :
         [typeof(object)] = AquaValueFormatter.Instance,
         [typeof(DynamicObject)] = DynamicObjectFormatter.Instance,
         [typeof(TypeInfo)] = TypeInfoFormatter.Instance,
+        [typeof(MemberInfo)] = MemberInfoFormatter.Instance,
         [typeof(FieldInfo)] = FieldInfoFormatter.Instance,
         [typeof(PropertyInfo)] = PropertyInfoFormatter.Instance,
         [typeof(ConstructorInfo)] = ConstructorInfoFormatter.Instance,
