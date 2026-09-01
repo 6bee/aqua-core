@@ -3,7 +3,6 @@
 namespace Aqua.Tests.Serialization;
 
 using global::MessagePack;
-using System.IO;
 
 public static class MessagePackSerializationHelper
 {
@@ -12,13 +11,8 @@ public static class MessagePackSerializationHelper
         var options = MessagePackSerializerOptions.Standard
             .ConfigureAqua()
             .WithPreserveReferences();
-
-        using var stream = new MemoryStream();
-        MessagePackSerializer.Serialize(stream, graph, options);
-
-        stream.Position = 0;
-        var copy = MessagePackSerializer.Deserialize<T>(stream, options);
-
+        var data = MessagePackSerializer.Serialize(graph, options);
+        var copy = MessagePackSerializer.Deserialize<T>(data, options);
         return copy;
     }
 }

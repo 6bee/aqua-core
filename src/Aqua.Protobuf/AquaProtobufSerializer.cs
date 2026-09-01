@@ -128,7 +128,7 @@ public static class AquaProtobufSerializer
     /// <summary>
     /// Deserializes a graph from the given <paramref name="data"/>.
     /// </summary>
-    /// <param name="data">The source stream.</param>
+    /// <param name="data">The source data.</param>
     /// <param name="options">Protobuf serializer options.</param>
     /// <returns>The deserialized graph.</returns>
     public static object? Deserialize(ReadOnlySequence<byte> data, ProtoOptions? options = null)
@@ -140,7 +140,7 @@ public static class AquaProtobufSerializer
     /// Deserializes a graph of type <typeparamref name="T"/> from the given <paramref name="data"/>.
     /// </summary>
     /// <typeparam name="T">The expected type of the deserialized graph.</typeparam>
-    /// <param name="data">The source stream.</param>
+    /// <param name="data">The source data.</param>
     /// <param name="options">Protobuf serializer options.</param>
     /// <returns>The deserialized graph.</returns>
     public static T? Deserialize<T>(ReadOnlySpan<byte> data, ProtoOptions? options = null)
@@ -151,7 +151,7 @@ public static class AquaProtobufSerializer
     /// <summary>
     /// Deserializes a graph from the given <paramref name="data"/>.
     /// </summary>
-    /// <param name="data">The source stream.</param>
+    /// <param name="data">The source data.</param>
     /// <param name="options">Protobuf serializer options.</param>
     /// <returns>The deserialized graph.</returns>
     public static object? Deserialize(ReadOnlySpan<byte> data, ProtoOptions? options = null)

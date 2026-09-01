@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add `Aqua.MessagePack` project with full MessagePack serialization support (scalar codec, value formatter, aqua type formatters)
-- Add `Aqua.Protobuf` project with full Protobuf serialization support (scalar codec, packed array serializer, value mapper, aqua.proto schema)
+- Add _Aqua.MessagePack_ project with full MessagePack serialization support (scalar codec, value formatter, aqua type formatters)
+- Add _Aqua.Protobuf_ project with full Protobuf serialization support (scalar codec, packed array serializer, value mapper, aqua.proto schema)
 - Add `Aqua.Dynamic.TypeSafety` static helper with `TypeSafety.AllowAny` (no-op `ITypeSafetyChecker`) and `TypeSafety.AllowList(...)` (opt-in allow-list checker backed by its own type set, throwing `TypeSafetyException`) in reference to [OWASP A8:2017-Insecure Deserialization][CWE-502]
 - Add `Aqua.Dynamic.TypeSafetyException` as the dedicated exception thrown by `TypeSafety.AllowList` checkers
 - Add `System.Numerics.BigInteger` and `System.Numerics.Complex` to `KnownTypesRegistry` default types (keys: `bigint`, `complex`)
@@ -19,13 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Consolidate `KnownTypesRegistry` from `Aqua.Text.Json` into root namespace `Aqua.KnownTypesRegistry`
 - `Aqua.KnownTypesRegistry` generates derived type key for generic types (except `Nullable<T>`) including generic type arguments which is potentially a breaking change.
-- Replace `Aqua.protobuf-net` serialization backend with new `Aqua.Protobuf` project
+- Replace _Aqua.protobuf-net_ serialization backend with new _Aqua.Protobuf_ project
 - Update `Aqua.Newtonsoft.Json` project: remove (replace) `KnownTypesRegistry`, update converters and contract resolvers
 - Bump _System.Text.Json_ from 10.0.0 to 10.0.10 (netstandard2.0;netstandard2.1)
 
 ### Removed
 
-- Remove project `Aqua.protobuf-net` (fully replaced by new `Aqua.Protobuf` project)
+- Remove project _Aqua.protobuf-net_ (fully replaced by new _Aqua.Protobuf_ project)
 - Remove `KnownTypesRegistry` from `Aqua.Newtonsoft.Json` (consolidated into `Aqua.KnownTypesRegistry`)
 - Remove abstract types `Aqua.TypeSystem.MemberInfo` and `Aqua.TypeSystem.MethodBaseInfo` from `KnownTypesRegistry` default types (they cannot be concrete deserialization targets)
 - Remove obsolete `AssemblyInfo.cs` files across projects
