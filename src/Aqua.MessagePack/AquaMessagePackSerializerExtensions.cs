@@ -12,7 +12,7 @@ using System.ComponentModel;
 /// <i>Aqua</i> types with type-safe formatters.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public static class MessagePackSerializerExtensions
+public static class AquaMessagePackSerializerExtensions
 {
     public delegate void SerializeMembers<in T>(ref MessagePackWriter writer, T value, MessagePackSerializerOptions options);
 
