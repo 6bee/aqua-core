@@ -69,10 +69,13 @@ jobs:
         path: artifacts
         if-no-files-found: error
 
+    - name: NuGet login (OIDC → temp API key)
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: ${{ secrets.NUGET_USER }}
+
     - name: Publish packages
-      env:
-        MYGET_AUTH_TOKEN: ${{ secrets.MYGET_AUTH_TOKEN }}
-        NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
       run: |
-        dotnet nuget push artifacts\*.nupkg -k "$env:MYGET_AUTH_TOKEN" -s https://www.myget.org/F/aqua/api/v3/index.json
-        dotnet nuget push artifacts\*.nupkg -k "$env:NUGET_AUTH_TOKEN" -s https://api.nuget.org/v3/index.json
+        dotnet nuget push artifacts\*.nupkg -k ${{ secrets.MYGET_AUTH_TOKEN }} -s https://www.myget.org/F/aqua/api/v3/index.json
+        dotnet nuget push artifacts\*.nupkg -k ${{ steps.login.outputs.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
