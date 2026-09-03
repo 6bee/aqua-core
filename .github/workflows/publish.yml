@@ -81,5 +81,5 @@ jobs:
 
       - name: NuGet push
         run: |
-          dotnet nuget push artifacts\*.nupkg -k ${{ secrets.MYGET_AUTH_TOKEN }} -s https://www.myget.org/F/aqua/api/v3/index.json
+          dotnet nuget push artifacts\*.nupkg -k ${{ secrets.MYGET_AUTH_TOKEN }}          -s https://www.myget.org/F/aqua/api/v3/index.json
           dotnet nuget push artifacts\*.nupkg -k ${{ steps.login.outputs.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
