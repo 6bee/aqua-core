@@ -1,5 +1,7 @@
 # aqua-core
 
+> „Be water, my friend“ – Bruce Lee
+
 [![GitHub license][lic-badge]][lic-link]
 [![Github Workflow][pub-badge]][pub-link]
 
@@ -13,8 +15,6 @@
 | `aqua-core-newtonsoft-json` | [![NuGet Badge][17]][18] | [![MyGet Pre Release][19]][20] |
 | `aqua-core-messagepack`     | [![NuGet Badge][21]][22] | [![MyGet Pre Release][23]][24] |
 | `aqua-core-protobuf`        | [![NuGet Badge][25]][26] | [![MyGet Pre Release][27]][28] |
-
-> „Be water, my friend“ – Bruce Lee
 
 Transform any object-graph into a dynamic, _composed dictionaries_ like structure, holding serializable values and type information.
 
