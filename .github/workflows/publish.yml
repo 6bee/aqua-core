@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Extract version from tag
-        uses: nowsprinting/check-version-format-action@v4
+        uses: nowsprinting/check-version-format-action@v5
         id: version
         with:
           prefix: 'v'
@@ -27,12 +27,12 @@ jobs:
           exit 1
 
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0 # Mandatory to use exact version from tag action
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
 
