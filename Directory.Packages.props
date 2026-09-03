@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="aqua.tool.Validation" Version="3.2.1" />
-    <PackageVersion Include="Google.Protobuf" Version="3.36.0" />
+    <PackageVersion Include="Google.Protobuf" Version="3.36.1" />
     <PackageVersion Include="Grpc.Tools" Version="2.83.0" />
     <PackageVersion Include="MessagePack" Version="3.1.8" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.400" />
