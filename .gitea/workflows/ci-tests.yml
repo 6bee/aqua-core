@@ -9,11 +9,11 @@ jobs:
   test:
     name: Test
 
-    runs-on: dotnet-10
+    runs-on: dotnet-10.0
 
     strategy:
       matrix:
-        framework: [net8.0, net10.0]
+        framework: [net10.0]
 
     steps:
 
