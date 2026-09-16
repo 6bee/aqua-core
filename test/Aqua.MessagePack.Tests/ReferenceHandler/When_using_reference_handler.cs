@@ -7,7 +7,7 @@ using Aqua.MessagePack;
 using global::MessagePack;
 using System.IO;
 
-public class When_using_reference_tracker
+public class When_using_reference_handler
 {
     private static T Clone<T>(T graph, ReferenceHandler referenceHandler)
     {
