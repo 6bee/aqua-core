@@ -4,8 +4,6 @@ namespace Aqua.MessagePack;
 
 public class MessagePackSerializerContext(ReferenceHandler referenceHandler = ReferenceHandler.Unspecified)
 {
-    internal static MessagePackSerializerContext Default => new();
-
     private SerializationReferenceTracker? _serializationTracker;
     private DeserializationReferenceTracker? _deserializationTracker;
 
