@@ -8,5 +8,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Aqua.Protobuf\Aqua.Protobuf.csproj" />
   </ItemGroup>
-  
+
 </Project>

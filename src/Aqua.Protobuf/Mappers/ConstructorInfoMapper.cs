@@ -12,8 +12,10 @@ public sealed class ConstructorInfoMapper : ProtoMapper<ConstructorInfo, Proto.C
 
     public override ConstructorInfo FromProto(Proto.ConstructorInfo proto, ProtoContext context)
     {
-        return proto is null ? null! : proto.NodeCase switch
+        return proto?.NodeCase switch
         {
+            null or
+            NodeOneofCase.Null => null!,
             NodeOneofCase.Value => context.Resolve<ConstructorInfo, Proto.ConstructorInfoValue>(proto.Value, FromProto),
             NodeOneofCase.Ref => context.Resolve<ConstructorInfo>(proto.Ref),
             _ => throw new NotSupportedException($"{proto.NodeCase} is not supported"),
