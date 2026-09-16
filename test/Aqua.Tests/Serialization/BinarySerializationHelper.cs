@@ -1,5 +1,6 @@
 // Copyright (c) Christof Senn. All rights reserved. See license.txt in the project root for license information.
 
+#if NETFRAMEWORK
 namespace Aqua.Tests.Serialization;
 
 using System.IO;
@@ -23,3 +24,5 @@ public static class BinarySerializationHelper
 #pragma warning restore SYSLIB0011 // Type or member is obsolete
     }
 }
+
+#endif // NETFRAMEWORK
