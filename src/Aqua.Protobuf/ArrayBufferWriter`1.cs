@@ -30,6 +30,7 @@ internal sealed class ArrayBufferWriter<T>(int initialSize = 256) : IBufferWrite
         return _buffer.AsSpan(_index);
     }
 
+    public ReadOnlyMemory<T> WrittenMemory => _buffer.AsMemory(0, _index);
     public ReadOnlySpan<T> WrittenSpan => _buffer.AsSpan(0, _index);
 
     private void Ensure(int sizeHint)

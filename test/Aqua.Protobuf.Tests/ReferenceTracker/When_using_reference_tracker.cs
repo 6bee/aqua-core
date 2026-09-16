@@ -3,6 +3,7 @@
 namespace Aqua.Protobuf.Tests.ReferenceTracker;
 
 using Aqua.Dynamic;
+using Aqua.Protobuf;
 
 public class When_using_reference_tracker
 {
