@@ -16,5 +16,5 @@
   <ItemGroup Label="borrow polyfill type from protobuf project">
     <Compile Include="..\..\src\Aqua.Protobuf\ArrayBufferWriter`1.cs" Link="ArrayBufferWriter`1.cs" />
   </ItemGroup>
-  
+
 </Project>
