@@ -63,13 +63,15 @@ jobs:
         run: dotnet build Aqua.slnx --no-restore -c Release /bl:build.binlog
 
       - name: Test
-        run: dotnet test Aqua.slnx --no-build -c Release
+        run: dotnet test Aqua.slnx --no-build -c Release /bl:test.binlog
 
-      - name: Upload build log
+      - name: Upload build logs
         uses: actions/upload-artifact@v7
         with:
-          name: build_log
-          path: build.binlog
+          name: msbuild_logs
+          path: |
+            build.binlog
+            test.binlog
           if-no-files-found: error
 
       - name: Upload packages
