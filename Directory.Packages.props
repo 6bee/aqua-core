@@ -6,18 +6,18 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="aqua.tool.Validation" Version="3.2.1" />
-    <PackageVersion Include="Google.Protobuf" Version="3.36.1" />
-    <PackageVersion Include="Grpc.Tools" Version="2.83.0" />
-    <PackageVersion Include="MessagePack" Version="3.1.8" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.400" />
+    <PackageVersion Include="Google.Protobuf" Version="3.36.2" />
+    <PackageVersion Include="Grpc.Tools" Version="2.84.0" />
+    <PackageVersion Include="MessagePack" Version="3.1.9" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.401" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.33.0.1635" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.34.0.3385" />
     <PackageVersion Include="System.Reflection.Emit" Version="4.7.0" />
-    <PackageVersion Include="System.Text.Json" Version="10.0.11" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.12" />
   </ItemGroup>
   <ItemGroup Label="Tests">
     <PackageVersion Include="coverlet.MTP" Version="10.0.1" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="xunit.v3.mtp-v2" Version="4.0.0" />
+    <PackageVersion Include="xunit.v3.mtp-v2" Version="4.0.1" />
   </ItemGroup>
 </Project>
