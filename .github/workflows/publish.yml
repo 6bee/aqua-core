@@ -68,8 +68,8 @@ jobs:
       - name: Upload build log
         uses: actions/upload-artifact@v7
         with:
-          name: msbuild_log
-          path: msbuild.binlog
+          name: build_log
+          path: build.binlog
           if-no-files-found: error
 
       - name: Upload packages
