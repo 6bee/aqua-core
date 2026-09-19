@@ -36,8 +36,8 @@ public static class DynamicObjectExtensions
 
     /// <summary>
     /// Returns <see langword="true"/> if this <see cref="DynamicObject"/> wraps a single value, <see langword="false"/> otherwise.
+    /// A wrapped value is represented by exactly one property with an empty name; named properties may provide metadata for the value.
     /// </summary>
     public static bool IsSingleValueWrapper(this DynamicObject dynamicObject)
-        => dynamicObject.CheckNotNull().PropertyCount is 1
-        && string.IsNullOrEmpty(dynamicObject.GetPropertyNames().Single());
+        => dynamicObject.CheckNotNull().Properties?.Count(static x => string.IsNullOrEmpty(x.Name)) is 1;
 }

@@ -147,7 +147,7 @@ public class DynamicObjectConverter(KnownTypesRegistry knownTypes) : ObjectConve
                 var type = reader.Read<TypeInfo?>(serializer);
 
                 reader.AssertProperty(nameof(DynamicProperty.Value));
-                var value = reader.Read(type, serializer);
+                var value = ReadPropertyValue(reader, name, type, typeInfo, serializer);
 
                 reader.AssertEndObject();
                 propertySet.Add(new DynamicProperty(name, value));
@@ -164,6 +164,25 @@ public class DynamicObjectConverter(KnownTypesRegistry knownTypes) : ObjectConve
         }
 
         throw reader.CreateException($"Unexpected token {reader.TokenType}");
+    }
+
+    private static object? ReadPropertyValue(JsonReader reader, string name, TypeInfo? propertyType, TypeInfo? objectType, JsonSerializer serializer)
+    {
+        var type = objectType?.ToType();
+        if (type?.IsArray is true && type.GetArrayRank() > 1)
+        {
+            if (string.IsNullOrEmpty(name) && propertyType?.ToType() == typeof(object[]))
+            {
+                return reader.Read(type.GetElementType()!.MakeArrayType(), serializer);
+            }
+
+            if (string.Equals(name, "Dimensions", StringComparison.Ordinal))
+            {
+                return reader.Read<int[]>(serializer)?.Cast<object>().ToArray();
+            }
+        }
+
+        return reader.Read(propertyType, serializer);
     }
 
     protected override void WriteObjectProperties(JsonWriter writer, DynamicObject instance, IReadOnlyCollection<Property> properties, JsonSerializer serializer)
@@ -214,7 +233,7 @@ public class DynamicObjectConverter(KnownTypesRegistry knownTypes) : ObjectConve
                     writer.WriteValue(property.Name);
 
                     writer.WritePropertyName(nameof(Type));
-                    serializer.Serialize(writer, CreateTypeInfo(property.Value));
+                    serializer.Serialize(writer, CreatePropertyTypeInfo(instanceType, property));
 
                     writer.WritePropertyName(nameof(DynamicProperty.Value));
                     if (property.Value is null)
@@ -254,4 +273,20 @@ public class DynamicObjectConverter(KnownTypesRegistry knownTypes) : ObjectConve
         => value is null
         ? null
         : new TypeInfo(value.GetType(), false, false);
+
+    private static TypeInfo? CreatePropertyTypeInfo(TypeInfo? objectType, DynamicProperty property)
+    {
+        var type = objectType?.ToType();
+        if (type?.IsArray is true && type.GetArrayRank() > 1 && string.IsNullOrEmpty(property.Name) && property.Value is object[] values)
+        {
+            var elementType = values.Any(static x => x is not null) && values.All(static x => x is null or string)
+                ? typeof(string)
+                : values.Any(static x => x is DynamicObject) && values.All(static x => x is null or DynamicObject)
+                ? typeof(DynamicObject)
+                : type.GetElementType()!;
+            return new TypeInfo(elementType.MakeArrayType(), false, false);
+        }
+
+        return CreateTypeInfo(property.Value);
+    }
 }

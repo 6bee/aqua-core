@@ -120,7 +120,11 @@ public class TypeResolver : ITypeResolver
 
             if (type.IsArray)
             {
-                type = type.GetElementType()!.MakeGenericType(genericArguments!).MakeArrayType();
+                var rank = type.GetArrayRank();
+                var elementType = type.GetElementType()!.MakeGenericType(genericArguments!);
+                type = rank is 1
+                    ? elementType.MakeArrayType()
+                    : elementType.MakeArrayType(rank);
             }
             else
             {

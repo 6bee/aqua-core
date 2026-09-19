@@ -168,6 +168,8 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
     private const string NumericPattern = @"([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?";
 
+    private const string ArrayDimensionsPropertyName = "Dimensions";
+
     private const string ComplexNumberParserRegexPattern = $"^(?<Re>[+-]?({NumericPattern}))(?<Sign>[+-])[iI](?<Im>{NumericPattern})$";
 
     private static readonly Regex _complexNumberParserRegex = new(ComplexNumberParserRegexPattern);
@@ -695,9 +697,14 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 return dynamicObj;
             }
 
+            if (resultType.IsArray && resultType.GetArrayRank() > 1)
+            {
+                return MapMultidimensionalArray(dynamicObj, resultType);
+            }
+
             if (dynamicObj.IsSingleValueWrapper())
             {
-                return MapRequired(dynamicObj.GetValues().Single(), resultType);
+                return MapRequired(dynamicObj.Get(), resultType);
             }
 
             return MapInternal(dynamicObj, sourceType, resultType);
@@ -1006,6 +1013,22 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 return dynamicObject;
             };
         }
+        else if (sourceType.IsArray && sourceType.GetArrayRank() > 1)
+        {
+            factory = (t, o, f) =>
+            {
+                var source = (Array)o;
+                var dimensions = GetArrayDimensions(source);
+                var items = source
+                    .Cast<object?>()
+                    .Select(x => MapToDynamicObjectIfRequired(x, f))
+                    .ToArray();
+                var dynamicObject = _createDynamicObject(t, o);
+                dynamicObject.Add(string.Empty, items);
+                dynamicObject.Add(ArrayDimensionsPropertyName, dimensions);
+                return dynamicObject;
+            };
+        }
         else if (obj.IsCollection(out var collection) && !ShouldMapToDynamicObject(collection))
         {
             factory = (t, o, f) =>
@@ -1170,6 +1193,144 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
         }
 
         return _fromContext.TryGetOrCreateNew(targetType, obj, factory, initializer);
+    }
+
+    private Array MapMultidimensionalArray(DynamicObject dynamicObject, Type targetType)
+    {
+        var properties = dynamicObject.Properties ?? throw new DynamicObjectMapperException("Multidimensional array properties must not be null.");
+        var valueProperties = properties.Where(static x => string.IsNullOrEmpty(x.Name)).ToList();
+        if (valueProperties.Count is not 1)
+        {
+            throw new DynamicObjectMapperException("A multidimensional array must contain exactly one empty-name value property.");
+        }
+
+        var dimensionProperties = properties.Where(x => string.Equals(x.Name, ArrayDimensionsPropertyName, StringComparison.Ordinal)).ToList();
+        if (dimensionProperties.Count is not 1)
+        {
+            throw new DynamicObjectMapperException($"A multidimensional array must contain exactly one '{ArrayDimensionsPropertyName}' property.");
+        }
+
+        var dimensions = ReadArrayDimensions(dimensionProperties[0].Value, targetType.GetArrayRank());
+        var values = ReadArrayValues(valueProperties[0].Value);
+        var expectedValueCount = GetArrayLength(dimensions);
+        if (values.Count != expectedValueCount)
+        {
+            throw new DynamicObjectMapperException($"Multidimensional array value count {values.Count} does not match the dimensions length {expectedValueCount}.");
+        }
+
+        var elementType = targetType.GetElementType()!;
+        var result = Array.CreateInstance(elementType, dimensions);
+        var indexes = new int[dimensions.Length];
+        for (var offset = 0; offset < values.Count; offset++)
+        {
+            var value = MapFromDynamicObjectGraph(values[offset], elementType);
+            result.SetValue(value, indexes);
+            IncrementArrayIndexes(indexes, dimensions);
+        }
+
+        return result;
+    }
+
+    private static int[] ReadArrayDimensions(object? value, int rank)
+    {
+        if (value is not IEnumerable collection || value is string)
+        {
+            throw new DynamicObjectMapperException($"The '{ArrayDimensionsPropertyName}' property must contain a collection of array lengths.");
+        }
+
+        var values = collection.Cast<object?>().ToList();
+        if (values.Count != rank)
+        {
+            throw new DynamicObjectMapperException($"The '{ArrayDimensionsPropertyName}' property must contain exactly {rank} array lengths.");
+        }
+
+        var dimensions = new int[rank];
+        for (var dimension = 0; dimension < rank; dimension++)
+        {
+            dimensions[dimension] = GetArrayDimension(values[dimension], dimension);
+        }
+
+        return dimensions;
+    }
+
+    private static int GetArrayDimension(object? value, int dimension)
+    {
+        try
+        {
+            var length = value switch
+            {
+                byte x => x,
+                sbyte x => x,
+                short x => x,
+                ushort x => x,
+                int x => x,
+                uint x => checked((int)x),
+                long x => checked((int)x),
+                ulong x => checked((int)x),
+                System.Text.Json.JsonElement x when x.ValueKind is System.Text.Json.JsonValueKind.Number && x.TryGetInt32(out var number) => number,
+                _ => throw new DynamicObjectMapperException($"Array dimension {dimension} must be an integral value."),
+            };
+
+            return length >= 0
+                ? length
+                : throw new DynamicObjectMapperException($"Array dimension {dimension} must not be negative.");
+        }
+        catch (OverflowException exception)
+        {
+            throw new DynamicObjectMapperException($"Array dimension {dimension} exceeds the supported length.", exception);
+        }
+    }
+
+    private static IReadOnlyList<object?> ReadArrayValues(object? value)
+    {
+        if (value is not IEnumerable collection || value is string)
+        {
+            throw new DynamicObjectMapperException("The multidimensional array value property must contain a collection.");
+        }
+
+        return collection.Cast<object?>().ToList();
+    }
+
+    private static int GetArrayLength(IEnumerable<int> dimensions)
+    {
+        try
+        {
+            return dimensions.Aggregate(1, static (length, dimension) => checked(length * dimension));
+        }
+        catch (OverflowException exception)
+        {
+            throw new DynamicObjectMapperException("The multidimensional array length exceeds the supported size.", exception);
+        }
+    }
+
+    private static void IncrementArrayIndexes(int[] indexes, int[] dimensions)
+    {
+        for (var dimension = indexes.Length - 1; dimension >= 0; dimension--)
+        {
+            indexes[dimension]++;
+            if (indexes[dimension] < dimensions[dimension])
+            {
+                return;
+            }
+
+            indexes[dimension] = 0;
+        }
+    }
+
+    private static object[] GetArrayDimensions(Array array)
+    {
+        var dimensions = new object[array.Rank];
+        for (var dimension = 0; dimension < array.Rank; dimension++)
+        {
+            if (array.GetLowerBound(dimension) is not 0)
+            {
+                throw new DynamicObjectMapperException("Arrays with non-zero lower bounds are not supported.");
+            }
+
+            dimensions[dimension] = array.GetLength(dimension);
+        }
+
+        return dimensions;
     }
 
     private void InitializeProperties(Type type, DynamicObject item, object obj)

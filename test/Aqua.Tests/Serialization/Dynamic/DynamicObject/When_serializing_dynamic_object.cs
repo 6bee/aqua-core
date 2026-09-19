@@ -284,8 +284,50 @@ public abstract class When_serializing_dynamic_object(Func<DynamicObject, Dynami
             },
         };
 
-        var result = Serialize<int?[,,], int?[]>(array);
-        result.Length.ShouldBe(60);
+        var result = Serialize(array);
+
+        result.ShouldNotBeSameAs(array);
+        result.GetLength(0).ShouldBe(2);
+        result.GetLength(1).ShouldBe(6);
+        result.GetLength(2).ShouldBe(5);
+        result.Cast<int?>().ShouldBe(array.Cast<int?>().ToArray());
+    }
+
+    [Fact]
+    public void Three_dimensional_array_with_empty_dimension_should_serialize()
+    {
+        var array = new int?[2, 0, 3];
+
+        var result = Serialize(array);
+
+        result.ShouldNotBeSameAs(array);
+        result.GetLength(0).ShouldBe(2);
+        result.GetLength(1).ShouldBe(0);
+        result.GetLength(2).ShouldBe(3);
+        result.Length.ShouldBe(0);
+    }
+
+    [Fact]
+    public void Three_dimensional_array_of_reference_type_should_serialize()
+    {
+        var array = new TestData.RecordType[1, 2, 2]
+        {
+            {
+                { new() { Value = "one" }, null },
+                { new() { Value = "two" }, new() { Value = "three" } },
+            },
+        };
+
+        var result = Serialize(array);
+
+        result.ShouldNotBeSameAs(array);
+        result.GetLength(0).ShouldBe(1);
+        result.GetLength(1).ShouldBe(2);
+        result.GetLength(2).ShouldBe(2);
+        result[0, 0, 0].Value.ShouldBe("one");
+        result[0, 0, 1].ShouldBeNull();
+        result[0, 1, 0].Value.ShouldBe("two");
+        result[0, 1, 1].Value.ShouldBe("three");
     }
 
     [Fact]

@@ -34,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Preserve multidimensional array shape when mapping and serializing `DynamicObject`
+
 ### Security
 
 ## [5.5.1][5.5.1] - 2026-01-19
