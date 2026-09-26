@@ -3,7 +3,6 @@
 namespace Aqua.Tests;
 
 using Aqua.TypeSystem;
-
 using System.Collections;
 using System.Globalization;
 
