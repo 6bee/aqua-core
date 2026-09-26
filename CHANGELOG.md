@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove `KnownTypesRegistry` from `Aqua.Newtonsoft.Json` (consolidated into `Aqua.KnownTypesRegistry`)
 - Remove abstract types `Aqua.TypeSystem.MemberInfo` and `Aqua.TypeSystem.MethodBaseInfo` from `KnownTypesRegistry` default types (they cannot be concrete deserialization targets)
 - Remove obsolete `AssemblyInfo.cs` files across projects
+- Remove property `DynamicObjectMapperSettings.UtilizeFormatterServices` which was marked obsolete for .NET 8 and later
 
 ### Deprecated
 
