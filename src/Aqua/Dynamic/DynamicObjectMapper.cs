@@ -200,6 +200,8 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             typeof(DateTimeOffset),
             typeof(BigInteger),
             typeof(Complex),
+            typeof(IntPtr),
+            typeof(UIntPtr),
             typeof(byte[]),
 #if NET5_0_OR_GREATER
             typeof(Half),
@@ -304,6 +306,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(ulong), static x => checked((ulong)(int)x) },
                     { typeof(char), static x => checked((char)(int)x) },
                     { typeof(BigInteger), static x => checked((BigInteger)(int)x) },
+                    { typeof(IntPtr), static x => checked((IntPtr)(int)x) },
 #if NET7_0_OR_GREATER
                     // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
                     { typeof(UInt128), static x => checked((UInt128)(int)x) },
@@ -319,6 +322,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(ushort), static x => checked((ushort)(uint)x) },
                     { typeof(int), static x => checked((int)(uint)x) },
                     { typeof(char), static x => checked((char)(uint)x) },
+                    { typeof(UIntPtr), static x => checked((UIntPtr)(uint)x) },
                 }
             },
             {
@@ -333,6 +337,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(ulong), static x => checked((ulong)(long)x) },
                     { typeof(char), static x => checked((char)(long)x) },
                     { typeof(BigInteger), static x => checked((BigInteger)(long)x) },
+                    { typeof(IntPtr), static x => checked((IntPtr)(long)x) },
 #if NET7_0_OR_GREATER
                     // source: https://learn.microsoft.com/en-us/dotnet/api/system.int128.op_explicit
                     { typeof(UInt128), static x => checked((UInt128)(long)x) },
@@ -351,6 +356,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                     { typeof(long), static x => checked((long)(ulong)x) },
                     { typeof(char), static x => checked((char)(ulong)x) },
                     { typeof(BigInteger), static x => checked((BigInteger)(ulong)x) },
+                    { typeof(UIntPtr), static x => checked((UIntPtr)(ulong)x) },
                 }
             },
             {
@@ -460,6 +466,20 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                             return new DateTimeOffset(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Millisecond, default);
                         }
                     },
+                }
+            },
+            {
+                typeof(IntPtr), new()
+                {
+                    { typeof(long), static x => checked((long)(IntPtr)x) },
+                    { typeof(int), static x => checked((int)(IntPtr)x) },
+                }
+            },
+            {
+                typeof(UIntPtr), new()
+                {
+                    { typeof(ulong), static x => checked((ulong)(UIntPtr)x) },
+                    { typeof(uint), static x => checked((uint)(UIntPtr)x) },
                 }
             },
 #if NET5_0_OR_GREATER
@@ -750,6 +770,32 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 return ParseToNativeType(resultType.AsNonNullableType(), str);
             }
 
+            if (resultType == typeof(IntPtr))
+            {
+                if (obj is long longValue)
+                {
+                    return checked((IntPtr)longValue);
+                }
+
+                if (obj is int intValue)
+                {
+                    return checked((IntPtr)intValue);
+                }
+            }
+
+            if (resultType == typeof(UIntPtr))
+            {
+                if (obj is ulong ulongValue)
+                {
+                    return checked((UIntPtr)ulongValue);
+                }
+
+                if (obj is uint uintValue)
+                {
+                    return checked((UIntPtr)uintValue);
+                }
+            }
+
             if (objectType == resultType)
             {
                 return obj;
@@ -803,7 +849,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
             if (enumerableType.IsAssignableFrom(resultType))
             {
-                ctor = resultType.GetConstructors().FirstOrDefault(static c => c.GetParameters().Length is 0);
+                ctor = Array.Find(resultType.GetConstructors(), static c => c.GetParameters().Length is 0);
                 if (ctor is not null)
                 {
                     var addMethod = resultType.GetMethods()
@@ -861,7 +907,22 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
         if (_isNativeType(type))
         {
-            return _settings.FormatNativeTypesAsString ? FormatNativeTypeAsString(obj, type) : obj;
+            if (_settings.FormatNativeTypesAsString)
+            {
+                return FormatNativeTypeAsString(obj, type);
+            }
+
+            if (obj is IntPtr ip)
+            {
+                return (long)ip;
+            }
+
+            if (obj is UIntPtr up)
+            {
+                return (ulong)up;
+            }
+
+            return obj;
         }
 
         if (type.IsEnum())
@@ -887,7 +948,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 {
                     elementType = typeof(string);
                 }
-                else if (items.All(static x => x is null or DynamicObject))
+                else if (Array.TrueForAll(items, static x => x is null or DynamicObject))
                 {
                     elementType = typeof(DynamicObject);
                 }
@@ -898,8 +959,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             return items;
         }
 
-        if (_settings.PassthroughAquaTypeSystemTypes &&
-            (obj is TypeSystem.TypeInfo or TypeSystem.MemberInfo))
+        if (_settings.PassthroughAquaTypeSystemTypes && obj is TypeSystem.TypeInfo or TypeSystem.MemberInfo)
         {
             return obj;
         }
@@ -1467,8 +1527,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
         if (targetType == typeof(Complex))
         {
-            var m = _complexNumberParserRegex.Match(value);
-            if (m.Success)
+            if (_complexNumberParserRegex.Match(value) is { Success: true } m)
             {
                 var re = double.Parse(m.Groups["Re"].Value, CultureInfo.InvariantCulture);
                 var im = double.Parse(m.Groups["Sign"].Value + m.Groups["Im"].Value, CultureInfo.InvariantCulture);
@@ -1476,6 +1535,16 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
             }
 
             throw new DynamicObjectMapperException(new FormatException($"Value '{value}' cannot be parsed into complex number."));
+        }
+
+        if (targetType == typeof(IntPtr))
+        {
+            return (IntPtr)(long)ParseToNativeType(typeof(long), value);
+        }
+
+        if (targetType == typeof(UIntPtr))
+        {
+            return (UIntPtr)(ulong)ParseToNativeType(typeof(ulong), value);
         }
 
         if (targetType == typeof(byte[]))
@@ -1684,6 +1753,16 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 #pragma warning restore S6618 // "string.Create" should be used instead of "FormattableString"
 #endif // NET8_0_OR_GREATER
                     $"{c.Real:R}{Math.Sign(c.Imaginary):+;-}i{Math.Abs(c.Imaginary):R}");
+        }
+
+        if (type == typeof(IntPtr) || type == typeof(IntPtr?))
+        {
+            return FormatNativeTypeAsString(((IntPtr)obj).ToInt64(), typeof(long));
+        }
+
+        if (type == typeof(UIntPtr) || type == typeof(UIntPtr?))
+        {
+            return FormatNativeTypeAsString(((UIntPtr)obj).ToUInt64(), typeof(ulong));
         }
 
         if (type == typeof(byte[]))
