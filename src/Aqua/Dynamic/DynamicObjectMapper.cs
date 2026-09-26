@@ -1153,8 +1153,10 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                                 .ToArray(),
                         };
                     })
-                    .OrderByDescending(static i => i.ParametersCount is 0 ? int.MaxValue : i.ParametersCount)
-                    .FirstOrDefault(static i => i.Parameters.All(static p => p.Property is not null));
+                    // - prioritize parameterless ctor if available to avoid parameterized ctors with side effects
+                    // - Exception types prioritize parameterized ctors since properties are read-only
+                    .OrderByDescending(static i => !typeof(Exception).IsAssignableFrom(i.Info.DeclaringType) && i.ParametersCount is 0 ? int.MaxValue : i.ParametersCount)
+                    .FirstOrDefault(static i => Array.TrueForAll(i.Parameters, static p => p.Property is not null));
 
                 if (constructor is not null)
                 {
