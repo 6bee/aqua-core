@@ -18,12 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Consolidate `KnownTypesRegistry` from `Aqua.Text.Json` into root namespace `Aqua.KnownTypesRegistry`
-- `Aqua.KnownTypesRegistry` generates derived type key for generic types (except `Nullable<T>`) including generic type arguments which is potentially a breaking change.
+- `Aqua.KnownTypesRegistry` generates derived type key for generic types (except `Nullable<T>`) including generic type arguments which is potentially a breaking change
 - Replace _Aqua.protobuf-net_ serialization backend with new _Aqua.Protobuf_ project
 - Update `Aqua.Newtonsoft.Json` project: remove (replace) `KnownTypesRegistry`, update converters and contract resolvers
 - Bump _System.Text.Json_ from 10.0.0 to 10.0.12 (netstandard2.0;netstandard2.1)
 - Prioritize parameterized ctors for mapping dynamic object to exception types since properties are read-only
 - Mapping `System.IntPtr`/`System.UIntPtr` as `long`/`ulong`
+- Prevent stack overflow due to cyclic references established through constructor parameter mapping; degrade to the default value instead of recursing indefinitely
 
 ### Removed
 

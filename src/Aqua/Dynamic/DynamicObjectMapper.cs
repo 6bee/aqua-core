@@ -54,11 +54,11 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
     }
 
     [DebuggerDisplay("{Type} {Value}")]
-    private readonly struct ReferenceMapKey(Type type, DynamicObject value) : IEquatable<ReferenceMapKey>
+    private readonly struct ReferenceMapKey(Type type, object? value) : IEquatable<ReferenceMapKey>
     {
         public Type Type { get; } = type;
 
-        public DynamicObject Value { get; } = value;
+        public object? Value { get; } = value;
 
         public override bool Equals(object? obj)
             => obj is ReferenceMapKey other
@@ -66,15 +66,10 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
 
         public bool Equals(ReferenceMapKey other)
             => EqualityComparer<Type>.Default.Equals(Type, other.Type)
-            && ReferenceEqualityComparer<DynamicObject>.Default.Equals(Value, other.Value);
+            && ReferenceEquals(Value, other.Value);
 
         public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((Type?.GetHashCode() ?? 0) * 397) ^ (Value?.GetHashCode() ?? 0);
-            }
-        }
+            => unchecked(((Type?.GetHashCode() ?? 0) * 397) ^ (Value?.GetHashCode() ?? 0));
     }
 
     private interface IMappingContext
@@ -128,7 +123,12 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
     {
         private readonly Dictionary<ReferenceMapKey, object> _referenceMap = [];
         private readonly HashSet<Type> _safeTypes = [];
+        private readonly HashSet<ReferenceMapKey> _inProgressMappings = [];
         private readonly ITypeSafetyChecker? _typeSafetyChecker = typeSafetyChecker;
+
+        internal bool TryEnterMapping(object? value, Type type) => _inProgressMappings.Add(new ReferenceMapKey(type, value));
+
+        internal void LeaveMapping(object? value, Type type) => _inProgressMappings.Remove(new ReferenceMapKey(type, value));
 
         /// <summary>
         /// Returns an existing instance if found in the reference map, creates a new instance otherwise.
@@ -1207,7 +1207,32 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                                     Info = parameter,
                                     Property = obj.Properties?
                                         .Where(dynamicProperty => string.Equals(dynamicProperty.Name, parameter.Name, StringComparison.OrdinalIgnoreCase))
-                                        .Select(dynamicProperty => new { dynamicProperty.Name, Value = MapFromDynamicObjectGraph(dynamicProperty.Value, parameter.ParameterType) })
+                                        .Select(dynamicProperty =>
+                                        {
+                                            var value = ResolveConstructorParameter(dynamicProperty.Value, parameter.ParameterType);
+                                            return new { dynamicProperty.Name, Value = value };
+
+                                            object? ResolveConstructorParameter(object? value, Type type)
+                                            {
+                                                // cyclic references can be established through constructor parameter mapping
+                                                // before the created instance is registered in the reference map,
+                                                // degrade to the default value instead of recursing indefinitely,
+                                                // alternatively throw DynamicObjectMapperException
+                                                if (!_fromContext.TryEnterMapping(value, type))
+                                                {
+                                                    return GetDefault(targetType);
+                                                }
+
+                                                try
+                                                {
+                                                    return MapFromDynamicObjectGraph(value, type);
+                                                }
+                                                finally
+                                                {
+                                                    _fromContext.LeaveMapping(value, type);
+                                                }
+                                            }
+                                        })
                                         .SingleOrDefault(dynamicProperty => IsAssignable(parameter.ParameterType, dynamicProperty.Value)),
                                 })
                                 .ToArray(),

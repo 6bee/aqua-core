@@ -3,6 +3,7 @@
 namespace Aqua.Tests.Dynamic.DynamicObjectMapper;
 
 using Aqua.Dynamic;
+using System.Reflection;
 
 public class When_recreating_exception
 {
@@ -141,4 +142,49 @@ public class When_recreating_exception
         // the captured "message" value must not be bound to the parameterized ctor
         result.FromParameterizedCtor.ShouldBeNull();
     }
+
+    [Fact]
+    public void Should_recreate_self_referencing_inner_exception()
+    {
+        var exception = new Exception("Self");
+
+        // establish the cyclic reference via reflection since the base property is read-only
+        typeof(Exception)
+            .GetField("_innerException", BindingFlags.Instance | BindingFlags.NonPublic)
+            ?.SetValue(exception, exception);
+
+        var mapped = Mapper.MapObject(exception);
+
+        var result = Should.NotThrow(() => Mapper.Map<Exception>(mapped));
+
+        result.Message.ShouldBe("Self");
+
+        // the cyclic reference cannot be restored without recursing indefinitely,
+        // the inner exception degrades to a null value
+        result.InnerException.ShouldBeNull();
+    }
+
+#if NETFRAMEWORK
+    [Fact(Skip = "Fails to restore System.Collections.IDictionary property from dynamic object")]
+    public void Should_recreate_exception_with_data_with_binary_formatter()
+    {
+        var mapper = new DynamicObjectMapper();
+
+        var exception = new DivideByZeroException("Test") { Data = { ["K"] = "V" } };
+
+        var mapped = mapper.MapObject(exception);
+
+        // the content of the dictionary-typed Data member is not restored
+        // (pre-existing dictionary property limitation); the recreation must not fail
+        var result = Should.NotThrow(() => mapper.Map<DivideByZeroException>(mapped));
+
+        result.Message.ShouldBe("Test");
+
+        // the Data property is lazily initialized, so it is not null even if its content was not restored
+        result.Data.ShouldNotBeNull();
+
+        // data items are not restored since Data property is read-only
+        result.Data["K"].ShouldBe("V");
+    }
+#endif // NETFRAMEWORK
 }
