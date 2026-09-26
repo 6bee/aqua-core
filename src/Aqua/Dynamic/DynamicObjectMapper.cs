@@ -810,7 +810,7 @@ public partial class DynamicObjectMapper : IDynamicObjectMapper
                 .Cast<object>()
                 .Select(x => MapFromDynamicObjectGraph(x, elementType))
                 .ToList();
-            var r1 = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, new[] { items });
+            var r1 = MethodInfos.Enumerable.Cast.MakeGenericMethod(elementType).Invoke(null, [items]);
 
             if (resultType.IsArray)
             {
