@@ -93,8 +93,7 @@ partial class DynamicObjectMapper
     {
         var memberName = member.Name;
 
-        var match = _backingFieldRegex.Match(memberName);
-        if (match.Success)
+        if (_backingFieldRegex.Match(memberName) is { Success: true } match)
         {
             memberName = match.Groups["name"].Value;
         }
