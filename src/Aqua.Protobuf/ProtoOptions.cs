@@ -8,6 +8,12 @@ public sealed record class ProtoOptions
 
     public TimeSpanEncoding TimeSpanEncoding { get; init; }
 
+    /// <summary>
+    /// Gets the <see cref="ReferenceHandler"/> to use for serialization.
+    /// </summary>
+    /// <remarks>
+    /// This setting is applied only during serialization and is ignored during deserialization.
+    /// </remarks>
     public ReferenceHandler ReferenceHandler { get; init; }
 
     public IMapperResolver Resolver

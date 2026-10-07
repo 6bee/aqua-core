@@ -5,6 +5,9 @@ namespace Aqua.MessagePack;
 /// <summary>
 /// The <see cref="ReferenceHandler"/> to be used at run time.
 /// </summary>
+/// <remarks>
+/// This setting is applied only during serialization and is not used during deserialization.
+/// </remarks>
 public enum ReferenceHandler
 {
     /// <summary>
