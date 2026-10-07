@@ -2,6 +2,12 @@
 
 namespace Aqua.Protobuf;
 
+/// <summary>
+/// Holds state used to serialize and deserialize a logical protobuf operation unit.
+/// </summary>
+/// <remarks>
+/// Instances are not thread-safe. Create a new instance per logical operation unit and do not share across threads.
+/// </remarks>
 public sealed class ProtoContext(ProtoOptions? options = null)
 {
     private readonly ProtoOptions _options = options ?? new();

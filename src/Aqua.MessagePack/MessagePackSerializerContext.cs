@@ -3,11 +3,14 @@
 namespace Aqua.MessagePack;
 
 /// <summary>
-/// Provides serialization and deserialization reference trackers for MessagePack processing.
+/// Holds state used to serialize and deserialize a logical MessagePack operation unit.
 /// </summary>
 /// <param name="referenceHandler">
 /// The <see cref="ReferenceHandler"/> to use for serialization. This value is ignored during deserialization.
 /// </param>
+/// <remarks>
+/// Instances are not thread-safe. Create a new instance per logical operation unit and do not share across threads.
+/// </remarks>
 public class MessagePackSerializerContext(ReferenceHandler referenceHandler = ReferenceHandler.Unspecified)
 {
     private SerializationReferenceTracker? _serializationTracker;
