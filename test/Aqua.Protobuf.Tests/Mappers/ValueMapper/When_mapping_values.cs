@@ -129,6 +129,6 @@ public sealed class When_mapping_values
     [Fact]
     public void Should_throw_for_unsupported_scalar()
     {
-        Should.Throw<ProtobufSerializationException>(() => ValueMapper.Instance.ToProto(new Version(1, 2), ProtoContext.ForWrite()));
+        Should.Throw<ProtobufSerializationException>(() => ValueMapper.Instance.ToProto(new Version(1, 2), new ProtoContext()));
     }
 }

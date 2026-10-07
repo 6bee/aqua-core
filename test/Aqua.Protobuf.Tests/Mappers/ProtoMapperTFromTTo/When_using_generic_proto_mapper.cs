@@ -11,10 +11,9 @@ public sealed class When_using_generic_proto_mapper
     public void Should_dispatch_to_typed_methods_through_non_generic_interface()
     {
         IProtoMapper<string> mapper = new StringMapper();
-        var context = ProtoContext.ForWrite();
 
-        var proto = mapper.ToProto("aqua", context);
-        var result = mapper.FromProto(proto, ProtoContext.ForRead());
+        var proto = mapper.ToProto("aqua", new ProtoContext());
+        var result = mapper.FromProto(proto, new ProtoContext());
 
         proto.ShouldBeOfType<Proto.Value>().String.ShouldBe("aqua");
         result.ShouldBe("aqua");

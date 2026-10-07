@@ -10,7 +10,7 @@ public class When_creating_a_reference_proto_for_a_null_value
     [Fact]
     public void Should_create_a_null_proto()
     {
-        var context = ProtoContext.ForWrite();
+        var context = new ProtoContext();
 
         var proto = context.ToReferenceProto<TestReferenceProto, TestValueProto, TestValue>(null, (_, _, _) => throw new InvalidOperationException());
 
@@ -23,7 +23,7 @@ public class When_creating_a_reference_proto_for_a_new_value
     [Fact]
     public void Should_create_and_populate_a_value_proto()
     {
-        var context = ProtoContext.ForWrite(new ProtoOptions { ReferenceHandler = ReferenceHandler.Preserve });
+        var context = new ProtoContext(new ProtoOptions { ReferenceHandler = ReferenceHandler.Preserve });
         var value = new TestValue { Name = "aqua" };
 
         var proto = context.ToReferenceProto<TestReferenceProto, TestValueProto, TestValue>(value, (target, source, _) => target.Name = source.Name);
@@ -38,7 +38,7 @@ public class When_creating_a_reference_proto_for_a_registered_value
     [Fact]
     public void Should_create_a_reference_proto_when_preserving_references()
     {
-        var context = ProtoContext.ForWrite(new ProtoOptions { ReferenceHandler = ReferenceHandler.Preserve });
+        var context = new ProtoContext(new ProtoOptions { ReferenceHandler = ReferenceHandler.Preserve });
         var value = new TestValue();
         context.ToReferenceProto<TestReferenceProto, TestValueProto, TestValue>(value, (_, _, _) => { });
 
@@ -53,7 +53,7 @@ public class When_resolving_a_reference_proto
     [Fact]
     public void Should_return_the_registered_reference()
     {
-        var context = ProtoContext.ForRead();
+        var context = new ProtoContext();
         var value = context.Resolve<TestValue, TestValueProto>(new TestValueProto { Id = 7 }, (target, _, _) => target.Name = "aqua");
 
         context.Resolve<TestValue>(new Ref { Id = 7 }).ShouldBeSameAs(value);

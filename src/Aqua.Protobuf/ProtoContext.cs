@@ -2,36 +2,19 @@
 
 namespace Aqua.Protobuf;
 
-public sealed class ProtoContext
+public sealed class ProtoContext(ProtoOptions? options = null)
 {
-    private readonly ProtoOptions _options;
-    private readonly SerializationReferenceTracker? _serializationTracker;
-    private readonly DeserializationReferenceTracker? _deserializationTracker;
-
-    private ProtoContext(bool isWrite, ProtoOptions? options = null)
-    {
-        _options = options ?? new();
-        if (isWrite)
-        {
-            _serializationTracker = new SerializationReferenceTracker(_options.ReferenceHandler);
-        }
-        else
-        {
-            _deserializationTracker = new DeserializationReferenceTracker();
-        }
-    }
-
-    public static ProtoContext ForRead(ProtoOptions? options = null) => new(false, options);
-
-    public static ProtoContext ForWrite(ProtoOptions? options = null) => new(true, options);
+    private readonly ProtoOptions _options = options ?? new();
+    private SerializationReferenceTracker? _serializationTracker;
+    private DeserializationReferenceTracker? _deserializationTracker;
 
     public ProtoOptions Options => _options;
 
-    public ISerializationReferenceTracker SerializationTracker
-        => _serializationTracker ?? throw new InvalidOperationException("Context is configured for read.");
+    public ISerializationReferenceTracker SerializationTracker => _serializationTracker ??= new(_options.ReferenceHandler);
 
-    public IDeserializationReferenceTracker DeserializationTracker
-        => _deserializationTracker ?? throw new InvalidOperationException("Context is configured for write.");
+    public IDeserializationReferenceTracker DeserializationTracker => _deserializationTracker ??= new();
 
     public IMapperResolver Resolver => _options.Resolver;
+
+    public static implicit operator ProtoContext(ProtoOptions? options) => new(options);
 }

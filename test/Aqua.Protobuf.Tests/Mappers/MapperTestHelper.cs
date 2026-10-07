@@ -10,7 +10,7 @@ internal static class MapperTestHelper
     public static T RoundTrip<T, TProto>(IProtoMapper<T, TProto> mapper, T value, ProtoOptions options = null)
         where TProto : IMessage
     {
-        var proto = mapper.ToProto(value, ProtoContext.ForWrite(options));
-        return mapper.FromProto(proto, ProtoContext.ForRead(options));
+        var proto = mapper.ToProto(value, options);
+        return mapper.FromProto(proto, options);
     }
 }

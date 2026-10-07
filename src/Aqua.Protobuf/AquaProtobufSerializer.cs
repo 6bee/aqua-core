@@ -183,13 +183,11 @@ public static class AquaProtobufSerializer
 
     private static Proto.Value ToProto(object? graph, ProtoOptions? options = null)
     {
-        var context = ProtoContext.ForWrite(options);
-        return ValueMapper.Instance.ToProto(graph, context);
+        return ValueMapper.Instance.ToProto(graph, options);
     }
 
     private static object? FromProto(Proto.Value proto, ProtoOptions? options = null)
     {
-        var context = ProtoContext.ForRead(options);
-        return ValueMapper.Instance.FromProto(proto, context);
+        return ValueMapper.Instance.FromProto(proto, options);
     }
 }
