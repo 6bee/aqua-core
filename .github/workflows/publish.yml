@@ -20,7 +20,7 @@ jobs:
         with:
           prefix: 'v'
 
-      - name: Validate version tag
+      - name: Invalid version tag
         if: steps.version.outputs.is_valid != 'true'
         run: |
           echo "Version tag format invalid: ${{ steps.version.outputs.full }}"
