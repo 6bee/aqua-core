@@ -29,9 +29,9 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Run tests with coverage
+      - name: Test
         run: >
-          dotnet test Aqua.slnx -f ${{ matrix.framework }} /bl `
+          dotnet test Aqua.slnx -f ${{ matrix.framework }} /bl:msbuild.${{ matrix.framework }}.binlog `
             --coverlet `
             --results-directory TestResults `
             --coverlet-output-format json `
@@ -43,13 +43,14 @@ jobs:
             --coverlet-exclude-by-attribute CompilerGenerated
 
       - name: Upload build log
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: msbuild_log_${{ matrix.framework }}
-          path: msbuild.binlog
+          path: msbuild.${{ matrix.framework }}.binlog
           if-no-files-found: error
 
-      - name: Upload coverage artifact
+      - name: Upload coverage reports
         uses: actions/upload-artifact@v3
         with:
           name: coverage

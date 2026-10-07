@@ -57,21 +57,23 @@ jobs:
           echo "Create release: v$Version"
 
       - name: Restore
-        run: dotnet restore Aqua.slnx --locked-mode
+        run: dotnet restore Aqua.slnx --locked-mode /bl:msbuild.restore.binlog
 
       - name: Build
-        run: dotnet build Aqua.slnx --no-restore -c Release /bl:build.binlog
+        run: dotnet build Aqua.slnx --no-restore -c Release /bl:msbuild.build.binlog
 
       - name: Test
-        run: dotnet test Aqua.slnx --no-build -c Release /bl:test.binlog
+        run: dotnet test Aqua.slnx --no-build -c Release /bl:msbuild.test.binlog
 
       - name: Upload build logs
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: msbuild_logs
           path: |
-            build.binlog
-            test.binlog
+            msbuild.restore.binlog
+            msbuild.build.binlog
+            msbuild.test.binlog
           if-no-files-found: error
 
       - name: Upload packages

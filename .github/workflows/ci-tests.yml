@@ -21,14 +21,14 @@ jobs:
           global-json-file: global.json
 
       - name: Restore
-        run: dotnet restore Aqua.slnx --locked-mode
+        run: dotnet restore Aqua.slnx --locked-mode /bl:msbuild.restore.binlog
 
       - name: Build
-        run: dotnet build Aqua.slnx --no-restore
+        run: dotnet build Aqua.slnx --no-restore /bl:msbuild.build.binlog
 
-      - name: Run tests with coverage
+      - name: Test
         run: >
-          dotnet test Aqua.slnx --no-build `
+          dotnet test Aqua.slnx --no-build /bl:msbuild.test.binlog `
             --coverlet `
             --results-directory TestResults `
             --coverlet-output-format json `
@@ -39,7 +39,18 @@ jobs:
             --coverlet-exclude-by-attribute DebuggerNonUserCode `
             --coverlet-exclude-by-attribute CompilerGenerated
 
-      - name: Upload coverage artifact
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: msbuild_logs
+          path: |
+            msbuild.restore.binlog
+            msbuild.build.binlog
+            msbuild.test.binlog
+          if-no-files-found: error
+
+      - name: Upload coverage reports
         uses: actions/upload-artifact@v7
         with:
           name: coverage
