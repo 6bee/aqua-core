@@ -73,20 +73,19 @@ public class When_mapping_a_value_through_a_proto_context
     }
 }
 
-public class When_serializing_a_value_through_a_proto_context
+public class When_serializing_a_value_through_fresh_proto_context
 {
     [Fact]
     public void Should_support_all_transport_overloads()
     {
-        var context = new ProtoContext();
-        var expected = context.Serialize(42);
+        var expected = new ProtoContext().Serialize(42);
         var span = new byte[expected.Length];
         var writer = new ArrayBufferWriter<byte>();
         using var stream = new MemoryStream();
 
-        context.Serialize(42, span);
-        context.Serialize(42, writer);
-        context.Serialize(42, stream);
+        new ProtoContext().Serialize(42, span);
+        new ProtoContext().Serialize(42, writer);
+        new ProtoContext().Serialize(42, stream);
 
         new ProtoContext().Deserialize<int>(expected).ShouldBe(42);
         new ProtoContext().Deserialize<int>(span.AsSpan()).ShouldBe(42);
@@ -96,10 +95,10 @@ public class When_serializing_a_value_through_a_proto_context
     }
 }
 
-public class When_round_tripping_with_a_single_write_context_instance
+public class When_round_tripping_with_shared_context_instances
 {
     [Fact]
-    public void Should_serialize_and_deserialize_using_the_same_context()
+    public void Should_serialize_and_deserialize_using_shared_contexts()
     {
         var context = new ProtoContext();
 
@@ -112,6 +111,7 @@ public class When_round_tripping_with_a_single_write_context_instance
     public void Should_support_all_transport_overloads()
     {
         var context = new ProtoContext();
+
         var expected = context.Serialize(42);
         var span = new byte[expected.Length];
         var writer = new ArrayBufferWriter<byte>();
@@ -126,18 +126,5 @@ public class When_round_tripping_with_a_single_write_context_instance
         context.Deserialize<int>(new ReadOnlySequence<byte>(writer.WrittenMemory)).ShouldBe(42);
         stream.Position = 0;
         context.Deserialize<int>(stream).ShouldBe(42);
-    }
-}
-
-public class When_round_tripping_with_a_single_read_context_instance
-{
-    [Fact]
-    public void Should_serialize_and_deserialize_using_the_same_context()
-    {
-        var context = new ProtoContext();
-
-        var expected = context.Serialize(42);
-
-        context.Deserialize<int>(expected).ShouldBe(42);
     }
 }
