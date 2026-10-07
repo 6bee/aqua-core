@@ -17,6 +17,7 @@
   </ItemGroup>
   <ItemGroup Label="Tests">
     <PackageVersion Include="coverlet.MTP" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="2.5.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="xunit.v3.mtp-v2" Version="4.0.1" />
   </ItemGroup>
