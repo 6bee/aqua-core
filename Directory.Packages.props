@@ -5,7 +5,7 @@
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="aqua.tool.Validation" Version="3.2.1" />
+    <PackageVersion Include="aqua.tool.Validation" Version="4.0.0-alpha-001" />
     <PackageVersion Include="Google.Protobuf" Version="3.36.2" />
     <PackageVersion Include="Grpc.Tools" Version="2.84.0" />
     <PackageVersion Include="MessagePack" Version="3.1.9" />
