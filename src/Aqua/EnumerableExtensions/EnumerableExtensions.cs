@@ -213,14 +213,29 @@ public static class EnumerableExtensions
     public static T[] AsEmptyIfNull<T>(this T[]? source) => source ?? [];
 
     [DebuggerStepThrough]
+    public static TCollection AsEmptyIfNull<TCollection>(this TCollection? collection)
+        where TCollection : IEnumerable, new()
+        => collection ?? new();
+
+    [DebuggerStepThrough]
+    public static TCollection AsEmptyIfNull<TCollection>(this TCollection? collection, Func<TCollection> emptyFactory)
+        where TCollection : IEnumerable
+        => collection ?? emptyFactory();
+
+    [DebuggerStepThrough]
     public static string AsEmptyIfNull(this string? source) => source ?? string.Empty;
 
     [DebuggerStepThrough]
     public static T? AsNullIfEmpty<T>(this T? source)
         where T : IEnumerable
-        => source is string str && string.IsNullOrEmpty(str)
+        => source is ICollection { Count: 0 }
+        || source?.GetEnumerator().MoveNext() is not true
         ? default
-        : source?.GetEnumerator().MoveNext() is not true
+        : source;
+
+    [DebuggerStepThrough]
+    public static string? AsNullIfEmpty(this string? source)
+        => string.IsNullOrEmpty(source)
         ? default
         : source;
 
@@ -231,22 +246,28 @@ public static class EnumerableExtensions
         : source;
 
     [DebuggerStepThrough]
-    public static bool IsNotNullOrEmpty([NotNullWhen(true)] this IEnumerable? source)
-        => source is string str
-        ? !string.IsNullOrEmpty(str)
-        : source?.GetEnumerator().MoveNext() is true;
-
-    [DebuggerStepThrough]
     public static bool IsNullOrEmpty([NotNullWhen(false)] this IEnumerable? source)
-        => source is string str
-        ? string.IsNullOrEmpty(str)
+        => source is ICollection collection
+        ? collection.Count is 0
         : source?.GetEnumerator().MoveNext() is not true;
 
     [DebuggerStepThrough]
-    public static bool IsNotNullOrWhiteSpace([NotNullWhen(true)] this string? source) => !string.IsNullOrWhiteSpace(source);
+    public static bool IsNullOrEmpty([NotNullWhen(false)] this string? source) => string.IsNullOrEmpty(source);
 
     [DebuggerStepThrough]
     public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? source) => string.IsNullOrWhiteSpace(source);
+
+    [DebuggerStepThrough]
+    public static bool IsNotNullOrEmpty([NotNullWhen(true)] this IEnumerable? source)
+        => source is ICollection collection
+        ? collection.Count > 0
+        : source?.GetEnumerator().MoveNext() is true;
+
+    [DebuggerStepThrough]
+    public static bool IsNotNullOrEmpty([NotNullWhen(true)] this string? source) => !string.IsNullOrEmpty(source);
+
+    [DebuggerStepThrough]
+    public static bool IsNotNullOrWhiteSpace([NotNullWhen(true)] this string? source) => !string.IsNullOrWhiteSpace(source);
 
     [DebuggerStepThrough]
     [return: NotNullIfNotNull(nameof(source))]
